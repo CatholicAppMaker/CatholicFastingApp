@@ -1,0 +1,37 @@
+{
+  "": {
+    "dependencies": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/release/CatholicFastingCore.build/CatholicFastingCore.d",
+    "object": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/release/CatholicFastingCore.build/CatholicFastingCore.o",
+    "swift-dependencies": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/release/CatholicFastingCore.build/master.swiftdeps"
+  },
+  "/Users/kevpierce/Desktop/CatholicFastingApp/CatholicFastingApp/Models/ObservanceCalculator.swift": {
+    "object": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/release/CatholicFastingCore.build/ObservanceCalculator.swift.o",
+    "swiftmodule": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/release/CatholicFastingCore.build/ObservanceCalculator~partial.swiftmodule",
+    "swift-dependencies": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/release/CatholicFastingCore.build/ObservanceCalculator.swiftdeps",
+    "diagnostics": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/release/CatholicFastingCore.build/ObservanceCalculator.dia"
+  },
+  "/Users/kevpierce/Desktop/CatholicFastingApp/CatholicFastingApp/Models/ObservanceStore.swift": {
+    "object": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/release/CatholicFastingCore.build/ObservanceStore.swift.o",
+    "swiftmodule": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/release/CatholicFastingCore.build/ObservanceStore~partial.swiftmodule",
+    "swift-dependencies": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/release/CatholicFastingCore.build/ObservanceStore.swiftdeps",
+    "diagnostics": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/release/CatholicFastingCore.build/ObservanceStore.dia"
+  },
+  "/Users/kevpierce/Desktop/CatholicFastingApp/CatholicFastingApp/Models/RuleBundleAndStorage.swift": {
+    "object": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/release/CatholicFastingCore.build/RuleBundleAndStorage.swift.o",
+    "swiftmodule": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/release/CatholicFastingCore.build/RuleBundleAndStorage~partial.swiftmodule",
+    "swift-dependencies": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/release/CatholicFastingCore.build/RuleBundleAndStorage.swiftdeps",
+    "diagnostics": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/release/CatholicFastingCore.build/RuleBundleAndStorage.dia"
+  },
+  "/Users/kevpierce/Desktop/CatholicFastingApp/CatholicFastingApp/Models/RuleDomain.swift": {
+    "object": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/release/CatholicFastingCore.build/RuleDomain.swift.o",
+    "swiftmodule": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/release/CatholicFastingCore.build/RuleDomain~partial.swiftmodule",
+    "swift-dependencies": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/release/CatholicFastingCore.build/RuleDomain.swiftdeps",
+    "diagnostics": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/release/CatholicFastingCore.build/RuleDomain.dia"
+  },
+  "/Users/kevpierce/Desktop/CatholicFastingApp/CatholicFastingApp/Models/SyncAndGuidance.swift": {
+    "object": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/release/CatholicFastingCore.build/SyncAndGuidance.swift.o",
+    "swiftmodule": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/release/CatholicFastingCore.build/SyncAndGuidance~partial.swiftmodule",
+    "swift-dependencies": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/release/CatholicFastingCore.build/SyncAndGuidance.swiftdeps",
+    "diagnostics": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/release/CatholicFastingCore.build/SyncAndGuidance.dia"
+  }
+}

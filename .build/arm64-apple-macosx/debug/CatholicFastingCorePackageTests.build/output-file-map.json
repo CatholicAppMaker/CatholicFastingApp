@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/debug/CatholicFastingCorePackageTests.build/master.swiftdeps"
+  },
+  "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/debug/CatholicFastingCorePackageTests.derived/runner.swift": {
+    "dependencies": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/debug/CatholicFastingCorePackageTests.build/runner.d",
+    "object": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/debug/CatholicFastingCorePackageTests.build/runner.swift.o",
+    "swiftmodule": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/debug/CatholicFastingCorePackageTests.build/runner~partial.swiftmodule",
+    "swift-dependencies": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/debug/CatholicFastingCorePackageTests.build/runner.swiftdeps",
+    "diagnostics": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/debug/CatholicFastingCorePackageTests.build/runner.dia"
+  }
+}

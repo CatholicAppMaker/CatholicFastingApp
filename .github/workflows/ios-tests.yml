@@ -1,0 +1,29 @@
+name: iOS Tests
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  swift-package:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Swift test
+        run: swift test
+
+  ios-ui:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run deterministic iOS UI tests
+        run: |
+          chmod +x scripts/run_ios_tests.sh
+          ./scripts/run_ios_tests.sh
+      - name: Upload xcresult bundles
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-xcresults
+          path: /tmp/CatholicFastingAppTestResults/*.xcresult
