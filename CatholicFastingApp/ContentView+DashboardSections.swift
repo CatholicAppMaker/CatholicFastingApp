@@ -1,85 +1,84 @@
 import SwiftUI
-
-struct SacredImageryItem: Identifiable {
-  let id: String
-  let assetName: String
-  let title: String
-  let subtitle: String
-}
-
-enum SacredImageryCatalog {
-  static let fastingGallery: [SacredImageryItem] = [
-    SacredImageryItem(
-      id: "chi-rho",
-      assetName: "SacredChiRho",
-      title: "Chi-Rho",
-      subtitle: "Offer each fast in Christ."
-    ),
-    SacredImageryItem(
-      id: "monstrance",
-      assetName: "SacredMonstrance",
-      title: "Monstrance",
-      subtitle: "Let prayer anchor discipline."
-    ),
-    SacredImageryItem(
-      id: "sacred-heart",
-      assetName: "SacredSacredHeart",
-      title: "Sacred Heart",
-      subtitle: "Unite fasting to charity."
-    ),
-    SacredImageryItem(
-      id: "rosary-cross",
-      assetName: "SacredRosaryCross",
-      title: "Rosary Cross",
-      subtitle: "Pray while you abstain."
-    ),
-  ]
-}
-
-struct SacredImageryCard: View {
-  let item: SacredImageryItem
-  var width: CGFloat = 168
-  var height: CGFloat = 176
-
-  var body: some View {
-    VStack(alignment: .leading, spacing: 8) {
-      ZStack {
-        RoundedRectangle(cornerRadius: 14)
-          .fill(.thinMaterial)
-          .overlay(
-            RoundedRectangle(cornerRadius: 14)
-              .fill(CatholicTheme.parchment.opacity(0.16))
-          )
-          .overlay(
-            RoundedRectangle(cornerRadius: 14)
-              .stroke(CatholicTheme.cardBorder.opacity(0.6), lineWidth: 1)
-          )
-
-        Image(item.assetName)
-          .resizable()
-          .scaledToFit()
-          .padding(14)
-      }
-      .frame(height: height - 58)
-      .appRoundedGlass(cornerRadius: 14)
-
-      Text(item.title)
-        .font(.system(.subheadline, design: .serif).weight(.semibold))
-        .foregroundStyle(CatholicTheme.primary)
-        .lineLimit(1)
-
-      Text(item.subtitle)
-        .font(.caption)
-        .foregroundStyle(.secondary)
-        .lineLimit(2)
-    }
-    .frame(width: width, alignment: .leading)
-    .accessibilityElement(children: .combine)
-    .accessibilityLabel("\(item.title). \(item.subtitle)")
-  }
-}
+#if canImport(TipKit)
+  import TipKit
+#endif
+#if canImport(AVFoundation)
+  import AVFoundation
+#endif
 
 extension ContentView {
+  var dashboardHeroArtwork: SacredHeroArtwork {
+    SacredHeroImageSelector.artwork(for: .dashboard)
+  }
+
+  var fastingDaysHeroArtwork: SacredHeroArtwork {
+    SacredHeroImageSelector.artwork(for: .fastingDays)
+  }
+
+  var dashboardFastingQuote: CatholicFastingQuote {
+    CatholicFastingQuoteSelector.quote(for: .dashboard)
+  }
+
+  var fastingDaysFastingQuote: CatholicFastingQuote {
+    CatholicFastingQuoteSelector.quote(for: .fastingDays)
+  }
+
+  var intermittentFastingQuote: CatholicFastingQuote {
+    CatholicFastingQuoteSelector.quote(for: .intermittent)
+  }
+
+  var guidanceFastingQuote: CatholicFastingQuote {
+    CatholicFastingQuoteSelector.quote(for: .guidance)
+  }
+
+  var planningProgressSection: some View {
+    Section("Year Plan Snapshot") {
+      Text("Required: \(yearlyRequiredCompletions)/\(planningData.requiredGoal) • Optional: \(yearlyOptionalCompletions)/\(planningData.optionalGoal)")
+        .font(.subheadline)
+      ProgressView(value: requirementGoalProgress)
+        .tint(CatholicTheme.primary)
+      ProgressView(value: optionalGoalProgress)
+        .tint(CatholicTheme.accent)
+      if currentSeasonCommitments.isEmpty {
+        Text("No active commitments for \(currentLiturgicalSeason.label).")
+          .font(.caption)
+          .foregroundStyle(.secondary)
+      } else {
+        ForEach(currentSeasonCommitments.prefix(3)) { commitment in
+          Label(commitment.title, systemImage: "checkmark.circle")
+            .font(.caption)
+        }
+      }
+    }
+  }
+
+  var personalInsightsSection: some View {
+    Section("Personal Insights (Local)") {
+      Text("This month completions: \(monthlyCompletionCount)")
+      Text("Recent intermittent hit-rate: \(intermittentHitRatePercent)%")
+      Text("Current streak: \(currentStreak) day(s)")
+    }
+  }
+
+  var accessibilitySupportSection: some View {
+    Section("Accessibility Support") {
+      if simplifiedModeEnabled {
+        Text("Simplified mode is enabled.")
+          .foregroundStyle(CatholicTheme.primary)
+      }
+      if voiceSummaryEnabled {
+        Button("Read Voice Summary") {
+          #if canImport(AVFoundation)
+            let utterance = AVSpeechUtterance(string: voiceSummaryText)
+            utterance.rate = 0.5
+            AVSpeechSynthesizer().speak(utterance)
+          #endif
+        }
+        .appSecondaryButtonStyle()
+      }
+    }
+  }
+
   var unofficialAppNoticeSection: some View {
     Section("Important Notice") {
       Text(
@@ -113,8 +112,8 @@ extension ContentView {
           .accessibilityIdentifier("today.setup.progress")
 
         setupChecklistRow(
-          title: "Birth year set",
-          isComplete: hasConfiguredBirthYear
+          title: "Age eligibility reviewed",
+          isComplete: hasConfiguredBirthDate
         )
         setupChecklistRow(
           title: "Pastoral consent acknowledged",
@@ -136,34 +135,18 @@ extension ContentView {
 
   var dashboardSacredImageSection: some View {
     Section {
-      ZStack(alignment: .bottomLeading) {
-        Image("HeroSacred")
-          .resizable()
-          .scaledToFill()
-          .frame(height: 210)
-          .clipped()
-        LinearGradient(
-          colors: [.clear, Color.black.opacity(0.6)],
-          startPoint: .center,
-          endPoint: .bottom
+      VStack(alignment: .leading, spacing: 10) {
+        SacredHeroCard(
+          assetName: dashboardHeroArtwork.assetName,
+          title: dashboardHeroArtwork.title,
+          subtitle: dashboardHeroArtwork.subtitle,
+          height: 210,
+          accessibilityIdentifier: "dashboard.sacred_image"
         )
-        VStack(alignment: .leading, spacing: 4) {
-          Text("Christ Pantocrator")
-            .font(.system(.headline, design: .serif))
-            .foregroundStyle(.white)
-          Text("Let your fasting be prayerful, intentional, and rooted in the Church.")
-            .font(.caption)
-            .foregroundStyle(.white.opacity(0.92))
-        }
-        .padding(12)
+
+        CatholicFastingQuoteCard(quote: dashboardFastingQuote, compact: true)
+          .accessibilityIdentifier("dashboard.fasting_quote")
       }
-      .clipShape(RoundedRectangle(cornerRadius: 14))
-      .overlay(
-        RoundedRectangle(cornerRadius: 14)
-          .stroke(CatholicTheme.cardBorder.opacity(0.6), lineWidth: 1)
-      )
-      .appRoundedGlass(cornerRadius: 14)
-      .accessibilityIdentifier("dashboard.sacred_image")
     }
   }
 
@@ -200,8 +183,8 @@ extension ContentView {
     switch homeSurface {
     case .today:
       return "surface.today.ready"
-    case .calendar:
-      return "surface.calendar.ready"
+    case .fastingDays:
+      return "surface.fasting_days.ready"
     case .intermittent:
       return "surface.intermittent.ready"
     case .more:
@@ -257,12 +240,15 @@ extension ContentView {
         .foregroundStyle(.secondary)
 
       Button {
-        homeSurface = .calendar
+        homeSurface = .fastingDays
       } label: {
-        Label("Open Calendar", systemImage: "calendar")
+        Label("Open Fasting Days", systemImage: "calendar")
       }
-      .accessibilityIdentifier("today.quick.calendar")
+      .accessibilityIdentifier("today.quick.fasting_days")
       .appPrimaryButtonStyle()
+      #if canImport(TipKit)
+        .popoverTip(FastingDaysFocusTip(), arrowEdge: .top)
+      #endif
 
       Button {
         homeSurface = .intermittent
@@ -271,6 +257,9 @@ extension ContentView {
       }
       .accessibilityIdentifier("today.quick.intermittent")
       .appSecondaryButtonStyle(legacyTint: CatholicTheme.accent)
+      #if canImport(TipKit)
+        .popoverTip(IntermittentTrackerTip(), arrowEdge: .top)
+      #endif
 
       Button {
         homeSurface = .more
@@ -279,6 +268,9 @@ extension ContentView {
       }
       .accessibilityIdentifier("today.quick.more")
       .appSecondaryButtonStyle()
+      #if canImport(TipKit)
+        .popoverTip(MoreToolsTip(), arrowEdge: .top)
+      #endif
     }
   }
 
@@ -344,10 +336,10 @@ extension ContentView {
         .appPrimaryButtonStyle(legacyTint: CatholicTheme.accent)
         .disabled(!canLogRecoverySubstituteToday)
 
-        Button("Open Required Calendar Focus") {
-          focusCalendarOnUpcomingRequired()
+        Button("Focus Required Fasting Days") {
+          focusFastingDaysOnUpcomingRequired()
         }
-        .accessibilityIdentifier("today.recovery.open_calendar")
+        .accessibilityIdentifier("today.recovery.open_fasting_days")
         .appSecondaryButtonStyle()
       }
     )
@@ -398,20 +390,19 @@ extension ContentView {
         Text("No upcoming required observances this year.")
           .foregroundStyle(.secondary)
       }
-      Button("Open Calendar View") {
-        homeSurface = .calendar
+      Button("Open Fasting Days View") {
+        homeSurface = .fastingDays
       }
-      .accessibilityIdentifier("dashboard.open_calendar")
+      .accessibilityIdentifier("dashboard.open_fasting_days")
       .appPrimaryButtonStyle()
       Button("Focus Required (Next 30 Days)") {
-        focusCalendarOnUpcomingRequired()
+        focusFastingDaysOnUpcomingRequired()
       }
       .accessibilityIdentifier("dashboard.focus_required")
       .appSecondaryButtonStyle(legacyTint: CatholicTheme.accent)
     }
   }
 
-  @ViewBuilder
   private func setupChecklistRow(title: String, isComplete: Bool) -> some View {
     Label {
       Text(title)

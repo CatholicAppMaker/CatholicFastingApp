@@ -15,7 +15,7 @@
 - [ ] Dashboard, Calendar, Guidance, Settings all accessible
 - [ ] Consent gating works for reminder/export actions
 - [ ] Delete All App Data clears tracker/notes/settings
-- [ ] iCloud sync toggle and diagnostics toggle behave correctly
+- [ ] Data & Privacy screen reflects local-only data handling
 - [ ] English/Spanish switching is consistent on migrated screens
 
 ## Content Checklist

@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+
+# SwiftPM
+.build/
+
+# Xcode user + derived data
+DerivedData/
+*.xcresult
+*.xccovreport
+*.xccovarchive
+*.moved-aside
+
+# Xcode workspace/project user state
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+
+# SwiftPM/Xcode generated user files
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+.swiftpm/xcode/xcuserdata/

@@ -209,9 +209,9 @@ enum RuleBundleRepository {
     switch explicitSignature {
     case .none:
       signatureInput = document.signing
-    case .structured(let structured):
+    case let .structured(structured):
       signatureInput = structured
-    case .legacyDigest(let digest):
+    case let .legacyDigest(digest):
       let payload = canonicalPayloadData(from: document)
       let matchesDigest = validateDigest(data: payload, expectedHexDigest: digest)
       return (

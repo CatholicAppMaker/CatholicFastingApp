@@ -6,7 +6,7 @@ final class CatholicFastingAppUITests: XCTestCase {
     continueAfterFailure = false
   }
 
-  func testSmokeOnboardingCanBeCompleted() throws {
+  func testSmokeOnboardingCanBeCompleted() {
     let app = makeApp(skipOnboarding: false)
     app.launch()
 
@@ -18,11 +18,11 @@ final class CatholicFastingAppUITests: XCTestCase {
     XCTAssertTrue(app.otherElements["surface.today.ready"].waitForExistence(timeout: 4))
   }
 
-  func testSmokeCalendarFilterControlsVisible() throws {
+  func testSmokeCalendarFilterControlsVisible() {
     let app = makeApp()
     app.launch()
     ensureOnHomeScreen(app)
-    openSurface("Calendar", in: app)
+    openSurface("Fasting Days", in: app)
 
     let filterVisible =
       app.segmentedControls["calendar.filter_picker"].waitForExistence(timeout: 4)
@@ -32,7 +32,7 @@ final class CatholicFastingAppUITests: XCTestCase {
     XCTAssertTrue(app.buttons["calendar.year.current"].firstMatch.exists)
   }
 
-  func testSmokeExportsRequireLegalAcknowledgment() throws {
+  func testSmokeExportsRequireLegalAcknowledgment() {
     let app = makeApp()
     app.launch()
     ensureOnHomeScreen(app)
@@ -48,7 +48,7 @@ final class CatholicFastingAppUITests: XCTestCase {
     XCTAssertFalse(exportButton.isEnabled)
   }
 
-  func testSmokeGuidanceScenarioControlVisible() throws {
+  func testSmokeGuidanceScenarioControlVisible() {
     let app = makeApp()
     app.launch()
     ensureOnHomeScreen(app)
@@ -58,7 +58,7 @@ final class CatholicFastingAppUITests: XCTestCase {
     XCTAssertTrue(scrollToElement(scenarioByID, in: app))
   }
 
-  func testSmokePremiumSupportControlsVisible() throws {
+  func testSmokePremiumSupportControlsVisible() {
     let app = makeApp()
     app.launch()
     ensureOnHomeScreen(app)
@@ -79,7 +79,17 @@ final class CatholicFastingAppUITests: XCTestCase {
     XCTAssertTrue(scrollToElement(lockedPreview, in: app))
   }
 
-  func testDeepGuidanceSacredGalleryVisible() throws {
+  func testSmokePremiumSubscriptionStoreVisible() {
+    let app = makeApp()
+    app.launch()
+    ensureOnHomeScreen(app)
+    openMoreDestination("Support & Premium", in: app)
+
+    let nativeStore = app.otherElements["premium.subscription_store"].firstMatch
+    XCTAssertTrue(scrollToElement(nativeStore, in: app))
+  }
+
+  func testDeepGuidanceSacredGalleryVisible() {
     let app = makeApp()
     app.launch()
     ensureOnHomeScreen(app)
@@ -89,7 +99,7 @@ final class CatholicFastingAppUITests: XCTestCase {
     XCTAssertTrue(scrollToElement(gallery, in: app))
   }
 
-  func testDeepCanOpenFridayNotesHistory() throws {
+  func testDeepCanOpenFridayNotesHistory() {
     let app = makeApp()
     app.launch()
     ensureOnHomeScreen(app)
@@ -102,7 +112,7 @@ final class CatholicFastingAppUITests: XCTestCase {
     XCTAssertTrue(app.navigationBars["Friday Notes"].waitForExistence(timeout: 4))
   }
 
-  func testDeepLaunchReadinessControlsVisible() throws {
+  func testDeepLaunchReadinessControlsVisible() {
     let app = makeApp()
     app.launch()
     ensureOnHomeScreen(app)
@@ -115,7 +125,7 @@ final class CatholicFastingAppUITests: XCTestCase {
     XCTAssertTrue(scrollToElement(deleteButton, in: app))
   }
 
-  func testDeepDashboardHeroVisible() throws {
+  func testDeepDashboardHeroVisible() {
     let app = makeApp()
     app.launch()
     ensureOnHomeScreen(app)
@@ -126,7 +136,7 @@ final class CatholicFastingAppUITests: XCTestCase {
     XCTAssertTrue(scrollToElement(heroByID, in: app) || scrollToElement(heroTitle, in: app))
   }
 
-  func testDeepUnofficialNoticeVisible() throws {
+  func testDeepUnofficialNoticeVisible() {
     let app = makeApp()
     app.launch()
     ensureOnHomeScreen(app)
@@ -136,21 +146,21 @@ final class CatholicFastingAppUITests: XCTestCase {
     XCTAssertTrue(scrollToElement(notice, in: app))
   }
 
-  func testDeepDashboardOpenCalendarQuickAction() throws {
+  func testDeepDashboardOpenCalendarQuickAction() {
     let app = makeApp()
     app.launch()
     ensureOnHomeScreen(app)
     openSurface("Today", in: app)
 
-    let openCalendar = app.buttons["dashboard.open_calendar"].firstMatch
+    let openCalendar = app.buttons["dashboard.open_fasting_days"].firstMatch
     XCTAssertTrue(scrollToElement(openCalendar, in: app))
     openCalendar.tap()
 
-    XCTAssertTrue(app.otherElements["surface.calendar.ready"].waitForExistence(timeout: 4))
-    XCTAssertTrue(app.staticTexts["calendar.filter_summary"].firstMatch.waitForExistence(timeout: 4))
+    XCTAssertTrue(app.otherElements["surface.fasting_days.ready"].waitForExistence(timeout: 4))
+    XCTAssertTrue(app.staticTexts["Fasting Days"].firstMatch.waitForExistence(timeout: 4))
   }
 
-  func testDeepDashboardFocusRequiredQuickAction() throws {
+  func testDeepDashboardFocusRequiredQuickAction() {
     let app = makeApp()
     app.launch()
     ensureOnHomeScreen(app)
@@ -160,21 +170,21 @@ final class CatholicFastingAppUITests: XCTestCase {
     XCTAssertTrue(scrollToElement(focusRequired, in: app))
     focusRequired.tap()
 
-    XCTAssertTrue(app.otherElements["surface.calendar.ready"].waitForExistence(timeout: 4))
-    XCTAssertTrue(app.staticTexts["calendar.filter_summary"].firstMatch.exists)
+    XCTAssertTrue(app.otherElements["surface.fasting_days.ready"].waitForExistence(timeout: 4))
+    XCTAssertTrue(app.staticTexts["Fasting Days"].firstMatch.exists)
   }
 
-  func testDeepCalendarResetFiltersButtonVisible() throws {
+  func testDeepFastingDaysScopePickerVisible() {
     let app = makeApp()
     app.launch()
     ensureOnHomeScreen(app)
-    openSurface("Calendar", in: app)
+    openSurface("Fasting Days", in: app)
 
-    let resetButton = app.buttons["calendar.reset_filters"].firstMatch
-    XCTAssertTrue(scrollToElement(resetButton, in: app))
+    let scopePicker = app.segmentedControls["fasting_days.scope_picker"].firstMatch
+    XCTAssertTrue(scrollToElement(scopePicker, in: app))
   }
 
-  func testIntermittentCanStartAndCancelFast() throws {
+  func testIntermittentCanStartAndCancelFast() {
     let app = makeApp()
     app.launch()
     ensureOnHomeScreen(app)
@@ -194,7 +204,7 @@ final class CatholicFastingAppUITests: XCTestCase {
     XCTAssertTrue(app.staticTexts["intermittent.no_active"].firstMatch.waitForExistence(timeout: 4))
   }
 
-  func testIntermittentCanEndFastAndWriteSessionHistory() throws {
+  func testIntermittentCanEndFastAndWriteSessionHistory() {
     let app = makeApp()
     app.launch()
     ensureOnHomeScreen(app)
@@ -213,7 +223,7 @@ final class CatholicFastingAppUITests: XCTestCase {
     XCTAssertTrue(scrollToElement(historyRow, in: app))
   }
 
-  func testIntermittentTargetPickerVisible() throws {
+  func testIntermittentTargetPickerVisible() {
     let app = makeApp()
     app.launch()
     ensureOnHomeScreen(app)
@@ -223,7 +233,7 @@ final class CatholicFastingAppUITests: XCTestCase {
     XCTAssertTrue(scrollToElement(targetPicker, in: app))
   }
 
-  func testDeepRecoveryPlanVisibleWhenMissedSeeded() throws {
+  func testDeepRecoveryPlanVisibleWhenMissedSeeded() {
     let app = makeApp(seedMissed: true)
     app.launch()
     ensureOnHomeScreen(app)
@@ -233,7 +243,7 @@ final class CatholicFastingAppUITests: XCTestCase {
     XCTAssertTrue(scrollToElement(recoveryTitle, in: app))
   }
 
-  func testDeepTodaySetupCardOpensQuickSetup() throws {
+  func testDeepTodaySetupCardOpensQuickSetup() {
     let app = makeApp()
     app.launch()
     ensureOnHomeScreen(app)
@@ -252,7 +262,7 @@ final class CatholicFastingAppUITests: XCTestCase {
     XCTAssertTrue(scrollToElement(quickProgress, in: app))
   }
 
-  func testDeepQuickSetupConsentIncrementsProgress() throws {
+  func testDeepQuickSetupConsentIncrementsProgress() {
     let app = makeApp()
     app.launch()
     ensureOnHomeScreen(app)
@@ -279,7 +289,7 @@ final class CatholicFastingAppUITests: XCTestCase {
     )
   }
 
-  func testDeepQuickSetupReminderActionsVisible() throws {
+  func testDeepQuickSetupReminderActionsVisible() {
     let app = makeApp()
     app.launch()
     ensureOnHomeScreen(app)
@@ -293,6 +303,61 @@ final class CatholicFastingAppUITests: XCTestCase {
     XCTAssertTrue(scrollToElement(requiredButton, in: app))
     let supportButton = app.buttons["settings.quick.schedule_support"].firstMatch
     XCTAssertTrue(scrollToElement(supportButton, in: app))
+  }
+
+  func testScrollMainSurfacesTopToBottomAndBack() {
+    let app = makeApp()
+    app.launch()
+    ensureOnHomeScreen(app)
+
+    let surfaces: [(label: String, id: String)] = [
+      ("Today", "today"),
+      ("Fasting Days", "fasting_days"),
+      ("Track Fast", "intermittent"),
+      ("More", "more"),
+    ]
+
+    for surface in surfaces {
+      openSurface(surface.label, in: app)
+      let bottomMarker = app.otherElements["surface.\(surface.id).bottom"].firstMatch
+      XCTAssertTrue(scrollToElement(bottomMarker, in: app), "Could not reach bottom of \(surface.label)")
+      let topMarker = app.otherElements["surface.\(surface.id).top"].firstMatch
+      XCTAssertTrue(scrollToElement(topMarker, in: app), "Could not return to top of \(surface.label)")
+    }
+  }
+
+  func testScrollMoreDestinationsTopToBottomAndBack() {
+    let app = makeApp()
+    app.launch()
+    ensureOnHomeScreen(app)
+    openSurface("More", in: app)
+
+    let destinations: [(title: String, id: String)] = [
+      ("Support & Premium", "supportAndPremium"),
+      ("Setup & Reminders", "setupAndReminders"),
+      ("Profile & Norms", "profileAndNorms"),
+      ("Guidance & Rules", "guidanceAndRules"),
+      ("Privacy & Data", "privacyAndData"),
+    ]
+
+    for destination in destinations {
+      openMoreDestination(destination.title, in: app)
+      let bottomMarker = app.otherElements["more.\(destination.id).bottom"].firstMatch
+      XCTAssertTrue(
+        scrollToElement(bottomMarker, in: app),
+        "Could not reach bottom of \(destination.title)"
+      )
+      let topMarker = app.otherElements["more.\(destination.id).top"].firstMatch
+      XCTAssertTrue(
+        scrollToElement(topMarker, in: app),
+        "Could not return to top of \(destination.title)"
+      )
+
+      let backButton = app.navigationBars.buttons.firstMatch
+      XCTAssertTrue(backButton.waitForExistence(timeout: 3))
+      backButton.tap()
+      XCTAssertTrue(app.navigationBars["Catholic Fasting"].waitForExistence(timeout: 4))
+    }
   }
 
   private func makeApp(skipOnboarding: Bool = true, seedMissed: Bool = false) -> XCUIApplication {
@@ -322,10 +387,25 @@ final class CatholicFastingAppUITests: XCTestCase {
     let tabBar = app.tabBars.firstMatch
     XCTAssertTrue(tabBar.waitForExistence(timeout: 3))
 
-    let tab = tabBar.buttons[label].firstMatch
+    let tab = tabButton(for: label, in: app)
     XCTAssertTrue(tab.waitForExistence(timeout: 3), "Unable to find tab \(label)")
     tab.tap()
     waitForSurfaceReady(label, in: app)
+  }
+
+  private func tabButton(for label: String, in app: XCUIApplication) -> XCUIElement {
+    let tabBar = app.tabBars.firstMatch
+    let direct = tabBar.buttons[label].firstMatch
+    if direct.exists {
+      return direct
+    }
+    if label == "Fasting Days" {
+      let fastingDays = tabBar.buttons["Fasting Days"].firstMatch
+      if fastingDays.exists {
+        return fastingDays
+      }
+    }
+    return direct
   }
 
   private func openMoreDestination(_ title: String, in app: XCUIApplication) {
@@ -350,8 +430,8 @@ final class CatholicFastingAppUITests: XCTestCase {
     switch label {
     case "Today":
       markerID = "surface.today.ready"
-    case "Calendar":
-      markerID = "surface.calendar.ready"
+    case "Fasting Days":
+      markerID = "surface.fasting_days.ready"
     case "Track Fast":
       markerID = "surface.intermittent.ready"
     case "More":

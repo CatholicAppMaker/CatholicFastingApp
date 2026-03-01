@@ -19,6 +19,10 @@
 "guidance.sources.local_decrees_note" = "Always confirm local decrees for your location and year.";
 
 "settings.personal_profile.title" = "Personal Profile";
+"settings.personal_profile.birth_date" = "Birth Date";
+"settings.personal_profile.birth_date_hint" = "Set your full birth date so age-based obligations are calculated accurately.";
+"settings.personal_profile.birth_date_saved_format" = "Saved birth date: %@";
+"settings.personal_profile.birth_date_clear" = "Clear Birth Date";
 "settings.personal_profile.birth_year" = "Birth Year";
 "settings.personal_profile.not_set" = "Not set";
 "settings.personal_profile.birth_year_hint" = "Set your birth year so age-based obligations are calculated accurately.";
@@ -42,32 +46,19 @@
 
 "settings.privacy.title" = "Privacy & Consent";
 "settings.privacy.legal_ack" = "I understand this app supplements (not replaces) pastoral guidance";
-"settings.privacy.share_crash_reports" = "Share crash reports";
-"settings.privacy.enable_icloud_sync" = "Enable iCloud Sync";
-"settings.privacy.local_analytics" = "Enable anonymous local analytics";
-"settings.privacy.local_analytics_hint" = "When enabled, the app stores anonymous on-device usage counts to improve onboarding and reminder flow.";
-"settings.privacy.advanced_options" = "Advanced Data Options";
-"settings.privacy.include_diagnostics" = "Include anonymous diagnostics in support exports";
-"settings.privacy.diagnostics_hint" = "These diagnostics help troubleshoot sync and data issues. No devotional notes are added unless you explicitly export them.";
-"settings.privacy.icloud_available" = "iCloud sync is available on this device.";
-"settings.privacy.icloud_unavailable" = "iCloud sync is currently unavailable on this device.";
-"settings.privacy.last_sync_format" = "Last sync: %@";
-"settings.privacy.sync_note_format" = "Sync note: %@";
 "settings.privacy.confirm_consent" = "Please confirm consent to enable reminders and exports.";
 "settings.privacy.consent_confirmed_format" = "Consent confirmed: %@";
-"settings.privacy.data_storage_summary" = "This app stores only fasting-tracker data you enter and optional diagnostics you approve.";
+"settings.privacy.data_storage_summary" = "This app stores only fasting-tracker data you enter, locally on this device.";
 "settings.privacy.data_details_link" = "View Data & Privacy Details";
 "settings.privacy.data_details_title" = "Data & Privacy";
-"settings.privacy.data_details_intro" = "Your fasting records remain on your device by default. iCloud sync and data exports happen only when you enable or trigger them.";
+"settings.privacy.data_details_intro" = "Your fasting records remain on your device. The app does not use cloud sync or analytics.";
 "settings.privacy.section_stored_title" = "Data Stored In App";
-"settings.privacy.stored_item_profile" = "Profile and settings (birth year, language, fasting preferences).";
+"settings.privacy.stored_item_profile" = "Profile and settings (age eligibility toggles, language, fasting preferences).";
 "settings.privacy.stored_item_observances" = "Observance progress and completion status history.";
 "settings.privacy.stored_item_notes" = "Friday penance notes that you manually enter.";
 "settings.privacy.stored_item_intermittent" = "Intermittent fasting sessions and active timer state.";
 "settings.privacy.section_shared_title" = "Data Shared Or Transmitted";
 "settings.privacy.shared_item_default" = "No automatic data upload to the developer.";
-"settings.privacy.shared_item_icloud_on" = "iCloud sync is enabled and uses your Apple iCloud account.";
-"settings.privacy.shared_item_icloud_off" = "iCloud sync is off.";
 "settings.privacy.shared_item_export" = "Export/share only when you tap an export action.";
 "settings.privacy.shared_item_feedback" = "Feedback email opens your mail app and sends only what you choose.";
 "settings.privacy.section_not_collected_title" = "Not Collected";
@@ -75,11 +66,6 @@
 "settings.privacy.not_collected_third_party" = "No third-party analytics SDKs in the app.";
 "settings.privacy.section_controls_title" = "Your Controls";
 "settings.privacy.control_consent" = "Consent";
-"settings.privacy.control_icloud" = "iCloud Sync";
-"settings.privacy.control_diagnostics" = "Diagnostics In Support Exports";
-"settings.privacy.control_local_analytics" = "Anonymous Local Analytics";
-"settings.privacy.control_icloud_available" = "iCloud Available On Device";
-"settings.privacy.control_last_sync" = "Last Sync";
 
 "settings.backups.title" = "Backups & Exports";
 "settings.backups.usccb_guidance" = "USCCB Liturgical Calendar Guidance";

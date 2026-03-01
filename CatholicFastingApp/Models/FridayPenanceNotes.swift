@@ -12,27 +12,11 @@ final class FridayPenanceNotes: ObservableObject {
   @Published private(set) var notesByObservanceID: [String: String]
 
   private let syncKey = SyncStoreKeys.fridayPenanceNotes
-  private var cloudObserver: NSObjectProtocol?
 
   init() {
     StorageSchema.migrateIfNeeded()
     notesByObservanceID = SyncedStore.mergedStringDictionary(for: syncKey)
     SyncedStore.persist(notesByObservanceID, for: syncKey)
-    if SyncedStore.isCloudSyncEnabled() {
-      cloudObserver = NotificationCenter.default.addObserver(
-        forName: NSUbiquitousKeyValueStore.didChangeExternallyNotification,
-        object: NSUbiquitousKeyValueStore.default,
-        queue: .main
-      ) { [weak self] _ in
-        self?.refreshFromCloud()
-      }
-    }
-  }
-
-  deinit {
-    if let cloudObserver {
-      NotificationCenter.default.removeObserver(cloudObserver)
-    }
   }
 
   func note(for observanceID: String) -> String {
@@ -67,13 +51,6 @@ final class FridayPenanceNotes: ObservableObject {
     notesByObservanceID
   }
 
-  private func refreshFromCloud() {
-    let merged = SyncedStore.mergedStringDictionary(for: syncKey)
-    guard merged != notesByObservanceID else { return }
-    notesByObservanceID = merged
-    SyncedStore.persist(notesByObservanceID, for: syncKey)
-  }
-
   private func makeRecord(observanceID: String, note: String) -> FridayPenanceRecord {
     let pieces = observanceID.split(separator: "|", maxSplits: 2, omittingEmptySubsequences: false)
     let dateString = pieces.indices.contains(0) ? String(pieces[0]) : ""
@@ -82,4 +59,5 @@ final class FridayPenanceNotes: ObservableObject {
     return FridayPenanceRecord(id: observanceID, date: date, title: title, note: note)
   }
 }
+
 extension FridayPenanceNotes: @unchecked Sendable {}

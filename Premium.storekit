@@ -1,0 +1,123 @@
+{
+  "identifier" : "B9E57D9E-5CD2-4EA7-A9A5-E7782350C4C7",
+  "nonRenewingSubscriptions" : [],
+  "products" : [
+    {
+      "displayPrice" : "1.99",
+      "familyShareable" : false,
+      "internalID" : "6A7F5D58-0F66-4550-8D1B-3DD44C3E8912",
+      "localizations" : [
+        {
+          "description" : "Optional one-time tip to support ongoing app work.",
+          "displayName" : "Tip Small",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.kevpierce.catholicfasting.tip.small",
+      "referenceName" : "Tip Small",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "A7B7D3ED-839A-45C6-B0D5-AF4EF14298EB",
+      "localizations" : [
+        {
+          "description" : "Optional one-time tip to support ongoing app work.",
+          "displayName" : "Tip Medium",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.kevpierce.catholicfasting.tip.medium",
+      "referenceName" : "Tip Medium",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "9.99",
+      "familyShareable" : false,
+      "internalID" : "64BD27A3-291E-4A2A-A08A-E6E6BEE65FA3",
+      "localizations" : [
+        {
+          "description" : "Optional one-time tip to support ongoing app work.",
+          "displayName" : "Tip Large",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.kevpierce.catholicfasting.tip.large",
+      "referenceName" : "Tip Large",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "1B0F2F3B-B157-4419-B13D-7B722FAE21CB",
+    "_developerTeamID" : "22L6MB4Z6V",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 762825600,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_timeRate" : 0
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "9B1233C9-E3A4-433F-AEF0-D6A8E7AA8F40",
+      "localizations" : [
+        {
+          "description" : "Unlock premium fasting planning features.",
+          "displayName" : "Pro User",
+          "locale" : "en_US"
+        }
+      ],
+      "name" : "Pro User",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [],
+          "codeOffers" : [],
+          "displayPrice" : "1.99",
+          "familyShareable" : true,
+          "groupNumber" : 1,
+          "internalID" : "1A51159F-E64A-4DF2-8897-C11E70A8CC61",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Unlock monthly premium fasting planning features.",
+              "displayName" : "Premium Monthly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.kevpierce.catholicfasting.premium.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Premium Monthly",
+          "subscriptionGroupID" : "9B1233C9-E3A4-433F-AEF0-D6A8E7AA8F40",
+          "type" : "RecurringSubscription",
+          "winBackOffers" : []
+        },
+        {
+          "adHocOffers" : [],
+          "codeOffers" : [],
+          "displayPrice" : "9.99",
+          "familyShareable" : true,
+          "groupNumber" : 2,
+          "internalID" : "E53CB0C4-2AFB-41C8-8DBF-1D3D9CC90A9E",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Unlock yearly premium fasting planning features.",
+              "displayName" : "Premium Yearly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.kevpierce.catholicfasting.premium.yearly",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Premium Yearly",
+          "subscriptionGroupID" : "9B1233C9-E3A4-433F-AEF0-D6A8E7AA8F40",
+          "type" : "RecurringSubscription",
+          "winBackOffers" : []
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

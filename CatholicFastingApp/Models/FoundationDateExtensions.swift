@@ -3,7 +3,8 @@
 extension Calendar {
   static var gregorian: Calendar {
     var calendar = Calendar(identifier: .gregorian)
-    calendar.timeZone = TimeZone(secondsFromGMT: 0) ?? .current
+    calendar.locale = Locale(identifier: "en_US_POSIX")
+    calendar.timeZone = .current
     return calendar
   }
 }
@@ -11,8 +12,9 @@ extension Calendar {
 extension DateFormatter {
   static let dayKey: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.calendar = Calendar(identifier: .gregorian)
-    formatter.timeZone = TimeZone(secondsFromGMT: 0)
+    formatter.calendar = .gregorian
+    formatter.locale = Locale(identifier: "en_US_POSIX")
+    formatter.timeZone = .current
     formatter.dateFormat = "yyyy-MM-dd"
     return formatter
   }()

@@ -99,7 +99,7 @@ run_deep_suite() {
     -only-testing:CatholicFastingAppUITests/testDeepUnofficialNoticeVisible
     -only-testing:CatholicFastingAppUITests/testDeepDashboardOpenCalendarQuickAction
     -only-testing:CatholicFastingAppUITests/testDeepDashboardFocusRequiredQuickAction
-    -only-testing:CatholicFastingAppUITests/testDeepCalendarResetFiltersButtonVisible
+    -only-testing:CatholicFastingAppUITests/testDeepFastingDaysScopePickerVisible
     -only-testing:CatholicFastingAppUITests/testDeepRecoveryPlanVisibleWhenMissedSeeded
     -only-testing:CatholicFastingAppUITests/testDeepGuidanceSacredGalleryVisible
     -only-testing:CatholicFastingAppUITests/testDeepTodaySetupCardOpensQuickSetup

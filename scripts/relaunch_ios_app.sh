@@ -5,25 +5,39 @@ SIMULATOR_NAME="${SIMULATOR_NAME:-iPhone 17}"
 APP_NAME="${APP_NAME:-CatholicFastingApp}"
 BUNDLE_ID="${BUNDLE_ID:-com.kevpierce.CatholicFastingApp}"
 DERIVED_DATA_ROOT="${DERIVED_DATA_ROOT:-$HOME/Library/Developer/Xcode/DerivedData}"
+DERIVED_DATA_ROOTS="${DERIVED_DATA_ROOTS:-}"
 
 find_latest_app_bundle() {
   local newest_path=""
   local newest_mtime=-1
+  local -a search_roots=()
 
-  while IFS= read -r -d '' candidate; do
-    local mtime
-    mtime=$(stat -f "%m" "$candidate")
-    if (( mtime > newest_mtime )); then
-      newest_mtime="$mtime"
-      newest_path="$candidate"
-    fi
-  done < <(
-    find "${DERIVED_DATA_ROOT}" \
-      -type d \
-      -path "*/Build/Products/Debug-iphonesimulator/${APP_NAME}.app" \
-      ! -path "*Index.noindex*" \
-      -print0
-  )
+  if [[ -n "${DERIVED_DATA_ROOTS}" ]]; then
+    IFS=':' read -r -a search_roots <<<"${DERIVED_DATA_ROOTS}"
+  else
+    search_roots=(
+      "${DERIVED_DATA_ROOT}"
+      "/tmp/CatholicFastingAppDerivedData"
+    )
+  fi
+
+  for root in "${search_roots[@]}"; do
+    [[ -d "${root}" ]] || continue
+    while IFS= read -r -d '' candidate; do
+      local mtime
+      mtime=$(stat -f "%m" "$candidate")
+      if (( mtime > newest_mtime )); then
+        newest_mtime="$mtime"
+        newest_path="$candidate"
+      fi
+    done < <(
+      find "${root}" \
+        -type d \
+        -path "*/Build/Products/Debug-iphonesimulator/${APP_NAME}.app" \
+        ! -path "*Index.noindex*" \
+        -print0
+    )
+  done
 
   if [[ -z "${newest_path}" ]]; then
     return 1
@@ -37,7 +51,8 @@ xcrun simctl boot "${SIMULATOR_NAME}" >/dev/null 2>&1 || true
 xcrun simctl bootstatus "${SIMULATOR_NAME}" -b
 
 APP_PATH="$(find_latest_app_bundle)" || {
-  echo "No valid ${APP_NAME}.app found under ${DERIVED_DATA_ROOT}" >&2
+  echo "No valid ${APP_NAME}.app found under configured DerivedData roots." >&2
+  echo "Set DERIVED_DATA_ROOTS as colon-separated paths if needed." >&2
   exit 1
 }
 

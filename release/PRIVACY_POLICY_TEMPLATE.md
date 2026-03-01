@@ -1,31 +1,35 @@
 # Privacy Policy (Template)
 
-_Last updated: [DATE]_
+_Last updated: February 19, 2026_
 
 Catholic Fasting ("the app") is currently self-published by the app developer via an individual App Store account.
 
 ## Data We Store
-The app may store:
+The app stores only data needed to provide app features on your device:
 - profile and observance settings
 - fasting/abstinence status records
 - optional Friday notes
 - consent timestamps
-- optional diagnostics (if enabled)
 
-## iCloud Sync
-If enabled, selected app data may sync through Apple's iCloud key-value storage.
-
-## Diagnostics
-Diagnostics are optional and can be disabled in Settings.
+## Cloud Sync and Analytics
+- No iCloud sync is used.
+- No third-party analytics SDKs are used.
+- No anonymous usage analytics are collected.
 
 ## Exports
 You can export:
 - personal backup
-- support log
-- encrypted backup (with your passphrase)
+- premium summary export (if applicable)
+
+Exports happen only when you manually choose an export/share action.
 
 ## Data Deletion
 You can remove data using "Delete All App Data" in Settings.
+
+## Data We Do Not Collect
+- No advertising identifiers
+- No account profile data on developer servers
+- No automated telemetry uploads to the developer
 
 ## Medical and Pastoral Disclaimer
 The app is for informational and devotional support. It is not medical advice and does not replace pastoral direction.

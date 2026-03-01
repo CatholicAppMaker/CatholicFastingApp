@@ -2,11 +2,64 @@ import SwiftUI
 #if canImport(StoreKit)
   import StoreKit
 #endif
+#if canImport(AppIntents)
+  import AppIntents
+#endif
+#if canImport(TipKit)
+  import TipKit
+#endif
 #if canImport(UIKit)
   import UIKit
 #endif
 #if canImport(UserNotifications)
   import UserNotifications
+#endif
+
+#if canImport(TipKit)
+  @available(iOS 18.0, *)
+  struct FastingDaysFocusTip: Tip {
+    var title: Text {
+      Text("Focus Required Days")
+    }
+
+    var message: Text? {
+      Text("Open Fasting Days to filter required observances and plan ahead.")
+    }
+
+    var image: Image? {
+      Image(systemName: "calendar.badge.clock")
+    }
+  }
+
+  @available(iOS 18.0, *)
+  struct IntermittentTrackerTip: Tip {
+    var title: Text {
+      Text("Track Personal Fasts")
+    }
+
+    var message: Text? {
+      Text("Use Track Fast for optional intermittent disciplines.")
+    }
+
+    var image: Image? {
+      Image(systemName: "timer")
+    }
+  }
+
+  @available(iOS 18.0, *)
+  struct MoreToolsTip: Tip {
+    var title: Text {
+      Text("Everything Else Is in More")
+    }
+
+    var message: Text? {
+      Text("Use More for setup, reminders, premium, and privacy controls.")
+    }
+
+    var image: Image? {
+      Image(systemName: "ellipsis.circle")
+    }
+  }
 #endif
 
 #if canImport(StoreKit)
@@ -30,6 +83,7 @@ import SwiftUI
     @Published var premiumProducts: [Product] = []
     @Published var tipProducts: [Product] = []
 
+    private static let debugPremiumUnlockedKey = "debug_simulator_premium_unlocked"
     private var updatesTask: Task<Void, Never>?
 
     init() {
@@ -64,14 +118,26 @@ import SwiftUI
     }
 
     func purchase(_ product: Product) async {
+      if Self.usesSimulatorDebugPurchases {
+        if Self.premiumProductIDs.contains(product.id) {
+          premiumUnlocked = true
+          UserDefaults.standard.set(true, forKey: Self.debugPremiumUnlockedKey)
+          statusMessage = "Premium unlocked (simulator debug purchase)."
+        } else {
+          statusMessage = "Thank you for supporting this app (simulator debug tip)."
+        }
+        await refreshSubscriptionHealth()
+        return
+      }
+
       isPurchasing = true
       defer { isPurchasing = false }
 
       do {
         let result = try await product.purchase()
         switch result {
-        case .success(let verification):
-          guard case .verified(let transaction) = verification else {
+        case let .success(verification):
+          guard case let .verified(transaction) = verification else {
             statusMessage = "Purchase could not be verified."
             return
           }
@@ -96,6 +162,16 @@ import SwiftUI
     }
 
     func restorePurchases() async {
+      if Self.usesSimulatorDebugPurchases {
+        premiumUnlocked = UserDefaults.standard.bool(forKey: Self.debugPremiumUnlockedKey)
+        await refreshSubscriptionHealth()
+        statusMessage =
+          premiumUnlocked
+          ? "Simulator debug purchase restored."
+          : "No simulator debug premium purchase found."
+        return
+      }
+
       isPurchasing = true
       defer { isPurchasing = false }
 
@@ -130,9 +206,14 @@ import SwiftUI
     }
 
     private func refreshEntitlements() async {
+      if Self.usesSimulatorDebugPurchases {
+        premiumUnlocked = UserDefaults.standard.bool(forKey: Self.debugPremiumUnlockedKey)
+        return
+      }
+
       premiumUnlocked = false
       for await verification in Transaction.currentEntitlements {
-        guard case .verified(let transaction) = verification else { continue }
+        guard case let .verified(transaction) = verification else { continue }
         guard Self.premiumProductIDs.contains(transaction.productID) else { continue }
         if transaction.revocationDate != nil { continue }
         if let expiration = transaction.expirationDate, expiration <= Date() { continue }
@@ -141,8 +222,12 @@ import SwiftUI
     }
 
     private func monitorTransactionUpdates() async {
+      if Self.usesSimulatorDebugPurchases {
+        return
+      }
+
       for await verification in Transaction.updates {
-        guard case .verified(let transaction) = verification else { continue }
+        guard case let .verified(transaction) = verification else { continue }
         await transaction.finish()
         await refreshEntitlements()
         await refreshSubscriptionHealth()
@@ -215,6 +300,14 @@ import SwiftUI
         return 99
       }
     }
+
+    private static var usesSimulatorDebugPurchases: Bool {
+      #if DEBUG && targetEnvironment(simulator)
+        true
+      #else
+        false
+      #endif
+    }
   }
 #else
   @MainActor
@@ -229,249 +322,69 @@ import SwiftUI
 
     func refreshCatalogAndEntitlements() async {}
     func restorePurchases() async {}
-    func purchase(_ product: String) async {}
+    func purchase(_: String) async {}
     func openManageSubscriptions() async {}
   }
 #endif
 
-enum ReminderScheduler {
-  private static let reminderPrefix = "required-day-"
-  private static let supportReminderPrefix = "habit-support-"
-  private static let reminderCategory = "habit-reminder"
+#if canImport(AppIntents)
+  @available(iOS 18.0, *)
+  struct OpenTodayIntent: AppIntent {
+    static let title: LocalizedStringResource = "Open Today Plan"
+    static let description = IntentDescription("Open the Today tab in Catholic Fasting.")
+    static var openAppWhenRun: Bool = true
 
-  static func requestPermission() async -> String {
-    #if canImport(UserNotifications)
-      let center = UNUserNotificationCenter.current()
-      let existingStatus = await authorizationStatus(center)
-      if isAuthorizedStatus(existingStatus) {
-        configureReminderActions(center)
-        return "Permission already granted"
-      }
-      if existingStatus == .denied {
-        return "Notifications denied. Enable them in iOS Settings."
-      }
-      do {
-        let granted = try await center.requestAuthorization(options: [.alert, .sound, .badge])
-        configureReminderActions(center)
-        return granted ? "Permission granted" : "Permission denied"
-      } catch {
-        return "Permission error: \(error.localizedDescription)"
-      }
-    #else
-      return "Notifications unavailable on this platform"
-    #endif
+    func perform() async throws -> some IntentResult & OpensIntent {
+      .result(opensIntent: OpenURLIntent(UIConstants.deepLinkTodayURL))
+    }
   }
 
-  static func schedule(observances: [Observance]) async -> String {
-    #if canImport(UserNotifications)
-      let center = UNUserNotificationCenter.current()
-      let status = await authorizationStatus(center)
-      guard isAuthorizedStatus(status) else {
-        return "Notifications are not enabled. Request permission first."
-      }
-      configureReminderActions(center)
-      let existing = await pendingRequests(center)
-      let toRemove = existing.map(\.identifier).filter { $0.hasPrefix(reminderPrefix) }
-      if !toRemove.isEmpty {
-        center.removePendingNotificationRequests(withIdentifiers: toRemove)
-      }
+  @available(iOS 18.0, *)
+  struct OpenFastingDaysIntent: AppIntent {
+    static let title: LocalizedStringResource = "Open Fasting Days"
+    static let description = IntentDescription("Open the fasting days list.")
+    static var openAppWhenRun: Bool = true
 
-      let startOfToday = Calendar.current.startOfDay(for: Date())
-      let upcomingMandatoryObservances = observances.filter { observance in
-        observance.obligation == .mandatory && Calendar.current.startOfDay(for: observance.date) >= startOfToday
-      }
-
-      guard !upcomingMandatoryObservances.isEmpty else {
-        return "No upcoming required observances to schedule"
-      }
-
-      var scheduled = 0
-      for observance in upcomingMandatoryObservances {
-        let identifier = "required-day-\(observance.id)"
-        var dateComponents = Calendar.current.dateComponents([.year, .month, .day], from: observance.date)
-        dateComponents.hour = 7
-        dateComponents.minute = 0
-
-        let content = UNMutableNotificationContent()
-        content.title = observance.title
-        content.body = "Required observance today. Open Catholic Fasting to mark completion."
-        content.sound = .default
-        content.categoryIdentifier = reminderCategory
-
-        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
-        do {
-          try await center.add(request)
-          scheduled += 1
-        } catch {
-          return "Scheduling error: \(error.localizedDescription)"
-        }
-      }
-
-      return "Scheduled \(scheduled) upcoming reminder(s)"
-    #else
-      return "Notifications unavailable on this platform"
-    #endif
+    func perform() async throws -> some IntentResult & OpensIntent {
+      .result(opensIntent: OpenURLIntent(UIConstants.deepLinkFastingDaysURL))
+    }
   }
 
-  static func scheduleHabitSupport(morning: Bool, evening: Bool) async -> String {
-    #if canImport(UserNotifications)
-      let center = UNUserNotificationCenter.current()
-      let status = await authorizationStatus(center)
-      guard isAuthorizedStatus(status) else {
-        return "Notifications are not enabled. Request permission first."
-      }
-      configureReminderActions(center)
-      let existing = await pendingRequests(center)
-      let toRemove = existing.map(\.identifier).filter { $0.hasPrefix(supportReminderPrefix) }
-      if !toRemove.isEmpty {
-        center.removePendingNotificationRequests(withIdentifiers: toRemove)
-      }
+  @available(iOS 18.0, *)
+  struct OpenIntermittentTrackerIntent: AppIntent {
+    static let title: LocalizedStringResource = "Open Fast Tracker"
+    static let description = IntentDescription("Open the intermittent fasting tracker.")
+    static var openAppWhenRun: Bool = true
 
-      guard morning || evening else {
-        return "Select morning or evening support first"
-      }
-
-      var scheduled = 0
-
-      if morning {
-        if await addHabitSupportReminder(
-          center: center,
-          identifier: "\(supportReminderPrefix)morning",
-          title: "Morning fasting check",
-          body: "Review today’s observance plan before your first meal.",
-          hour: 7,
-          minute: 0
-        ) {
-          scheduled += 1
-        }
-      }
-
-      if evening {
-        if await addHabitSupportReminder(
-          center: center,
-          identifier: "\(supportReminderPrefix)evening",
-          title: "Evening examen",
-          body: "Mark progress and prepare for tomorrow’s observance.",
-          hour: 20,
-          minute: 0
-        ) {
-          scheduled += 1
-        }
-      }
-
-      return scheduled > 0 ? "Scheduled \(scheduled) daily support reminder(s)" : "No support reminders selected"
-    #else
-      return "Notifications unavailable on this platform"
-    #endif
+    func perform() async throws -> some IntentResult & OpensIntent {
+      .result(opensIntent: OpenURLIntent(UIConstants.deepLinkIntermittentURL))
+    }
   }
 
-  static func notificationSummary() async -> String {
-    #if canImport(UserNotifications)
-      let center = UNUserNotificationCenter.current()
-      let status = await authorizationStatus(center)
-      if status == .notDetermined {
-        return "Permission not requested"
-      }
-      if status == .denied {
-        return "Notifications denied in iOS Settings"
-      }
-
-      let requests = await pendingRequests(center)
-      let requiredCount = requests.map(\.identifier).filter { $0.hasPrefix(reminderPrefix) }.count
-      let supportCount = requests.map(\.identifier).filter { $0.hasPrefix(supportReminderPrefix) }.count
-      if requiredCount == 0 && supportCount == 0 {
-        return "No reminders queued"
-      }
-      if requiredCount > 0 && supportCount > 0 {
-        return "\(requiredCount) required-day and \(supportCount) support reminder(s) queued"
-      }
-      if requiredCount > 0 {
-        return "\(requiredCount) required-day reminder(s) queued"
-      }
-      return "\(supportCount) support reminder(s) queued"
-    #else
-      return "Notifications unavailable on this platform"
-    #endif
-  }
-
-  #if canImport(UserNotifications)
-    private static func configureReminderActions(_ center: UNUserNotificationCenter) {
-      let reviewAction = UNNotificationAction(
-        identifier: "review_today",
-        title: "Review Today",
-        options: [.foreground]
+  @available(iOS 18.0, *)
+  struct CatholicFastingAppShortcuts: AppShortcutsProvider {
+    static var appShortcuts: [AppShortcut] {
+      AppShortcut(
+        intent: OpenTodayIntent(),
+        phrases: ["Open \(.applicationName) today"],
+        shortTitle: "Today Plan",
+        systemImageName: "sun.max"
       )
-      let recoveryAction = UNNotificationAction(
-        identifier: "open_recovery",
-        title: "Recovery Plan",
-        options: [.foreground]
+      AppShortcut(
+        intent: OpenFastingDaysIntent(),
+        phrases: ["Open \(.applicationName) fasting days"],
+        shortTitle: "Fasting Days",
+        systemImageName: "calendar"
       )
-      let category = UNNotificationCategory(
-        identifier: reminderCategory,
-        actions: [reviewAction, recoveryAction],
-        intentIdentifiers: [],
-        options: []
+      AppShortcut(
+        intent: OpenIntermittentTrackerIntent(),
+        phrases: ["Open \(.applicationName) fast tracker"],
+        shortTitle: "Track Fast",
+        systemImageName: "timer"
       )
-      center.setNotificationCategories([category])
     }
-
-    private static func addHabitSupportReminder(
-      center: UNUserNotificationCenter,
-      identifier: String,
-      title: String,
-      body: String,
-      hour: Int,
-      minute: Int
-    ) async -> Bool {
-      var dateComponents = DateComponents()
-      dateComponents.hour = hour
-      dateComponents.minute = minute
-
-      let content = UNMutableNotificationContent()
-      content.title = title
-      content.body = body
-      content.sound = .default
-      content.categoryIdentifier = reminderCategory
-
-      let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-      let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
-      do {
-        try await center.add(request)
-        return true
-      } catch {
-        return false
-      }
-    }
-
-    private static func pendingRequests(_ center: UNUserNotificationCenter) async -> [UNNotificationRequest] {
-      await withCheckedContinuation { continuation in
-        center.getPendingNotificationRequests { requests in
-          continuation.resume(returning: requests)
-        }
-      }
-    }
-
-    private static func authorizationStatus(_ center: UNUserNotificationCenter) async
-      -> UNAuthorizationStatus
-    {
-      await withCheckedContinuation { continuation in
-        center.getNotificationSettings { settings in
-          continuation.resume(returning: settings.authorizationStatus)
-        }
-      }
-    }
-
-    private static func isAuthorizedStatus(_ status: UNAuthorizationStatus) -> Bool {
-      switch status {
-      case .authorized, .provisional, .ephemeral:
-        return true
-      default:
-        return false
-      }
-    }
-  #endif
-}
+  }
+#endif
 
 struct ObservanceRowView: View {
   let observance: Observance
@@ -768,15 +681,12 @@ struct FridayNotesHistoryView: View {
 }
 
 struct OnboardingView: View {
-  @Binding var birthYear: Int
+  @Binding var age14OrOlderForAbstinence: Bool
+  @Binding var age18OrOlderForFasting: Bool
   @Binding var medicalDispensation: Bool
   @Binding var fridayModeRaw: String
   @Binding var dailyReminderSupportEnabled: Bool
   let onComplete: () -> Void
-
-  private var birthYearRange: [Int] {
-    Array((UIConstants.minBirthYear...Calendar.current.component(.year, from: Date())).reversed())
-  }
 
   var body: some View {
     NavigationStack {
@@ -786,15 +696,11 @@ struct OnboardingView: View {
         }
 
         Section("Profile Setup") {
-          Picker("Birth Year", selection: $birthYear) {
-            Text("Not set").tag(0)
-            ForEach(birthYearRange, id: \.self) { year in
-              Text(String(year)).tag(year)
-            }
-          }
-          .pickerStyle(.menu)
-          .accessibilityIdentifier("onboarding.birth_year")
-          Text("Why this matters: age determines whether fasting or abstinence binds.")
+          Toggle("I am 14 or older (abstinence age)", isOn: $age14OrOlderForAbstinence)
+            .accessibilityIdentifier("onboarding.age14_toggle")
+          Toggle("I am 18 or older (fasting age)", isOn: $age18OrOlderForFasting)
+            .accessibilityIdentifier("onboarding.age18_toggle")
+          Text("You can update these anytime in Settings as your age status changes.")
             .font(.caption)
             .foregroundStyle(.secondary)
 

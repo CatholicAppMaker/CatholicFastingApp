@@ -1,5 +1,5 @@
-import XCTest
 @testable import CatholicFastingCore
+import XCTest
 
 final class RuleMetadataAndGuidanceTests: XCTestCase {
   override func setUp() {
@@ -79,7 +79,8 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
       hasMedicalDispensation: false,
       ascensionObservance: .sunday,
       fridayOutsideLentMode: .substitutePenance,
-      calendarMode: .usccb)
+      calendarMode: .usccb
+    )
 
     let observances = ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
     let ashWednesday = try XCTUnwrap(observances.first { $0.title == "Ash Wednesday" })
@@ -94,7 +95,8 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
       hasMedicalDispensation: false,
       ascensionObservance: .sunday,
       fridayOutsideLentMode: .substitutePenance,
-      calendarMode: .usccb)
+      calendarMode: .usccb
+    )
 
     let recommendations = FoodGuidanceEngine.recommendations(for: .medicalRecovery, settings: settings)
     XCTAssertTrue(recommendations.contains { $0.localizedCaseInsensitiveContains("dispensation") })
@@ -111,13 +113,6 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
     let snapshot = SyncDiagnostics.snapshot()
     XCTAssertTrue(snapshot.completedObservancesCount == 0)
     XCTAssertFalse(snapshot.warnings.isEmpty)
-  }
-
-  func testDiagnosticsCanBeDisabled() {
-    UserDefaults.standard.set(false, forKey: "allow_diagnostics")
-    let snapshot = SyncDiagnostics.snapshot()
-    XCTAssertEqual(snapshot.completedObservancesCount, 0)
-    XCTAssertTrue(snapshot.warnings.contains { $0.localizedCaseInsensitiveContains("disabled") })
   }
 
   func testDataProtectionEncryptDecryptRoundTrip() {
@@ -146,7 +141,8 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
       hasMedicalDispensation: false,
       ascensionObservance: .sunday,
       fridayOutsideLentMode: .substitutePenance,
-      calendarMode: .usccb)
+      calendarMode: .usccb
+    )
 
     let recommendations = FoodGuidanceEngine.recommendations(for: .heavyLabor, settings: settings)
     XCTAssertTrue(recommendations.contains { $0.localizedCaseInsensitiveContains("heavy labor") || $0.localizedCaseInsensitiveContains("pastor") })
@@ -158,7 +154,8 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
       hasMedicalDispensation: false,
       ascensionObservance: .sunday,
       fridayOutsideLentMode: .substitutePenance,
-      calendarMode: .usccb)
+      calendarMode: .usccb
+    )
 
     let recommendations = FoodGuidanceEngine.recommendations(for: .normalDay, settings: settings)
     XCTAssertTrue(recommendations.contains { $0.localizedCaseInsensitiveContains("abstinence") || $0.localizedCaseInsensitiveContains("avoid meat") })
@@ -208,6 +205,42 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
     XCTAssertTrue(plan?.nextRequiredLine.localizedCaseInsensitiveContains("required") ?? false)
   }
 
+  func testDailyFoodDecisionMarksAshWednesdayMandatoryOnLocalEvening() throws {
+    let originalTimeZone = NSTimeZone.default
+    let testTimeZone = try XCTUnwrap(TimeZone(identifier: "America/Los_Angeles"))
+    NSTimeZone.default = testTimeZone
+    defer {
+      NSTimeZone.default = originalTimeZone
+    }
+
+    ObservanceCalculator.resetCacheForTesting()
+    let settings = RuleSettings(
+      birthYear: 1988,
+      hasMedicalDispensation: false,
+      ascensionObservance: .sunday,
+      fridayOutsideLentMode: .abstainFromMeat,
+      calendarMode: .usccb
+    )
+
+    var localCalendar = Calendar(identifier: .gregorian)
+    localCalendar.timeZone = testTimeZone
+
+    let observances = ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
+    let localEveningAshWednesday =
+      localCalendar.date(from: DateComponents(year: 2026, month: 2, day: 18, hour: 20, minute: 30))
+      ?? .distantPast
+
+    let decision = DailyFoodDecisionEngine.decision(
+      for: observances,
+      settings: settings,
+      date: localEveningAshWednesday,
+      calendar: localCalendar
+    )
+
+    XCTAssertTrue(decision.obligationLine.localizedCaseInsensitiveContains("fasting and abstinence"))
+    XCTAssertTrue(decision.rationale.localizedCaseInsensitiveContains("ash wednesday"))
+  }
+
   private var fixedCalendar: Calendar {
     var calendar = Calendar(identifier: .gregorian)
     calendar.timeZone = TimeZone(secondsFromGMT: 0) ?? .current
@@ -217,5 +250,4 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
   private func fixedDate(year: Int, month: Int, day: Int) -> Date {
     fixedCalendar.date(from: DateComponents(year: year, month: month, day: day)) ?? .distantPast
   }
-
 }

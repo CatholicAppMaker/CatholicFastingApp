@@ -49,7 +49,7 @@ func marianMonogram() throws {
 
     let attrs: [NSAttributedString.Key: Any] = [
         .font: NSFont.systemFont(ofSize: 560, weight: .black),
-        .foregroundColor: c(247, 233, 197)
+        .foregroundColor: c(247, 233, 197),
     ]
     "M".draw(at: CGPoint(x: 250, y: 240), withAttributes: attrs)
 
@@ -58,7 +58,7 @@ func marianMonogram() throws {
     NSBezierPath(roundedRect: CGRect(x: 675, y: 772, width: 175, height: 56), xRadius: 12, yRadius: 12).fill()
 
     c(244, 214, 136).setFill()
-    for i in 0..<12 {
+    for i in 0 ..< 12 {
         let angle = (CGFloat(i) / 12.0) * .pi * 2.0
         let x = 512 + cos(angle) * 360
         let y = 520 + sin(angle) * 360
@@ -84,7 +84,7 @@ func jerusalemCross() throws {
         CGRect(x: 182, y: 182, width: 120, height: 120),
         CGRect(x: 722, y: 182, width: 120, height: 120),
         CGRect(x: 182, y: 722, width: 120, height: 120),
-        CGRect(x: 722, y: 722, width: 120, height: 120)
+        CGRect(x: 722, y: 722, width: 120, height: 120),
     ]
     for rect in smallRects {
         NSBezierPath(roundedRect: rect, xRadius: 18, yRadius: 18).fill()
@@ -108,7 +108,7 @@ func monstrance() throws {
 
     c(248, 218, 139).setFill()
     let hostRaysCenter = CGPoint(x: 512, y: 592)
-    for i in 0..<16 {
+    for i in 0 ..< 16 {
         let angle = CGFloat(i) * (.pi * 2 / 16)
         let path = NSBezierPath()
         let r1: CGFloat = 140

@@ -1,42 +1,83 @@
 import SwiftUI
+#if canImport(UIKit)
+  import UIKit
+#endif
+
+private struct LiveTrackerMetricChip: View {
+  let title: String
+  let value: String
+
+  var body: some View {
+    VStack(alignment: .leading, spacing: 3) {
+      Text(title)
+        .font(.caption2.weight(.semibold))
+        .foregroundStyle(.secondary)
+      Text(value)
+        .font(.subheadline.weight(.semibold))
+        .foregroundStyle(CatholicTheme.primary)
+    }
+    .frame(maxWidth: .infinity, alignment: .leading)
+    .padding(10)
+    .background(
+      RoundedRectangle(cornerRadius: 10)
+        .fill(CatholicTheme.parchment.opacity(0.92))
+    )
+    .overlay(
+      RoundedRectangle(cornerRadius: 10)
+        .stroke(CatholicTheme.cardBorder.opacity(0.45), lineWidth: 1)
+    )
+  }
+}
 
 extension ContentView {
+  func fireIntermittentTargetReachedHapticIfNeeded(start: Date) {
+    guard hapticsEnabled else { return }
+    let key = String(Int(start.timeIntervalSince1970))
+    guard lastTargetReachedHapticKey != key else { return }
+    lastTargetReachedHapticKey = key
+    #if canImport(UIKit)
+      let generator = UINotificationFeedbackGenerator()
+      generator.prepare()
+      generator.notificationOccurred(.success)
+    #endif
+  }
+
+  func fireIntermittentEatingWindowClosedHapticIfNeeded(sessionID: String) {
+    guard hapticsEnabled else { return }
+    guard lastEatingWindowClosedHapticKey != sessionID else { return }
+    lastEatingWindowClosedHapticKey = sessionID
+    #if canImport(UIKit)
+      let generator = UINotificationFeedbackGenerator()
+      generator.prepare()
+      generator.notificationOccurred(.warning)
+    #endif
+  }
+
+  var intermittentHeroArtwork: SacredHeroArtwork {
+    SacredHeroImageSelector.artwork(for: .intermittent)
+  }
+
   var intermittentHeroSection: some View {
     Section {
-      ZStack(alignment: .bottomLeading) {
-        Image("HeroSacred")
-          .resizable()
-          .scaledToFill()
-          .frame(height: 190)
-          .clipped()
-        LinearGradient(
-          colors: [Color.clear, Color.black.opacity(0.6)],
-          startPoint: .center,
-          endPoint: .bottom
+      VStack(alignment: .leading, spacing: 10) {
+        SacredHeroCard(
+          assetName: intermittentHeroArtwork.assetName,
+          title: intermittentHeroArtwork.title,
+          subtitle: intermittentHeroArtwork.subtitle,
+          height: 190,
+          accessibilityIdentifier: "intermittent.hero.card"
         )
-        VStack(alignment: .leading, spacing: 4) {
-          Label("Intermittent Fasting Companion", systemImage: "cross.case.fill")
-            .font(.system(.headline, design: .serif))
-            .foregroundStyle(.white)
-          Text("Offer this fast with intention: prayer, almsgiving, and conversion.")
-            .font(.caption)
-            .foregroundStyle(.white.opacity(0.94))
-        }
-        .padding(12)
+
+        CatholicFastingQuoteCard(quote: intermittentFastingQuote, compact: true)
+          .accessibilityIdentifier("intermittent.fasting_quote")
       }
-      .clipShape(RoundedRectangle(cornerRadius: 14))
-      .overlay(
-        RoundedRectangle(cornerRadius: 14)
-          .stroke(CatholicTheme.cardBorder.opacity(0.6), lineWidth: 1)
-      )
-      .appRoundedGlass(cornerRadius: 14)
       .accessibilityIdentifier("intermittent.hero")
     }
   }
 
   var intermittentOverviewSection: some View {
     Section("Rule of Life") {
-      Text("Use intermittent fasting as a personal discipline. Liturgical obligations remain in Calendar.")
+      Text("Use intermittent fasting as a personal discipline. Liturgical obligations remain in Fasting Days.")
         .font(.subheadline)
         .foregroundStyle(.secondary)
       ViewThatFits(in: .horizontal) {
@@ -69,7 +110,7 @@ extension ContentView {
   var intermittentControlsSection: some View {
     Section("Fasting Plan") {
       Picker("Quick Plan", selection: intermittentPresetBinding) {
-        ForEach([12, 14, 16, 18, 20, 24], id: \.self) { hours in
+        ForEach([12, 14, 16, 18, 20, 24, 36], id: \.self) { hours in
           Text(intermittentPlanDescription(hours)).tag(hours)
         }
       }
@@ -99,7 +140,6 @@ extension ContentView {
       if intermittentTracker.activeStart == nil {
         Button {
           intermittentTracker.startFast()
-          LocalAnalyticsStore.track(.intermittentFastStarted)
         } label: {
           Label("Start Fast Now", systemImage: "play.fill")
         }
@@ -127,48 +167,373 @@ extension ContentView {
     }
   }
 
-  var intermittentActiveSection: some View {
-    Section("Active Fast") {
-      if let start = intermittentTracker.activeStart {
-        TimelineView(.periodic(from: .now, by: 1)) { context in
-          let elapsed = context.date.timeIntervalSince(start)
-          let targetSeconds = TimeInterval(intermittentTracker.presetHours * 3600)
-          let progress = min(1.0, max(0.0, elapsed / targetSeconds))
-          let targetDate = start.addingTimeInterval(targetSeconds)
+  var intermittentAdvancedToggleSection: some View {
+    Section("Advanced") {
+      Toggle("Show advanced tools", isOn: $intermittentShowAdvanced)
+        .accessibilityIdentifier("intermittent.advanced.toggle")
+      Text(
+        "Advanced includes schedules, milestones, recovery guidance, and full recent session details."
+      )
+      .font(.caption)
+      .foregroundStyle(.secondary)
+    }
+  }
 
-          VStack(alignment: .leading, spacing: 8) {
-            Text("Started: \(start.formatted(date: .abbreviated, time: .shortened))")
-              .font(.caption)
-              .foregroundStyle(.secondary)
+  var intermittentScheduleSection: some View {
+    Section("Custom Schedules") {
+      Text("Save reusable plans for longer fasting disciplines. Stored locally on this device.")
+        .font(.caption)
+        .foregroundStyle(.secondary)
 
-            Text("Elapsed: \(durationText(elapsed))")
-              .font(.headline)
-              .foregroundStyle(CatholicTheme.primary)
-              .accessibilityIdentifier("intermittent.active_elapsed")
+      TextField("Schedule name (optional)", text: $newIntermittentScheduleName)
+        .textInputAutocapitalization(.words)
+        .autocorrectionDisabled()
+        .accessibilityIdentifier("intermittent.schedule.name")
 
-            ProgressView(value: progress)
-              .tint(progress >= 1 ? .green : CatholicTheme.accent)
+      Stepper("Start hour: \(String(format: "%02d:00", newIntermittentScheduleStartHour))", value: $newIntermittentScheduleStartHour, in: 0...23)
+        .accessibilityIdentifier("intermittent.schedule.start_hour")
 
-            Text("Target time: \(targetDate.formatted(date: .abbreviated, time: .shortened))")
-              .font(.caption)
-              .foregroundStyle(.secondary)
-
-            if elapsed >= targetSeconds {
-              Text("Target reached. You may end your fast when ready.")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.green)
-                .accessibilityIdentifier("intermittent.target_reached")
-            } else {
-              Text("Remaining: \(durationText(targetSeconds - elapsed))")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+      VStack(alignment: .leading, spacing: 8) {
+        Text("Days")
+          .font(.caption.weight(.semibold))
+          .foregroundStyle(.secondary)
+        HStack(spacing: 6) {
+          ForEach(1...7, id: \.self) { weekday in
+            let selected = newIntermittentScheduleWeekdays.contains(weekday)
+            Button(weekdayLabel(for: weekday)) {
+              toggleIntermittentScheduleWeekday(weekday)
             }
+            .buttonStyle(.borderedProminent)
+            .tint(selected ? CatholicTheme.primary : .gray.opacity(0.35))
           }
         }
-      } else {
-        Text("No active intermittent fast.")
+      }
+      .accessibilityIdentifier("intermittent.schedule.weekdays")
+
+      if intermittentSchedules.isEmpty {
+        Text("No saved schedules yet. Save your current plan to reuse it quickly.")
           .foregroundStyle(.secondary)
-          .accessibilityIdentifier("intermittent.no_active")
+      } else {
+        ForEach(intermittentSchedules) { plan in
+          HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 2) {
+              HStack(spacing: 6) {
+                Text(plan.name)
+                  .font(.subheadline.weight(.semibold))
+                if activeIntermittentScheduleID == plan.id {
+                  Text("Applied")
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(Capsule().fill(CatholicTheme.primary))
+                }
+              }
+              Text("Target \(plan.targetHours)h • Start \(String(format: "%02d:00", plan.startHour)) • Days \(weekdayListText(plan.weekdays))")
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+            }
+            Spacer()
+            VStack(alignment: .trailing, spacing: 6) {
+              Button("Use") {
+                Task {
+                  await applyIntermittentSchedule(plan)
+                }
+              }
+              .appSecondaryButtonStyle()
+
+              Button("Edit") {
+                startEditingIntermittentSchedule(plan)
+              }
+              .appSecondaryButtonStyle(legacyTint: CatholicTheme.accent)
+
+              Button("Delete", role: .destructive) {
+                deleteIntermittentSchedule(plan)
+              }
+              .buttonStyle(.bordered)
+            }
+          }
+          .padding(.vertical, 2)
+        }
+      }
+
+      if !notificationStatus.isEmpty {
+        Text(notificationStatus)
+          .font(.caption2)
+          .foregroundStyle(.secondary)
+      }
+
+      HStack {
+        Button(isEditingIntermittentSchedule ? "Update Schedule" : "Save Current Plan as Schedule") {
+          addOrUpdateIntermittentSchedulePlan()
+        }
+        .appPrimaryButtonStyle()
+        .disabled(!canSaveIntermittentSchedule)
+        .accessibilityIdentifier("intermittent.schedule.add")
+
+        if isEditingIntermittentSchedule {
+          Button("Cancel Edit") {
+            cancelEditingIntermittentSchedule()
+          }
+          .appSecondaryButtonStyle()
+          .accessibilityIdentifier("intermittent.schedule.cancel_edit")
+        }
+      }
+    }
+  }
+
+  var intermittentMilestonesSection: some View {
+    Section("Milestones") {
+      let total = intermittentTracker.sessions.count
+      let completedTargets = intermittentTracker.sessions.filter(\.completedTarget).count
+      let longestHours = Int((intermittentTracker.sessions.map(\.duration).max() ?? 0) / 3600)
+
+      Text("Sessions completed: \(total)")
+      Text("Targets achieved: \(completedTargets)")
+      Text("Longest fast: \(longestHours) hour(s)")
+      Text("Recent hit rate: \(intermittentHitRatePercent)%")
+        .foregroundStyle(.secondary)
+    }
+  }
+
+  var intermittentRecoverySection: some View {
+    Section("Recovery Guidance") {
+      if intermittentTracker.activeStart == nil, let latest = intermittentTracker.sessions.first, !latest.completedTarget {
+        Text("Your latest session ended below target. Consider a lighter target tomorrow and hydrate well.")
+          .foregroundStyle(.orange)
+      } else {
+        Text("No immediate recovery actions needed.")
+          .foregroundStyle(.secondary)
+      }
+      Text("Prudence first: adjust fast length when health, duty, or pastoral guidance requires.")
+        .font(.caption)
+        .foregroundStyle(.secondary)
+    }
+  }
+
+  var intermittentActiveSection: some View {
+    Section("Live Tracker") {
+      TimelineView(.periodic(from: .now, by: 1)) { context in
+        let now = context.date
+        let accessibilityLayout = dynamicTypeSize.isAccessibilitySize
+
+        if let start = intermittentTracker.activeStart {
+          let targetSeconds = TimeInterval(intermittentTracker.presetHours * 3600)
+          let elapsed = max(0, now.timeIntervalSince(start))
+          let remaining = max(0, targetSeconds - elapsed)
+          let overtime = max(0, elapsed - targetSeconds)
+          let progress = min(1.0, elapsed / max(1, targetSeconds))
+          let eatingHours = max(0, 24 - intermittentTracker.presetHours)
+          let targetDate = start.addingTimeInterval(targetSeconds)
+
+          VStack(alignment: .leading, spacing: 14) {
+            if accessibilityLayout {
+              VStack(alignment: .leading, spacing: 12) {
+                liveFastRing(progress: progress, reached: progress >= 1, countdown: countdownText(progress >= 1 ? overtime : remaining))
+                liveFastSummary(reached: progress >= 1, start: start, targetDate: targetDate)
+              }
+            } else {
+              HStack(alignment: .center, spacing: 16) {
+                liveFastRing(progress: progress, reached: progress >= 1, countdown: countdownText(progress >= 1 ? overtime : remaining))
+                liveFastSummary(reached: progress >= 1, start: start, targetDate: targetDate)
+              }
+            }
+
+            if accessibilityLayout {
+              VStack(spacing: 8) {
+                LiveTrackerMetricChip(title: "Elapsed", value: countdownText(elapsed))
+                  .accessibilityIdentifier("intermittent.active_elapsed")
+                LiveTrackerMetricChip(title: "Plan", value: "\(intermittentTracker.presetHours)h fast")
+                LiveTrackerMetricChip(
+                  title: "Eating Window",
+                  value: eatingHours > 0 ? "\(eatingHours)h after fast" : "Custom rhythm"
+                )
+              }
+            } else {
+              HStack(spacing: 8) {
+                LiveTrackerMetricChip(title: "Elapsed", value: countdownText(elapsed))
+                  .accessibilityIdentifier("intermittent.active_elapsed")
+                LiveTrackerMetricChip(title: "Plan", value: "\(intermittentTracker.presetHours)h fast")
+                LiveTrackerMetricChip(
+                  title: "Eating Window",
+                  value: eatingHours > 0 ? "\(eatingHours)h after fast" : "Custom rhythm"
+                )
+              }
+            }
+          }
+          .padding(4)
+          .onChange(of: elapsed >= targetSeconds, initial: true) { _, reached in
+            if reached {
+              fireIntermittentTargetReachedHapticIfNeeded(start: start)
+            }
+          }
+        } else if let latestSession = intermittentTracker.sessions.first {
+          let lastEnded = latestSession.end
+          let elapsedSinceEnd = max(0, now.timeIntervalSince(lastEnded))
+          let eatingSeconds =
+            latestSession.targetHours <= 24
+            ? TimeInterval(max(0, 24 - latestSession.targetHours) * 3600) : 0
+          let hasEatingWindow = eatingSeconds > 0
+          let eatingRemaining = max(0, eatingSeconds - elapsedSinceEnd)
+          let eatingProgress = hasEatingWindow ? min(1.0, elapsedSinceEnd / eatingSeconds) : 1
+          let nextSuggestedStart = lastEnded.addingTimeInterval(eatingSeconds)
+
+          VStack(alignment: .leading, spacing: 14) {
+            if accessibilityLayout {
+              VStack(alignment: .leading, spacing: 12) {
+                liveEatingRing(progress: eatingProgress, hasEatingWindow: hasEatingWindow, countdown: hasEatingWindow ? countdownText(eatingRemaining) : "Ready")
+                liveEatingSummary(
+                  hasEatingWindow: hasEatingWindow,
+                  lastEnded: lastEnded,
+                  nextSuggestedStart: nextSuggestedStart
+                )
+              }
+            } else {
+              HStack(alignment: .center, spacing: 16) {
+                liveEatingRing(progress: eatingProgress, hasEatingWindow: hasEatingWindow, countdown: hasEatingWindow ? countdownText(eatingRemaining) : "Ready")
+                liveEatingSummary(
+                  hasEatingWindow: hasEatingWindow,
+                  lastEnded: lastEnded,
+                  nextSuggestedStart: nextSuggestedStart
+                )
+              }
+            }
+
+            if accessibilityLayout {
+              VStack(spacing: 8) {
+                LiveTrackerMetricChip(title: "Since End", value: countdownText(elapsedSinceEnd))
+                LiveTrackerMetricChip(title: "Last Fast", value: "\(latestSession.targetHours)h plan")
+                LiveTrackerMetricChip(
+                  title: "Status",
+                  value: hasEatingWindow
+                    ? (eatingRemaining > 0 ? "Eating window open" : "Ready to fast")
+                    : "Ready anytime"
+                )
+              }
+            } else {
+              HStack(spacing: 8) {
+                LiveTrackerMetricChip(title: "Since End", value: countdownText(elapsedSinceEnd))
+                LiveTrackerMetricChip(title: "Last Fast", value: "\(latestSession.targetHours)h plan")
+                LiveTrackerMetricChip(
+                  title: "Status",
+                  value: hasEatingWindow
+                    ? (eatingRemaining > 0 ? "Eating window open" : "Ready to fast")
+                    : "Ready anytime"
+                )
+              }
+            }
+          }
+          .padding(4)
+          .onChange(
+            of: hasEatingWindow && eatingRemaining <= 0,
+            initial: true
+          ) { _, closed in
+            if closed {
+              fireIntermittentEatingWindowClosedHapticIfNeeded(sessionID: latestSession.id)
+            }
+          }
+        } else {
+          VStack(alignment: .leading, spacing: 8) {
+            Text("No fasting session yet.")
+              .font(.headline)
+              .foregroundStyle(CatholicTheme.primary)
+            Text("Start your first intermittent fast to unlock the live countdown and eating-window tracker.")
+              .font(.subheadline)
+              .foregroundStyle(.secondary)
+              .accessibilityIdentifier("intermittent.no_active")
+          }
+        }
+      }
+    }
+  }
+
+  private func liveFastRing(progress: Double, reached: Bool, countdown: String) -> some View {
+    ZStack {
+      Circle()
+        .stroke(CatholicTheme.cardBorder.opacity(0.3), lineWidth: 12)
+      Circle()
+        .trim(from: 0, to: progress)
+        .stroke(
+          reached ? .green : CatholicTheme.accent,
+          style: StrokeStyle(lineWidth: 12, lineCap: .round)
+        )
+        .rotationEffect(.degrees(-90))
+      VStack(spacing: 2) {
+        Text(reached ? "Target" : "Remaining")
+          .font(.caption2.weight(.semibold))
+          .foregroundStyle(.secondary)
+        Text(countdown)
+          .font(.system(.headline, design: .rounded).monospacedDigit())
+          .foregroundStyle(reached ? .green : CatholicTheme.primary)
+      }
+      .multilineTextAlignment(.center)
+    }
+    .frame(width: 150, height: 150)
+    .accessibilityIdentifier("intermittent.live_ring")
+  }
+
+  private func liveFastSummary(reached: Bool, start: Date, targetDate: Date) -> some View {
+    VStack(alignment: .leading, spacing: 8) {
+      Text(reached ? "Fast target reached" : "Fasting in progress")
+        .font(.headline.weight(.semibold))
+        .foregroundStyle(CatholicTheme.primary)
+      Text("Started \(start.formatted(date: .abbreviated, time: .shortened))")
+        .font(.caption)
+        .foregroundStyle(.secondary)
+      Text("Target ends \(targetDate.formatted(date: .abbreviated, time: .shortened))")
+        .font(.caption)
+        .foregroundStyle(.secondary)
+      Text(reached ? "You can end your fast at any time." : "Keep going to complete this plan.")
+        .font(.caption)
+        .foregroundStyle(reached ? .green : .secondary)
+    }
+  }
+
+  private func liveEatingRing(progress: Double, hasEatingWindow: Bool, countdown: String) -> some View {
+    ZStack {
+      Circle()
+        .stroke(CatholicTheme.cardBorder.opacity(0.3), lineWidth: 12)
+      Circle()
+        .trim(from: 0, to: progress)
+        .stroke(
+          hasEatingWindow ? CatholicTheme.accent : CatholicTheme.cardBorder,
+          style: StrokeStyle(lineWidth: 12, lineCap: .round)
+        )
+        .rotationEffect(.degrees(-90))
+      VStack(spacing: 2) {
+        Text(hasEatingWindow ? "Eating Window" : "Next Fast")
+          .font(.caption2.weight(.semibold))
+          .foregroundStyle(.secondary)
+        Text(countdown)
+          .font(.system(.headline, design: .rounded).monospacedDigit())
+          .foregroundStyle(CatholicTheme.primary)
+      }
+      .multilineTextAlignment(.center)
+    }
+    .frame(width: 150, height: 150)
+    .accessibilityIdentifier("intermittent.eating_ring")
+  }
+
+  private func liveEatingSummary(
+    hasEatingWindow: Bool,
+    lastEnded: Date,
+    nextSuggestedStart: Date
+  ) -> some View {
+    VStack(alignment: .leading, spacing: 8) {
+      Text(hasEatingWindow ? "Eating window tracker" : "No fixed eating window")
+        .font(.headline.weight(.semibold))
+        .foregroundStyle(CatholicTheme.primary)
+      Text("Last fast ended \(lastEnded.formatted(date: .abbreviated, time: .shortened))")
+        .font(.caption)
+        .foregroundStyle(.secondary)
+      if hasEatingWindow {
+        Text("Suggested next fast start: \(nextSuggestedStart.formatted(date: .abbreviated, time: .shortened))")
+          .font(.caption)
+          .foregroundStyle(.secondary)
+      } else {
+        Text("Plans above 24h do not use a standard daily eating window.")
+          .font(.caption)
+          .foregroundStyle(.secondary)
       }
     }
   }
@@ -176,9 +541,13 @@ extension ContentView {
   var intermittentSessionHistorySection: some View {
     Section("Recent Sessions") {
       if intermittentTracker.sessions.isEmpty {
-        Text("No sessions yet.")
+        Text("No sessions yet. Start a fast to build your local history.")
           .foregroundStyle(.secondary)
           .accessibilityIdentifier("intermittent.history_empty")
+        Button("Start First Fast") {
+          intermittentTracker.startFast()
+        }
+        .appPrimaryButtonStyle()
       } else {
         let sessionLimit = monetizationStore.premiumUnlocked ? 12 : 3
         ForEach(intermittentTracker.sessions.prefix(sessionLimit)) { session in

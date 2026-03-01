@@ -3,7 +3,9 @@
 /Users/kevpierce/Desktop/CatholicFastingApp/Tests/CatholicFastingCoreTests/ObservanceCalculatorTests.swift
 /Users/kevpierce/Desktop/CatholicFastingApp/Tests/CatholicFastingCoreTests/ObservanceQueryEngineTests.swift
 /Users/kevpierce/Desktop/CatholicFastingApp/Tests/CatholicFastingCoreTests/PremiumExperienceEngineTests.swift
+/Users/kevpierce/Desktop/CatholicFastingApp/Tests/CatholicFastingCoreTests/RequiredDayReminderPlannerTests.swift
 /Users/kevpierce/Desktop/CatholicFastingApp/Tests/CatholicFastingCoreTests/RuleEngineExtendedTests.swift
 /Users/kevpierce/Desktop/CatholicFastingApp/Tests/CatholicFastingCoreTests/RuleMetadataAndGuidanceTests.swift
 /Users/kevpierce/Desktop/CatholicFastingApp/Tests/CatholicFastingCoreTests/StorageAndSyncTests.swift
 /Users/kevpierce/Desktop/CatholicFastingApp/Tests/CatholicFastingCoreTests/TestStoreResetSupport.swift
+/Users/kevpierce/Desktop/CatholicFastingApp/Tests/CatholicFastingCoreTests/WidgetSnapshotStoreTests.swift

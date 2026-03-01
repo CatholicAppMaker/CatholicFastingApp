@@ -1,6 +1,6 @@
 import Foundation
 #if canImport(CryptoKit)
-import CryptoKit
+    import CryptoKit
 #endif
 
 struct BundleDocument: Codable {
@@ -60,47 +60,47 @@ func canonicalPayloadData(from document: BundleDocument) throws -> Data {
 func main() throws {
     guard CommandLine.arguments.count == 3 else { throw SignError.usage }
     #if !canImport(CryptoKit)
-    throw SignError.unsupportedPlatform
+        throw SignError.unsupportedPlatform
     #else
-    let inputURL = URL(fileURLWithPath: CommandLine.arguments[1])
-    let outputURL = URL(fileURLWithPath: CommandLine.arguments[2])
-    let keyID = ProcessInfo.processInfo.environment["RULE_BUNDLE_KEY_ID"] ?? "release-unknown"
+        let inputURL = URL(fileURLWithPath: CommandLine.arguments[1])
+        let outputURL = URL(fileURLWithPath: CommandLine.arguments[2])
+        let keyID = ProcessInfo.processInfo.environment["RULE_BUNDLE_KEY_ID"] ?? "release-unknown"
 
-    guard
-        let privateKeyBase64 = ProcessInfo.processInfo.environment["RULE_BUNDLE_PRIVATE_KEY_B64"],
-        let privateKeyData = Data(base64Encoded: privateKeyBase64)
-    else {
-        throw SignError.missingPrivateKey
-    }
+        guard
+            let privateKeyBase64 = ProcessInfo.processInfo.environment["RULE_BUNDLE_PRIVATE_KEY_B64"],
+            let privateKeyData = Data(base64Encoded: privateKeyBase64)
+        else {
+            throw SignError.missingPrivateKey
+        }
 
-    guard
-        let rawData = try? Data(contentsOf: inputURL),
-        var document = try? JSONDecoder().decode(BundleDocument.self, from: rawData)
-    else {
-        throw SignError.parseFailure
-    }
+        guard
+            let rawData = try? Data(contentsOf: inputURL),
+            var document = try? JSONDecoder().decode(BundleDocument.self, from: rawData)
+        else {
+            throw SignError.parseFailure
+        }
 
-    guard let privateKey = try? Curve25519.Signing.PrivateKey(rawRepresentation: privateKeyData) else {
-        throw SignError.invalidPrivateKey
-    }
+        guard let privateKey = try? Curve25519.Signing.PrivateKey(rawRepresentation: privateKeyData) else {
+            throw SignError.invalidPrivateKey
+        }
 
-    let payloadData = try canonicalPayloadData(from: document)
-    let signature = try privateKey.signature(for: payloadData)
-    document.signing = BundleDocument.SigningDocument(
-        keyID: keyID,
-        algorithm: "ed25519",
-        signature: Data(signature).base64EncodedString()
-    )
+        let payloadData = try canonicalPayloadData(from: document)
+        let signature = try privateKey.signature(for: payloadData)
+        document.signing = BundleDocument.SigningDocument(
+            keyID: keyID,
+            algorithm: "ed25519",
+            signature: Data(signature).base64EncodedString()
+        )
 
-    let encoder = JSONEncoder()
-    encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-    guard let signedData = try? encoder.encode(document) else { throw SignError.encodeFailure }
-    try signedData.write(to: outputURL, options: .atomic)
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        guard let signedData = try? encoder.encode(document) else { throw SignError.encodeFailure }
+        try signedData.write(to: outputURL, options: .atomic)
 
-    let publicKey = privateKey.publicKey.rawRepresentation.base64EncodedString()
-    print("Signed bundle written to: \(outputURL.path)")
-    print("Key ID: \(keyID)")
-    print("Public key (base64): \(publicKey)")
+        let publicKey = privateKey.publicKey.rawRepresentation.base64EncodedString()
+        print("Signed bundle written to: \(outputURL.path)")
+        print("Key ID: \(keyID)")
+        print("Public key (base64): \(publicKey)")
     #endif
 }
 

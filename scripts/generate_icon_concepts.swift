@@ -69,7 +69,7 @@ func sacredHeart() throws {
     crown.stroke()
 
     rgba(248, 228, 153).setFill()
-    for idx in 0..<12 {
+    for idx in 0 ..< 12 {
         let angle = (CGFloat(idx) / 12.0) * (.pi * 1.2) + .pi * 0.95
         let x = 512 + cos(angle) * 252
         let y = 645 + sin(angle) * 252
@@ -101,7 +101,7 @@ func chiRho() throws {
     NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: rep)
 
     let center = CGPoint(x: 512, y: 512)
-    for i in 0..<12 {
+    for i in 0 ..< 12 {
         let t = CGFloat(i) / 11.0
         rgba(8 + 38 * t, 43 + 67 * t, 87 + 53 * t).setFill()
         NSBezierPath(rect: CGRect(x: 0, y: CGFloat(i) * 92, width: 1024, height: 92)).fill()
@@ -143,7 +143,7 @@ func chiRho() throws {
     let omega = NSBezierPath()
     let attrs: [NSAttributedString.Key: Any] = [
         .font: NSFont.systemFont(ofSize: 94, weight: .bold),
-        .foregroundColor: rgba(249, 236, 191)
+        .foregroundColor: rgba(249, 236, 191),
     ]
     "Α".draw(at: CGPoint(x: 250, y: 186), withAttributes: attrs)
     "Ω".draw(at: CGPoint(x: 692, y: 186), withAttributes: attrs)
@@ -176,7 +176,7 @@ func rosaryCross() throws {
     beadColor.setFill()
     let center = CGPoint(x: 512, y: 540)
     let radius: CGFloat = 310
-    for i in 0..<24 {
+    for i in 0 ..< 24 {
         let angle = (CGFloat(i) / 24.0) * .pi * 2.0 + .pi * 0.18
         let x = center.x + cos(angle) * radius
         let y = center.y + sin(angle) * radius

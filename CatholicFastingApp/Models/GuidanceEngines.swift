@@ -7,7 +7,9 @@ enum GuidanceScenario: String, CaseIterable, Identifiable {
   case socialMeal
   case medicalRecovery
 
-  var id: String { rawValue }
+  var id: String {
+    rawValue
+  }
 
   var label: String {
     switch self {
@@ -58,13 +60,16 @@ enum FoodGuidanceEngine {
       lines.append("Discuss a steady plan with your pastor if this is frequent.")
     case .travel:
       lines.append(
-        "Travel days can limit options. Choose the best realistic penitential option available.")
+        "Travel days can limit options. Choose the best realistic penitential option available."
+      )
       lines.append("If needed, simplify meals and add prayer or almsgiving as substitute penance.")
     case .socialMeal:
       lines.append(
-        "Keep charity and discretion at shared meals; avoid drawing attention to yourself.")
+        "Keep charity and discretion at shared meals; avoid drawing attention to yourself."
+      )
       lines.append(
-        "If a host menu is limited, choose the most prudent option and keep penitential intent.")
+        "If a host menu is limited, choose the most prudent option and keep penitential intent."
+      )
     case .medicalRecovery:
       break
     }
@@ -88,6 +93,66 @@ struct MissedDayRecoveryPlan {
   let nextRequiredLine: String
 }
 
+enum RequiredDayReminderPlanner {
+  static let pendingNotificationLimit = 64
+  static let reservedSlotsForNonRequired = 14
+  static let absoluteRequiredReminderCap = pendingNotificationLimit - reservedSlotsForNonRequired
+
+  static func maximumRequiredReminders(existingNonRequiredPendingCount: Int) -> Int {
+    let nonRequiredCount = max(0, existingNonRequiredPendingCount)
+    let remainingQueueCapacity = max(0, pendingNotificationLimit - nonRequiredCount)
+    return min(absoluteRequiredReminderCap, remainingQueueCapacity)
+  }
+
+  static func additionalRequiredReminderSlots(
+    existingRequiredPendingCount: Int,
+    existingNonRequiredPendingCount: Int
+  ) -> Int {
+    let requiredCount = max(0, existingRequiredPendingCount)
+    let maxRequired = maximumRequiredReminders(
+      existingNonRequiredPendingCount: existingNonRequiredPendingCount
+    )
+    return max(0, maxRequired - requiredCount)
+  }
+
+  static func upcomingMandatoryObservances(
+    from observances: [Observance],
+    now: Date = Date(),
+    calendar: Calendar = .gregorian,
+    limit: Int
+  ) -> [Observance] {
+    guard limit > 0 else { return [] }
+
+    let startOfToday = calendar.startOfDay(for: now)
+    let sortedCandidates =
+      observances
+      .filter { observance in
+        observance.obligation == .mandatory
+          && calendar.startOfDay(for: observance.date) >= startOfToday
+      }
+      .sorted { lhs, rhs in
+        if lhs.date == rhs.date {
+          return lhs.id < rhs.id
+        }
+        return lhs.date < rhs.date
+      }
+
+    var seenIDs = Set<String>()
+    var planned: [Observance] = []
+    planned.reserveCapacity(min(limit, sortedCandidates.count))
+
+    for observance in sortedCandidates {
+      guard seenIDs.insert(observance.id).inserted else { continue }
+      planned.append(observance)
+      if planned.count == limit {
+        break
+      }
+    }
+
+    return planned
+  }
+}
+
 enum DailyFoodDecisionEngine {
   static func decision(
     for observances: [Observance],
@@ -97,6 +162,9 @@ enum DailyFoodDecisionEngine {
   ) -> DailyFoodDecision {
     let todayObservances = observances.filter { calendar.isDate($0.date, inSameDayAs: date) }
     let mandatoryToday = todayObservances.filter { $0.obligation == .mandatory }
+    let optionalFastOrAbstinenceToday = todayObservances.filter {
+      $0.obligation == .optional && ($0.kind == .fastAndAbstinence || $0.kind == .abstinence)
+    }
 
     if settings.hasMedicalDispensation {
       return DailyFoodDecision(
@@ -151,6 +219,30 @@ enum DailyFoodDecisionEngine {
         avoid: [],
         rationale: observanceReason(from: mandatoryToday),
         sourceLine: "Source: USCCB liturgical norms."
+      )
+    }
+
+    if !optionalFastOrAbstinenceToday.isEmpty {
+      let titles = optionalFastOrAbstinenceToday.map(\.title).joined(separator: ", ")
+      let unknownAgeProfile = !settings.isAge14OrOlderForAbstinence && !settings.isAge18OrOlderForFasting
+      let obligationLine =
+        unknownAgeProfile
+        ? "Today may include fasting/abstinence obligations (profile incomplete)."
+        : "Today includes fasting/abstinence observance in your profile, but not mandatory."
+      let rationale =
+        unknownAgeProfile
+        ? "Review the age eligibility toggles in Settings so the app can determine whether \(titles) binds you."
+        : "Based on your current profile, \(titles) does not strictly bind today."
+
+      return DailyFoodDecision(
+        obligationLine: obligationLine,
+        allowed: [
+          "Follow age/health and pastoral guidance for your situation.",
+          "If unsure, observe abstinence and a simpler meal pattern.",
+        ],
+        avoid: ["Do not assume no obligation without confirming your profile."],
+        rationale: rationale,
+        sourceLine: "Source: USCCB Fast & Abstinence norms."
       )
     }
 
@@ -241,7 +333,8 @@ enum ObservanceQueryEngine {
       guard
         matchesWindow(
           observance, window: window, startOfToday: startOfToday, endOfNext30Days: endOfNext30Days,
-          calendar: calendar)
+          calendar: calendar
+        )
       else { return false }
       guard matchesQuery(observance, query: normalizedQuery) else { return false }
       return true

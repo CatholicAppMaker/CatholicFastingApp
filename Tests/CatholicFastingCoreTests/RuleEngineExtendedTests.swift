@@ -1,5 +1,5 @@
-import XCTest
 @testable import CatholicFastingCore
+import XCTest
 
 final class RuleEngineExtendedTests: XCTestCase {
   override func setUp() {
@@ -20,7 +20,8 @@ final class RuleEngineExtendedTests: XCTestCase {
       hasMedicalDispensation: true,
       ascensionObservance: .sunday,
       fridayOutsideLentMode: .substitutePenance,
-      calendarMode: .usccb)
+      calendarMode: .usccb
+    )
 
     let observances = ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
     let ash = observances.first { $0.title == "Ash Wednesday" }
@@ -36,7 +37,8 @@ final class RuleEngineExtendedTests: XCTestCase {
       hasMedicalDispensation: false,
       ascensionObservance: .sunday,
       fridayOutsideLentMode: .abstainFromMeat,
-      calendarMode: .usccb)
+      calendarMode: .usccb
+    )
 
     let observances = ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
     let friday = observances.first { $0.kind == .fridayPenance }
@@ -51,13 +53,15 @@ final class RuleEngineExtendedTests: XCTestCase {
       hasMedicalDispensation: false,
       ascensionObservance: .sunday,
       fridayOutsideLentMode: .substitutePenance,
-      calendarMode: .usccb)
+      calendarMode: .usccb
+    )
     let traditional = RuleSettings(
       birthYear: 1990,
       hasMedicalDispensation: false,
       ascensionObservance: .sunday,
       fridayOutsideLentMode: .substitutePenance,
-      calendarMode: .traditional1962)
+      calendarMode: .traditional1962
+    )
 
     let usccbEmber = ObservanceCalculator.makeCalendar(for: 2026, settings: usccb).first { $0.kind == .optionalEmber }
     let tradEmber = ObservanceCalculator.makeCalendar(for: 2026, settings: traditional).first { $0.kind == .optionalEmber }
@@ -73,13 +77,15 @@ final class RuleEngineExtendedTests: XCTestCase {
       hasMedicalDispensation: false,
       ascensionObservance: .sunday,
       fridayOutsideLentMode: .substitutePenance,
-      calendarMode: .usccb)
+      calendarMode: .usccb
+    )
     let thursday = RuleSettings(
       birthYear: 1990,
       hasMedicalDispensation: false,
       ascensionObservance: .thursday,
       fridayOutsideLentMode: .substitutePenance,
-      calendarMode: .usccb)
+      calendarMode: .usccb
+    )
 
     let sundayDate = ObservanceCalculator.makeCalendar(for: 2026, settings: sunday).first { $0.title == "Ascension" }?.date
     let thursdayDate = ObservanceCalculator.makeCalendar(for: 2026, settings: thursday).first { $0.title == "Ascension" }?.date
@@ -99,7 +105,8 @@ final class RuleEngineExtendedTests: XCTestCase {
       hasMedicalDispensation: false,
       ascensionObservance: .sunday,
       fridayOutsideLentMode: .substitutePenance,
-      calendarMode: .usccb)
+      calendarMode: .usccb
+    )
 
     let christmas = ObservanceCalculator.makeCalendar(for: 2026, settings: settings).first { $0.title == "Christmas" }
     XCTAssertEqual(christmas?.obligation, .notApplicable)
@@ -111,7 +118,8 @@ final class RuleEngineExtendedTests: XCTestCase {
       hasMedicalDispensation: false,
       ascensionObservance: .sunday,
       fridayOutsideLentMode: .substitutePenance,
-      calendarMode: .usccb)
+      calendarMode: .usccb
+    )
 
     let christmas = ObservanceCalculator.makeCalendar(for: 2026, settings: settings).first { $0.title == "Christmas" }
     XCTAssertEqual(christmas?.obligation, .mandatory)
@@ -123,7 +131,8 @@ final class RuleEngineExtendedTests: XCTestCase {
       hasMedicalDispensation: false,
       ascensionObservance: .sunday,
       fridayOutsideLentMode: .substitutePenance,
-      calendarMode: .usccb)
+      calendarMode: .usccb
+    )
 
     let observances = ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
     let outsideLent = observances.filter { $0.kind == .fridayPenance }
@@ -139,10 +148,10 @@ final class RuleEngineExtendedTests: XCTestCase {
       hasMedicalDispensation: false,
       ascensionObservance: .sunday,
       fridayOutsideLentMode: .substitutePenance,
-      calendarMode: .usccb)
+      calendarMode: .usccb
+    )
 
     let observances = ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
     XCTAssertEqual(observances, observances.sorted { $0.date < $1.date })
   }
-
 }

@@ -1,6 +1,6 @@
 # App Store Connect Submission Checklist (U.S.-Only)
 
-Last reviewed: February 15, 2026
+Last reviewed: February 19, 2026
 App: Catholic Fasting
 Scope: U.S. storefront only (not released in EU storefronts)
 
@@ -61,7 +61,7 @@ Source of truth: `release/APP_STORE_METADATA_DRAFT.md`
 - [ ] Review notes include:
   - App uses USCCB-aligned calendar guidance and includes pastoral/medical disclaimers.
   - No account required.
-  - Data remains on-device by default; iCloud sync is optional.
+  - Data remains on-device; no cloud sync or analytics collection.
 - [ ] Sign-in required: `No`
 
 ## 8) Export Compliance

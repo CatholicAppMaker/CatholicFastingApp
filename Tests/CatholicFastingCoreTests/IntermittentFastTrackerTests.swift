@@ -1,5 +1,5 @@
-import XCTest
 @testable import CatholicFastingCore
+import XCTest
 
 final class IntermittentFastTrackerTests: XCTestCase {
   override func setUp() {
@@ -60,7 +60,7 @@ final class IntermittentFastTrackerTests: XCTestCase {
 
   func testStatePersistsAcrossInstances() throws {
     let start = Date(timeIntervalSince1970: 1_700_200_000)
-    let end = start.addingTimeInterval(7_200)
+    let end = start.addingTimeInterval(7200)
 
     let tracker = IntermittentFastTracker()
     tracker.setPresetHours(20)
@@ -83,7 +83,7 @@ final class IntermittentFastTrackerTests: XCTestCase {
   func testClearAllResetsSessionsAndPreset() {
     let tracker = IntermittentFastTracker()
     let start = Date(timeIntervalSince1970: 1_700_300_000)
-    let end = start.addingTimeInterval(3_600)
+    let end = start.addingTimeInterval(3600)
     tracker.setPresetHours(18)
     tracker.startFast(now: start)
     tracker.endFast(now: end)
@@ -102,8 +102,8 @@ final class IntermittentFastTrackerTests: XCTestCase {
     let base = Date(timeIntervalSince1970: 1_700_400_000)
 
     for offset in 0..<520 {
-      let start = base.addingTimeInterval(TimeInterval(offset * 7_200))
-      let end = start.addingTimeInterval(1_800)
+      let start = base.addingTimeInterval(TimeInterval(offset * 7200))
+      let end = start.addingTimeInterval(1800)
       tracker.startFast(now: start)
       tracker.endFast(now: end)
     }

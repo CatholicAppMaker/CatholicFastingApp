@@ -2,7 +2,7 @@
 
 ## Scope
 - Product: Catholic Fasting App (iOS)
-- Data classes: profile settings, observance status, Friday notes, optional diagnostics, consent timestamps
+- Data classes: profile settings, observance status, Friday notes, consent timestamps
 - Jurisdiction target: U.S. end users
 
 ## User-Facing Disclosures
@@ -16,24 +16,22 @@
   - observance completion/status history
   - Friday penance notes
   - consent flags and timestamps
-- Optional sync:
-  - iCloud key-value sync can be disabled in Settings.
-- Optional diagnostics:
-  - anonymous diagnostics export can be disabled in Settings.
+- No cloud sync.
+- No analytics or diagnostics collection.
 - Export options:
   - plain personal backup
-  - redacted support bundle
-  - encrypted backup (passphrase required)
+  - premium summary export (if feature is available)
 
 ## Retention and Deletion
 - Data persists until user deletes it.
 - "Delete All App Data" clears local tracker/notes/settings state.
-- User can disable iCloud sync and diagnostics independently.
+- No sync/diagnostics toggle required because those paths are removed.
 
 ## App Store Privacy Label Inputs (Working Draft)
 - Data linked to user:
-  - User Content: fasting progress, optional notes
-  - Diagnostics: only if user enables diagnostics
+  - none
+- Data not linked to user:
+  - none
 - Data used for tracking: none
 - Contact info collection in app: none (feedback uses mail client)
 

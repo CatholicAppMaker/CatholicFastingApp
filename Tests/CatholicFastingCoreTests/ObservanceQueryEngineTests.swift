@@ -1,5 +1,5 @@
-import XCTest
 @testable import CatholicFastingCore
+import XCTest
 
 final class ObservanceQueryEngineTests: XCTestCase {
   private var calendar: Calendar {

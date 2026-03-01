@@ -39,10 +39,6 @@ extension XCTestCase {
       "observance_statuses",
       "friday_penance_notes",
       "last_sync_date",
-      "allow_cloud_sync",
-      "allow_diagnostics",
-      "allow_local_analytics",
-      "local_analytics_counts",
       "daily_reminder_support_enabled",
       "morning_reminder_enabled",
       "evening_reminder_enabled",
@@ -51,15 +47,14 @@ extension XCTestCase {
       "accepted_legal_notice",
       "accepted_legal_notice_at",
       "rule_bundle_directory_override",
+      "widget_snapshot",
     ]
   }
 
   func resetStores() {
-    syncResetKeys.forEach {
-      UserDefaults.standard.removeObject(forKey: $0)
-      NSUbiquitousKeyValueStore.default.removeObject(forKey: $0)
+    for syncResetKey in syncResetKeys {
+      UserDefaults.standard.removeObject(forKey: syncResetKey)
     }
-    NSUbiquitousKeyValueStore.default.synchronize()
   }
 
   func beginStoreIsolation() {

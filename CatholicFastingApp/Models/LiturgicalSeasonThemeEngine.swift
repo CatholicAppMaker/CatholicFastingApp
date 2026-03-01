@@ -1,6 +1,6 @@
 @preconcurrency import Foundation
 
-enum LiturgicalSeason: String {
+enum LiturgicalSeason: String, Codable {
   case advent
   case christmas
   case lent

@@ -235,8 +235,7 @@ enum PremiumReflectionEngine {
   ) -> PremiumReflection {
     let dayIndex = Calendar.current.ordinality(of: .day, in: .year, for: date) ?? 1
     let options = reflections(for: season)
-    let reflection = options[(dayIndex - 1) % options.count]
-    return reflection
+    return options[(dayIndex - 1) % options.count]
   }
 
   private static func reflections(for season: LiturgicalSeason) -> [PremiumReflection] {
@@ -352,6 +351,239 @@ enum PremiumDirectionSummaryEngine {
       "- Action: \(latestReflection.action)",
     ]
     return lines.joined(separator: "\n")
+  }
+}
+
+struct PremiumAdaptiveRulePlan: Hashable {
+  let title: String
+  let summary: String
+  let weeklyActions: [String]
+  let caution: String
+}
+
+enum PremiumAdaptiveRulePlanner {
+  static func plan(
+    season: LiturgicalSeason,
+    settings: RuleSettings,
+    template: PremiumRuleTemplate,
+    optionalDisciplinesPerWeek: Int,
+    fixedFastWeekday: Int,
+    protectFeastDays: Bool
+  ) -> PremiumAdaptiveRulePlan {
+    let weekday = weekdayName(for: fixedFastWeekday)
+    let baseSeasonLine: String =
+      switch season {
+      case .advent:
+        "Advent emphasis: watchfulness and simplicity."
+      case .christmas:
+        "Christmas emphasis: grateful moderation."
+      case .lent:
+        "Lent emphasis: repentance and sustained sacrifice."
+      case .easter:
+        "Easter emphasis: preserve gains from Lent."
+      case .ordinary:
+        "Ordinary Time emphasis: steady fidelity."
+      }
+
+    if settings.hasMedicalDispensation {
+      return PremiumAdaptiveRulePlan(
+        title: "Moderated Rule of Life",
+        summary: "\(baseSeasonLine) Keep food discipline medically safe and pastorally guided.",
+        weeklyActions: [
+          "Anchor one stable prayer block daily.",
+          "Choose one practical charity act each week.",
+          "Use non-food substitute penance when needed.",
+        ],
+        caution: "Health and pastoral guidance take priority over rigor."
+      )
+    }
+
+    let intensity = max(0, min(optionalDisciplinesPerWeek, 7))
+    let templateLine = "\(template.label) template with \(intensity) optional discipline(s)/week."
+    let feastLine =
+      protectFeastDays
+      ? "Feast/holy days switch to celebration mode automatically."
+      : "Feast/holy days are shown, but your personal disciplines remain user-controlled."
+
+    return PremiumAdaptiveRulePlan(
+      title: "\(template.label) Rule Plan",
+      summary: "\(baseSeasonLine) \(templateLine)",
+      weeklyActions: [
+        "Primary personal fast day: \(weekday).",
+        "Optional disciplines this week: \(intensity).",
+        "Review completion each Sunday evening and adjust the next week.",
+      ],
+      caution: feastLine
+    )
+  }
+
+  private static func weekdayName(for value: Int) -> String {
+    let symbols = Calendar.current.weekdaySymbols
+    let index = max(1, min(7, value)) - 1
+    if index < symbols.count {
+      return symbols[index]
+    }
+    return "Friday"
+  }
+}
+
+enum PremiumConditionReminderAdvisor {
+  static func applyRules(
+    _ rules: PremiumConditionRules,
+    hasUpcomingRequiredDays: Bool
+  ) -> PremiumReminderRecommendation {
+    if rules.requiredDaysDoubleReminder && hasUpcomingRequiredDays {
+      return PremiumReminderRecommendation(
+        shouldEnableDailySupport: true,
+        shouldEnableMorning: true,
+        shouldEnableEvening: true,
+        summaryLine: "Condition rules enabled: required-day double reminders are active."
+      )
+    }
+    if rules.remindIfUnloggedByNoon {
+      return PremiumReminderRecommendation(
+        shouldEnableDailySupport: true,
+        shouldEnableMorning: true,
+        shouldEnableEvening: false,
+        summaryLine: "Condition rules enabled: noon check-in recovery reminders are active."
+      )
+    }
+    return PremiumReminderRecommendation(
+      shouldEnableDailySupport: true,
+      shouldEnableMorning: false,
+      shouldEnableEvening: true,
+      summaryLine: "Condition rules enabled: evening examen support is active."
+    )
+  }
+}
+
+struct PremiumRecoveryCoachPlan: Hashable {
+  let title: String
+  let summary: String
+  let steps: [String]
+}
+
+enum PremiumRecoveryCoachEngine {
+  static func plan(
+    missedPlan: MissedDayRecoveryPlan?,
+    season: LiturgicalSeason
+  ) -> PremiumRecoveryCoachPlan {
+    guard let missedPlan else {
+      return PremiumRecoveryCoachPlan(
+        title: "Recovery Stable",
+        summary: "No current missed-day alert. Stay proactive this week.",
+        steps: [
+          "Review the next required observance date.",
+          "Keep your fixed personal fast day.",
+          "Close today with a one-minute examen.",
+        ]
+      )
+    }
+
+    let seasonalAction: String =
+      switch season {
+      case .lent: "Pair recovery with concrete almsgiving."
+      case .advent: "Pair recovery with quiet watchfulness prayer."
+      case .easter: "Pair recovery with one mercy action."
+      case .christmas: "Pair recovery with gratitude prayer after meals."
+      case .ordinary: "Pair recovery with faithful Friday penance."
+      }
+
+    return PremiumRecoveryCoachPlan(
+      title: missedPlan.titleLine,
+      summary: "\(missedPlan.summaryLine) \(seasonalAction)",
+      steps: missedPlan.steps + [missedPlan.nextRequiredLine]
+    )
+  }
+}
+
+enum PremiumSeasonProgramEngine {
+  static func actions(
+    for program: PremiumSeasonProgram,
+    week: Int
+  ) -> [String] {
+    let normalizedWeek = max(1, week)
+    switch program {
+    case .liturgicalRhythm:
+      return [
+        "Pray before first meal each day.",
+        "Keep one fixed weekday discipline.",
+        "Weekly review checkpoint #\(normalizedWeek).",
+      ]
+    case .lentDeepen:
+      return [
+        "Keep all required observances with planning.",
+        "Add one hidden sacrifice this week.",
+        "Link fasting to almsgiving checkpoint #\(normalizedWeek).",
+      ]
+    case .adventWatch:
+      return [
+        "Reduce one comfort item for watchfulness.",
+        "Add a short Scripture reading before dinner.",
+        "Keep a quiet-night prayer checkpoint #\(normalizedWeek).",
+      ]
+    case .fridayFidelity:
+      return [
+        "Plan Friday penance by Thursday evening.",
+        "Record one charity action on Friday.",
+        "End Friday with a gratitude examen checkpoint #\(normalizedWeek).",
+      ]
+    }
+  }
+}
+
+enum PremiumFastPrepGuidanceEngine {
+  static func prepAndRefeed(
+    targetHours: Int,
+    hasMedicalDispensation: Bool
+  ) -> [String] {
+    if hasMedicalDispensation {
+      return [
+        "Prep: choose medically safe meals and hydration.",
+        "During: prioritize stability and avoid unsafe restriction.",
+        "Refeed: return to normal meals gradually as advised.",
+      ]
+    }
+
+    if targetHours <= 18 {
+      return [
+        "Prep: hydrate and simplify your final meal.",
+        "During: keep prayer cues tied to hunger moments.",
+        "Refeed: break with moderate portions and protein/fiber.",
+      ]
+    }
+
+    if targetHours <= 36 {
+      return [
+        "Prep: increase hydration the day before.",
+        "During: keep intensity moderate and avoid overexertion.",
+        "Refeed: start light, then full meal after 30-60 minutes.",
+      ]
+    }
+
+    return [
+      "Prep: plan schedule, hydration, and pastoral prudence.",
+      "During: monitor energy and stop if health concerns arise.",
+      "Refeed: start very gently, then normalize in stages.",
+    ]
+  }
+}
+
+enum PremiumMotivationEngine {
+  static func line(
+    season: LiturgicalSeason,
+    streak: Int,
+    template: PremiumRuleTemplate
+  ) -> String {
+    let seasonPhrase: String =
+      switch season {
+      case .advent: "Watch with hope"
+      case .christmas: "Celebrate with gratitude"
+      case .lent: "Repent with discipline"
+      case .easter: "Persevere in new life"
+      case .ordinary: "Stay faithful in the ordinary"
+      }
+    return "\(seasonPhrase) • \(template.label) rule • Streak \(streak)d"
   }
 }
 

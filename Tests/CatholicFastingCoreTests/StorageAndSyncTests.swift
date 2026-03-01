@@ -1,5 +1,5 @@
-import XCTest
 @testable import CatholicFastingCore
+import XCTest
 
 final class StorageAndSyncTests: XCTestCase {
   override func setUp() {
@@ -107,16 +107,6 @@ final class StorageAndSyncTests: XCTestCase {
     XCTAssertEqual(notes.note(for: "legacy-note-id"), "legacy note")
   }
 
-  func testCloudSyncToggleCanDisableICloudWrites() {
-    UserDefaults.standard.set(false, forKey: "allow_cloud_sync")
-    let tracker = FastTracker()
-    let id = "2026-03-10|NoCloud|mandatory"
-    tracker.setStatus(.completed, for: id)
-
-    let cloudValue = NSUbiquitousKeyValueStore.default.dictionary(forKey: "observance_statuses") as? [String: String]
-    XCTAssertFalse((cloudValue ?? [:]).keys.contains(id))
-  }
-
   func testSetNotStartedRemovesStatusEntry() {
     let tracker = FastTracker()
     let id = "2026-03-10|Reset|mandatory"
@@ -154,13 +144,7 @@ final class StorageAndSyncTests: XCTestCase {
     XCTAssertNil(notes.exportPayload()[id])
   }
 
-  func testSyncedStoreDiagnosticsDefaultEnabledWhenUnset() {
-    UserDefaults.standard.removeObject(forKey: "allow_diagnostics")
-    XCTAssertTrue(SyncedStore.isDiagnosticsEnabled())
-  }
-
   func testSyncedStoreDuplicatePersistSkipsLastSyncUpdate() {
-    UserDefaults.standard.set(false, forKey: "allow_cloud_sync")
     let payload = ["k": "v"]
 
     SyncedStore.persist(payload, for: "observance_statuses")
@@ -173,32 +157,31 @@ final class StorageAndSyncTests: XCTestCase {
     XCTAssertEqual(afterSecondPersist, sentinelDate)
   }
 
-  func testLocalAnalyticsTracksOnlyWhenEnabled() {
-    LocalAnalyticsStore.setEnabled(false)
-    LocalAnalyticsStore.track(.appLaunch)
-    XCTAssertEqual(LocalAnalyticsStore.snapshot().totalEvents, 0)
-
-    LocalAnalyticsStore.setEnabled(true)
-    LocalAnalyticsStore.track(.appLaunch)
-    LocalAnalyticsStore.track(.appLaunch)
-    LocalAnalyticsStore.track(.supportRemindersScheduled)
-
-    let snapshot = LocalAnalyticsStore.snapshot()
-    XCTAssertTrue(snapshot.isEnabled)
-    XCTAssertEqual(snapshot.count(for: .appLaunch), 2)
-    XCTAssertEqual(snapshot.count(for: .supportRemindersScheduled), 1)
-    XCTAssertEqual(snapshot.totalEvents, 3)
+  func testSyncedStorePersistsOnlyToUserDefaults() {
+    let payload = ["privacy": "local-only"]
+    SyncedStore.persist(payload, for: "observance_statuses")
+    let persisted = UserDefaults.standard.dictionary(forKey: "observance_statuses") as? [String: String]
+    XCTAssertEqual(persisted?["privacy"], "local-only")
   }
 
-  func testLocalAnalyticsDisablingClearsStoredCounts() {
-    LocalAnalyticsStore.setEnabled(true)
-    LocalAnalyticsStore.track(.onboardingCompleted)
-    XCTAssertGreaterThan(LocalAnalyticsStore.snapshot().totalEvents, 0)
+  func testHouseholdProfileDecodesLegacyBirthYearOnlyPayload() throws {
+    let json = """
+      [
+        {
+          "id": "legacy-profile",
+          "name": "Legacy",
+          "birthYear": 1985,
+          "medicalDispensation": true
+        }
+      ]
+      """
+    let data = Data(json.utf8)
+    let decoded = try JSONDecoder().decode([HouseholdProfile].self, from: data)
+    let profile = try XCTUnwrap(decoded.first)
 
-    LocalAnalyticsStore.setEnabled(false)
-    let snapshot = LocalAnalyticsStore.snapshot()
-    XCTAssertFalse(snapshot.isEnabled)
-    XCTAssertEqual(snapshot.totalEvents, 0)
+    XCTAssertEqual(profile.birthYear, 1985)
+    XCTAssertEqual(profile.birthMonth, 0)
+    XCTAssertEqual(profile.birthDay, 0)
+    XCTAssertTrue(profile.medicalDispensation)
   }
-
 }

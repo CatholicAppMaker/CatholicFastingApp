@@ -1,6 +1,6 @@
 # App Privacy Questionnaire Draft (App Store Connect)
 
-Last reviewed: February 15, 2026
+Last reviewed: February 19, 2026
 Scope: U.S.-only release (not released in EU storefronts)
 
 ## Data Used to Track You

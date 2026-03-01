@@ -1,6 +1,6 @@
 {
   "": {
-    "swift-dependencies": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/debug/CatholicFastingCore.build/master.swiftdeps"
+    "swift-dependencies": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/debug/CatholicFastingCore.build/primary.swiftdeps"
   },
   "/Users/kevpierce/Desktop/CatholicFastingApp/CatholicFastingApp/Models/CompletionStatusAndFastTracker.swift": {
     "dependencies": "/Users/kevpierce/Desktop/CatholicFastingApp/.build/arm64-apple-macosx/debug/CatholicFastingCore.build/CompletionStatusAndFastTracker.d",

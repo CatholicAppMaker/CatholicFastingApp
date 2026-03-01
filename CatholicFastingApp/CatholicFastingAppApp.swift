@@ -2,6 +2,7 @@ import SwiftUI
 #if canImport(UIKit)
   import UIKit
 #endif
+import os
 
 @main
 struct CatholicFastingAppApp: App {
@@ -14,6 +15,7 @@ struct CatholicFastingAppApp: App {
   var body: some Scene {
     WindowGroup {
       ContentView()
+        .preferredColorScheme(.light)
         .task {
           SeasonalIconManager.applyForCurrentSeasonIfNeeded()
         }
@@ -26,6 +28,8 @@ struct CatholicFastingAppApp: App {
 }
 
 private enum SeasonalIconManager {
+  private static let logger = Logger(subsystem: "com.kevpierce.CatholicFastingApp", category: "Icon")
+
   static func applyForCurrentSeasonIfNeeded() {
     #if canImport(UIKit)
       guard ProcessInfo.processInfo.environment["UITEST_MODE"] != "1" else { return }
@@ -41,7 +45,7 @@ private enum SeasonalIconManager {
 
       UIApplication.shared.setAlternateIconName(target) { error in
         if let error {
-          print("Seasonal icon update failed: \(error.localizedDescription)")
+          logger.error("Seasonal icon update failed: \(error.localizedDescription)")
         }
       }
     #endif
@@ -83,6 +87,10 @@ private enum UITestBootstrap {
     if arguments.contains("-uitest-reset") {
       [
         "birth_year",
+        "birth_month",
+        "birth_day",
+        "age_14_or_older_for_abstinence",
+        "age_18_or_older_for_fasting",
         "medical_dispensation",
         "ascension_observance",
         "friday_outside_lent_mode",
@@ -92,11 +100,6 @@ private enum UITestBootstrap {
         "did_complete_onboarding",
         "accepted_legal_notice",
         "accepted_legal_notice_at",
-        "crash_reporting_enabled",
-        "allow_cloud_sync",
-        "allow_diagnostics",
-        "allow_local_analytics",
-        "local_analytics_counts",
         "liturgical_season_colors_enabled",
         "daily_reminder_support_enabled",
         "morning_reminder_enabled",
@@ -111,13 +114,15 @@ private enum UITestBootstrap {
         "last_sync_date",
       ].forEach { key in
         defaults.removeObject(forKey: key)
-        NSUbiquitousKeyValueStore.default.removeObject(forKey: key)
       }
-      NSUbiquitousKeyValueStore.default.synchronize()
     }
 
     if arguments.contains("-uitest-seed-deterministic") {
-      defaults.set(1990, forKey: "birth_year")
+      defaults.set(0, forKey: "birth_year")
+      defaults.set(0, forKey: "birth_month")
+      defaults.set(0, forKey: "birth_day")
+      defaults.set(true, forKey: "age_14_or_older_for_abstinence")
+      defaults.set(true, forKey: "age_18_or_older_for_fasting")
       defaults.set(false, forKey: "medical_dispensation")
       defaults.set("sunday", forKey: "ascension_observance")
       defaults.set("substitutePenance", forKey: "friday_outside_lent_mode")
@@ -126,10 +131,6 @@ private enum UITestBootstrap {
       defaults.set("english", forKey: "language_mode")
       defaults.set(false, forKey: "accepted_legal_notice")
       defaults.set("", forKey: "accepted_legal_notice_at")
-      defaults.set(false, forKey: "crash_reporting_enabled")
-      defaults.set(false, forKey: "allow_cloud_sync")
-      defaults.set(true, forKey: "allow_diagnostics")
-      defaults.set(false, forKey: "allow_local_analytics")
       defaults.set(true, forKey: "liturgical_season_colors_enabled")
       defaults.set(true, forKey: "daily_reminder_support_enabled")
       defaults.set(true, forKey: "morning_reminder_enabled")
@@ -141,7 +142,11 @@ private enum UITestBootstrap {
 
     if arguments.contains("-uitest-seed-missed") {
       let settings = RuleSettings(
-        birthYear: 1990,
+        birthYear: 0,
+        birthMonth: 0,
+        birthDay: 0,
+        isAge14OrOlderForAbstinence: true,
+        isAge18OrOlderForFasting: true,
         hasMedicalDispensation: false,
         ascensionObservance: .sunday,
         fridayOutsideLentMode: .substitutePenance,
@@ -151,7 +156,10 @@ private enum UITestBootstrap {
       let observances = ObservanceCalculator.makeCalendar(for: year, settings: settings)
       let today = Calendar.current.startOfDay(for: Date())
       let missedTarget =
-        observances.last(where: { $0.obligation == .mandatory && $0.date <= today })
+        observances.last(where: {
+          $0.obligation == .mandatory
+            && Calendar.current.startOfDay(for: $0.date) <= today
+        })
         ?? observances.first(where: { $0.obligation == .mandatory })
 
       if let missedTarget {

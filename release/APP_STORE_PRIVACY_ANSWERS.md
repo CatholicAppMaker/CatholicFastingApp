@@ -1,6 +1,6 @@
 # App Store Connect Privacy Answers (Draft)
 
-Last reviewed: February 15, 2026
+Last reviewed: February 19, 2026
 App: Catholic Fasting
 Release scope: United States only (not released in EU storefronts)
 
@@ -21,9 +21,10 @@ Use this as your copy/paste baseline in App Store Connect. Final legal/complianc
 ## Why this is the current answer
 
 - User data is stored on-device (`UserDefaults` and local app storage).
-- Optional iCloud sync uses the user's own iCloud account (`NSUbiquitousKeyValueStore`) and is user-controlled.
+- No iCloud sync is used.
 - Data export/share is user-initiated only.
 - No third-party analytics SDK, ad SDK, or tracking code is present.
+- No anonymous local analytics collection is present.
 - Privacy manifest sets tracking to false and no collected data types.
 
 ## If behavior changes later, update App Store privacy immediately
@@ -41,6 +42,6 @@ If you add any of the following, you likely need to change the answers above:
 The in-app `Data & Privacy` page now states:
 
 - What is stored in app.
-- What may be transmitted (optional iCloud sync and manual export/email actions).
+- What may be transmitted (manual export/email actions only).
 - What is not collected (ad tracking IDs and third-party analytics SDKs).
-- User controls for consent, iCloud sync, diagnostics, and last sync visibility.
+- User controls for consent and local data management (export/delete).

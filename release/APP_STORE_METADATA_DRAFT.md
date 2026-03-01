@@ -19,7 +19,7 @@ Features:
 - Fast and abstinence guidance for common scenarios
 - Personal tracking with statuses and notes
 - Rule-bundle transparency with sources and rationale
-- iCloud sync toggle and export controls
+- Local-only data storage and export controls
 - English and Spanish support
 
 Important:
@@ -32,7 +32,7 @@ Catholic,fasting,abstinence,Lent,Ash Wednesday,Good Friday,USCCB,penance,liturgi
 - Improved Spanish localization via Localizable.strings
 - Refined guidance and settings language
 - Streamlined regional settings and consent flows
-- Reliability improvements in tests and sync diagnostics
+- Reliability improvements in tests and local data handling
 
 ## Support & Marketing URLs
 - Support URL: https://YOUR_DOMAIN/support

@@ -8,7 +8,9 @@ enum CompletionStatus: String, CaseIterable, Identifiable {
   case dispensed
   case missed
 
-  var id: String { rawValue }
+  var id: String {
+    rawValue
+  }
 
   var label: String {
     switch self {
@@ -34,34 +36,19 @@ final class FastTracker: ObservableObject {
   @Published private(set) var statusesByID: [String: CompletionStatus]
 
   private let syncKey = SyncStoreKeys.observanceStatuses
-  private var cloudObserver: NSObjectProtocol?
 
   init() {
     StorageSchema.migrateIfNeeded()
     statusesByID = SyncedStore.mergedStatusDictionary(for: syncKey)
     SyncedStore.persist(statusesByID, for: syncKey)
-    if SyncedStore.isCloudSyncEnabled() {
-      cloudObserver = NotificationCenter.default.addObserver(
-        forName: NSUbiquitousKeyValueStore.didChangeExternallyNotification,
-        object: NSUbiquitousKeyValueStore.default,
-        queue: .main
-      ) { [weak self] _ in
-        self?.refreshFromCloud()
-      }
-    }
-  }
-
-  deinit {
-    if let cloudObserver {
-      NotificationCenter.default.removeObserver(cloudObserver)
-    }
   }
 
   var completedIDs: Set<String> {
     Set(
-      statusesByID.compactMap { (id, status) in
+      statusesByID.compactMap { id, status in
         status.countsTowardProgress ? id : nil
-      })
+      }
+    )
   }
 
   func status(for id: String) -> CompletionStatus {
@@ -99,12 +86,6 @@ final class FastTracker: ObservableObject {
     statusesByID
       .mapValues(\.rawValue)
   }
-
-  private func refreshFromCloud() {
-    let merged = SyncedStore.mergedStatusDictionary(for: syncKey)
-    guard merged != statusesByID else { return }
-    statusesByID = merged
-    SyncedStore.persist(statusesByID, for: syncKey)
-  }
 }
+
 extension FastTracker: @unchecked Sendable {}

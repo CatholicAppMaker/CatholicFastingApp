@@ -1,123 +1,428 @@
 import SwiftUI
 
-extension ContentView {
-  var yearSection: some View {
-    Section("Year") {
-      HStack {
-        Button {
-          year = max(UIConstants.yearRange.lowerBound, year - 1)
-        } label: {
-          Label("Previous", systemImage: "chevron.left")
-        }
-        .accessibilityIdentifier("calendar.year.previous")
-        .appSecondaryButtonStyle()
+struct SacredHeroArtwork {
+  let assetName: String
+  let title: String
+  let subtitle: String
+}
 
-        Spacer()
+enum SacredHeroScene {
+  case dashboard
+  case fastingDays
+  case intermittent
+  case guidance
+}
 
-        Button("Current Year") {
-          year = Calendar.current.component(.year, from: Date())
-        }
-        .accessibilityIdentifier("calendar.year.current")
-        .appPrimaryButtonStyle(legacyTint: CatholicTheme.accent)
+enum SacredHeroImageSelector {
+  private static let dashboardArt: [SacredHeroArtwork] = [
+    SacredHeroArtwork(
+      assetName: "HeroSacred",
+      title: "Christ Pantocrator",
+      subtitle: "Let your fasting be prayerful, intentional, and rooted in the Church."
+    ),
+    SacredHeroArtwork(
+      assetName: "SacredMonstrance",
+      title: "Eucharistic Devotion",
+      subtitle: "Keep your sacrifice oriented to worship and thanksgiving."
+    ),
+    SacredHeroArtwork(
+      assetName: "SacredSacredHeart",
+      title: "Sacred Heart",
+      subtitle: "Offer discipline with mercy, reparation, and love."
+    ),
+    SacredHeroArtwork(
+      assetName: "SacredCathedralLight",
+      title: "Cathedral Light",
+      subtitle: "Bring your daily fast into the Church's worship and prayer."
+    ),
+    SacredHeroArtwork(
+      assetName: "SacredAshWednesday",
+      title: "Ashes and Repentance",
+      subtitle: "Remember conversion of heart as the first work of fasting."
+    ),
+    SacredHeroArtwork(
+      assetName: "SacredPalmSunday",
+      title: "Palm Sunday",
+      subtitle: "Walk with Christ through sacrifice toward the Paschal mystery."
+    ),
+    SacredHeroArtwork(
+      assetName: "SacredChaliceVine",
+      title: "Chalice and Vine",
+      subtitle: "Offer fasting in union with the Eucharistic life of the Church."
+    ),
+    SacredHeroArtwork(
+      assetName: "SacredScriptureCandle",
+      title: "Scripture Candle",
+      subtitle: "Let the Word of God shape your fasting and your charity."
+    ),
+  ]
 
-        Spacer()
+  private static let fastingDaysArt: [SacredHeroArtwork] = [
+    SacredHeroArtwork(
+      assetName: "SacredAshWednesday",
+      title: "Ash Wednesday",
+      subtitle: "Fasting begins with repentance, humility, and prayer."
+    ),
+    SacredHeroArtwork(
+      assetName: "SacredPalmSunday",
+      title: "Palm Branch",
+      subtitle: "Fasting days prepare us to follow Christ to the Cross."
+    ),
+    SacredHeroArtwork(
+      assetName: "SacredMonstrance",
+      title: "Eucharistic Focus",
+      subtitle: "Let every fast point toward worship and thanksgiving."
+    ),
+    SacredHeroArtwork(
+      assetName: "SacredRosaryCross",
+      title: "Rosary and Cross",
+      subtitle: "Pair abstinence with prayer for deeper conversion."
+    ),
+    SacredHeroArtwork(
+      assetName: "HeroSacred",
+      title: "Christ Pantocrator",
+      subtitle: "Keep the Lord at the center of your fasting calendar."
+    ),
+    SacredHeroArtwork(
+      assetName: "SacredCathedralLight",
+      title: "Light in the Church",
+      subtitle: "Observe fast days within the life of the liturgy."
+    ),
+  ]
 
-        Button {
-          year = min(UIConstants.yearRange.upperBound, year + 1)
-        } label: {
-          Label("Next", systemImage: "chevron.right")
-        }
-        .accessibilityIdentifier("calendar.year.next")
-        .appSecondaryButtonStyle()
-      }
+  private static let intermittentArt: [SacredHeroArtwork] = [
+    SacredHeroArtwork(
+      assetName: "SacredRosaryCross",
+      title: "Rosary Cross",
+      subtitle: "Offer this fast with intention: prayer, almsgiving, and conversion."
+    ),
+    SacredHeroArtwork(
+      assetName: "SacredChiRho",
+      title: "Chi-Rho",
+      subtitle: "Keep each session focused on Christ, not only performance."
+    ),
+    SacredHeroArtwork(
+      assetName: "HeroSacred",
+      title: "Daily Discipline",
+      subtitle: "Unite your fasting hours to repentance and gratitude."
+    ),
+    SacredHeroArtwork(
+      assetName: "SacredDesertPilgrimage",
+      title: "Desert Pilgrimage",
+      subtitle: "Persevere in sacrifice with trust, patience, and humility."
+    ),
+    SacredHeroArtwork(
+      assetName: "SacredAshWednesday",
+      title: "Discipline and Repentance",
+      subtitle: "Use optional fasting as a path of inner conversion."
+    ),
+    SacredHeroArtwork(
+      assetName: "SacredScriptureCandle",
+      title: "Prayer and the Word",
+      subtitle: "Keep intermittent fasting tied to prayer, not just metrics."
+    ),
+    SacredHeroArtwork(
+      assetName: "SacredMonstrance",
+      title: "Adoration",
+      subtitle: "Offer sacrifice as worship, gratitude, and reparation."
+    ),
+    SacredHeroArtwork(
+      assetName: "SacredChaliceVine",
+      title: "Eucharistic Spirit",
+      subtitle: "Let personal discipline strengthen communion and charity."
+    ),
+  ]
 
-      Picker("Calendar Year", selection: $year) {
-        ForEach(UIConstants.yearRange, id: \.self) { y in
-          Text(String(y)).tag(y)
-        }
-      }
-      .pickerStyle(.menu)
+  private static let guidanceArt: [SacredHeroArtwork] = [
+    SacredHeroArtwork(
+      assetName: "GuidanceSacred",
+      title: "St. Peter's Basilica",
+      subtitle: "Guidance should always be interpreted with pastoral direction."
+    ),
+    SacredHeroArtwork(
+      assetName: "SacredMonstrance",
+      title: "Rule and Reverence",
+      subtitle: "Follow Church norms with humility and consistency."
+    ),
+    SacredHeroArtwork(
+      assetName: "SacredSacredHeart",
+      title: "Pastoral Prudence",
+      subtitle: "Discipline and charity should always move together."
+    ),
+    SacredHeroArtwork(
+      assetName: "SacredScriptureCandle",
+      title: "Scripture and Prayer",
+      subtitle: "Let guidance be read with prayerful attention and discernment."
+    ),
+    SacredHeroArtwork(
+      assetName: "SacredAshWednesday",
+      title: "Penitential Clarity",
+      subtitle: "Guidance should always serve conversion, not legalism."
+    ),
+    SacredHeroArtwork(
+      assetName: "SacredPalmSunday",
+      title: "Holy Week Orientation",
+      subtitle: "Read Church norms in light of Christ's Paschal mystery."
+    ),
+    SacredHeroArtwork(
+      assetName: "SacredCathedralLight",
+      title: "Pastoral Context",
+      subtitle: "Apply fasting rules with pastoral care and prudence."
+    ),
+    SacredHeroArtwork(
+      assetName: "SacredChaliceVine",
+      title: "Sacramental Life",
+      subtitle: "Fasting and feasting both belong to the rhythm of the Church."
+    ),
+  ]
+
+  private static func pool(for scene: SacredHeroScene) -> [SacredHeroArtwork] {
+    switch scene {
+    case .dashboard:
+      return dashboardArt
+    case .fastingDays:
+      return fastingDaysArt
+    case .intermittent:
+      return intermittentArt
+    case .guidance:
+      return guidanceArt
     }
   }
 
-  var observanceControlsSection: some View {
-    Section("Calendar Filters") {
-      Picker("Show", selection: $observanceFilter) {
-        ForEach(ObservanceFilter.allCases) { filter in
-          Text(filter.label).tag(filter)
+  private static func daySeed(for date: Date) -> Int {
+    (Calendar.gregorian.ordinality(of: .day, in: .year, for: date) ?? 1) - 1
+  }
+
+  private static func artworkSet(for date: Date) -> [SacredHeroScene: SacredHeroArtwork] {
+    let scenes: [SacredHeroScene] = [.dashboard, .fastingDays, .intermittent, .guidance]
+    let seed = daySeed(for: date)
+    var usedAssetNames: Set<String> = []
+    var result: [SacredHeroScene: SacredHeroArtwork] = [:]
+
+    for (sceneOffset, scene) in scenes.enumerated() {
+      let pool = pool(for: scene)
+      let start = (seed + (sceneOffset * 2)) % pool.count
+      var picked = pool[start]
+
+      for indexOffset in 0..<pool.count {
+        let candidate = pool[(start + indexOffset) % pool.count]
+        if !usedAssetNames.contains(candidate.assetName) {
+          picked = candidate
+          break
         }
+      }
+
+      usedAssetNames.insert(picked.assetName)
+      result[scene] = picked
+    }
+
+    return result
+  }
+
+  static func artwork(for scene: SacredHeroScene, date: Date = Date()) -> SacredHeroArtwork {
+    artworkSet(for: date)[scene] ?? pool(for: scene)[0]
+  }
+}
+
+extension ContentView {
+  var fastingDaysScopeSelection: Binding<Int> {
+    Binding(
+      get: { fastingDaysShowAllYearDays ? 1 : 0 },
+      set: { newValue in
+        if newValue == 0 {
+          fastingDaysShowAllYearDays = false
+          fastingDaysIncludeOptionalDays = false
+        } else {
+          fastingDaysShowAllYearDays = true
+          fastingDaysIncludeOptionalDays = true
+        }
+      }
+    )
+  }
+
+  var fastingDaysActiveFilterSummary: String {
+    var labels: [String] = []
+    labels.append(fastingDaysShowAllYearDays ? "Full year" : "Upcoming only")
+    labels.append(fastingDaysIncludeOptionalDays ? "Required + optional" : "Required only")
+    if fastingDaysIncludeFeastAndHolyDays {
+      labels.append("Includes feast/holy/memorial days")
+    }
+    return labels.joined(separator: " • ")
+  }
+
+  var fastingDaysHeroSection: some View {
+    Section {
+      VStack(alignment: .leading, spacing: 10) {
+        SacredHeroCard(
+          assetName: fastingDaysHeroArtwork.assetName,
+          title: fastingDaysHeroArtwork.title,
+          subtitle: fastingDaysHeroArtwork.subtitle,
+          height: 132,
+          cornerRadius: 16
+        )
+
+        CatholicFastingQuoteCard(quote: fastingDaysFastingQuote, compact: true)
+          .accessibilityIdentifier("fasting_days.fasting_quote")
+      }
+      .accessibilityElement(children: .combine)
+      .accessibilityLabel("\(fastingDaysHeroArtwork.title). \(fastingDaysHeroArtwork.subtitle)")
+      .accessibilityIdentifier("fasting_days.hero")
+    }
+  }
+
+  var fastingDaysOverviewSection: some View {
+    Section("Fasting Days") {
+      Text("See required fasting days first, then expand to full-year and celebration planning when needed.")
+        .font(.subheadline)
+        .foregroundStyle(.secondary)
+
+      Text("Current view: \(fastingDaysActiveFilterSummary)")
+        .font(.caption)
+        .foregroundStyle(CatholicTheme.primary)
+
+      if let nextRequired = upcomingMandatoryObservance {
+        VStack(alignment: .leading, spacing: 10) {
+          Label("Next required day", systemImage: "calendar.badge.exclamationmark")
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(.secondary)
+
+          Text(nextRequired.title)
+            .font(.title3.weight(.semibold))
+
+          Text(nextRequired.date.formatted(date: .abbreviated, time: .omitted))
+            .font(.headline)
+            .foregroundStyle(.red)
+        }
+        .padding(.vertical, 4)
+      } else if let nextPotential = upcomingPotentialFastingObservance {
+        VStack(alignment: .leading, spacing: 10) {
+          Label("Next likely fasting day", systemImage: "calendar")
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(.secondary)
+
+          Text(nextPotential.title)
+            .font(.title3.weight(.semibold))
+
+          Text(nextPotential.date.formatted(date: .abbreviated, time: .omitted))
+            .font(.headline)
+            .foregroundStyle(.orange)
+
+          Text("Review age eligibility toggles in Settings to confirm profile-bound obligations.")
+            .font(.caption)
+            .foregroundStyle(.secondary)
+        }
+        .padding(.vertical, 4)
+      } else {
+        Text("No upcoming required fasting day found in the loaded calendar range.")
+          .font(.caption)
+          .foregroundStyle(.secondary)
+      }
+
+      Picker("Scope", selection: fastingDaysScopeSelection) {
+        Text("Upcoming").tag(0)
+        Text("Full Year").tag(1)
       }
       .pickerStyle(.segmented)
-      .accessibilityIdentifier("calendar.filter_picker")
-      TextField("Search observances", text: $observanceQuery)
-        .textInputAutocapitalization(.never)
-        .autocorrectionDisabled()
-        .submitLabel(.search)
-        .accessibilityIdentifier("calendar.search_field")
-      Picker("Window", selection: $calendarWindow) {
-        ForEach(CalendarWindow.allCases) { window in
-          Text(window.label).tag(window)
-        }
-      }
-      .pickerStyle(.menu)
-      .accessibilityIdentifier("calendar.window_picker")
-      Picker("Sort", selection: $observanceSortOrder) {
-        ForEach(ObservanceSortOrder.allCases) { order in
-          Text(order.label).tag(order)
-        }
-      }
-      .pickerStyle(.menu)
-      .accessibilityIdentifier("calendar.sort_picker")
-      Button("Reset Calendar Filters") {
-        resetCalendarFilters()
-      }
-      .accessibilityIdentifier("calendar.reset_filters")
-      .appSecondaryButtonStyle()
-
-      Button("Show Required in Next 30 Days") {
-        observanceFilter = .requiredOnly
-        observanceQuery = ""
-        calendarWindow = .next30Days
-        observanceSortOrder = .requiredFirst
-      }
-      .appSecondaryButtonStyle(legacyTint: CatholicTheme.accent)
+      .accessibilityIdentifier("fasting_days.scope_picker")
     }
   }
 
-  var calendarInsightsSection: some View {
-    Section("Calendar Insights") {
-      Text(calendarFilterSummaryText)
-        .font(.subheadline)
-        .foregroundStyle(CatholicTheme.primary.opacity(0.9))
-        .accessibilityIdentifier("calendar.filter_summary")
-      if let nextRequired = filteredObservances.first(where: { $0.obligation == .mandatory }) {
-        Text("Next required in results: \(nextRequired.title) • \(nextRequired.date.formatted(date: .abbreviated, time: .omitted))")
-          .font(.subheadline)
-          .foregroundStyle(.red.opacity(0.85))
-      }
-      if filteredObservances.isEmpty {
-        Button("Clear Filters to Show All") {
-          resetCalendarFilters()
-        }
-        .accessibilityIdentifier("calendar.clear_filters_cta")
-        .appPrimaryButtonStyle()
-      }
-    }
-  }
-
-  var observanceLegendSection: some View {
-    Section("Legend") {
-      HStack(spacing: 8) {
-        StatusTag(text: Observance.Kind.fastAndAbstinence.label, color: Observance.Kind.fastAndAbstinence.color)
-        StatusTag(text: Observance.Obligation.mandatory.label, color: .red)
-      }
-      HStack(spacing: 8) {
-        StatusTag(text: Observance.Kind.fridayPenance.label, color: Observance.Kind.fridayPenance.color)
-        StatusTag(text: Observance.Obligation.optional.label, color: .blue)
-      }
-      Text("Use filters to focus on required observances or your tracked history.")
+  var fastingDaysDisplayOptionsSection: some View {
+    Section("Display Filters") {
+      Toggle("Show all fasting days in this Catholic calendar year", isOn: $fastingDaysShowAllYearDays)
+      Toggle("Include optional fasting days (Ember days, optional Friday penance)", isOn: $fastingDaysIncludeOptionalDays)
+      Toggle("Include feast, holy, and memorial celebration days", isOn: $fastingDaysIncludeFeastAndHolyDays)
+      Text("Celebration days are shown for planning context and are not fasting obligations.")
         .font(.caption)
         .foregroundStyle(.secondary)
+    }
+  }
+
+  var fastingDaysListSection: some View {
+    var visibleKinds: Set<Observance.Kind> = [.fastAndAbstinence, .abstinence, .fridayPenance, .optionalEmber]
+    if fastingDaysIncludeFeastAndHolyDays {
+      visibleKinds.formUnion([.holyDay, .feastDay, .memorialDay])
+    }
+    let todayStart = liturgicalCalendar.startOfDay(for: Date())
+    let source =
+      fastingDaysShowAllYearDays
+      ? currentYearObservances
+      : rollingUpcomingObservances.filter {
+        liturgicalCalendar.startOfDay(for: $0.date) >= todayStart
+      }
+    let candidates = source.filter { visibleKinds.contains($0.kind) }
+    let filteredByObligation =
+      candidates
+      .filter { observance in
+        switch observance.kind {
+        case .holyDay, .feastDay, .memorialDay:
+          // Feast/Holy day visibility is controlled by its own toggle.
+          return fastingDaysIncludeFeastAndHolyDays
+        case .optionalEmber, .fridayPenance:
+          if fastingDaysIncludeOptionalDays {
+            return observance.obligation != .notApplicable
+          }
+          return observance.obligation == .mandatory
+        case .fastAndAbstinence, .abstinence:
+          if !hasKnownBirthYearForObligations {
+            // Keep core fasting days visible until age profile is configured.
+            return true
+          }
+          if fastingDaysIncludeOptionalDays {
+            return observance.obligation != .notApplicable
+          }
+          return observance.obligation == .mandatory
+        }
+      }
+      .sorted { $0.date < $1.date }
+    let displayItems = fastingDaysShowAllYearDays ? filteredByObligation : Array(filteredByObligation.prefix(20))
+    let baseTitle =
+      fastingDaysShowAllYearDays
+      ? (fastingDaysIncludeOptionalDays ? "All Fasting Days This Year" : "Required Fasting Days This Year")
+      : (fastingDaysIncludeOptionalDays ? "Upcoming Fasting Days (Required + Optional)" : "Upcoming Required Fasting Days")
+    let title = fastingDaysIncludeFeastAndHolyDays ? "\(baseTitle) + Feast/Holy/Memorial Celebration Days" : baseTitle
+
+    return Section(title) {
+      if displayItems.isEmpty {
+        Text("No fasting days match the current toggles.")
+          .foregroundStyle(.secondary)
+      } else {
+        ForEach(displayItems) { observance in
+          HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 2) {
+              Text(observance.title)
+                .font(.headline)
+              Text("\(observance.kind.label) • \(observanceDispositionLabel(for: observance))")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+              Text(observance.date.formatted(date: .abbreviated, time: .omitted))
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+            }
+            Spacer()
+            if observance.obligation != .notApplicable {
+              Menu {
+                ForEach(CompletionStatus.allCases) { statusOption in
+                  Button(statusOption.label) {
+                    tracker.setStatus(statusOption, for: observance.id)
+                  }
+                }
+              } label: {
+                Image(systemName: statusSymbol(for: tracker.status(for: observance.id)))
+                  .foregroundStyle(statusColor(for: tracker.status(for: observance.id)))
+              }
+              .buttonStyle(.plain)
+            }
+          }
+          .padding(.vertical, 2)
+        }
+
+        if !fastingDaysShowAllYearDays && filteredByObligation.count > displayItems.count {
+          Text("Showing next \(displayItems.count) fasting days. Turn on \"Show all fasting days in this Catholic calendar year\" for the full year list.")
+            .font(.caption)
+            .foregroundStyle(.secondary)
+        }
+      }
     }
   }
 
@@ -134,8 +439,8 @@ extension ContentView {
       if todayItems.isEmpty {
         Text("No listed observances today.")
           .foregroundStyle(.secondary)
-        Button("Open Calendar to Plan Ahead") {
-          homeSurface = .calendar
+        Button("Open Fasting Days to Plan Ahead") {
+          homeSurface = .fastingDays
         }
         .appSecondaryButtonStyle()
       } else {
@@ -144,7 +449,7 @@ extension ContentView {
             VStack(alignment: .leading) {
               Text(observance.title)
                 .font(.headline)
-              Text("\(observance.kind.label) • \(observance.obligation.label)")
+              Text("\(observance.kind.label) • \(observanceDispositionLabel(for: observance))")
                 .font(.caption)
                 .foregroundStyle(.secondary)
             }
@@ -162,7 +467,6 @@ extension ContentView {
   }
 
   var analyticsSection: some View {
-    let analytics = localAnalyticsSnapshot
     return Section("Streaks and Completion") {
       Text("Completion Rate: \(completionRateText)")
         .accessibilityIdentifier("today.analytics.completion_rate")
@@ -170,26 +474,6 @@ extension ContentView {
         .accessibilityIdentifier("today.analytics.current_streak")
       Text("Best Streak: \(bestStreak) day(s)")
         .accessibilityIdentifier("today.analytics.best_streak")
-
-      if analytics.isEnabled {
-        Text("Anonymous local analytics: \(analytics.totalEvents) tracked action(s)")
-          .font(.caption)
-          .foregroundStyle(.secondary)
-          .accessibilityIdentifier("today.analytics.local_enabled")
-        if analytics.totalEvents > 0 {
-          Text(
-            "Funnel: launches \(analytics.count(for: .appLaunch)) • onboarding \(analytics.count(for: .onboardingCompleted)) • reminders \(analytics.count(for: .requiredRemindersScheduled) + analytics.count(for: .supportRemindersScheduled)) • recovery \(analytics.count(for: .recoverySubstituteLogged))"
-          )
-          .font(.caption2)
-          .foregroundStyle(.secondary)
-          .accessibilityIdentifier("today.analytics.funnel")
-        }
-      } else {
-        Text("Anonymous local analytics is off.")
-          .font(.caption)
-          .foregroundStyle(.secondary)
-          .accessibilityIdentifier("today.analytics.local_disabled")
-      }
     }
   }
 
@@ -214,15 +498,13 @@ extension ContentView {
       Button("Request Notification Permission") {
         Task {
           notificationStatus = await ReminderScheduler.requestPermission()
-          LocalAnalyticsStore.track(.reminderPermissionRequested)
         }
       }
       .disabled(!acceptedLegalNotice)
       .accessibilityHint("Requires consent acknowledgment before reminders are enabled.")
       Button("Schedule Required-Day Reminders") {
         Task {
-          notificationStatus = await ReminderScheduler.schedule(observances: observances)
-          LocalAnalyticsStore.track(.requiredRemindersScheduled)
+          notificationStatus = await ReminderScheduler.schedule(observances: rollingUpcomingObservances)
         }
       }
       .disabled(!acceptedLegalNotice)
@@ -234,7 +516,6 @@ extension ContentView {
             morning: dailyReminderSupportEnabled && morningReminderEnabled,
             evening: dailyReminderSupportEnabled && eveningReminderEnabled
           )
-          LocalAnalyticsStore.track(.supportRemindersScheduled)
         }
       }
       .disabled(!acceptedLegalNotice || !dailyReminderSupportEnabled || !monetizationStore.premiumUnlocked)
@@ -258,23 +539,42 @@ extension ContentView {
     }
   }
 
-  var observancesSection: some View {
-    Section("Observances") {
-      if filteredObservances.isEmpty {
-        Text("No observances match your filters.")
-          .foregroundStyle(.secondary)
-      }
-      ForEach(filteredObservances) { observance in
-        ObservanceRowView(
-          observance: observance,
-          status: tracker.status(for: observance.id),
-          noteBinding: noteBinding(for: observance.id),
-          onToggleCompletion: { tracker.toggle(observance.id) },
-          onSetStatus: { status in
-            tracker.setStatus(status, for: observance.id)
-          }
-        )
-      }
+  private func statusSymbol(for status: CompletionStatus) -> String {
+    switch status {
+    case .notStarted:
+      return "circle"
+    case .completed:
+      return "checkmark.circle.fill"
+    case .substituted:
+      return "arrow.triangle.2.circlepath.circle.fill"
+    case .dispensed:
+      return "cross.case.circle.fill"
+    case .missed:
+      return "xmark.circle.fill"
+    }
+  }
+
+  private func statusColor(for status: CompletionStatus) -> Color {
+    switch status {
+    case .notStarted:
+      return .secondary
+    case .completed:
+      return .green
+    case .substituted:
+      return .blue
+    case .dispensed:
+      return .indigo
+    case .missed:
+      return .red
+    }
+  }
+
+  private func observanceDispositionLabel(for observance: Observance) -> String {
+    switch observance.kind {
+    case .feastDay, .memorialDay:
+      return "Celebrate"
+    default:
+      return observance.obligation.label
     }
   }
 }
