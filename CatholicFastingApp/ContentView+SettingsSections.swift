@@ -500,8 +500,6 @@ extension ContentView {
     newIntermittentScheduleWeekdays = [2, 4, 6]
     lastTargetReachedHapticKey = ""
     lastEatingWindowClosedHapticKey = ""
-    savedFastingDaysPresets = []
-    selectedFastingDaysPresetID = ""
     householdProfiles = LocalFeatureStore.loadProfiles()
     activeHouseholdProfileID = LocalFeatureStore.loadActiveProfileID() ?? ""
     devotionalFavorites = []
@@ -545,10 +543,6 @@ extension ContentView {
 
     notificationStatus = "Not scheduled"
     premiumCoachStatus = ""
-    observanceFilter = .all
-    observanceQuery = ""
-    fastingDaysWindow = .allYear
-    observanceSortOrder = .chronological
     homeSurface = .today
     guidanceScenario = .normalDay
 

@@ -99,28 +99,6 @@ extension ContentView {
     newSeasonCommitmentTitle = ""
   }
 
-  func saveCurrentFastingDaysPreset() {
-    let timestamp = Date().formatted(date: .abbreviated, time: .shortened)
-    let preset = SavedCalendarPreset(
-      id: UUID().uuidString,
-      name: "\(observanceFilter.label) • \(fastingDaysWindow.label) • \(timestamp)",
-      query: observanceQuery,
-      filterRawValue: observanceFilter.rawValue,
-      windowRawValue: fastingDaysWindow.rawValue,
-      sortRawValue: observanceSortOrder.rawValue
-    )
-    savedFastingDaysPresets.insert(preset, at: 0)
-    selectedFastingDaysPresetID = preset.id
-  }
-
-  func applySelectedFastingDaysPreset() {
-    guard let preset = savedFastingDaysPresets.first(where: { $0.id == selectedFastingDaysPresetID }) else { return }
-    observanceQuery = preset.query
-    observanceFilter = ObservanceFilter(rawValue: preset.filterRawValue) ?? .all
-    fastingDaysWindow = CalendarWindow(rawValue: preset.windowRawValue) ?? .allYear
-    observanceSortOrder = ObservanceSortOrder(rawValue: preset.sortRawValue) ?? .chronological
-  }
-
   func addOrUpdateIntermittentSchedulePlan() {
     let count = intermittentSchedules.count + 1
     let trimmedName = newIntermittentScheduleName.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -315,35 +293,13 @@ extension ContentView {
   }
 
   func focusFastingDaysOnUpcomingRequired() {
-    observanceFilter = .requiredOnly
-    observanceQuery = ""
-    fastingDaysWindow = .next30Days
-    observanceSortOrder = .requiredFirst
+    fastingDaysShowAllYearDays = false
+    fastingDaysIncludeOptionalDays = false
     homeSurface = .fastingDays
-  }
-
-  func resetFastingDaysFilters() {
-    observanceFilter = .all
-    observanceQuery = ""
-    fastingDaysWindow = .allYear
-    observanceSortOrder = .chronological
   }
 
   var observancesForToday: [Observance] {
     currentYearObservances.filter { liturgicalCalendar.isDate($0.date, inSameDayAs: Date()) }
-  }
-
-  var filteredObservances: [Observance] {
-    ObservanceQueryEngine.filter(
-      observances: observances,
-      query: observanceQuery,
-      filter: observanceFilter,
-      window: fastingDaysWindow,
-      sortOrder: observanceSortOrder,
-      statusesByID: tracker.statusesByID,
-      now: Date(),
-      calendar: liturgicalCalendar
-    )
   }
 
   var rollingUpcomingObservances: [Observance] {
@@ -382,12 +338,6 @@ extension ContentView {
 
   var mandatoryObservanceCount: Int {
     currentYearObservances.filter { $0.obligation == .mandatory }.count
-  }
-
-  var fastingDaysFilterSummaryText: String {
-    let shown = filteredObservances.count
-    let total = observances.count
-    return "Showing \(shown) of \(total) observances (\(observanceFilter.label), \(fastingDaysWindow.label), \(observanceSortOrder.label))."
   }
 
   var heroSummaryText: String {

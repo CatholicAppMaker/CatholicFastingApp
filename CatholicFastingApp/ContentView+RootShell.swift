@@ -131,9 +131,6 @@ extension ContentView {
       .onChange(of: activeIntermittentScheduleID) { _, _ in
         saveAdvancedState()
       }
-      .onChange(of: savedFastingDaysPresets) { _, _ in
-        saveAdvancedState()
-      }
       .onChange(of: householdProfiles) { _, _ in
         saveAdvancedState()
       }
@@ -161,7 +158,6 @@ extension ContentView {
     LocalFeatureStore.savePlanningData(planningData)
     LocalFeatureStore.saveSchedules(intermittentSchedules)
     LocalFeatureStore.saveActiveScheduleID(activeIntermittentScheduleID)
-    LocalFeatureStore.savePresets(savedFastingDaysPresets)
     LocalFeatureStore.saveProfiles(householdProfiles)
     LocalFeatureStore.saveActiveProfileID(activeHouseholdProfileID)
     LocalFeatureStore.saveDevotionalFavorites(devotionalFavorites)

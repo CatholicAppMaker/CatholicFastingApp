@@ -20,10 +20,6 @@ struct ContentView: View {
   @State var showDeleteDataConfirm = false
   @State var guidanceScenario: GuidanceScenario = .normalDay
   @State var homeSurface: HomeSurface = .today
-  @State var observanceFilter: ObservanceFilter = .all
-  @State var observanceQuery = ""
-  @State var fastingDaysWindow: CalendarWindow = .allYear
-  @State var observanceSortOrder: ObservanceSortOrder = .chronological
   @State var didConfigureTips = false
   @State var planningData = LocalFeatureStore.loadPlanningData()
   @State var intermittentSchedules = LocalFeatureStore.loadSchedules()
@@ -34,8 +30,6 @@ struct ContentView: View {
   @State var newIntermittentScheduleWeekdays: Set<Int> = [2, 4, 6]
   @State var lastTargetReachedHapticKey = ""
   @State var lastEatingWindowClosedHapticKey = ""
-  @State var savedFastingDaysPresets = LocalFeatureStore.loadPresets()
-  @State var selectedFastingDaysPresetID = ""
   @State var householdProfiles = LocalFeatureStore.loadProfiles()
   @State var activeHouseholdProfileID = LocalFeatureStore.loadActiveProfileID() ?? ""
   @State var devotionalFavorites = LocalFeatureStore.loadDevotionalFavorites()

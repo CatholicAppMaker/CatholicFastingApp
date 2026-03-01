@@ -244,15 +244,6 @@ struct IntermittentSchedulePlan: Codable, Equatable, Identifiable {
   var weekdays: [Int]
 }
 
-struct SavedCalendarPreset: Codable, Equatable, Identifiable {
-  let id: String
-  var name: String
-  var query: String
-  var filterRawValue: String
-  var windowRawValue: String
-  var sortRawValue: String
-}
-
 struct HouseholdProfile: Codable, Equatable, Identifiable {
   let id: String
   var name: String
@@ -357,7 +348,6 @@ enum LocalFeatureStore {
   private static let planningKey = "planning_data_v1"
   private static let schedulesKey = "intermittent_schedules_v1"
   private static let activeScheduleKey = "intermittent_active_schedule_v1"
-  private static let presetsKey = "calendar_presets_v1"
   private static let profilesKey = "household_profiles_v1"
   private static let activeProfileKey = "household_active_profile_v1"
   private static let reflectionsKey = "reflection_journal_v1"
@@ -388,14 +378,6 @@ enum LocalFeatureStore {
 
   static func saveActiveScheduleID(_ value: String?) {
     UserDefaults.standard.set(value, forKey: activeScheduleKey)
-  }
-
-  static func loadPresets() -> [SavedCalendarPreset] {
-    load([SavedCalendarPreset].self, key: presetsKey) ?? []
-  }
-
-  static func savePresets(_ value: [SavedCalendarPreset]) {
-    save(value, key: presetsKey)
   }
 
   static func loadProfiles() -> [HouseholdProfile] {
@@ -466,7 +448,6 @@ enum LocalFeatureStore {
       planningKey,
       schedulesKey,
       activeScheduleKey,
-      presetsKey,
       profilesKey,
       activeProfileKey,
       reflectionsKey,
