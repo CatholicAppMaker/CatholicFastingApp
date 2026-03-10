@@ -3,6 +3,7 @@
 
 # SwiftPM
 .build/
+build/
 
 # Xcode user + derived data
 DerivedData/
