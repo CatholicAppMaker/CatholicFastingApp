@@ -51,6 +51,9 @@ Ship:
 - one or two stronger premium preview moments
 - improved iPhone premium hierarchy to better match the iPad premium surface
 - consistent subscription naming and wording across the app and App Store metadata
+- post-approval pricing correction:
+  - `Premium Monthly` -> `3.99`
+  - `Premium Yearly` -> `19.99`
 - one narrow polish pass only on high-traffic screens if needed:
   - `Today`
   - `Fasting Days`
@@ -58,7 +61,10 @@ Ship:
 
 Bar:
 
-- no pricing changes
+- pricing changes happen only after:
+  - App Review approval is complete
+  - live subscriptions load correctly in production
+  - the subscription group and product IDs are already stable
 - no new premium tier
 - no broad UI overhaul
 
@@ -173,5 +179,6 @@ Unless product strategy changes, assume:
 - the four-tab shell stays intact through the rest of `3.x`
 - food guidance remains a first-class use case, but not its own tab
 - Canada remains honest-partial through `3.x`
-- subscription pricing and tier structure stay stable through `3.x`
+- subscription tier structure stays stable through `3.x`
+- subscription pricing remains stable until approval, then may change in `3.3`
 - hosted first-party support/legal pages are optional and budget-dependent, not required for `3.x`
