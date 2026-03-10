@@ -1,47 +1,47 @@
 @preconcurrency import Foundation
 
 struct SyncSnapshot {
-  let lastSyncDate: Date?
-  let completedObservancesCount: Int
-  let fridayNotesCount: Int
-  let warnings: [String]
+    let lastSyncDate: Date?
+    let completedObservancesCount: Int
+    let fridayNotesCount: Int
+    let warnings: [String]
 }
 
 enum SyncDiagnostics {
-  static func snapshot() -> SyncSnapshot {
-    let bundleAuditWarnings = RuleBundleRepository.snapshot().audit.warnings
+    static func snapshot() -> SyncSnapshot {
+        let bundleAuditWarnings = RuleBundleRepository.snapshot().audit.warnings
 
-    let completedCount = SyncedStore.mergedStatusDictionary(for: SyncStoreKeys.observanceStatuses)
-      .values
-      .filter(\.countsTowardProgress)
-      .count
-    let notesCount = SyncedStore.mergedStringDictionary(for: SyncStoreKeys.fridayPenanceNotes)
-      .values
-      .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
-      .count
+        let completedCount = SyncedStore.mergedStatusDictionary(for: SyncStoreKeys.observanceStatuses)
+            .values
+            .filter(\.countsTowardProgress)
+            .count
+        let notesCount = SyncedStore.mergedStringDictionary(for: SyncStoreKeys.fridayPenanceNotes)
+            .values
+            .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+            .count
 
-    let warnings =
-      consistencyWarnings(
-        completionCount: completedCount,
-        notesCount: notesCount
-      ) + bundleAuditWarnings
+        let warnings =
+            consistencyWarnings(
+                completionCount: completedCount,
+                notesCount: notesCount
+            ) + bundleAuditWarnings
 
-    return SyncSnapshot(
-      lastSyncDate: UserDefaults.standard.object(forKey: SyncStoreKeys.lastSyncDate) as? Date,
-      completedObservancesCount: completedCount,
-      fridayNotesCount: notesCount,
-      warnings: warnings
-    )
-  }
-
-  private static func consistencyWarnings(completionCount: Int, notesCount: Int) -> [String] {
-    var warnings: [String] = []
-    if completionCount == 0, notesCount > 0 {
-      warnings.append("You have notes but no completed observances.")
+        return SyncSnapshot(
+            lastSyncDate: UserDefaults.standard.object(forKey: SyncStoreKeys.lastSyncDate) as? Date,
+            completedObservancesCount: completedCount,
+            fridayNotesCount: notesCount,
+            warnings: warnings
+        )
     }
-    if completionCount > 200 {
-      warnings.append("High completion count detected; review exports for duplicates.")
+
+    private static func consistencyWarnings(completionCount: Int, notesCount: Int) -> [String] {
+        var warnings: [String] = []
+        if completionCount == 0, notesCount > 0 {
+            warnings.append("You have notes but no completed observances.")
+        }
+        if completionCount > 200 {
+            warnings.append("High completion count detected; review exports for duplicates.")
+        }
+        return warnings
     }
-    return warnings
-  }
 }

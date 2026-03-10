@@ -84,7 +84,7 @@
               "locale" : "en_US"
             }
           ],
-          "productID" : "com.kevpierce.catholicfasting.premium.monthly",
+          "productID" : "com.kevpierce.catholicfasting.premium.monthly.v3",
           "recurringSubscriptionPeriod" : "P1M",
           "referenceName" : "Premium Monthly",
           "subscriptionGroupID" : "9B1233C9-E3A4-433F-AEF0-D6A8E7AA8F40",
@@ -106,7 +106,7 @@
               "locale" : "en_US"
             }
           ],
-          "productID" : "com.kevpierce.catholicfasting.premium.yearly",
+          "productID" : "com.kevpierce.catholicfasting.premium.yearly.v3",
           "recurringSubscriptionPeriod" : "P1Y",
           "referenceName" : "Premium Yearly",
           "subscriptionGroupID" : "9B1233C9-E3A4-433F-AEF0-D6A8E7AA8F40",
