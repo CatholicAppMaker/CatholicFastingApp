@@ -2,513 +2,785 @@ import Foundation
 import XCTest
 
 final class CatholicFastingAppUITests: XCTestCase {
-  override func setUpWithError() throws {
-    continueAfterFailure = false
-  }
-
-  func testSmokeOnboardingCanBeCompleted() {
-    let app = makeApp(skipOnboarding: false)
-    app.launch()
-
-    let continueButton = app.buttons["onboarding.continue"]
-    XCTAssertTrue(continueButton.waitForExistence(timeout: 4))
-    continueButton.tap()
-
-    XCTAssertTrue(app.navigationBars["Catholic Fasting"].waitForExistence(timeout: 4))
-    XCTAssertTrue(app.otherElements["surface.today.ready"].waitForExistence(timeout: 4))
-  }
-
-  func testSmokeCalendarFilterControlsVisible() {
-    let app = makeApp()
-    app.launch()
-    ensureOnHomeScreen(app)
-    openSurface("Fasting Days", in: app)
-
-    let filterVisible =
-      app.segmentedControls["calendar.filter_picker"].waitForExistence(timeout: 4)
-      || app.otherElements["calendar.filter_picker"].waitForExistence(timeout: 1)
-    XCTAssertTrue(filterVisible)
-    XCTAssertTrue(app.textFields["calendar.search_field"].firstMatch.exists)
-    XCTAssertTrue(app.buttons["calendar.year.current"].firstMatch.exists)
-  }
-
-  func testSmokeExportsRequireLegalAcknowledgment() {
-    let app = makeApp()
-    app.launch()
-    ensureOnHomeScreen(app)
-    openMoreDestination("Privacy & Data", in: app)
-
-    let legalToggle = app.switches["launch.accept_legal_notice"].firstMatch
-    XCTAssertTrue(scrollToElement(legalToggle, in: app))
-    let initialValue = legalToggle.value as? String
-    XCTAssertTrue(initialValue == "0" || initialValue == "Off")
-
-    let exportButton = app.buttons["launch.export_data"].firstMatch
-    XCTAssertTrue(scrollToElement(exportButton, in: app))
-    XCTAssertFalse(exportButton.isEnabled)
-  }
-
-  func testSmokeGuidanceScenarioControlVisible() {
-    let app = makeApp()
-    app.launch()
-    ensureOnHomeScreen(app)
-    openMoreDestination("Guidance & Rules", in: app)
-
-    let scenarioByID = elementByIdentifier("guidance.scenario", in: app)
-    XCTAssertTrue(scrollToElement(scenarioByID, in: app))
-  }
-
-  func testSmokePremiumSupportControlsVisible() {
-    let app = makeApp()
-    app.launch()
-    ensureOnHomeScreen(app)
-    openMoreDestination("Support & Premium", in: app)
-
-    let sectionTitle = app.staticTexts["Free Core + Premium + Optional Tip"].firstMatch
-    XCTAssertTrue(scrollToElement(sectionTitle, in: app))
-
-    let restoreButton = app.buttons["premium.restore"].firstMatch
-    XCTAssertTrue(scrollToElement(restoreButton, in: app))
-    XCTAssertTrue(restoreButton.isEnabled)
-
-    let manageButton = app.buttons["premium.manage"].firstMatch
-    XCTAssertTrue(scrollToElement(manageButton, in: app))
-    XCTAssertTrue(manageButton.isEnabled)
-
-    let lockedPreview = app.staticTexts["premium.locked_feature_preview"].firstMatch
-    XCTAssertTrue(scrollToElement(lockedPreview, in: app))
-  }
-
-  func testSmokePremiumSubscriptionStoreVisible() {
-    let app = makeApp()
-    app.launch()
-    ensureOnHomeScreen(app)
-    openMoreDestination("Support & Premium", in: app)
-
-    let nativeStore = app.otherElements["premium.subscription_store"].firstMatch
-    XCTAssertTrue(scrollToElement(nativeStore, in: app))
-  }
-
-  func testDeepGuidanceSacredGalleryVisible() {
-    let app = makeApp()
-    app.launch()
-    ensureOnHomeScreen(app)
-    openMoreDestination("Guidance & Rules", in: app)
-
-    let gallery = elementByIdentifier("guidance.sacred_gallery", in: app)
-    XCTAssertTrue(scrollToElement(gallery, in: app))
-  }
-
-  func testDeepCanOpenFridayNotesHistory() {
-    let app = makeApp()
-    app.launch()
-    ensureOnHomeScreen(app)
-    openMoreDestination("Setup & Reminders", in: app)
-
-    let historyLink = app.staticTexts["Friday Notes History"].firstMatch
-    XCTAssertTrue(scrollToElement(historyLink, in: app))
-    historyLink.tap()
-
-    XCTAssertTrue(app.navigationBars["Friday Notes"].waitForExistence(timeout: 4))
-  }
-
-  func testDeepLaunchReadinessControlsVisible() {
-    let app = makeApp()
-    app.launch()
-    ensureOnHomeScreen(app)
-    openMoreDestination("Privacy & Data", in: app)
-
-    let exportButton = app.buttons["launch.export_data"].firstMatch
-    XCTAssertTrue(scrollToElement(exportButton, in: app))
-
-    let deleteButton = app.buttons["launch.delete_all_data"].firstMatch
-    XCTAssertTrue(scrollToElement(deleteButton, in: app))
-  }
-
-  func testDeepDashboardHeroVisible() {
-    let app = makeApp()
-    app.launch()
-    ensureOnHomeScreen(app)
-    openSurface("Today", in: app)
-
-    let heroByID = elementByIdentifier("dashboard.hero", in: app)
-    let heroTitle = app.staticTexts["Daily Catholic Fasting Plan"].firstMatch
-    XCTAssertTrue(scrollToElement(heroByID, in: app) || scrollToElement(heroTitle, in: app))
-  }
-
-  func testDeepUnofficialNoticeVisible() {
-    let app = makeApp()
-    app.launch()
-    ensureOnHomeScreen(app)
-    openSurface("Today", in: app)
-
-    let notice = elementByIdentifier("notice.unofficial", in: app)
-    XCTAssertTrue(scrollToElement(notice, in: app))
-  }
-
-  func testDeepDashboardOpenCalendarQuickAction() {
-    let app = makeApp()
-    app.launch()
-    ensureOnHomeScreen(app)
-    openSurface("Today", in: app)
-
-    let openCalendar = app.buttons["dashboard.open_fasting_days"].firstMatch
-    XCTAssertTrue(scrollToElement(openCalendar, in: app))
-    openCalendar.tap()
-
-    XCTAssertTrue(app.otherElements["surface.fasting_days.ready"].waitForExistence(timeout: 4))
-    XCTAssertTrue(app.staticTexts["Fasting Days"].firstMatch.waitForExistence(timeout: 4))
-  }
-
-  func testDeepDashboardFocusRequiredQuickAction() {
-    let app = makeApp()
-    app.launch()
-    ensureOnHomeScreen(app)
-    openSurface("Today", in: app)
-
-    let focusRequired = app.buttons["dashboard.focus_required"].firstMatch
-    XCTAssertTrue(scrollToElement(focusRequired, in: app))
-    focusRequired.tap()
-
-    XCTAssertTrue(app.otherElements["surface.fasting_days.ready"].waitForExistence(timeout: 4))
-    XCTAssertTrue(app.staticTexts["Fasting Days"].firstMatch.exists)
-  }
-
-  func testDeepFastingDaysScopePickerVisible() {
-    let app = makeApp()
-    app.launch()
-    ensureOnHomeScreen(app)
-    openSurface("Fasting Days", in: app)
-
-    let scopePicker = app.segmentedControls["fasting_days.scope_picker"].firstMatch
-    XCTAssertTrue(scrollToElement(scopePicker, in: app))
-  }
-
-  func testIntermittentCanStartAndCancelFast() {
-    let app = makeApp()
-    app.launch()
-    ensureOnHomeScreen(app)
-    openSurface("Track Fast", in: app)
-
-    let startButton = app.buttons["intermittent.start_fast"].firstMatch
-    XCTAssertTrue(scrollToElement(startButton, in: app))
-    startButton.tap()
-
-    let elapsed = app.staticTexts["intermittent.active_elapsed"].firstMatch
-    XCTAssertTrue(elapsed.waitForExistence(timeout: 4))
-
-    let cancelButton = app.buttons["intermittent.cancel_fast"].firstMatch
-    XCTAssertTrue(scrollToElement(cancelButton, in: app))
-    cancelButton.tap()
-
-    XCTAssertTrue(app.staticTexts["intermittent.no_active"].firstMatch.waitForExistence(timeout: 4))
-  }
-
-  func testIntermittentCanEndFastAndWriteSessionHistory() {
-    let app = makeApp()
-    app.launch()
-    ensureOnHomeScreen(app)
-    openSurface("Track Fast", in: app)
-
-    let startButton = app.buttons["intermittent.start_fast"].firstMatch
-    XCTAssertTrue(scrollToElement(startButton, in: app))
-    startButton.tap()
-
-    let endButton = app.buttons["intermittent.end_fast"].firstMatch
-    XCTAssertTrue(endButton.waitForExistence(timeout: 4))
-    endButton.tap()
-
-    let historyRow = app.descendants(matching: .any).matching(identifier: "intermittent.session_row")
-      .firstMatch
-    XCTAssertTrue(scrollToElement(historyRow, in: app))
-  }
-
-  func testIntermittentTargetPickerVisible() {
-    let app = makeApp()
-    app.launch()
-    ensureOnHomeScreen(app)
-    openSurface("Track Fast", in: app)
-
-    let targetPicker = elementByIdentifier("intermittent.target_picker", in: app)
-    XCTAssertTrue(scrollToElement(targetPicker, in: app))
-  }
-
-  func testDeepRecoveryPlanVisibleWhenMissedSeeded() {
-    let app = makeApp(seedMissed: true)
-    app.launch()
-    ensureOnHomeScreen(app)
-    openSurface("Today", in: app)
-
-    let recoveryTitle = app.staticTexts["today.recovery.title"].firstMatch
-    XCTAssertTrue(scrollToElement(recoveryTitle, in: app))
-  }
-
-  func testDeepTodaySetupCardOpensQuickSetup() {
-    let app = makeApp()
-    app.launch()
-    ensureOnHomeScreen(app)
-    openSurface("Today", in: app)
-
-    let setupButton = app.buttons["today.setup.open_quick_setup"].firstMatch
-    XCTAssertTrue(scrollToElement(setupButton, in: app))
-    setupButton.tap()
-
-    XCTAssertTrue(app.otherElements["surface.more.ready"].waitForExistence(timeout: 4))
-    let setupDestination = app.staticTexts["Setup & Reminders"].firstMatch
-    XCTAssertTrue(scrollToElement(setupDestination, in: app))
-    setupDestination.tap()
-
-    let quickProgress = app.staticTexts["settings.quick.progress"].firstMatch
-    XCTAssertTrue(scrollToElement(quickProgress, in: app))
-  }
-
-  func testDeepQuickSetupConsentIncrementsProgress() {
-    let app = makeApp()
-    app.launch()
-    ensureOnHomeScreen(app)
-    openMoreDestination("Setup & Reminders", in: app)
-
-    let progress = app.staticTexts["settings.quick.progress"].firstMatch
-    XCTAssertTrue(scrollToElement(progress, in: app))
-
-    let consentToggle = app.switches["settings.quick.consent"].firstMatch
-    XCTAssertTrue(scrollToElement(consentToggle, in: app))
-    if switchIsOn(consentToggle) {
-      consentToggle.tap()
+    override func setUpWithError() throws {
+        continueAfterFailure = false
     }
 
-    guard let beforeCount = progressCount(from: progress.label) else {
-      XCTFail("Unable to parse setup progress from label: \(progress.label)")
-      return
+    func testSmokeOnboardingCanBeCompleted() {
+        let app = makeApp(skipOnboarding: false)
+        app.launch()
+
+        let continueButton = app.buttons["onboarding.continue"]
+        XCTAssertTrue(continueButton.waitForExistence(timeout: 4))
+        continueButton.tap()
+
+        XCTAssertTrue(app.navigationBars["Catholic Fasting"].waitForExistence(timeout: 4))
+        XCTAssertTrue(app.otherElements["surface.today.ready"].waitForExistence(timeout: 4))
     }
 
-    consentToggle.tap()
-    XCTAssertTrue(
-      waitUntil(timeout: 3) { (progressCount(from: progress.label) ?? beforeCount) >= beforeCount + 1 },
-      "Expected setup progress to increment after consent toggle. Before: \(beforeCount), label now: \(progress.label)"
-    )
-  }
+    func testSmokeFastingDaysControlsVisible() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openSurface("Fasting Days", in: app)
 
-  func testDeepQuickSetupReminderActionsVisible() {
-    let app = makeApp()
-    app.launch()
-    ensureOnHomeScreen(app)
-    openMoreDestination("Setup & Reminders", in: app)
+        let scopePicker = app.segmentedControls["fasting_days.scope_picker"].firstMatch
+        XCTAssertTrue(scrollToElement(scopePicker, in: app))
+        expandDisclosureGroup("Customize List", in: app)
 
-    let status = app.staticTexts["settings.quick.reminder_status"].firstMatch
-    XCTAssertTrue(scrollToElement(status, in: app))
-    let permissionButton = app.buttons["settings.quick.request_permission"].firstMatch
-    XCTAssertTrue(scrollToElement(permissionButton, in: app))
-    let requiredButton = app.buttons["settings.quick.schedule_required"].firstMatch
-    XCTAssertTrue(scrollToElement(requiredButton, in: app))
-    let supportButton = app.buttons["settings.quick.schedule_support"].firstMatch
-    XCTAssertTrue(scrollToElement(supportButton, in: app))
-  }
-
-  func testScrollMainSurfacesTopToBottomAndBack() {
-    let app = makeApp()
-    app.launch()
-    ensureOnHomeScreen(app)
-
-    let surfaces: [(label: String, id: String)] = [
-      ("Today", "today"),
-      ("Fasting Days", "fasting_days"),
-      ("Track Fast", "intermittent"),
-      ("More", "more"),
-    ]
-
-    for surface in surfaces {
-      openSurface(surface.label, in: app)
-      let bottomMarker = app.otherElements["surface.\(surface.id).bottom"].firstMatch
-      XCTAssertTrue(scrollToElement(bottomMarker, in: app), "Could not reach bottom of \(surface.label)")
-      let topMarker = app.otherElements["surface.\(surface.id).top"].firstMatch
-      XCTAssertTrue(scrollToElement(topMarker, in: app), "Could not return to top of \(surface.label)")
-    }
-  }
-
-  func testScrollMoreDestinationsTopToBottomAndBack() {
-    let app = makeApp()
-    app.launch()
-    ensureOnHomeScreen(app)
-    openSurface("More", in: app)
-
-    let destinations: [(title: String, id: String)] = [
-      ("Support & Premium", "supportAndPremium"),
-      ("Setup & Reminders", "setupAndReminders"),
-      ("Profile & Norms", "profileAndNorms"),
-      ("Guidance & Rules", "guidanceAndRules"),
-      ("Privacy & Data", "privacyAndData"),
-    ]
-
-    for destination in destinations {
-      openMoreDestination(destination.title, in: app)
-      let bottomMarker = app.otherElements["more.\(destination.id).bottom"].firstMatch
-      XCTAssertTrue(
-        scrollToElement(bottomMarker, in: app),
-        "Could not reach bottom of \(destination.title)"
-      )
-      let topMarker = app.otherElements["more.\(destination.id).top"].firstMatch
-      XCTAssertTrue(
-        scrollToElement(topMarker, in: app),
-        "Could not return to top of \(destination.title)"
-      )
-
-      let backButton = app.navigationBars.buttons.firstMatch
-      XCTAssertTrue(backButton.waitForExistence(timeout: 3))
-      backButton.tap()
-      XCTAssertTrue(app.navigationBars["Catholic Fasting"].waitForExistence(timeout: 4))
-    }
-  }
-
-  private func makeApp(skipOnboarding: Bool = true, seedMissed: Bool = false) -> XCUIApplication {
-    let app = XCUIApplication()
-    var args = ["-uitest-reset", "-uitest-seed-deterministic", "-uitest-disable-animations"]
-    if skipOnboarding {
-      args.append("-uitest-skip-onboarding")
-    }
-    if seedMissed {
-      args.append("-uitest-seed-missed")
-    }
-    app.launchArguments = args
-    app.launchEnvironment["UITEST_MODE"] = "1"
-    return app
-  }
-
-  private func ensureOnHomeScreen(_ app: XCUIApplication) {
-    let continueButton = app.buttons["onboarding.continue"]
-    if continueButton.waitForExistence(timeout: 1) {
-      continueButton.tap()
-    }
-    XCTAssertTrue(app.navigationBars["Catholic Fasting"].waitForExistence(timeout: 4))
-    XCTAssertTrue(app.otherElements["home.ready"].waitForExistence(timeout: 4))
-  }
-
-  private func openSurface(_ label: String, in app: XCUIApplication) {
-    let tabBar = app.tabBars.firstMatch
-    XCTAssertTrue(tabBar.waitForExistence(timeout: 3))
-
-    let tab = tabButton(for: label, in: app)
-    XCTAssertTrue(tab.waitForExistence(timeout: 3), "Unable to find tab \(label)")
-    tab.tap()
-    waitForSurfaceReady(label, in: app)
-  }
-
-  private func tabButton(for label: String, in app: XCUIApplication) -> XCUIElement {
-    let tabBar = app.tabBars.firstMatch
-    let direct = tabBar.buttons[label].firstMatch
-    if direct.exists {
-      return direct
-    }
-    if label == "Fasting Days" {
-      let fastingDays = tabBar.buttons["Fasting Days"].firstMatch
-      if fastingDays.exists {
-        return fastingDays
-      }
-    }
-    return direct
-  }
-
-  private func openMoreDestination(_ title: String, in app: XCUIApplication) {
-    openSurface("More", in: app)
-
-    let destinationButton = app.buttons[title].firstMatch
-    if destinationButton.exists || destinationButton.waitForExistence(timeout: 1) {
-      XCTAssertTrue(scrollToElement(destinationButton, in: app))
-      destinationButton.tap()
-      XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 4))
-      return
+        let fullYearToggle = app.switches["fasting_days.toggle.full_year"].firstMatch
+        XCTAssertTrue(scrollToElement(fullYearToggle, in: app))
+        let optionalToggle = app.switches["fasting_days.toggle.optional"].firstMatch
+        XCTAssertTrue(scrollToElement(optionalToggle, in: app))
+        let celebrationsToggle = app.switches["fasting_days.toggle.celebrations"].firstMatch
+        XCTAssertTrue(scrollToElement(celebrationsToggle, in: app))
     }
 
-    let destinationText = app.staticTexts[title].firstMatch
-    XCTAssertTrue(scrollToElement(destinationText, in: app), "Unable to find More destination \(title)")
-    destinationText.tap()
-    XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 4))
-  }
+    func testSmokeExportsRequireLegalAcknowledgment() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openMoreDestination("Privacy & Data", in: app)
 
-  private func waitForSurfaceReady(_ label: String, in app: XCUIApplication) {
-    let markerID: String
-    switch label {
-    case "Today":
-      markerID = "surface.today.ready"
-    case "Fasting Days":
-      markerID = "surface.fasting_days.ready"
-    case "Track Fast":
-      markerID = "surface.intermittent.ready"
-    case "More":
-      markerID = "surface.more.ready"
-    default:
-      return
-    }
-    XCTAssertTrue(app.otherElements[markerID].waitForExistence(timeout: 4))
-  }
+        let legalToggle = app.switches["launch.accept_legal_notice"].firstMatch
+        XCTAssertTrue(scrollToElement(legalToggle, in: app))
+        let initialValue = legalToggle.value as? String
+        XCTAssertTrue(initialValue == "0" || initialValue == "Off")
 
-  private func scrollToElement(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 12)
-    -> Bool
-  {
-    if element.exists && element.isHittable {
-      return true
+        let exportButton = app.buttons["launch.export_data"].firstMatch
+        XCTAssertTrue(scrollToElement(exportButton, in: app))
+        XCTAssertFalse(exportButton.isEnabled)
     }
 
-    let scrollContainer: XCUIElement
-    if app.collectionViews.firstMatch.exists {
-      scrollContainer = app.collectionViews.firstMatch
-    } else if app.tables.firstMatch.exists {
-      scrollContainer = app.tables.firstMatch
-    } else if app.scrollViews.firstMatch.exists {
-      scrollContainer = app.scrollViews.firstMatch
-    } else {
-      scrollContainer = app
+    func testSmokeGuidanceScenarioControlVisible() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openMoreDestination("Guidance & Rules", in: app)
+
+        let scenarioByID = elementByIdentifier("guidance.scenario", in: app)
+        XCTAssertTrue(scrollToElement(scenarioByID, in: app))
+        let foodSection = elementByIdentifier("guidance.food.section", in: app)
+        XCTAssertTrue(scrollToElement(foodSection, in: app))
     }
 
-    for _ in 0..<maxSwipes {
-      scrollContainer.swipeUp()
-      if element.exists && element.isHittable {
-        return true
-      }
+    func testSmokePremiumSupportControlsVisible() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openMoreDestination("Support & Premium", in: app)
+
+        let sectionTitle = app.staticTexts["Premium Upgrade"].firstMatch
+        XCTAssertTrue(scrollToElement(sectionTitle, in: app))
+
+        let restoreButton = app.buttons["premium.restore"].firstMatch
+        XCTAssertTrue(scrollToElement(restoreButton, in: app))
+        XCTAssertTrue(restoreButton.isEnabled)
+
+        let manageButton = app.buttons["premium.manage"].firstMatch
+        XCTAssertTrue(scrollToElement(manageButton, in: app))
+        XCTAssertTrue(manageButton.isEnabled)
+
+        let lockedPreview = app.staticTexts["premium.locked_feature_preview"].firstMatch
+        XCTAssertTrue(scrollToElement(lockedPreview, in: app))
     }
 
-    for _ in 0..<maxSwipes {
-      scrollContainer.swipeDown()
-      if element.exists && element.isHittable {
-        return true
-      }
+    func testSmokePremiumSubscriptionStoreVisible() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openMoreDestination("Support & Premium", in: app)
+
+        let nativeStore = app.otherElements["premium.subscription_store"].firstMatch
+        XCTAssertTrue(scrollToElement(nativeStore, in: app))
     }
 
-    return element.exists && element.isHittable
-  }
+    func testDeepGuidanceSacredGalleryVisible() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openMoreDestination("Guidance & Rules", in: app)
 
-  private func elementByIdentifier(_ identifier: String, in app: XCUIApplication) -> XCUIElement {
-    app.descendants(matching: .any).matching(identifier: identifier).firstMatch
-  }
-
-  private func switchIsOn(_ element: XCUIElement) -> Bool {
-    let rawValue = element.value as? String
-    return rawValue == "1" || rawValue == "On"
-  }
-
-  private func progressCount(from label: String) -> Int? {
-    guard let range = label.range(of: #"\d+/\d+"#, options: .regularExpression) else {
-      return nil
+        let gallery = elementByIdentifier("guidance.sacred_gallery", in: app)
+        XCTAssertTrue(scrollToElement(gallery, in: app))
     }
-    let token = label[range]
-    guard let numerator = token.split(separator: "/").first else {
-      return nil
-    }
-    return Int(numerator)
-  }
 
-  private func waitUntil(
-    timeout: TimeInterval,
-    pollInterval: TimeInterval = 0.1,
-    condition: () -> Bool
-  ) -> Bool {
-    let deadline = Date().addingTimeInterval(timeout)
-    while Date() < deadline {
-      if condition() {
-        return true
-      }
-      RunLoop.current.run(until: Date().addingTimeInterval(pollInterval))
+    func testDeepCanOpenFridayNotesHistory() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openMoreDestination("Setup & Reminders", in: app)
+
+        let historyLink = app.staticTexts["Friday Notes History"].firstMatch
+        XCTAssertTrue(scrollToElement(historyLink, in: app))
+        historyLink.tap()
+
+        XCTAssertTrue(app.navigationBars["Friday Notes"].waitForExistence(timeout: 4))
     }
-    return condition()
-  }
+
+    func testDeepLaunchReadinessControlsVisible() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openMoreDestination("Privacy & Data", in: app)
+
+        let exportButton = app.buttons["launch.export_data"].firstMatch
+        XCTAssertTrue(scrollToElement(exportButton, in: app))
+
+        let deleteButton = app.buttons["launch.delete_all_data"].firstMatch
+        XCTAssertTrue(scrollToElement(deleteButton, in: app))
+    }
+
+    func testDeepDashboardHeroVisible() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openSurface("Today", in: app)
+
+        let heroByID = elementByIdentifier("dashboard.hero", in: app)
+        let heroTitle = app.staticTexts["Daily Catholic Fasting Plan"].firstMatch
+        XCTAssertTrue(scrollToElement(heroByID, in: app) || scrollToElement(heroTitle, in: app))
+    }
+
+    func testDeepUnofficialNoticeVisible() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openSurface("Today", in: app)
+
+        let notice = elementByIdentifier("notice.unofficial", in: app)
+        XCTAssertTrue(scrollToElement(notice, in: app))
+    }
+
+    func testDeepDashboardOpenFastingDaysQuickAction() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openSurface("Today", in: app)
+
+        let openFastingDays = app.buttons["dashboard.open_fasting_days"].firstMatch
+        XCTAssertTrue(scrollToElement(openFastingDays, in: app))
+        openFastingDays.tap()
+
+        XCTAssertTrue(app.otherElements["surface.fasting_days.ready"].waitForExistence(timeout: 4))
+        XCTAssertTrue(app.staticTexts["Fasting Days"].firstMatch.waitForExistence(timeout: 4))
+    }
+
+    func testDeepDashboardFocusRequiredQuickAction() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openSurface("Today", in: app)
+
+        let focusRequired = app.buttons["dashboard.focus_required"].firstMatch
+        XCTAssertTrue(scrollToElement(focusRequired, in: app))
+        focusRequired.tap()
+
+        XCTAssertTrue(app.otherElements["surface.fasting_days.ready"].waitForExistence(timeout: 4))
+        XCTAssertTrue(app.staticTexts["Fasting Days"].firstMatch.exists)
+    }
+
+    func testDeepTodayFoodGuidanceShortcutOpensGuidanceRules() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openSurface("Today", in: app)
+
+        let foodShortcut = app.buttons["today.decision.open_full_food_guidance"].firstMatch
+        XCTAssertTrue(scrollToElement(foodShortcut, in: app))
+        foodShortcut.tap()
+
+        let foodSection = elementByIdentifier("guidance.food.section", in: app)
+        XCTAssertTrue(foodSection.waitForExistence(timeout: 4))
+    }
+
+    func testDeepFastingDaysScopePickerVisible() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openSurface("Fasting Days", in: app)
+
+        let scopePicker = app.segmentedControls["fasting_days.scope_picker"].firstMatch
+        XCTAssertTrue(scrollToElement(scopePicker, in: app))
+    }
+
+    func testIntermittentCanStartAndCancelFast() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openSurface("Track Fast", in: app)
+
+        let startButton = app.buttons["intermittent.start_fast"].firstMatch
+        XCTAssertTrue(scrollToElement(startButton, in: app))
+        startButton.tap()
+
+        let elapsed = app.staticTexts["intermittent.active_elapsed"].firstMatch
+        XCTAssertTrue(elapsed.waitForExistence(timeout: 4))
+
+        let cancelButton = app.buttons["intermittent.cancel_fast"].firstMatch
+        XCTAssertTrue(scrollToElement(cancelButton, in: app))
+        cancelButton.tap()
+
+        XCTAssertTrue(app.staticTexts["intermittent.no_active"].firstMatch.waitForExistence(timeout: 4))
+    }
+
+    func testIntermittentCanEndFastAndWriteSessionHistory() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openSurface("Track Fast", in: app)
+
+        let startButton = app.buttons["intermittent.start_fast"].firstMatch
+        XCTAssertTrue(scrollToElement(startButton, in: app))
+        startButton.tap()
+
+        let endButton = app.buttons["intermittent.end_fast"].firstMatch
+        XCTAssertTrue(endButton.waitForExistence(timeout: 4))
+        endButton.tap()
+
+        let historyRow = app.descendants(matching: .any).matching(identifier: "intermittent.session_row")
+            .firstMatch
+        XCTAssertTrue(scrollToElement(historyRow, in: app))
+    }
+
+    func testIntermittentLockedCustomTargetCanOpenPremiumUpgrade() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openSurface("Track Fast", in: app)
+
+        let unlockButton = app.buttons["intermittent.unlock_custom_targets"].firstMatch
+        XCTAssertTrue(scrollToElement(unlockButton, in: app))
+        unlockButton.tap()
+
+        let premiumHero = app.otherElements["premium.hero"].firstMatch
+        XCTAssertTrue(premiumHero.waitForExistence(timeout: 4))
+        XCTAssertTrue(app.staticTexts["Premium Upgrade"].firstMatch.exists)
+    }
+
+    func testIntermittentTargetPickerVisible() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openSurface("Track Fast", in: app)
+
+        let targetPicker = elementByIdentifier("intermittent.target_picker", in: app)
+        XCTAssertTrue(scrollToElement(targetPicker, in: app))
+    }
+
+    func testDeepRecoveryPlanVisibleWhenMissedSeeded() {
+        let app = makeApp(seedMissed: true)
+        app.launch()
+        ensureOnHomeScreen(app)
+        openSurface("Today", in: app)
+
+        let recoveryTitle = app.staticTexts["today.recovery.title"].firstMatch
+        XCTAssertTrue(scrollToElement(recoveryTitle, in: app))
+    }
+
+    func testDeepTodaySetupCardOpensQuickSetup() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openSurface("Today", in: app)
+
+        let setupButton = app.buttons["today.setup.open_quick_setup"].firstMatch
+        XCTAssertTrue(scrollToElement(setupButton, in: app))
+        setupButton.tap()
+
+        XCTAssertTrue(app.otherElements["surface.more.ready"].waitForExistence(timeout: 4))
+        let setupDestination = app.staticTexts["Setup & Reminders"].firstMatch
+        XCTAssertTrue(scrollToElement(setupDestination, in: app))
+        setupDestination.tap()
+
+        let quickProgress = app.staticTexts["settings.quick.progress"].firstMatch
+        XCTAssertTrue(scrollToElement(quickProgress, in: app))
+    }
+
+    func testDeepQuickSetupConsentIncrementsProgress() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openMoreDestination("Setup & Reminders", in: app)
+
+        let progress = app.staticTexts["settings.quick.progress"].firstMatch
+        XCTAssertTrue(scrollToElement(progress, in: app))
+
+        let consentToggle = app.switches["settings.quick.consent"].firstMatch
+        XCTAssertTrue(scrollToElement(consentToggle, in: app))
+        if switchIsOn(consentToggle) {
+            consentToggle.tap()
+        }
+
+        guard let beforeCount = progressCount(from: progress.label) else {
+            XCTFail("Unable to parse setup progress from label: \(progress.label)")
+            return
+        }
+
+        consentToggle.tap()
+        XCTAssertTrue(
+            waitUntil(timeout: 3) { (progressCount(from: progress.label) ?? beforeCount) >= beforeCount + 1 },
+            "Expected setup progress to increment after consent toggle. Before: \(beforeCount), label now: \(progress.label)"
+        )
+    }
+
+    func testDeepQuickSetupReminderActionsVisible() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openMoreDestination("Setup & Reminders", in: app)
+
+        expandDisclosureGroup("Reminder Actions", in: app)
+
+        let status = app.staticTexts["settings.quick.reminder_status"].firstMatch
+        XCTAssertTrue(scrollToElement(status, in: app))
+        let permissionButton = app.buttons["settings.quick.request_permission"].firstMatch
+        XCTAssertTrue(scrollToElement(permissionButton, in: app))
+        let requiredButton = app.buttons["settings.quick.schedule_required"].firstMatch
+        XCTAssertTrue(scrollToElement(requiredButton, in: app))
+        let supportButton = app.buttons["settings.quick.schedule_support"].firstMatch
+        XCTAssertTrue(scrollToElement(supportButton, in: app))
+    }
+
+    func testDeepHouseholdProfileCanBeCreatedAndReapplied() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openMoreDestination("Setup & Reminders", in: app)
+
+        let age14Toggle = app.switches["settings.quick.age14_toggle"].firstMatch
+        XCTAssertTrue(scrollToElement(age14Toggle, in: app))
+        if switchIsOn(age14Toggle) {
+            age14Toggle.tap()
+        }
+
+        let age18Toggle = app.switches["settings.quick.age18_toggle"].firstMatch
+        XCTAssertTrue(scrollToElement(age18Toggle, in: app))
+        if switchIsOn(age18Toggle) {
+            age18Toggle.tap()
+        }
+
+        returnToMoreHome(in: app)
+        openMoreDestination("Profile & Norms", in: app)
+
+        let newProfileField = app.textFields["settings.household.new_name"].firstMatch
+        XCTAssertTrue(scrollToElement(newProfileField, in: app))
+        newProfileField.tap()
+        newProfileField.typeText("Teen Profile")
+
+        let addProfileButton = app.buttons["settings.household.add"].firstMatch
+        XCTAssertTrue(scrollToElement(addProfileButton, in: app))
+        addProfileButton.tap()
+
+        returnToMoreHome(in: app)
+        openMoreDestination("Setup & Reminders", in: app)
+
+        XCTAssertTrue(scrollToElement(age14Toggle, in: app))
+        if !switchIsOn(age14Toggle) {
+            age14Toggle.tap()
+        }
+        XCTAssertTrue(scrollToElement(age18Toggle, in: app))
+        if !switchIsOn(age18Toggle) {
+            age18Toggle.tap()
+        }
+
+        returnToMoreHome(in: app)
+        openMoreDestination("Profile & Norms", in: app)
+
+        let applyButton = app.buttons["settings.household.apply"].firstMatch
+        XCTAssertTrue(scrollToElement(applyButton, in: app))
+        applyButton.tap()
+
+        returnToMoreHome(in: app)
+        openMoreDestination("Setup & Reminders", in: app)
+
+        XCTAssertTrue(scrollToElement(age14Toggle, in: app))
+        XCTAssertFalse(switchIsOn(age14Toggle))
+        XCTAssertTrue(scrollToElement(age18Toggle, in: app))
+        XCTAssertFalse(switchIsOn(age18Toggle))
+    }
+
+    func testScrollMainSurfacesTopToBottomAndBack() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        let surfaces: [(label: String, id: String)] = [
+            ("Today", "today"),
+            ("Fasting Days", "fasting_days"),
+            ("Track Fast", "intermittent"),
+            ("More", "more"),
+        ]
+
+        for surface in surfaces {
+            openSurface(surface.label, in: app)
+            let bottomMarker = app.otherElements["surface.\(surface.id).bottom"].firstMatch
+            XCTAssertTrue(scrollToElement(bottomMarker, in: app), "Could not reach bottom of \(surface.label)")
+            let topMarker = app.otherElements["surface.\(surface.id).top"].firstMatch
+            XCTAssertTrue(scrollToElement(topMarker, in: app), "Could not return to top of \(surface.label)")
+        }
+    }
+
+    func testScrollMoreDestinationsTopToBottomAndBack() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openSurface("More", in: app)
+
+        let destinations: [(title: String, id: String)] = [
+            ("Support & Premium", "supportAndPremium"),
+            ("Setup & Reminders", "setupAndReminders"),
+            ("Profile & Norms", "profileAndNorms"),
+            ("Guidance & Rules", "guidanceAndRules"),
+            ("Privacy & Data", "privacyAndData"),
+        ]
+
+        for destination in destinations {
+            openMoreDestination(destination.title, in: app)
+            let bottomMarker = app.otherElements["more.\(destination.id).bottom"].firstMatch
+            XCTAssertTrue(
+                scrollToElement(bottomMarker, in: app),
+                "Could not reach bottom of \(destination.title)"
+            )
+            let topMarker = app.otherElements["more.\(destination.id).top"].firstMatch
+            XCTAssertTrue(
+                scrollToElement(topMarker, in: app),
+                "Could not return to top of \(destination.title)"
+            )
+
+            let backButton = app.navigationBars.buttons.firstMatch
+            XCTAssertTrue(backButton.waitForExistence(timeout: 3))
+            backButton.tap()
+            XCTAssertTrue(app.navigationBars["Catholic Fasting"].waitForExistence(timeout: 4))
+        }
+    }
+
+    func testIPadSidebarSwitchesPrimaryWorkspaces() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadSurface("today", in: app)
+        XCTAssertTrue(app.otherElements["ipad.today.workspace"].waitForExistence(timeout: 4))
+
+        openIPadSurface("fasting_days", in: app)
+        XCTAssertTrue(app.otherElements["ipad.fasting_days.workspace"].waitForExistence(timeout: 4))
+
+        openIPadSurface("intermittent", in: app)
+        XCTAssertTrue(app.otherElements["ipad.intermittent.workspace"].waitForExistence(timeout: 4))
+
+        openIPadSurface("more", in: app)
+        XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
+    }
+
+    func testIPadTodayDashboardShowsHeroAndCoreCards() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadSurface("today", in: app)
+
+        XCTAssertTrue(app.otherElements["ipad.today.workspace"].waitForExistence(timeout: 4))
+        XCTAssertTrue(app.otherElements["ipad.today.hero"].waitForExistence(timeout: 4))
+        XCTAssertTrue(app.otherElements["ipad.today.primary_card"].waitForExistence(timeout: 4))
+        XCTAssertTrue(app.otherElements["ipad.today.metrics"].waitForExistence(timeout: 4))
+        XCTAssertTrue(app.otherElements["ipad.today.actions"].waitForExistence(timeout: 4))
+    }
+
+    func testIPadFastingDaysSelectionShowsDetail() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadSurface("fasting_days", in: app)
+
+        let row = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "ipad.fasting_days.row."))
+            .firstMatch
+        XCTAssertTrue(scrollToElement(row, in: app))
+        row.tap()
+
+        let detail = app.otherElements["ipad.fasting_days.detail"].firstMatch
+        XCTAssertTrue(detail.waitForExistence(timeout: 4))
+    }
+
+    func testIPadFastingDaysShowsFiltersAndQuickDates() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadSurface("fasting_days", in: app)
+
+        XCTAssertTrue(app.otherElements["ipad.fasting_days.filters"].waitForExistence(timeout: 4))
+        XCTAssertTrue(app.otherElements["ipad.fasting_days.quick_dates"].waitForExistence(timeout: 4))
+        XCTAssertTrue(app.otherElements["ipad.fasting_days.center_list"].waitForExistence(timeout: 4))
+    }
+
+    func testIPadFastingDaysFoodGuidanceShortcutOpensMoreGuidance() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadSurface("fasting_days", in: app)
+
+        let row = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "ipad.fasting_days.row."))
+            .firstMatch
+        XCTAssertTrue(scrollToElement(row, in: app))
+        row.tap()
+
+        let shortcut = app.buttons["ipad.fasting_days.open_food_guidance"].firstMatch
+        XCTAssertTrue(scrollToElement(shortcut, in: app))
+        shortcut.tap()
+
+        XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
+        let guidanceSection = app.otherElements["guidance.food.section"].firstMatch
+        XCTAssertTrue(scrollToElement(guidanceSection, in: app))
+    }
+
+    func testIPadOnboardingShowsRegionSelector() {
+        let app = makeApp(skipOnboarding: false)
+        app.launch()
+
+        XCTAssertTrue(app.pickers["onboarding.region"].waitForExistence(timeout: 4))
+    }
+
+    func testIPadMoreProfileDestinationShowsRegionPicker() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadMoreDestination("profileAndNorms", in: app)
+
+        let regionPicker = app.pickers["settings.region_picker"].firstMatch
+        XCTAssertTrue(scrollToElement(regionPicker, in: app))
+    }
+
+    func testIPadCanadaModeShowsPartialSupportContext() {
+        let app = makeApp(regionProfile: "canada")
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadSurface("today", in: app)
+        XCTAssertTrue(scrollToElement(app.staticTexts["Canada guidance"].firstMatch, in: app))
+
+        openIPadSurface("fasting_days", in: app)
+        XCTAssertTrue(scrollToElement(app.staticTexts["Partial support"].firstMatch, in: app))
+    }
+
+    func testIPadPremiumWorkspaceShowsLegalLinks() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadMoreDestination("supportAndPremium", in: app)
+
+        let premiumWorkspace = app.otherElements["ipad.premium.workspace"].firstMatch
+        XCTAssertTrue(premiumWorkspace.waitForExistence(timeout: 4))
+        XCTAssertTrue(app.otherElements["ipad.premium.dashboard"].waitForExistence(timeout: 4))
+        XCTAssertTrue(app.otherElements["ipad.premium.legal_footer"].waitForExistence(timeout: 4))
+        XCTAssertTrue(scrollToElement(app.links["Terms of Use (EULA)"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.links["Privacy Policy"].firstMatch, in: app))
+    }
+
+    func testIPadTrackFastShowsLiveWorkspaceAndControls() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadSurface("intermittent", in: app)
+
+        XCTAssertTrue(app.otherElements["ipad.intermittent.live"].waitForExistence(timeout: 4))
+        XCTAssertTrue(app.otherElements["ipad.intermittent.controls"].waitForExistence(timeout: 4))
+        XCTAssertTrue(app.otherElements["ipad.intermittent.planning"].waitForExistence(timeout: 4))
+        XCTAssertTrue(app.otherElements["ipad.intermittent.history"].waitForExistence(timeout: 4))
+    }
+
+    private func makeApp(skipOnboarding: Bool = true, seedMissed: Bool = false, regionProfile: String? = nil) -> XCUIApplication {
+        let app = XCUIApplication()
+        var args = ["-uitest-reset", "-uitest-seed-deterministic", "-uitest-disable-animations"]
+        if skipOnboarding {
+            args.append("-uitest-skip-onboarding")
+        }
+        if seedMissed {
+            args.append("-uitest-seed-missed")
+        }
+        app.launchArguments = args
+        app.launchEnvironment["UITEST_MODE"] = "1"
+        if let regionProfile {
+            app.launchEnvironment["UITEST_REGION_PROFILE"] = regionProfile
+        }
+        return app
+    }
+
+    private func ensureOnHomeScreen(_ app: XCUIApplication) {
+        let continueButton = app.buttons["onboarding.continue"]
+        if continueButton.waitForExistence(timeout: 1) {
+            continueButton.tap()
+        }
+        XCTAssertTrue(app.navigationBars["Catholic Fasting"].waitForExistence(timeout: 4))
+        XCTAssertTrue(app.otherElements["home.ready"].waitForExistence(timeout: 4))
+    }
+
+    private func openSurface(_ label: String, in app: XCUIApplication) {
+        let tabBar = app.tabBars.firstMatch
+        XCTAssertTrue(tabBar.waitForExistence(timeout: 3))
+
+        let tab = tabButton(for: label, in: app)
+        XCTAssertTrue(tab.waitForExistence(timeout: 3), "Unable to find tab \(label)")
+        tab.tap()
+        waitForSurfaceReady(label, in: app)
+    }
+
+    private func tabButton(for label: String, in app: XCUIApplication) -> XCUIElement {
+        let tabBar = app.tabBars.firstMatch
+        let direct = tabBar.buttons[label].firstMatch
+        if direct.exists {
+            return direct
+        }
+        if label == "Fasting Days" {
+            let fastingDays = tabBar.buttons["Fasting Days"].firstMatch
+            if fastingDays.exists {
+                return fastingDays
+            }
+        }
+        return direct
+    }
+
+    private func openMoreDestination(_ title: String, in app: XCUIApplication) {
+        openSurface("More", in: app)
+
+        let destinationButton = app.buttons[title].firstMatch
+        if destinationButton.exists || destinationButton.waitForExistence(timeout: 1) {
+            XCTAssertTrue(scrollToElement(destinationButton, in: app))
+            destinationButton.tap()
+            XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 4))
+            return
+        }
+
+        let destinationText = app.staticTexts[title].firstMatch
+        XCTAssertTrue(scrollToElement(destinationText, in: app), "Unable to find More destination \(title)")
+        destinationText.tap()
+        XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 4))
+    }
+
+    private func openIPadSurface(_ rawValue: String, in app: XCUIApplication) {
+        let button = app.buttons["ipad.sidebar.\(rawValue)"].firstMatch
+        XCTAssertTrue(button.waitForExistence(timeout: 4), "Unable to find iPad sidebar surface \(rawValue)")
+        button.tap()
+    }
+
+    private func openIPadMoreDestination(_ rawValue: String, in app: XCUIApplication) {
+        openIPadSurface("more", in: app)
+
+        let destination = app.buttons["ipad.more.destination.\(rawValue)"].firstMatch
+        XCTAssertTrue(destination.waitForExistence(timeout: 4), "Unable to find iPad More destination \(rawValue)")
+        destination.tap()
+    }
+
+    private func waitForSurfaceReady(_ label: String, in app: XCUIApplication) {
+        let markerID: String
+        switch label {
+        case "Today":
+            markerID = "surface.today.ready"
+        case "Fasting Days":
+            markerID = "surface.fasting_days.ready"
+        case "Track Fast":
+            markerID = "surface.intermittent.ready"
+        case "More":
+            markerID = "surface.more.ready"
+        default:
+            return
+        }
+        XCTAssertTrue(app.otherElements[markerID].waitForExistence(timeout: 4))
+    }
+
+    private func scrollToElement(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 12)
+        -> Bool
+    {
+        if element.exists, element.isHittable {
+            return true
+        }
+
+        let scrollContainer: XCUIElement = if app.collectionViews.firstMatch.exists {
+            app.collectionViews.firstMatch
+        } else if app.tables.firstMatch.exists {
+            app.tables.firstMatch
+        } else if app.scrollViews.firstMatch.exists {
+            app.scrollViews.firstMatch
+        } else {
+            app
+        }
+
+        for _ in 0 ..< maxSwipes {
+            scrollContainer.swipeUp()
+            if element.exists, element.isHittable {
+                return true
+            }
+        }
+
+        for _ in 0 ..< maxSwipes {
+            scrollContainer.swipeDown()
+            if element.exists, element.isHittable {
+                return true
+            }
+        }
+
+        return element.exists && element.isHittable
+    }
+
+    private func elementByIdentifier(_ identifier: String, in app: XCUIApplication) -> XCUIElement {
+        app.descendants(matching: .any).matching(identifier: identifier).firstMatch
+    }
+
+    private func expandDisclosureGroup(_ label: String, in app: XCUIApplication) {
+        let button = app.buttons[label].firstMatch
+        if scrollToElement(button, in: app) {
+            button.tap()
+            return
+        }
+
+        let text = app.staticTexts[label].firstMatch
+        XCTAssertTrue(scrollToElement(text, in: app), "Unable to find disclosure group \(label)")
+        text.tap()
+    }
+
+    private func returnToMoreHome(in app: XCUIApplication) {
+        let backButton = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(backButton.waitForExistence(timeout: 3))
+        backButton.tap()
+        XCTAssertTrue(app.navigationBars["Catholic Fasting"].waitForExistence(timeout: 4))
+    }
+
+    private func switchIsOn(_ element: XCUIElement) -> Bool {
+        let rawValue = element.value as? String
+        return rawValue == "1" || rawValue == "On"
+    }
+
+    private func progressCount(from label: String) -> Int? {
+        guard let range = label.range(of: #"\d+/\d+"#, options: .regularExpression) else {
+            return nil
+        }
+        let token = label[range]
+        guard let numerator = token.split(separator: "/").first else {
+            return nil
+        }
+        return Int(numerator)
+    }
+
+    private func waitUntil(
+        timeout: TimeInterval,
+        pollInterval: TimeInterval = 0.1,
+        condition: () -> Bool
+    ) -> Bool {
+        let deadline = Date().addingTimeInterval(timeout)
+        while Date() < deadline {
+            if condition() {
+                return true
+            }
+            RunLoop.current.run(until: Date().addingTimeInterval(pollInterval))
+        }
+        return condition()
+    }
 }
