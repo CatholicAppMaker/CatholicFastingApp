@@ -14,6 +14,7 @@
 "guidance.usccb.fast_rule" = "Fasting applies from age 18 until age 59.";
 "guidance.usccb.abstinence_rule" = "Abstinence from meat applies from age 14 onward.";
 "guidance.usccb.friday_rule" = "Fridays in Lent are days of abstinence.";
+"guidance.usccb.outside_lent_rule" = "Fridays outside Lent remain penitential days in the U.S.; choose abstinence or another penitential act.";
 "guidance.usccb.dispensation_note" = "Pastors and local bishops may give legitimate dispensations and local norms.";
 "guidance.usccb.link_label" = "Read Full USCCB Fast & Abstinence Guidelines";
 "guidance.sources.local_decrees_note" = "Always confirm local decrees for your location and year.";
@@ -68,7 +69,7 @@
 "settings.privacy.control_consent" = "Consent";
 
 "settings.backups.title" = "Backups & Exports";
-"settings.backups.usccb_guidance" = "USCCB Liturgical Calendar Guidance";
+"settings.backups.usccb_guidance" = "USCCB Liturgical Year Guidance";
 "settings.backups.send_feedback" = "Send Feedback";
 "settings.backups.data_export_subject" = "Catholic Fasting Data Export";
 "settings.backups.data_export_message" = "Exported user data for backup/review";

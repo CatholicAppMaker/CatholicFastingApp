@@ -14,6 +14,7 @@
 "guidance.usccb.fast_rule" = "El ayuno aplica desde los 18 hasta los 59 años.";
 "guidance.usccb.abstinence_rule" = "La abstinencia de carne aplica desde los 14 años en adelante.";
 "guidance.usccb.friday_rule" = "Los viernes de Cuaresma son días de abstinencia.";
+"guidance.usccb.outside_lent_rule" = "Los viernes fuera de Cuaresma siguen siendo días penitenciales en EE. UU.; elija abstinencia u otro acto penitencial.";
 "guidance.usccb.dispensation_note" = "Los párrocos y obispos locales pueden otorgar dispensas legítimas y normas locales.";
 "guidance.usccb.link_label" = "Leer guía completa de ayuno y abstinencia de la USCCB";
 "guidance.sources.local_decrees_note" = "Siempre confirme los decretos locales para su ubicación y año.";
@@ -68,7 +69,7 @@
 "settings.privacy.control_consent" = "Consentimiento";
 
 "settings.backups.title" = "Respaldos y exportaciones";
-"settings.backups.usccb_guidance" = "Guía del calendario litúrgico de la USCCB";
+"settings.backups.usccb_guidance" = "Guía del año litúrgico de la USCCB";
 "settings.backups.send_feedback" = "Enviar comentarios";
 "settings.backups.data_export_subject" = "Exportación de datos de ayuno católico";
 "settings.backups.data_export_message" = "Datos exportados para respaldo/revisión";
