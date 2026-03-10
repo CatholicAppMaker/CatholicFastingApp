@@ -44,6 +44,19 @@
 		A00000000000000000000096 /* ReminderScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000093 /* ReminderScheduler.swift */; };
 		A00000000000000000000097 /* ContentView+RootShell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000094 /* ContentView+RootShell.swift */; };
 		A00000000000000000000099 /* ContentView+PremiumCompanionSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000009A /* ContentView+PremiumCompanionSections.swift */; };
+		A0000000000000000000009C /* GrowthContracts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000009B /* GrowthContracts.swift */; };
+		A0000000000000000000009E /* ContentView+iPadLayouts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000009D /* ContentView+iPadLayouts.swift */; };
+		A0000000000000000000009F /* RegionalGuidanceContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000A4 /* RegionalGuidanceContext.swift */; };
+		A000000000000000000000A0 /* ContentView+iPadToday.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000A5 /* ContentView+iPadToday.swift */; };
+		A000000000000000000000A1 /* ContentView+iPadFastingDays.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000A6 /* ContentView+iPadFastingDays.swift */; };
+		A000000000000000000000A2 /* ContentView+iPadTrackFast.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000A7 /* ContentView+iPadTrackFast.swift */; };
+		A000000000000000000000A3 /* ContentView+iPadMore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000A8 /* ContentView+iPadMore.swift */; };
+		A000000000000000000000A9 /* ContentView+iPadMoreDestinations.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000AA /* ContentView+iPadMoreDestinations.swift */; };
+		A000000000000000000000AB /* ContentView+iPadPremiumWorkspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000AC /* ContentView+iPadPremiumWorkspace.swift */; };
+		A000000000000000000000AD /* ContentView+iPadComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000AE /* ContentView+iPadComponents.swift */; };
+		A000000000000000000000AF /* ContentView+iPadTodayCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000B0 /* ContentView+iPadTodayCards.swift */; };
+		A000000000000000000000B1 /* ContentView+iPadFastingDaysPanels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000B2 /* ContentView+iPadFastingDaysPanels.swift */; };
+		A000000000000000000000B3 /* ContentView+iPadTrackFastPanels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000B4 /* ContentView+iPadTrackFastPanels.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -122,6 +135,19 @@
 		A00000000000000000000094 /* ContentView+RootShell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+RootShell.swift"; sourceTree = "<group>"; };
 		A00000000000000000000098 /* Premium.storekit */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Premium.storekit; sourceTree = "<group>"; };
 		A0000000000000000000009A /* ContentView+PremiumCompanionSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+PremiumCompanionSections.swift"; sourceTree = "<group>"; };
+		A0000000000000000000009B /* GrowthContracts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthContracts.swift; sourceTree = "<group>"; };
+		A0000000000000000000009D /* ContentView+iPadLayouts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+iPadLayouts.swift"; sourceTree = "<group>"; };
+		A000000000000000000000A4 /* RegionalGuidanceContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionalGuidanceContext.swift; sourceTree = "<group>"; };
+		A000000000000000000000A5 /* ContentView+iPadToday.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+iPadToday.swift"; sourceTree = "<group>"; };
+		A000000000000000000000A6 /* ContentView+iPadFastingDays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+iPadFastingDays.swift"; sourceTree = "<group>"; };
+		A000000000000000000000A7 /* ContentView+iPadTrackFast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+iPadTrackFast.swift"; sourceTree = "<group>"; };
+		A000000000000000000000A8 /* ContentView+iPadMore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+iPadMore.swift"; sourceTree = "<group>"; };
+		A000000000000000000000AA /* ContentView+iPadMoreDestinations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+iPadMoreDestinations.swift"; sourceTree = "<group>"; };
+		A000000000000000000000AC /* ContentView+iPadPremiumWorkspace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+iPadPremiumWorkspace.swift"; sourceTree = "<group>"; };
+		A000000000000000000000AE /* ContentView+iPadComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+iPadComponents.swift"; sourceTree = "<group>"; };
+		A000000000000000000000B0 /* ContentView+iPadTodayCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+iPadTodayCards.swift"; sourceTree = "<group>"; };
+		A000000000000000000000B2 /* ContentView+iPadFastingDaysPanels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+iPadFastingDaysPanels.swift"; sourceTree = "<group>"; };
+		A000000000000000000000B4 /* ContentView+iPadTrackFastPanels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+iPadTrackFastPanels.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,6 +207,17 @@
 				A00000000000000000000049 /* ContentView+IntermittentSections.swift */,
 				A0000000000000000000004B /* ContentView+StateHelpers.swift */,
 				A00000000000000000000094 /* ContentView+RootShell.swift */,
+				A0000000000000000000009D /* ContentView+iPadLayouts.swift */,
+				A000000000000000000000AE /* ContentView+iPadComponents.swift */,
+				A000000000000000000000A5 /* ContentView+iPadToday.swift */,
+				A000000000000000000000B0 /* ContentView+iPadTodayCards.swift */,
+				A000000000000000000000A6 /* ContentView+iPadFastingDays.swift */,
+				A000000000000000000000B2 /* ContentView+iPadFastingDaysPanels.swift */,
+				A000000000000000000000A7 /* ContentView+iPadTrackFast.swift */,
+				A000000000000000000000B4 /* ContentView+iPadTrackFastPanels.swift */,
+				A000000000000000000000A8 /* ContentView+iPadMore.swift */,
+				A000000000000000000000AA /* ContentView+iPadMoreDestinations.swift */,
+				A000000000000000000000AC /* ContentView+iPadPremiumWorkspace.swift */,
 				A0000000000000000000009A /* ContentView+PremiumCompanionSections.swift */,
 				A0000000000000000000003D /* ContentView+GuidanceSections.swift */,
 				A0000000000000000000003F /* ContentView+SettingsSections.swift */,
@@ -216,6 +253,8 @@
 				A00000000000000000000057 /* SyncStore.swift */,
 				A00000000000000000000059 /* FoundationDateExtensions.swift */,
 				A00000000000000000000064 /* PremiumExperienceEngine.swift */,
+				A0000000000000000000009B /* GrowthContracts.swift */,
+				A000000000000000000000A4 /* RegionalGuidanceContext.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -386,12 +425,25 @@
 				A00000000000000000000056 /* SyncStore.swift in Sources */,
 				A00000000000000000000058 /* FoundationDateExtensions.swift in Sources */,
 				A00000000000000000000063 /* PremiumExperienceEngine.swift in Sources */,
+				A0000000000000000000009C /* GrowthContracts.swift in Sources */,
+				A0000000000000000000009F /* RegionalGuidanceContext.swift in Sources */,
 				A00000000000000000000038 /* ContentSupportViews.swift in Sources */,
 				A0000000000000000000003A /* ContentView+DashboardSections.swift in Sources */,
 				A00000000000000000000046 /* ContentView+CalendarSections.swift in Sources */,
 				A00000000000000000000048 /* ContentView+IntermittentSections.swift in Sources */,
 				A0000000000000000000004A /* ContentView+StateHelpers.swift in Sources */,
 				A00000000000000000000097 /* ContentView+RootShell.swift in Sources */,
+				A0000000000000000000009E /* ContentView+iPadLayouts.swift in Sources */,
+				A000000000000000000000AD /* ContentView+iPadComponents.swift in Sources */,
+				A000000000000000000000A0 /* ContentView+iPadToday.swift in Sources */,
+				A000000000000000000000AF /* ContentView+iPadTodayCards.swift in Sources */,
+				A000000000000000000000A1 /* ContentView+iPadFastingDays.swift in Sources */,
+				A000000000000000000000B1 /* ContentView+iPadFastingDaysPanels.swift in Sources */,
+				A000000000000000000000A2 /* ContentView+iPadTrackFast.swift in Sources */,
+				A000000000000000000000B3 /* ContentView+iPadTrackFastPanels.swift in Sources */,
+				A000000000000000000000A3 /* ContentView+iPadMore.swift in Sources */,
+				A000000000000000000000A9 /* ContentView+iPadMoreDestinations.swift in Sources */,
+				A000000000000000000000AB /* ContentView+iPadPremiumWorkspace.swift in Sources */,
 				A00000000000000000000099 /* ContentView+PremiumCompanionSections.swift in Sources */,
 				A0000000000000000000003C /* ContentView+GuidanceSections.swift in Sources */,
 				A0000000000000000000003E /* ContentView+SettingsSections.swift in Sources */,
@@ -564,7 +616,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = CatholicFastingApp/CatholicFastingApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"CatholicFastingApp/Preview Content\"";
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_PREVIEWS = YES;
@@ -583,7 +635,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
@@ -602,7 +654,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = CatholicFastingApp/CatholicFastingApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_PREVIEWS = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -620,7 +672,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
@@ -634,7 +686,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -645,7 +697,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingAppUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
@@ -659,7 +711,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -670,7 +722,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingAppUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
@@ -686,7 +738,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = CatholicFastingWidget/CatholicFastingWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -697,7 +749,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingApp.CatholicFastingWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -713,7 +765,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = CatholicFastingWidget/CatholicFastingWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -724,7 +776,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingApp.CatholicFastingWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

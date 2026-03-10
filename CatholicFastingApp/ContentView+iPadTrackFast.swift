@@ -1,0 +1,42 @@
+import SwiftUI
+
+extension ContentView {
+    var ipadIntermittentWorkspace: some View {
+        GeometryReader { geometry in
+            let compact = geometry.size.width < 1260
+            let stacked = geometry.size.width < 1000
+
+            ScrollView {
+                Group {
+                    if stacked {
+                        VStack(alignment: .leading, spacing: 20) {
+                            ipadIntermittentHeroBand(compact: true)
+                            ipadIntermittentLiveControlCenter
+                            ipadIntermittentQuickPlansCard
+                            ipadIntermittentPlanningCard
+                            ipadIntermittentMilestoneCard
+                            ipadIntermittentHistoryCard
+                        }
+                    } else {
+                        HStack(alignment: .top, spacing: 20) {
+                            VStack(alignment: .leading, spacing: 20) {
+                                ipadIntermittentHeroBand(compact: compact)
+                                ipadIntermittentLiveControlCenter
+                                ipadIntermittentQuickPlansCard
+                            }
+                            .frame(minWidth: 0, maxWidth: .infinity, alignment: .top)
+
+                            VStack(alignment: .leading, spacing: 20) {
+                                ipadIntermittentPlanningCard
+                                ipadIntermittentMilestoneCard
+                                ipadIntermittentHistoryCard
+                            }
+                            .frame(width: compact ? 360 : 430, alignment: .top)
+                        }
+                    }
+                }
+                .padding(20)
+            }
+        }
+    }
+}

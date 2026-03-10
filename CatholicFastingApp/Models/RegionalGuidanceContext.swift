@@ -1,0 +1,283 @@
+@preconcurrency import Foundation
+
+private enum RegionalGuidanceLinks {
+    static let privacy = URL(string: "https://x.com/CatholicFasting/status/2026354531273945191")
+    static let usccbFastAbstinence = URL(
+        string:
+        "https://www.usccb.org/prayer-and-worship/liturgical-year-and-calendar/lent/catholic-information-on-lenten-fast-and-abstinence"
+    )
+    static let cccbKeepingFriday = URL(string: "https://www.cccb.ca/document/keeping-friday/")
+}
+
+enum RegionalSupportLevel: String, CaseIterable {
+    case full
+    case partial
+    case informational
+
+    var label: String {
+        switch self {
+        case .full:
+            "Modeled"
+        case .partial:
+            "Partial"
+        case .informational:
+            "Informational"
+        }
+    }
+}
+
+struct RegionalRuleContext: Hashable {
+    let regionProfile: RuleSettings.RegionProfile
+    let supportLevel: RegionalSupportLevel
+    let classificationLabel: String
+    let authorityLabel: String
+    let disclosureText: String
+    let citations: [RuleCitation]
+    let sourceURL: URL?
+}
+
+struct ObservancePresentationContext: Hashable {
+    let observance: Observance
+    let regionalContext: RegionalRuleContext
+    let sourceSummary: String
+    let nextActionText: String
+}
+
+enum PremiumWorkspaceSection: String, CaseIterable, Identifiable {
+    case dashboard
+    case planning
+    case reminders
+    case reflection
+    case analytics
+    case export
+
+    var id: String {
+        rawValue
+    }
+
+    var title: String {
+        switch self {
+        case .dashboard:
+            "Dashboard"
+        case .planning:
+            "Planning"
+        case .reminders:
+            "Reminders"
+        case .reflection:
+            "Reflection"
+        case .analytics:
+            "Analytics"
+        case .export:
+            "Export"
+        }
+    }
+}
+
+enum IPadWorkspaceLayout: String {
+    case dashboard
+    case planningTriptych
+    case controlCenter
+    case settingsDetail
+}
+
+enum RegionalGuidanceContextFactory {
+    static func generalContext(for settings: RuleSettings) -> RegionalRuleContext {
+        switch settings.regionProfile {
+        case .us:
+            RegionalRuleContext(
+                regionProfile: .us,
+                supportLevel: .full,
+                classificationLabel: "U.S. profile",
+                authorityLabel: "USCCB + universal law",
+                disclosureText: "This profile models universal fasting norms together with U.S.-specific Friday and holy day handling used throughout the app.",
+                citations: [
+                    RuleCitation(authority: .universalLaw, title: "Code of Canon Law", shortReference: "Can. 1249-1253"),
+                    RuleCitation(authority: .usccb, title: "USCCB Liturgical Guidance", shortReference: "U.S. conference norms"),
+                ],
+                sourceURL: RegionalGuidanceLinks.usccbFastAbstinence
+            )
+        case .canada:
+            RegionalRuleContext(
+                regionProfile: .canada,
+                supportLevel: .partial,
+                classificationLabel: "Canada guidance",
+                authorityLabel: "Universal law + CCCB Friday guidance",
+                disclosureText: "Canada support is explicit partial support in 3.0. Universal fasting rules and CCCB Friday penitential guidance are modeled directly; holy day obligation handling remains informational unless fully modeled.",
+                citations: [
+                    RuleCitation(authority: .universalLaw, title: "Code of Canon Law", shortReference: "Can. 1249-1253"),
+                    RuleCitation(authority: .cccb, title: "Keeping Friday", shortReference: "CCCB Friday guidance"),
+                ],
+                sourceURL: RegionalGuidanceLinks.cccbKeepingFriday
+            )
+        case .other:
+            RegionalRuleContext(
+                regionProfile: .other,
+                supportLevel: .informational,
+                classificationLabel: "Local guidance",
+                authorityLabel: "Universal law + local conference law",
+                disclosureText: "Outside the U.S. and Canada profiles, the app treats regional norms as informational beyond universal fasting law. Users should follow local episcopal and diocesan guidance.",
+                citations: [
+                    RuleCitation(authority: .universalLaw, title: "Code of Canon Law", shortReference: "Can. 1249-1253"),
+                    RuleCitation(authority: .pastoral, title: "Local Catholic Guidance", shortReference: "Consult local conference norms"),
+                ],
+                sourceURL: nil
+            )
+        }
+    }
+
+    static func context(for observance: Observance, settings: RuleSettings) -> RegionalRuleContext {
+        switch observance.kind {
+        case .fastAndAbstinence, .abstinence:
+            RegionalRuleContext(
+                regionProfile: settings.regionProfile,
+                supportLevel: .full,
+                classificationLabel: "Universal",
+                authorityLabel: "Universal law",
+                disclosureText: "This observance is grounded in universal fasting and abstinence law. Regional profiles change supporting explanation and Friday practice, not the universal core.",
+                citations: observance.citations,
+                sourceURL: settings.regionProfile == .canada
+                    ? RegionalGuidanceLinks.cccbKeepingFriday
+                    : RegionalGuidanceLinks.usccbFastAbstinence
+            )
+        case .fridayPenance:
+            switch settings.regionProfile {
+            case .us:
+                RegionalRuleContext(
+                    regionProfile: .us,
+                    supportLevel: .full,
+                    classificationLabel: "U.S. norm",
+                    authorityLabel: "USCCB guidance",
+                    disclosureText: "Outside Lent Friday practice follows the U.S. mode selected in your profile.",
+                    citations: observance.citations,
+                    sourceURL: RegionalGuidanceLinks.usccbFastAbstinence
+                )
+            case .canada:
+                RegionalRuleContext(
+                    regionProfile: .canada,
+                    supportLevel: .full,
+                    classificationLabel: "Canada guidance",
+                    authorityLabel: "CCCB guidance",
+                    disclosureText: "Friday remains penitential in the Canada profile. The app models abstinence or another charitable or pious practice based on CCCB guidance.",
+                    citations: observance.citations,
+                    sourceURL: RegionalGuidanceLinks.cccbKeepingFriday
+                )
+            case .other:
+                RegionalRuleContext(
+                    regionProfile: .other,
+                    supportLevel: .informational,
+                    classificationLabel: "Local guidance",
+                    authorityLabel: "Local conference law",
+                    disclosureText: "Friday practice outside the U.S. and Canada profiles is shown for planning context only unless local law is modeled.",
+                    citations: observance.citations,
+                    sourceURL: nil
+                )
+            }
+        case .holyDay:
+            switch settings.regionProfile {
+            case .us:
+                RegionalRuleContext(
+                    regionProfile: .us,
+                    supportLevel: .full,
+                    classificationLabel: "U.S. norm",
+                    authorityLabel: "Universal + U.S. holy day law",
+                    disclosureText: "U.S. holy day handling is modeled directly, including transferred or abrogated cases where applicable.",
+                    citations: observance.citations,
+                    sourceURL: RegionalGuidanceLinks.privacy
+                )
+            case .canada:
+                RegionalRuleContext(
+                    regionProfile: .canada,
+                    supportLevel: .partial,
+                    classificationLabel: "Informational",
+                    authorityLabel: "Planning context only",
+                    disclosureText: "Canada holy day listings are shown for planning and liturgical awareness. This release does not claim full conference-level holy day obligation parity.",
+                    citations: observance.citations,
+                    sourceURL: RegionalGuidanceLinks.cccbKeepingFriday
+                )
+            case .other:
+                RegionalRuleContext(
+                    regionProfile: .other,
+                    supportLevel: .informational,
+                    classificationLabel: "Informational",
+                    authorityLabel: "Local conference law",
+                    disclosureText: "Holy day handling is informational outside the U.S. profile unless a fully modeled local obligation rule exists.",
+                    citations: observance.citations,
+                    sourceURL: nil
+                )
+            }
+        case .feastDay, .memorialDay:
+            switch settings.regionProfile {
+            case .us:
+                RegionalRuleContext(
+                    regionProfile: .us,
+                    supportLevel: .full,
+                    classificationLabel: "Calendar context",
+                    authorityLabel: "Liturgical planning",
+                    disclosureText: "These celebration days are included for liturgical and devotional planning. They are not fasting obligations.",
+                    citations: observance.citations,
+                    sourceURL: RegionalGuidanceLinks.privacy
+                )
+            case .canada:
+                RegionalRuleContext(
+                    regionProfile: .canada,
+                    supportLevel: .partial,
+                    classificationLabel: "Calendar context",
+                    authorityLabel: "Liturgical planning",
+                    disclosureText: "These celebration days support planning and devotion in the Canada profile. Local proper calendars may differ.",
+                    citations: observance.citations,
+                    sourceURL: RegionalGuidanceLinks.cccbKeepingFriday
+                )
+            case .other:
+                RegionalRuleContext(
+                    regionProfile: .other,
+                    supportLevel: .informational,
+                    classificationLabel: "Calendar context",
+                    authorityLabel: "Liturgical planning",
+                    disclosureText: "These celebration days are informational outside fully modeled regional calendars.",
+                    citations: observance.citations,
+                    sourceURL: nil
+                )
+            }
+        case .optionalEmber:
+            RegionalRuleContext(
+                regionProfile: settings.regionProfile,
+                supportLevel: .informational,
+                classificationLabel: "Devotional",
+                authorityLabel: "Optional practice",
+                disclosureText: "Ember days are shown as devotional discipline and not as universal obligation days in this release.",
+                citations: observance.citations,
+                sourceURL: nil
+            )
+        }
+    }
+
+    static func presentationContext(for observance: Observance, settings: RuleSettings) -> ObservancePresentationContext {
+        let regionalContext = context(for: observance, settings: settings)
+        let sourceSummary = observance.citations.map { "\($0.authority.rawValue): \($0.shortReference)" }.joined(separator: " • ")
+        let nextActionText: String = switch observance.kind {
+        case .feastDay, .memorialDay:
+            "Celebrate the day and avoid treating it like a required fast."
+        case .optionalEmber:
+            "Use this only as a voluntary devotional discipline if it is prudent for your state in life."
+        case .fridayPenance:
+            observance.obligation == .mandatory
+                ? "Choose the Friday penitential act you will actually keep, then log it here."
+                : "Review local custom and choose a prudent Friday practice."
+        case .holyDay:
+            regionalContext.supportLevel == .full
+                ? "Plan Mass attendance and log your observance clearly."
+                : "Use this as planning context and confirm local obligation if certainty matters."
+        case .fastAndAbstinence, .abstinence:
+            observance.obligation == .mandatory
+                ? "Protect this day on your calendar and log the discipline you actually kept."
+                : "Review the day and use it for planning or moderated discipline if prudent."
+        }
+
+        return ObservancePresentationContext(
+            observance: observance,
+            regionalContext: regionalContext,
+            sourceSummary: sourceSummary,
+            nextActionText: nextActionText
+        )
+    }
+}

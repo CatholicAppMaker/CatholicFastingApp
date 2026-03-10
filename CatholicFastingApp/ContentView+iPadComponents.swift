@@ -1,0 +1,236 @@
+import SwiftUI
+
+struct IPadPaneCardModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 22, style: .continuous)
+                    .stroke(CatholicTheme.cardBorder.opacity(0.55), lineWidth: 1)
+            )
+            .appRoundedGlass(cornerRadius: 22)
+    }
+}
+
+extension View {
+    func iPadPaneCard() -> some View {
+        modifier(IPadPaneCardModifier())
+    }
+}
+
+struct IPadWorkspaceHeader: View {
+    let eyebrow: String
+    let title: String
+    let detail: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(eyebrow.uppercased())
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(.secondary)
+            Text(title)
+                .font(.system(.title3, design: .serif).weight(.bold))
+                .foregroundStyle(CatholicTheme.primary)
+            Text(detail)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
+struct IPadSummaryMetricCard: View {
+    let title: String
+    let value: String
+    var subtitle: String?
+    var tint: Color = CatholicTheme.primary
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title.uppercased())
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(.secondary)
+            Text(value)
+                .font(.system(.title3, design: .rounded).weight(.bold))
+                .foregroundStyle(tint)
+            if let subtitle {
+                Text(subtitle)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(2)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(14)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(CatholicTheme.parchment.opacity(0.92))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(CatholicTheme.cardBorder.opacity(0.45), lineWidth: 1)
+        )
+    }
+}
+
+struct IPadContextBadge: View {
+    let text: String
+    let supportLevel: RegionalSupportLevel
+
+    var tint: Color {
+        switch supportLevel {
+        case .full:
+            .green
+        case .partial:
+            .orange
+        case .informational:
+            .blue
+        }
+    }
+
+    var body: some View {
+        Text(text)
+            .font(.caption2.weight(.semibold))
+            .foregroundStyle(tint)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(Capsule().fill(tint.opacity(0.14)))
+            .overlay(Capsule().stroke(tint.opacity(0.3), lineWidth: 1))
+    }
+}
+
+struct IPadKeyDateChip: View {
+    let title: String
+    let subtitle: String
+    let isSelected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.caption.weight(.semibold))
+                Text(subtitle)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 10)
+            .background(
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(isSelected ? CatholicTheme.primary.opacity(0.14) : CatholicTheme.parchment.opacity(0.9))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .stroke(isSelected ? CatholicTheme.primary : CatholicTheme.cardBorder.opacity(0.45), lineWidth: 1)
+            )
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+struct IPadWorkspaceHeroBand: View {
+    let assetName: String
+    let seasonLabel: String
+    let title: String
+    let subtitle: String
+    let quote: CatholicFastingQuote
+    let regionContext: RegionalRuleContext
+    var compact: Bool = false
+    let accessibilityIdentifier: String
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 18) {
+            SacredHeroCard(
+                assetName: assetName,
+                title: title,
+                subtitle: subtitle,
+                height: compact ? 176 : 220,
+                cornerRadius: 20,
+                accessibilityIdentifier: accessibilityIdentifier
+            )
+            .frame(maxWidth: compact ? 240 : .infinity)
+
+            VStack(alignment: .leading, spacing: 12) {
+                Label("Liturgical Season: \(seasonLabel)", systemImage: "sparkles")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(CatholicTheme.primary)
+                CatholicFastingQuoteCard(quote: quote, compact: compact)
+                HStack(spacing: 8) {
+                    IPadContextBadge(text: regionContext.classificationLabel, supportLevel: regionContext.supportLevel)
+                    IPadContextBadge(text: regionContext.supportLevel.label, supportLevel: regionContext.supportLevel)
+                }
+                Text(regionContext.disclosureText)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .frame(width: compact ? 280 : 340, alignment: .leading)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(18)
+        .iPadPaneCard()
+    }
+}
+
+struct IPadWorkspaceActionButton: View {
+    let title: String
+    let systemImage: String
+    let primary: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Label(title, systemImage: systemImage)
+                .frame(maxWidth: .infinity)
+        }
+        .if(primary) { view in
+            view.appPrimaryButtonStyle()
+        }
+        .if(!primary) { view in
+            view.appSecondaryButtonStyle()
+        }
+    }
+}
+
+struct IPadObservanceSelectionRow: View {
+    let context: ObservancePresentationContext
+    let isSelected: Bool
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 10) {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(context.observance.title)
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+                Text(context.observance.date.formatted(date: .abbreviated, time: .omitted))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                HStack(spacing: 6) {
+                    StatusTag(text: context.observance.kind.label, color: context.observance.kind.color)
+                    StatusTag(
+                        text: context.observance.dispositionLabel,
+                        color: context.observance.obligation == .mandatory ? .red : .blue
+                    )
+                    IPadContextBadge(text: context.regionalContext.classificationLabel, supportLevel: context.regionalContext.supportLevel)
+                }
+            }
+            Spacer(minLength: 0)
+            if isSelected {
+                Image(systemName: "checkmark.circle.fill")
+                    .foregroundStyle(CatholicTheme.primary)
+            }
+        }
+        .padding(.vertical, 4)
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func `if`(_ condition: Bool, transform: (Self) -> some View) -> some View {
+        if condition {
+            transform(self)
+        } else {
+            self
+        }
+    }
+}
