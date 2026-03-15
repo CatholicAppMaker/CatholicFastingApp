@@ -92,7 +92,14 @@ extension ContentView {
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(12)
-                    .appSurfaceCard(selectedPremiumToolDestination == destination ? .primary : .utility, cornerRadius: 16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .fill(selectedPremiumToolDestination == destination ? CatholicTheme.primary.opacity(0.12) : CatholicTheme.parchment.opacity(0.85))
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .stroke(selectedPremiumToolDestination == destination ? CatholicTheme.primary : CatholicTheme.cardBorder.opacity(0.35), lineWidth: 1)
+                    )
                 }
                 .buttonStyle(.plain)
                 .disabled(!monetizationStore.premiumUnlocked)

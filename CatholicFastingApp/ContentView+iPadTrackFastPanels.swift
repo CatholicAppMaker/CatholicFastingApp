@@ -114,7 +114,14 @@ extension ContentView {
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(12)
-                        .appSurfaceCard(intermittentTracker.presetHours == hours ? .primary : .utility, cornerRadius: 16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                .fill(intermittentTracker.presetHours == hours ? CatholicTheme.primary.opacity(0.12) : CatholicTheme.parchment.opacity(0.9))
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                .stroke(intermittentTracker.presetHours == hours ? CatholicTheme.primary : CatholicTheme.cardBorder.opacity(0.4), lineWidth: 1)
+                        )
                     }
                     .buttonStyle(.plain)
                     .accessibilityIdentifier("ipad.intermittent.plan.\(hours)")

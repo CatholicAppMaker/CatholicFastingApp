@@ -43,7 +43,15 @@ extension ContentView {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.horizontal, 14)
                             .padding(.vertical, 12)
-                            .appSurfaceCard(selectedMoreDestination == destination ? .primary : .utility, cornerRadius: 18)
+                            .background(
+                                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                    .fill(selectedMoreDestination == destination ? CatholicTheme.primary : CatholicTheme.parchment.opacity(0.92))
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                    .stroke(selectedMoreDestination == destination ? CatholicTheme.primary : CatholicTheme.cardBorder.opacity(0.35), lineWidth: 1)
+                            )
+                            .shadow(color: selectedMoreDestination == destination ? CatholicTheme.primary.opacity(0.10) : .clear, radius: 10, y: 4)
                         }
                         .buttonStyle(.plain)
                         .accessibilityIdentifier("ipad.more.compact.\(destination.rawValue)")
@@ -77,7 +85,14 @@ extension ContentView {
                                 }
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(12)
-                                .appSurfaceCard(selectedMoreDestination == destination ? .primary : .utility, cornerRadius: 16)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                        .fill(selectedMoreDestination == destination ? CatholicTheme.primary.opacity(0.12) : CatholicTheme.parchment.opacity(0.85))
+                                )
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                        .stroke(selectedMoreDestination == destination ? CatholicTheme.primary : CatholicTheme.cardBorder.opacity(0.35), lineWidth: 1)
+                                )
                             }
                             .buttonStyle(.plain)
                             .accessibilityIdentifier("ipad.more.destination.\(destination.rawValue)")

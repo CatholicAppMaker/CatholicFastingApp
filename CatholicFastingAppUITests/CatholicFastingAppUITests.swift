@@ -95,6 +95,53 @@ final class CatholicFastingAppUITests: XCTestCase {
         XCTAssertTrue(scrollToElement(nativeStore, in: app))
     }
 
+    func testDeepIPhoneMoreDestinationsOpenAndReturn() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        let destinations = [
+            "Support & Premium",
+            "Setup & Reminders",
+            "Profile & Norms",
+            "Guidance & Rules",
+            "Privacy & Data",
+        ]
+
+        for destination in destinations {
+            openMoreDestination(destination, in: app)
+            XCTAssertTrue(app.navigationBars[destination].waitForExistence(timeout: 4))
+            returnToMoreHome(in: app)
+        }
+    }
+
+    func testDeepIPhonePremiumScreenShowsPlansTipsAndLegal() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openMoreDestination("Support & Premium", in: app)
+
+        XCTAssertTrue(scrollToElement(app.staticTexts["Premium Yearly"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Premium Monthly"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Optional support tips"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.buttons["premium.restore"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.buttons["premium.manage"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.links["Terms of Use (EULA)"].firstMatch, in: app))
+    }
+
+    func testDeepIPhonePremiumUnlockButtonsExist() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openMoreDestination("Support & Premium", in: app)
+
+        let yearlyButton = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Unlock Premium Yearly")).firstMatch
+        XCTAssertTrue(scrollToElement(yearlyButton, in: app))
+
+        let monthlyButton = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Unlock Premium Monthly")).firstMatch
+        XCTAssertTrue(scrollToElement(monthlyButton, in: app))
+    }
+
     func testDeepGuidanceSacredGalleryVisible() {
         let app = makeApp()
         app.launch()
@@ -584,6 +631,107 @@ final class CatholicFastingAppUITests: XCTestCase {
         XCTAssertTrue(scrollToElement(app.links["Privacy Policy"].firstMatch, in: app))
     }
 
+    func testIPadMoreAllDestinationsOpenWithoutBreakingWorkspace() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        let destinations = [
+            "supportAndPremium",
+            "setupAndReminders",
+            "profileAndNorms",
+            "guidanceAndRules",
+            "privacyAndData",
+        ]
+
+        for destination in destinations {
+            openIPadMoreDestination(destination, in: app)
+            XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
+        }
+    }
+
+    func testIPadMoreSetupDestinationShowsReminderControls() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadMoreDestination("setupAndReminders", in: app)
+
+        let regionPicker = app.pickers["settings.region_picker"].firstMatch
+        XCTAssertTrue(scrollToElement(regionPicker, in: app))
+        XCTAssertTrue(scrollToElement(app.otherElements["settings.quick.reminder_actions"].firstMatch, in: app))
+    }
+
+    func testIPadMoreGuidanceDestinationShowsFoodSection() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadMoreDestination("guidanceAndRules", in: app)
+
+        let foodSection = app.otherElements["guidance.food.section"].firstMatch
+        XCTAssertTrue(scrollToElement(foodSection, in: app))
+        XCTAssertTrue(scrollToElement(app.otherElements["guidance.food.if_unsure"].firstMatch, in: app))
+    }
+
+    func testIPadMorePrivacyDestinationShowsDataTools() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadMoreDestination("privacyAndData", in: app)
+
+        XCTAssertTrue(scrollToElement(app.otherElements["settings.privacy.details"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.buttons["launch.export_data"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.buttons["launch.delete_all_data"].firstMatch, in: app))
+    }
+
+    func testIPadMoreCompactPremiumShowsPlansAndLegal() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadMoreDestination("supportAndPremium", in: app)
+
+        XCTAssertTrue(scrollToElement(app.staticTexts["Support & Premium"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Premium Yearly"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Premium Monthly"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.buttons["premium.restore"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.links["Terms of Use (EULA)"].firstMatch, in: app))
+    }
+
+    func testIPadTrackFastPresetSelectionStaysVisible() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadSurface("intermittent", in: app)
+
+        let sixteen = app.buttons["ipad.intermittent.plan.16"].firstMatch
+        XCTAssertTrue(scrollToElement(sixteen, in: app))
+        sixteen.tap()
+
+        let twentyFour = app.buttons["ipad.intermittent.plan.24"].firstMatch
+        XCTAssertTrue(scrollToElement(twentyFour, in: app))
+        twentyFour.tap()
+
+        XCTAssertTrue(app.otherElements["ipad.intermittent.controls"].waitForExistence(timeout: 4))
+        XCTAssertTrue(scrollToElement(app.buttons["ipad.intermittent.start"].firstMatch, in: app))
+    }
+
+    func testIPadTodayAndMoreCanBeVisitedRepeatedly() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        for _ in 0 ..< 3 {
+            openIPadSurface("today", in: app)
+            XCTAssertTrue(app.otherElements["ipad.today.workspace"].waitForExistence(timeout: 4))
+            openIPadSurface("more", in: app)
+            XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
+        }
+    }
+
     func testIPadTrackFastShowsLiveWorkspaceAndControls() {
         let app = makeApp()
         app.launch()
@@ -675,8 +823,11 @@ final class CatholicFastingAppUITests: XCTestCase {
         openIPadSurface("more", in: app)
 
         let destination = app.buttons["ipad.more.destination.\(rawValue)"].firstMatch
-        XCTAssertTrue(destination.waitForExistence(timeout: 4), "Unable to find iPad More destination \(rawValue)")
-        destination.tap()
+        let compactDestination = app.buttons["ipad.more.compact.\(rawValue)"].firstMatch
+        let target = destination.waitForExistence(timeout: 2) ? destination : compactDestination
+        XCTAssertTrue(target.waitForExistence(timeout: 4), "Unable to find iPad More destination \(rawValue)")
+        XCTAssertTrue(scrollToElement(target, in: app))
+        target.tap()
     }
 
     private func waitForSurfaceReady(_ label: String, in app: XCUIApplication) {

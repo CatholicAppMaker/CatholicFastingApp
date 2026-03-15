@@ -3,17 +3,21 @@ set -euo pipefail
 
 PROJECT="/Users/kevpierce/Desktop/CatholicFastingApp/CatholicFastingApp.xcodeproj"
 SCHEME="CatholicFastingApp"
-SIMULATOR_ID="04B1BAC6-9C7F-4C37-BE47-46ED42DF2871"
+SIMULATOR_ID="${SIMULATOR_ID:-04B1BAC6-9C7F-4C37-BE47-46ED42DF2871}"
 DESTINATION="platform=iOS Simulator,id=${SIMULATOR_ID}"
 TIMEOUT_SECONDS=180
+SUITE="${SUITE:-iphone}"
 
-TESTS=(
+IPHONE_TESTS=(
   "CatholicFastingAppUITests/testSmokeOnboardingCanBeCompleted"
   "CatholicFastingAppUITests/testDeepCanOpenFridayNotesHistory"
   "CatholicFastingAppUITests/testDeepLaunchReadinessControlsVisible"
   "CatholicFastingAppUITests/testSmokeExportsRequireLegalAcknowledgment"
   "CatholicFastingAppUITests/testSmokeGuidanceScenarioControlVisible"
   "CatholicFastingAppUITests/testDeepDashboardHeroVisible"
+  "CatholicFastingAppUITests/testDeepIPhoneMoreDestinationsOpenAndReturn"
+  "CatholicFastingAppUITests/testDeepIPhonePremiumScreenShowsPlansTipsAndLegal"
+  "CatholicFastingAppUITests/testDeepIPhonePremiumUnlockButtonsExist"
   "CatholicFastingAppUITests/testDeepDashboardOpenFastingDaysQuickAction"
   "CatholicFastingAppUITests/testSmokeFastingDaysControlsVisible"
   "CatholicFastingAppUITests/testDeepFastingDaysScopePickerVisible"
@@ -22,6 +26,26 @@ TESTS=(
   "CatholicFastingAppUITests/testIntermittentCanStartAndCancelFast"
   "CatholicFastingAppUITests/testIntermittentCanEndFastAndWriteSessionHistory"
   "CatholicFastingAppUITests/testIntermittentTargetPickerVisible"
+)
+
+IPAD_TESTS=(
+  "CatholicFastingAppUITests/testIPadSidebarSwitchesPrimaryWorkspaces"
+  "CatholicFastingAppUITests/testIPadTodayDashboardShowsHeroAndCoreCards"
+  "CatholicFastingAppUITests/testIPadFastingDaysSelectionShowsDetail"
+  "CatholicFastingAppUITests/testIPadFastingDaysShowsFiltersAndQuickDates"
+  "CatholicFastingAppUITests/testIPadFastingDaysFoodGuidanceShortcutOpensMoreGuidance"
+  "CatholicFastingAppUITests/testIPadOnboardingShowsRegionSelector"
+  "CatholicFastingAppUITests/testIPadMoreProfileDestinationShowsRegionPicker"
+  "CatholicFastingAppUITests/testIPadCanadaModeShowsPartialSupportContext"
+  "CatholicFastingAppUITests/testIPadPremiumWorkspaceShowsLegalLinks"
+  "CatholicFastingAppUITests/testIPadMoreAllDestinationsOpenWithoutBreakingWorkspace"
+  "CatholicFastingAppUITests/testIPadMoreSetupDestinationShowsReminderControls"
+  "CatholicFastingAppUITests/testIPadMoreGuidanceDestinationShowsFoodSection"
+  "CatholicFastingAppUITests/testIPadMorePrivacyDestinationShowsDataTools"
+  "CatholicFastingAppUITests/testIPadMoreCompactPremiumShowsPlansAndLegal"
+  "CatholicFastingAppUITests/testIPadTrackFastPresetSelectionStaysVisible"
+  "CatholicFastingAppUITests/testIPadTodayAndMoreCanBeVisitedRepeatedly"
+  "CatholicFastingAppUITests/testIPadTrackFastShowsLiveWorkspaceAndControls"
 )
 
 boot_simulator() {
@@ -102,7 +126,20 @@ run_one_test() {
 main() {
   print "test,status,seconds"
   boot_simulator
-  for test_name in "${TESTS[@]}"; do
+  local tests_var
+  case "${SUITE}" in
+    iphone) tests_var=IPHONE_TESTS ;;
+    ipad) tests_var=IPAD_TESTS ;;
+    *)
+      print "Unknown SUITE=${SUITE}. Use iphone or ipad." >&2
+      return 1
+      ;;
+  esac
+
+  local -a tests
+  tests=("${(@P)tests_var}")
+
+  for test_name in "${tests[@]}"; do
     run_one_test "${test_name}"
   done
 }

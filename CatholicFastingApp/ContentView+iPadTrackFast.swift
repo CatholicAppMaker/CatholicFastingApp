@@ -3,8 +3,8 @@ import SwiftUI
 extension ContentView {
     var ipadIntermittentWorkspace: some View {
         GeometryReader { geometry in
-            let compact = geometry.size.width < 1260
-            let stacked = geometry.size.width < 1000
+            let compact = geometry.size.width < 1360
+            let stacked = geometry.size.width < 1180
 
             ScrollView {
                 Group {

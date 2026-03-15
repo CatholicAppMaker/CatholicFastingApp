@@ -118,7 +118,19 @@ extension ContentView {
             }
             .padding(14)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .appSurfaceCard(offer?.isPrimaryAnchor == true ? .primary : .standard, cornerRadius: 16)
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(
+                        offer?.isPrimaryAnchor == true
+                            ? CatholicTheme.accent.opacity(0.10)
+                            : CatholicTheme.parchment.opacity(0.92)
+                    )
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke((offer?.isPrimaryAnchor == true ? CatholicTheme.primary : CatholicTheme.cardBorder).opacity(0.45), lineWidth: 1)
+            )
+            .appRoundedGlass(cornerRadius: 16)
         }
     #endif
 
