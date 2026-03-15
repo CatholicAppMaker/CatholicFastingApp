@@ -372,7 +372,7 @@ extension ContentView {
 
     var fastingDaysOverviewSection: some View {
         Section("Fasting Days") {
-            Text("Start with required days, then add optional or celebration days when you need context.")
+            Text("Start with required days, then add optional or celebration days when you need more context.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
             Text(regionalNormSummaryLine)
@@ -393,23 +393,26 @@ extension ContentView {
                     Label("Next required", systemImage: "calendar.badge.exclamationmark")
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(.secondary)
+                        .textCase(.uppercase)
 
                     Text(nextRequired.title)
-                        .font(.title3.weight(.semibold))
+                        .font(.system(.title3, design: .serif).weight(.bold))
 
                     Text(nextRequired.date.formatted(date: .abbreviated, time: .omitted))
                         .font(.headline)
                         .foregroundStyle(.red)
                 }
-                .padding(.vertical, 4)
+                .padding(12)
+                .appSurfaceCard(.utility, cornerRadius: 16)
             } else if let nextPotential = upcomingPotentialFastingObservance {
                 VStack(alignment: .leading, spacing: 10) {
                     Label("Next possible observance", systemImage: "calendar")
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(.secondary)
+                        .textCase(.uppercase)
 
                     Text(nextPotential.title)
-                        .font(.title3.weight(.semibold))
+                        .font(.system(.title3, design: .serif).weight(.bold))
 
                     Text(nextPotential.date.formatted(date: .abbreviated, time: .omitted))
                         .font(.headline)
@@ -419,7 +422,8 @@ extension ContentView {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
-                .padding(.vertical, 4)
+                .padding(12)
+                .appSurfaceCard(.utility, cornerRadius: 16)
             } else {
                 Text("No upcoming required observance day found in the loaded date range.")
                     .font(.caption)

@@ -12,20 +12,14 @@ private struct LiveTrackerMetricChip: View {
             Text(title)
                 .font(.caption2.weight(.semibold))
                 .foregroundStyle(.secondary)
+                .textCase(.uppercase)
             Text(value)
-                .font(.subheadline.weight(.semibold))
+                .font(.system(.body, design: .rounded).weight(.bold))
                 .foregroundStyle(CatholicTheme.primary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(10)
-        .background(
-            RoundedRectangle(cornerRadius: 10)
-                .fill(CatholicTheme.parchment.opacity(0.92))
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 10)
-                .stroke(CatholicTheme.cardBorder.opacity(0.45), lineWidth: 1)
-        )
+        .appSurfaceCard(.utility, cornerRadius: 12)
     }
 }
 
@@ -77,7 +71,7 @@ extension ContentView {
 
     var intermittentOverviewSection: some View {
         Section("Plan Snapshot") {
-            Text("Use intermittent fasting as a personal discipline. Church obligation days still live in Fasting Days.")
+            Text("Keep your personal fasting rhythm separate from Church obligation days.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
             ViewThatFits(in: .horizontal) {
@@ -99,7 +93,7 @@ extension ContentView {
                 Text("Current fast began \(activeStart.formatted(date: .abbreviated, time: .shortened)).")
                     .font(.caption)
                     .foregroundStyle(CatholicTheme.primary.opacity(0.9))
-                Text("Stay with this fast until the tracker reaches your target.")
+                Text("Hold steady until the tracker reaches your target.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             } else if let latestSession = intermittentTracker.sessions.first {
@@ -108,8 +102,8 @@ extension ContentView {
                     .foregroundStyle(.secondary)
                 Text(
                     latestSession.completedTarget
-                        ? "Repeat this rhythm or increase only if it stays prudent."
-                        : "Choose a lighter target or re-enter with a simpler schedule."
+                        ? "Repeat this rhythm or increase only if it remains prudent."
+                        : "Choose a lighter target or re-enter with a simpler plan."
                 )
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -135,14 +129,14 @@ extension ContentView {
                 Stepper(value: intermittentPresetBinding, in: 12 ... 336, step: 1) {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Custom target: \(intermittentTracker.presetHours)h")
-                        Text("Use for longer disciplines (up to 14 days / 336h).")
+                        Text("Longer disciplines remain available here (up to 14 days / 336h).")
                             .font(.caption2)
                             .foregroundStyle(.secondary)
                     }
                 }
                 .accessibilityIdentifier("intermittent.custom_target_stepper")
             } else {
-                Text("Custom targets beyond presets are Premium.")
+                Text("Custom targets beyond presets are part of Premium.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 Button("Unlock Custom Long Fasts") {

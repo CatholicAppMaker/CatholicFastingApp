@@ -3,12 +3,7 @@ import SwiftUI
 struct IPadPaneCardModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-            .overlay(
-                RoundedRectangle(cornerRadius: 22, style: .continuous)
-                    .stroke(CatholicTheme.cardBorder.opacity(0.55), lineWidth: 1)
-            )
-            .appRoundedGlass(cornerRadius: 22)
+            .appSurfaceCard(.standard, cornerRadius: 22)
     }
 }
 
@@ -51,7 +46,7 @@ struct IPadSummaryMetricCard: View {
                 .font(.caption2.weight(.semibold))
                 .foregroundStyle(.secondary)
             Text(value)
-                .font(.system(.title3, design: .rounded).weight(.bold))
+                .font(.system(.title2, design: .rounded).weight(.bold))
                 .foregroundStyle(tint)
             if let subtitle {
                 Text(subtitle)
@@ -62,14 +57,7 @@ struct IPadSummaryMetricCard: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(14)
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(CatholicTheme.parchment.opacity(0.92))
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(CatholicTheme.cardBorder.opacity(0.45), lineWidth: 1)
-        )
+        .appSurfaceCard(.utility, cornerRadius: 16)
     }
 }
 
@@ -126,6 +114,7 @@ struct IPadKeyDateChip: View {
             )
         }
         .buttonStyle(.plain)
+        .shadow(color: isSelected ? CatholicTheme.primary.opacity(0.10) : .clear, radius: 10, y: 4)
     }
 }
 
@@ -140,31 +129,61 @@ struct IPadWorkspaceHeroBand: View {
     let accessibilityIdentifier: String
 
     var body: some View {
-        HStack(alignment: .top, spacing: 18) {
-            SacredHeroCard(
-                assetName: assetName,
-                title: title,
-                subtitle: subtitle,
-                height: compact ? 176 : 220,
-                cornerRadius: 20,
-                accessibilityIdentifier: accessibilityIdentifier
-            )
-            .frame(maxWidth: compact ? 240 : .infinity)
+        Group {
+            if compact {
+                VStack(alignment: .leading, spacing: 14) {
+                    SacredHeroCard(
+                        assetName: assetName,
+                        title: title,
+                        subtitle: subtitle,
+                        height: 144,
+                        cornerRadius: 20,
+                        accessibilityIdentifier: accessibilityIdentifier
+                    )
 
-            VStack(alignment: .leading, spacing: 12) {
-                Label("Liturgical Season: \(seasonLabel)", systemImage: "sparkles")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(CatholicTheme.primary)
-                CatholicFastingQuoteCard(quote: quote, compact: compact)
-                HStack(spacing: 8) {
-                    IPadContextBadge(text: regionContext.classificationLabel, supportLevel: regionContext.supportLevel)
-                    IPadContextBadge(text: regionContext.supportLevel.label, supportLevel: regionContext.supportLevel)
+                    VStack(alignment: .leading, spacing: 10) {
+                        Label("Liturgical Season: \(seasonLabel)", systemImage: "sparkles")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(CatholicTheme.primary)
+                        CatholicFastingQuoteCard(quote: quote, compact: true)
+                        HStack(spacing: 8) {
+                            IPadContextBadge(text: regionContext.classificationLabel, supportLevel: regionContext.supportLevel)
+                            IPadContextBadge(text: regionContext.supportLevel.label, supportLevel: regionContext.supportLevel)
+                        }
+                        Text(regionContext.disclosureText)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(2)
+                    }
                 }
-                Text(regionContext.disclosureText)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+            } else {
+                HStack(alignment: .top, spacing: 18) {
+                    SacredHeroCard(
+                        assetName: assetName,
+                        title: title,
+                        subtitle: subtitle,
+                        height: 196,
+                        cornerRadius: 20,
+                        accessibilityIdentifier: accessibilityIdentifier
+                    )
+                    .frame(maxWidth: .infinity)
+
+                    VStack(alignment: .leading, spacing: 12) {
+                        Label("Liturgical Season: \(seasonLabel)", systemImage: "sparkles")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(CatholicTheme.primary)
+                        CatholicFastingQuoteCard(quote: quote, compact: false)
+                        HStack(spacing: 8) {
+                            IPadContextBadge(text: regionContext.classificationLabel, supportLevel: regionContext.supportLevel)
+                            IPadContextBadge(text: regionContext.supportLevel.label, supportLevel: regionContext.supportLevel)
+                        }
+                        Text(regionContext.disclosureText)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .frame(width: 340, alignment: .leading)
+                }
             }
-            .frame(width: compact ? 280 : 340, alignment: .leading)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(18)
@@ -183,6 +202,7 @@ struct IPadWorkspaceActionButton: View {
             Label(title, systemImage: systemImage)
                 .frame(maxWidth: .infinity)
         }
+        .controlSize(.large)
         .if(primary) { view in
             view.appPrimaryButtonStyle()
         }

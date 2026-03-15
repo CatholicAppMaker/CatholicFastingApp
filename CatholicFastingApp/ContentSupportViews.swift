@@ -206,6 +206,14 @@ import SwiftUI
             #endif
         }
 
+        func resetSimulatorDebugPurchase() async {
+            guard Self.usesSimulatorDebugPurchases else { return }
+            UserDefaults.standard.removeObject(forKey: Self.debugPremiumUnlockedKey)
+            premiumUnlocked = false
+            statusMessage = "Simulator debug premium reset."
+            await refreshSubscriptionHealth()
+        }
+
         private func refreshEntitlements() async {
             if Self.usesSimulatorDebugPurchases {
                 premiumUnlocked = UserDefaults.standard.bool(forKey: Self.debugPremiumUnlockedKey)
@@ -318,6 +326,7 @@ import SwiftUI
         func restorePurchases() async {}
         func purchase(_: String) async {}
         func openManageSubscriptions() async {}
+        func resetSimulatorDebugPurchase() async {}
     }
 #endif
 
@@ -563,28 +572,32 @@ struct MetricTile: View {
     let value: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(alignment: .leading, spacing: 4) {
             Text(title)
-                .font(.caption2)
-                .foregroundStyle(CatholicTheme.primary.opacity(0.85))
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(.secondary)
+                .textCase(.uppercase)
             Text(value)
-                .font(.headline)
-                .fontWeight(.semibold)
+                .font(.system(.title3, design: .rounded).weight(.bold))
                 .foregroundStyle(CatholicTheme.primary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 10)
-        .padding(.vertical, 8)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .fill(tileTint.opacity(0.12))
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
+        .background(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .fill(CatholicTheme.parchment.opacity(0.92))
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .stroke(CatholicTheme.cardBorder.opacity(0.5), lineWidth: 1)
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .fill(tileTint.opacity(0.08))
         )
-        .appRoundedGlass(cornerRadius: 10)
+        .overlay(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(CatholicTheme.cardBorder.opacity(0.45), lineWidth: 1)
+        )
+        .shadow(color: tileTint.opacity(0.08), radius: 10, y: 4)
+        .appRoundedGlass(cornerRadius: 14)
     }
 
     private var tileTint: Color {

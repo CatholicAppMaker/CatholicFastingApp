@@ -6,7 +6,7 @@ extension ContentView {
             assetName: intermittentHeroArtwork.assetName,
             seasonLabel: currentLiturgicalSeason.label,
             title: "Intermittent Fasting Control Center",
-            subtitle: "Keep the live fast, next eating window, and schedule choices visible together.",
+            subtitle: "Keep the live fast, next eating window, and schedule choices together.",
             quote: intermittentFastingQuote,
             regionContext: RegionalGuidanceContextFactory.generalContext(for: settings),
             compact: compact,
@@ -19,7 +19,7 @@ extension ContentView {
             IPadWorkspaceHeader(
                 eyebrow: "Live",
                 title: intermittentTracker.activeStart == nil ? "No active fast" : "Fast in progress",
-                detail: "The ring, elapsed time, and next action stay fixed in one place on iPad."
+                detail: "The ring, elapsed time, and next action stay in one place."
             )
 
             TimelineView(.periodic(from: .now, by: 1)) { context in
@@ -44,7 +44,7 @@ extension ContentView {
                                 Text("Target ends \(targetDate.formatted(date: .abbreviated, time: .shortened))")
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
-                                Text(progress >= 1 ? "You can end the fast at any time." : "Hold steady until the ring reaches your target.")
+                                Text(progress >= 1 ? "You can end the fast at any time." : "Hold steady until the ring reaches the target.")
                                     .font(.caption)
                                     .foregroundStyle(progress >= 1 ? .green : .secondary)
                             }
@@ -76,7 +76,7 @@ extension ContentView {
                             Text("No fasting session yet")
                                 .font(.title3.weight(.semibold))
                                 .foregroundStyle(CatholicTheme.primary)
-                            Text("Choose a quick plan or custom target below, then start your first session when ready.")
+                            Text("Choose a quick plan below, then start when ready.")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                         }
@@ -96,7 +96,7 @@ extension ContentView {
             IPadWorkspaceHeader(
                 eyebrow: "Controls",
                 title: "Start, end, or adjust the fast",
-                detail: "Quick presets stay simple; custom longer fasts remain available for premium users."
+                detail: "Quick presets stay simple; custom longer fasts remain a premium option."
             )
 
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
@@ -114,14 +114,7 @@ extension ContentView {
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(12)
-                        .background(
-                            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                .fill(intermittentTracker.presetHours == hours ? CatholicTheme.primary.opacity(0.12) : CatholicTheme.parchment.opacity(0.9))
-                        )
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                .stroke(intermittentTracker.presetHours == hours ? CatholicTheme.primary : CatholicTheme.cardBorder.opacity(0.4), lineWidth: 1)
-                        )
+                        .appSurfaceCard(intermittentTracker.presetHours == hours ? .primary : .utility, cornerRadius: 16)
                     }
                     .buttonStyle(.plain)
                     .accessibilityIdentifier("ipad.intermittent.plan.\(hours)")
@@ -170,7 +163,7 @@ extension ContentView {
             IPadWorkspaceHeader(
                 eyebrow: "Planning",
                 title: "Schedule and cadence",
-                detail: "Use the right pane as a slower planning workspace instead of stacking several phone screens."
+                detail: "Review cadence, milestones, and recovery together."
             )
 
             HStack(spacing: 10) {
@@ -186,10 +179,6 @@ extension ContentView {
                     intermittentRecoverySection
                 }
             }
-
-            Text("Use the left pane to control the live fast and the right pane to review cadence, recovery, and history without losing context.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
         }
         .padding(18)
         .iPadPaneCard()

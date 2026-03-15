@@ -189,6 +189,8 @@ extension ContentView {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
+            .padding(14)
+            .appSurfaceCard(.primary, cornerRadius: 22)
             .accessibilityIdentifier("dashboard.today_glance")
         }
     }
@@ -316,61 +318,76 @@ extension ContentView {
     var todayDecisionCardSection: some View {
         let decision = todayFoodDecision
         return Section("What Can I Eat Today?") {
-            Text(decision.obligationLine)
-                .font(.headline)
-                .foregroundStyle(CatholicTheme.primary)
-                .accessibilityIdentifier("today.decision.obligation")
+            VStack(alignment: .leading, spacing: 14) {
+                Text(decision.obligationLine)
+                    .font(.system(.title3, design: .serif).weight(.bold))
+                    .foregroundStyle(CatholicTheme.primary)
+                    .accessibilityIdentifier("today.decision.obligation")
 
-            if !decision.allowed.isEmpty {
-                Text("Okay today")
-                    .font(.subheadline.weight(.semibold))
-                ForEach(decision.allowed, id: \.self) { item in
-                    Label(item, systemImage: "checkmark.circle")
+                if !decision.allowed.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Okay today")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                            .textCase(.uppercase)
+                        ForEach(decision.allowed, id: \.self) { item in
+                            Label(item, systemImage: "checkmark.circle.fill")
+                        }
+                    }
                 }
-            }
 
-            if !decision.avoid.isEmpty {
-                Text("Avoid today")
-                    .font(.subheadline.weight(.semibold))
-                ForEach(decision.avoid, id: \.self) { item in
-                    Label(item, systemImage: "xmark.circle")
+                if !decision.avoid.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Avoid today")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                            .textCase(.uppercase)
+                        ForEach(decision.avoid, id: \.self) { item in
+                            Label(item, systemImage: "xmark.circle.fill")
+                        }
+                    }
                 }
-            }
 
-            Text(decision.rationale)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Common food questions")
-                    .font(.subheadline.weight(.semibold))
-                Label("Chicken and turkey count as meat.", systemImage: "xmark.circle")
-                Label("Eggs, milk, butter, and cheese are generally permitted.", systemImage: "checkmark.circle")
-                Label("Fish and shellfish are generally permitted.", systemImage: "checkmark.circle")
-                Label(
-                    "Broths and gravies may be technically permitted, but many Catholics still avoid them in stricter practice.",
-                    systemImage: "questionmark.circle"
+                Text(decision.rationale)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Common food questions")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                        .textCase(.uppercase)
+                    Label("Chicken and turkey count as meat.", systemImage: "xmark.circle")
+                    Label("Eggs, milk, butter, and cheese are generally permitted.", systemImage: "checkmark.circle")
+                    Label("Fish and shellfish are generally permitted.", systemImage: "checkmark.circle")
+                    Label(
+                        "Broths and gravies may be technically permitted, but many Catholics still avoid them in stricter practice.",
+                        systemImage: "questionmark.circle"
+                    )
+                    .foregroundStyle(.secondary)
+                }
+                .accessibilityIdentifier("today.decision.common_food_questions")
+
+                NavigationLink {
+                    moreDestinationList(for: .guidanceAndRules)
+                } label: {
+                    Label("Open full food guidance", systemImage: "book.closed")
+                }
+                .accessibilityIdentifier("today.decision.open_full_food_guidance")
+
+                Text(decision.sourceLine)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+
+                Link(
+                    regionProfile == .canada
+                        ? "Read CCCB Friday guidance"
+                        : "Read official USCCB fast/abstinence guidance",
+                    destination: regionProfile == .canada ? UIConstants.cccbKeepingFridayURL : UIConstants.usccbFastAbstinenceURL
                 )
-                .foregroundStyle(.secondary)
             }
-            .accessibilityIdentifier("today.decision.common_food_questions")
-
-            NavigationLink {
-                moreDestinationList(for: .guidanceAndRules)
-            } label: {
-                Label("Open full food guidance", systemImage: "book.closed")
-            }
-            .accessibilityIdentifier("today.decision.open_full_food_guidance")
-
-            Text(decision.sourceLine)
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-
-            Link(
-                regionProfile == .canada
-                    ? "Read CCCB Friday guidance"
-                    : "Read official USCCB fast/abstinence guidance",
-                destination: regionProfile == .canada ? UIConstants.cccbKeepingFridayURL : UIConstants.usccbFastAbstinenceURL
-            )
+            .padding(14)
+            .appSurfaceCard(.standard, cornerRadius: 20)
         }
     }
 

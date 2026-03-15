@@ -58,7 +58,7 @@ extension ContentView {
 
             Text(
                 selectedSupportPremiumSurface == .upgrade
-                    ? "Manage plans, tips, and status."
+                    ? "Choose a plan, send a tip, or manage billing."
                     : "Open premium planning, journaling, and exports."
             )
             .font(.caption)
@@ -103,25 +103,13 @@ extension ContentView {
 
     var premiumAndSupportSection: some View {
         Section("Premium Upgrade") {
-            premiumUpgradeHeroCard
-
-            premiumStatusSummaryCard
-
-            premiumSamplePreviewCard
-
-            #if canImport(StoreKit)
-                if !monetizationStore.premiumUnlocked {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Unlock Premium (Apple Subscription)")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(.secondary)
-                        Text("Choose monthly or yearly.")
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                    }
-                    .accessibilityIdentifier("premium.subscription_store")
-                }
-
+            if monetizationStore.premiumUnlocked {
+                premiumActiveStateCard
+            } else {
+                Text("Choose monthly or yearly below.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .accessibilityIdentifier("premium.upgrade_summary")
                 if monetizationStore.isLoading {
                     HStack(spacing: 8) {
                         ProgressView()
@@ -131,9 +119,6 @@ extension ContentView {
                 }
 
                 if !monetizationStore.premiumProducts.isEmpty {
-                    Text("Premium Plans")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(.secondary)
                     ForEach(monetizationStore.premiumProducts, id: \.id) { product in
                         let offer = premiumOfferCatalog.offer(for: product.id)
                         premiumOfferCard(product: product, offer: offer)
@@ -145,7 +130,7 @@ extension ContentView {
                 }
 
                 if !monetizationStore.tipProducts.isEmpty {
-                    Text("Optional Support Tips")
+                    Text("Optional support tips")
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(.secondary)
                     ForEach(monetizationStore.tipProducts, id: \.id) { product in
@@ -166,70 +151,60 @@ extension ContentView {
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
-            #endif
-
-            #if canImport(StoreKit)
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("Auto-Renewable Subscription Details")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(.secondary)
-
-                    if monetizationStore.premiumProducts.isEmpty {
-                        Text("Premium Monthly and Premium Yearly are auto-renewable subscriptions.")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    } else {
-                        ForEach(monetizationStore.premiumProducts, id: \.id) { product in
-                            Text("• \(product.displayName): \(product.displayPrice)\(subscriptionPeriodSuffix(for: product))")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                }
-            #endif
-
-            DisclosureGroup("What stays free vs paid") {
-                VStack(alignment: .leading, spacing: 12) {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Label("Free: know the day, follow the rule, log the result", systemImage: "checkmark.circle")
-                        Label("Premium: plan ahead, recover faster, reflect more deeply", systemImage: "star.circle")
-                        Label("Tips: one-time support only, no feature lock", systemImage: "heart.circle")
-                    }
-                    .font(.subheadline)
-
-                    ForEach(premiumOfferCatalog.pillars) { pillar in
-                        premiumPillarCard(for: pillar)
-                    }
-                }
-                .padding(.top, 6)
             }
 
             premiumLegalSupportCard
-
-            if !monetizationStore.subscriptionHealthMessage.isEmpty {
-                Text(monetizationStore.subscriptionHealthMessage)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .accessibilityIdentifier("premium.subscription_health")
-            }
-
-            if !monetizationStore.statusMessage.isEmpty {
-                Text(monetizationStore.statusMessage)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .accessibilityIdentifier("premium.status")
-            }
-            if !monetizationStore.premiumUnlocked {
-                Text("Premium unlocks planning, support reminders, deeper review, and exports.")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-                    .accessibilityIdentifier("premium.locked_feature_preview")
-            }
+            premiumStoreFeedbackSection
         }
         .animation(.none, value: monetizationStore.premiumProducts.map(\.id))
         .animation(.none, value: monetizationStore.tipProducts.map(\.id))
         .animation(.none, value: monetizationStore.isLoading)
         .animation(.none, value: monetizationStore.statusMessage)
+    }
+
+    @ViewBuilder
+    var premiumStoreFeedbackSection: some View {
+        if !monetizationStore.subscriptionHealthMessage.isEmpty {
+            Text(monetizationStore.subscriptionHealthMessage)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .accessibilityIdentifier("premium.subscription_health")
+        }
+
+        if !monetizationStore.statusMessage.isEmpty {
+            Text(monetizationStore.statusMessage)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .accessibilityIdentifier("premium.status")
+        }
+    }
+
+    var premiumActiveStateCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Premium is active.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .accessibilityIdentifier("premium.active_summary")
+
+            Button("Open Premium Tools") {
+                supportPremiumSurfaceRaw = SupportPremiumSurface.tools.rawValue
+            }
+            .appPrimaryButtonStyle()
+            .accessibilityIdentifier("premium.open_tools")
+
+            #if DEBUG && targetEnvironment(simulator)
+                Button("Reset Simulator Premium") {
+                    Task {
+                        await monetizationStore.resetSimulatorDebugPurchase()
+                    }
+                }
+                .appSecondaryButtonStyle()
+                .disabled(monetizationStore.isPurchasing)
+                .accessibilityIdentifier("premium.reset_simulator")
+            #endif
+        }
+        .padding(14)
+        .appSurfaceCard(.primary, cornerRadius: 18)
     }
 
     var premiumUpgradeHeroCard: some View {
@@ -432,18 +407,15 @@ extension ContentView {
                     }
                 }
 
-                Text(offer?.outcomeSummary ?? "Subscription unlocks premium planning, accountability, and reflection surfaces.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-
-                Text("Duration: \(offer?.durationLabel ?? "Auto-renewing")")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-
                 if offer?.isPrimaryAnchor == true {
-                    Text("Best for users who want one steady rhythm through the full liturgical year.")
-                        .font(.caption2)
+                    Text("Best for one steady rhythm through the Church year.")
+                        .font(.caption)
                         .foregroundStyle(CatholicTheme.primary.opacity(0.9))
+                } else if let summary = offer?.outcomeSummary {
+                    Text(summary)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
                 }
 
                 Button("Unlock \(offer?.displayTitle ?? product.displayName) • \(product.displayPrice)") {
@@ -456,19 +428,7 @@ extension ContentView {
             }
             .padding(14)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(
-                        offer?.isPrimaryAnchor == true
-                            ? CatholicTheme.accent.opacity(0.10)
-                            : CatholicTheme.parchment.opacity(0.92)
-                    )
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .stroke((offer?.isPrimaryAnchor == true ? CatholicTheme.primary : CatholicTheme.cardBorder).opacity(0.45), lineWidth: 1)
-            )
-            .appRoundedGlass(cornerRadius: 16)
+            .appSurfaceCard(offer?.isPrimaryAnchor == true ? .primary : .standard, cornerRadius: 16)
         }
     #endif
 
@@ -476,10 +436,6 @@ extension ContentView {
         VStack(alignment: .leading, spacing: 10) {
             Text("Restore / Manage / Legal")
                 .font(.caption.weight(.semibold))
-                .foregroundStyle(.secondary)
-
-            Text("Subscriptions renew automatically through Apple unless canceled. Legal and support links stay available here.")
-                .font(.caption)
                 .foregroundStyle(.secondary)
 
             Button("Restore Purchases") {
@@ -511,15 +467,8 @@ extension ContentView {
                 .accessibilityIdentifier("premium.legal.support")
         }
         .padding(14)
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(CatholicTheme.parchment.opacity(0.88))
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(CatholicTheme.cardBorder.opacity(0.4), lineWidth: 1)
-        )
-        .appRoundedGlass(cornerRadius: 16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .appSurfaceCard(.utility, cornerRadius: 16)
     }
 
     func premiumIconName(for surface: PremiumEntitlementSurface) -> String {

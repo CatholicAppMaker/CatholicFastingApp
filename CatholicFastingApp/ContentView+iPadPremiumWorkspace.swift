@@ -92,14 +92,7 @@ extension ContentView {
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(12)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .fill(selectedPremiumToolDestination == destination ? CatholicTheme.primary.opacity(0.12) : CatholicTheme.parchment.opacity(0.85))
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .stroke(selectedPremiumToolDestination == destination ? CatholicTheme.primary : CatholicTheme.cardBorder.opacity(0.35), lineWidth: 1)
-                    )
+                    .appSurfaceCard(selectedPremiumToolDestination == destination ? .primary : .utility, cornerRadius: 16)
                 }
                 .buttonStyle(.plain)
                 .disabled(!monetizationStore.premiumUnlocked)
@@ -141,6 +134,7 @@ extension ContentView {
                     Text("Active plan")
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(.secondary)
+                        .textCase(.uppercase)
                     Text(PremiumSeasonPlanEngine.plan(for: currentLiturgicalSeason, settings: settings).titleLine)
                         .font(.headline)
                     Text(PremiumSeasonPlanEngine.plan(for: currentLiturgicalSeason, settings: settings).focusLine)
@@ -148,11 +142,14 @@ extension ContentView {
                         .foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(12)
+                .appSurfaceCard(.utility, cornerRadius: 16)
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Reminder readiness")
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(.secondary)
+                        .textCase(.uppercase)
                     Text(reminderRecommendation.summaryLine)
                         .font(.headline)
                     Text("Current tier: \(reminderTier.label)")
@@ -160,11 +157,14 @@ extension ContentView {
                         .foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(12)
+                .appSurfaceCard(.utility, cornerRadius: 16)
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Reflection")
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(.secondary)
+                        .textCase(.uppercase)
                     Text(reflectionEntries.first?.title ?? "No recent reflection yet")
                         .font(.headline)
                     Text("Use the selected tool below to review or write a new entry.")
@@ -172,6 +172,8 @@ extension ContentView {
                         .foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(12)
+                .appSurfaceCard(.utility, cornerRadius: 16)
             }
         }
         .padding(18)

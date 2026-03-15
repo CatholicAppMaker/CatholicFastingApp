@@ -9,9 +9,11 @@ extension View {
         if #available(iOS 26.0, *) {
             tint(legacyTint)
                 .buttonStyle(.glassProminent)
+                .controlSize(.large)
         } else {
             buttonStyle(.borderedProminent)
                 .tint(legacyTint)
+                .controlSize(.large)
         }
     }
 
@@ -20,9 +22,11 @@ extension View {
         if #available(iOS 26.0, *) {
             tint(legacyTint)
                 .buttonStyle(.glass)
+                .controlSize(.large)
         } else {
             buttonStyle(.bordered)
                 .tint(legacyTint)
+                .controlSize(.large)
         }
     }
 
@@ -51,6 +55,72 @@ extension View {
         } else {
             self
         }
+    }
+
+    func appSurfaceCard(_ style: AppSurfaceCardStyle = .standard, cornerRadius: CGFloat = 18) -> some View {
+        modifier(AppSurfaceCardModifier(style: style, cornerRadius: cornerRadius))
+    }
+}
+
+enum AppSurfaceCardStyle {
+    case primary
+    case standard
+    case utility
+
+    var fillOpacity: Double {
+        switch self {
+        case .primary:
+            0.96
+        case .standard:
+            0.92
+        case .utility:
+            0.88
+        }
+    }
+
+    var tintOpacity: Double {
+        switch self {
+        case .primary:
+            0.16
+        case .standard:
+            0.08
+        case .utility:
+            0.04
+        }
+    }
+
+    var strokeOpacity: Double {
+        switch self {
+        case .primary:
+            0.62
+        case .standard:
+            0.46
+        case .utility:
+            0.36
+        }
+    }
+}
+
+struct AppSurfaceCardModifier: ViewModifier {
+    let style: AppSurfaceCardStyle
+    let cornerRadius: CGFloat
+
+    func body(content: Content) -> some View {
+        content
+            .background(
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .fill(CatholicTheme.parchment.opacity(style.fillOpacity))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .fill(CatholicTheme.accent.opacity(style.tintOpacity))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .stroke(CatholicTheme.cardBorder.opacity(style.strokeOpacity), lineWidth: 1)
+            )
+            .shadow(color: CatholicTheme.primary.opacity(style == .primary ? 0.08 : 0.04), radius: style == .primary ? 18 : 10, y: style == .primary ? 10 : 5)
+            .appRoundedGlass(cornerRadius: cornerRadius)
     }
 }
 
@@ -240,7 +310,7 @@ struct SacredHeroCard: View {
             heroMediaLayer
 
             LinearGradient(
-                colors: [CatholicTheme.primary.opacity(0.28), Color.clear, Color.black.opacity(0.64)],
+                colors: [CatholicTheme.primary.opacity(0.20), Color.clear, Color.black.opacity(0.70)],
                 startPoint: .topLeading,
                 endPoint: .bottom
             )
@@ -249,9 +319,13 @@ struct SacredHeroCard: View {
                 Text(title)
                     .font(.system(.headline, design: .serif))
                     .foregroundStyle(.white)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.9)
                 Text(subtitle)
                     .font(.caption)
                     .foregroundStyle(Color.white.opacity(0.92))
+                    .lineLimit(3)
+                    .minimumScaleFactor(0.9)
             }
             .padding(12)
         }
@@ -268,8 +342,9 @@ struct SacredHeroCard: View {
         .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                .stroke(CatholicTheme.cardBorder.opacity(0.6), lineWidth: 1)
+                .stroke(CatholicTheme.cardBorder.opacity(0.72), lineWidth: 1)
         )
+        .shadow(color: CatholicTheme.primary.opacity(0.14), radius: 18, y: 8)
         .appRoundedGlass(cornerRadius: cornerRadius)
         .modifier(AccessibilityIDModifier(id: accessibilityIdentifier))
     }
@@ -377,16 +452,7 @@ struct CatholicFastingQuoteCard: View {
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(CatholicTheme.accent.opacity(0.08))
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .stroke(CatholicTheme.cardBorder.opacity(0.55), lineWidth: 1)
-        )
-        .appRoundedGlass(cornerRadius: 12)
+        .appSurfaceCard(.utility, cornerRadius: 12)
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(quote.text). \(quote.author). \(quote.source).")
     }

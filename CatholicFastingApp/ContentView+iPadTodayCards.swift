@@ -29,7 +29,7 @@ extension ContentView {
 
             VStack(alignment: .leading, spacing: 8) {
                 Text(decision.obligationLine)
-                    .font(.title3.weight(.semibold))
+                    .font(.system(.title3, design: .serif).weight(.bold))
                     .foregroundStyle(CatholicTheme.primary)
                 if let allowed = decision.allowed.first {
                     Text("Okay today: \(allowed)")
@@ -46,8 +46,9 @@ extension ContentView {
 
             VStack(alignment: .leading, spacing: 8) {
                 Text("Food guidance")
-                    .font(.subheadline.weight(.semibold))
+                    .font(.caption.weight(.semibold))
                     .foregroundStyle(CatholicTheme.primary)
+                    .textCase(.uppercase)
                 Label("Chicken and turkey count as meat.", systemImage: "xmark.circle")
                 Label("Eggs, milk, butter, and cheese are generally permitted.", systemImage: "checkmark.circle")
                 Label("Fish and shellfish are generally permitted.", systemImage: "checkmark.circle")
@@ -63,6 +64,7 @@ extension ContentView {
                 Text("Next step")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.secondary)
+                    .textCase(.uppercase)
                 Text(todayContext?.nextActionText ?? "Keep the next required day visible and review your region profile before planning optional disciplines.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
@@ -239,8 +241,7 @@ extension ContentView {
                         .foregroundStyle(.secondary)
                         .padding(10)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(RoundedRectangle(cornerRadius: 14, style: .continuous).fill(CatholicTheme.parchment.opacity(0.92)))
-                        .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous).stroke(CatholicTheme.cardBorder.opacity(0.4), lineWidth: 1))
+                        .appSurfaceCard(.utility, cornerRadius: 14)
                 }
             }
         }
