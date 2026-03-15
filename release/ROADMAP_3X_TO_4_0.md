@@ -108,43 +108,64 @@ Recommended theme:
 
 **Regional depth + formation depth**
 
-That means `4.0` should include one or both of these tracks.
+Use `4.0` when the app moves beyond refinement and gains a broader capability in both of these areas.
 
-## 4.0 Option A: Real Canada support
+### 4.0 Goal
 
-Use `4.0` for Canada if the app moves beyond “honest partial.”
+Ship a real major release by expanding what the app can do, not just how polished it feels.
 
-Ship:
+### 4.0 Core tracks
 
-- true Canada-aware rules/data where support is claimed
-- region-conditioned observance handling at the model level
-- Canada-specific citations/sources where needed
-- no silent fallback to U.S.-specific behavior unless it is labeled as informational
+#### 1. Full Canada-aware support
 
-This is the cleanest structural reason to call a release `4.0`.
-
-## 4.0 Option B: Deeper premium formation product
-
-Use `4.0` for premium if the paid product becomes meaningfully deeper.
+Move Canada from `honest partial` to structurally complete support where claimed.
 
 Ship:
 
-- more structured seasonal programs or formation journeys
+- true Canada-aware rule/data handling at the model layer
+- clear separation of universal, U.S.-specific, and Canada-specific observance behavior
+- Canada-specific citations and source labeling where needed
+- food guidance, Friday guidance, and observance detail that all reflect the selected region truthfully
+- no fallback to U.S.-specific behavior unless it is explicitly labeled as informational
+
+#### 2. Deeper premium formation product
+
+Make premium a meaningfully deeper formation product instead of only a stronger paid surface.
+
+Ship:
+
+- structured seasonal programs or formation journeys
 - stronger long-term review and reflection workflows
-- deeper accountability/history synthesis
-- better premium differentiation beyond planning, reminders, and review
+- deeper accountability and history synthesis
+- clearer premium differentiation based on outcomes, not just tools
+- premium depth without adding a second premium tier by default
 
-This only belongs in `4.0` if premium becomes a broader capability, not just a better sales surface.
+#### 3. Optional trust-surface maturity
 
-## 4.0 Option C: Both together
+Only if budget allows during `4.0`:
 
-Best major-version candidate:
+- move privacy/support/terms/help from X-based links to first-party hosted pages
+- align in-app legal/support surfaces and App Store metadata to those hosted pages
 
-- full Canada-aware support
-- deeper premium formation workflows
-- optional hosted first-party legal/support pages if budget allows by then
+#### 4. Localization maturity
 
-That combination is large enough to justify a new App Store narrative and a new major version.
+Ship:
+
+- a full Spanish localization quality cleanup across core user-facing flows
+- Canadian French localization only if full Canada-aware support ships in the same release
+
+Do not add French Canadian in `4.0` if Canada remains partial.
+
+### 4.0 release bar
+
+`4.0` should not ship unless:
+
+- Canada support is no longer described as partial for the scenarios the app claims to support
+- premium offers at least one clearly deeper long-term formation workflow than `3.x`
+- the App Store narrative can honestly present `4.0` as more than refinement
+- tests cover the deeper region engine and premium workflow surfaces
+- Spanish quality is materially improved
+- French Canadian ships only if Canada support is truly first-class
 
 ## Test and release expectations
 
@@ -171,6 +192,7 @@ Before calling a release `4.0`:
 - new tests must cover any deeper region engine or premium workflow layer
 - migrations and compatibility must be reviewed explicitly if region logic deepens
 - the App Store description and review notes must explain why the release is more than polish
+- manual review must include iPhone, 11-inch iPad, and 13-inch iPad for the new regional and premium flows
 
 ## Working assumptions
 
@@ -182,3 +204,5 @@ Unless product strategy changes, assume:
 - subscription tier structure stays stable through `3.x`
 - subscription pricing remains stable until approval, then may change in `3.3`
 - hosted first-party support/legal pages are optional and budget-dependent, not required for `3.x`
+- `4.0` is the first version where full Canada depth and materially deeper premium formation workflows may land together
+- Spanish cleanup fits naturally into `4.0`; Canadian French is conditional on full Canada support
