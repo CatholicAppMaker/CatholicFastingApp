@@ -45,6 +45,10 @@ IPAD_TESTS=(
   "CatholicFastingAppUITests/testIPadMoreCompactPremiumShowsPlansAndLegal"
   "CatholicFastingAppUITests/testIPadTrackFastPresetSelectionStaysVisible"
   "CatholicFastingAppUITests/testIPadTodayAndMoreCanBeVisitedRepeatedly"
+  "CatholicFastingAppUITests/testIPadTodayQuickActionsOpenTargetWorkspaces"
+  "CatholicFastingAppUITests/testIPadTodayQuickActionsRemainResponsiveAcrossRepeatedCycles"
+  "CatholicFastingAppUITests/testIPadVoiceSummaryTapKeepsTodayActionsResponsive"
+  "CatholicFastingAppUITests/testIPadMoreDestinationsRemainResponsiveAcrossRepeatedCycles"
   "CatholicFastingAppUITests/testIPadTrackFastShowsLiveWorkspaceAndControls"
 )
 
