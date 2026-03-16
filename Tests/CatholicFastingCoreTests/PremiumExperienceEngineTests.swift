@@ -42,6 +42,30 @@ final class PremiumExperienceEngineTests: XCTestCase {
         XCTAssertTrue(recommendation.summaryLine.localizedCaseInsensitiveContains("recovery"))
     }
 
+    func testReminderPlannerFallsBackToMaintenanceModeWithoutUpcomingRequiredDays() {
+        let now = makeDate(year: 2026, month: 7, day: 15)
+        let observances = [
+            makeObservance(id: "a", title: "A", date: makeDate(year: 2026, month: 6, day: 20), obligation: .optional),
+            makeObservance(id: "b", title: "B", date: makeDate(year: 2026, month: 7, day: 10), obligation: .optional),
+        ]
+        let statuses: [String: CompletionStatus] = [
+            "a": .completed,
+            "b": .completed,
+        ]
+
+        let recommendation = PremiumReminderPlanner.recommendation(
+            observances: observances,
+            statusesByID: statuses,
+            now: now,
+            calendar: fixedCalendar
+        )
+
+        XCTAssertTrue(recommendation.shouldEnableDailySupport)
+        XCTAssertFalse(recommendation.shouldEnableMorning)
+        XCTAssertTrue(recommendation.shouldEnableEvening)
+        XCTAssertTrue(recommendation.summaryLine.localizedCaseInsensitiveContains("maintenance"))
+    }
+
     func testAnalyticsSummaryComputesCompletionAndIntermittentRate() {
         let observances = [
             makeObservance(id: "r1", title: "R1", date: makeDate(year: 2026, month: 2, day: 10), obligation: .mandatory),
@@ -174,6 +198,24 @@ final class PremiumExperienceEngineTests: XCTestCase {
             premiumUnlocked: true
         )
         XCTAssertEqual(gracePriority, "You are in billing grace period. Premium remains active for now.")
+    }
+
+    func testSeasonPlanWithMedicalDispensationUsesGentlePlanForAnySeason() {
+        let settings = RuleSettings(
+            birthYear: 1986,
+            hasMedicalDispensation: true,
+            ascensionObservance: .sunday,
+            fridayOutsideLentMode: .substitutePenance,
+            calendarMode: .usccb
+        )
+
+        let adventPlan = PremiumSeasonPlanEngine.plan(for: .advent, settings: settings)
+        let lentPlan = PremiumSeasonPlanEngine.plan(for: .lent, settings: settings)
+
+        XCTAssertEqual(adventPlan.fastingIntensity, "Gentle")
+        XCTAssertEqual(lentPlan.fastingIntensity, "Gentle")
+        XCTAssertEqual(adventPlan.titleLine, "Medical/Pastoral Plan")
+        XCTAssertEqual(lentPlan.titleLine, "Medical/Pastoral Plan")
     }
 
     private var fixedCalendar: Calendar {

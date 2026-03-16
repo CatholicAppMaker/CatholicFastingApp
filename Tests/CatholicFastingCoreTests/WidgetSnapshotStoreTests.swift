@@ -67,4 +67,31 @@ final class WidgetSnapshotStoreTests: XCTestCase {
 
         XCTAssertEqual(WidgetSnapshotStore.load(), updated)
     }
+
+    func testWidgetSnapshotClearRemovesPersistedValue() {
+        let snapshot = WidgetSnapshot(
+            generatedAt: Date(timeIntervalSince1970: 1_726_700_000),
+            todayTitle: "Friday of Lent",
+            todayObligation: "Required",
+            nextRequiredTitle: "Good Friday",
+            nextRequiredDate: Date(timeIntervalSince1970: 1_726_786_400),
+            completionRate: 0.65,
+            hasActiveIntermittentFast: false,
+            activeIntermittentFastStart: nil,
+            activeIntermittentTargetHours: 16
+        )
+
+        WidgetSnapshotStore.persist(snapshot)
+        XCTAssertEqual(WidgetSnapshotStore.load(), snapshot)
+
+        WidgetSnapshotStore.clear()
+        XCTAssertNil(WidgetSnapshotStore.load())
+    }
+
+    func testWidgetSnapshotLoadReturnsNilForCorruptPayload() {
+        let sharedDefaults = UserDefaults(suiteName: "group.com.kevpierce.CatholicFastingApp")
+        sharedDefaults?.set(Data("not-json".utf8), forKey: "widget_snapshot")
+
+        XCTAssertNil(WidgetSnapshotStore.load())
+    }
 }

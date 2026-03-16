@@ -107,6 +107,16 @@ final class StorageAndSyncTests: XCTestCase {
         XCTAssertEqual(notes.note(for: "legacy-note-id"), "legacy note")
     }
 
+    func testSchemaMigrationRemovesLegacyCompletedObservancesKey() {
+        UserDefaults.standard.set(["legacy-id"], forKey: "completed_observances")
+        UserDefaults.standard.set(0, forKey: "storage_schema_version")
+
+        let tracker = FastTracker()
+
+        XCTAssertEqual(tracker.status(for: "legacy-id"), .completed)
+        XCTAssertNil(UserDefaults.standard.array(forKey: "completed_observances"))
+    }
+
     func testSetNotStartedRemovesStatusEntry() {
         let tracker = FastTracker()
         let id = "2026-03-10|Reset|mandatory"
@@ -162,6 +172,28 @@ final class StorageAndSyncTests: XCTestCase {
         SyncedStore.persist(payload, for: "observance_statuses")
         let persisted = UserDefaults.standard.dictionary(forKey: "observance_statuses") as? [String: String]
         XCTAssertEqual(persisted?["privacy"], "local-only")
+    }
+
+    func testMergedStatusDictionaryFallsBackToNotStartedForUnknownRawValue() {
+        UserDefaults.standard.set(["broken": "mystery"], forKey: "observance_statuses")
+
+        let merged = SyncedStore.mergedStatusDictionary(for: "observance_statuses")
+
+        XCTAssertEqual(merged["broken"], .notStarted)
+    }
+
+    func testPersistingChangedDictionaryUpdatesLastSyncDate() throws {
+        let firstPayload = ["a": "completed"]
+        let secondPayload = ["a": "completed", "b": "missed"]
+
+        SyncedStore.persist(firstPayload, for: "observance_statuses")
+        let firstSync = try XCTUnwrap(UserDefaults.standard.object(forKey: "last_sync_date") as? Date)
+
+        Thread.sleep(forTimeInterval: 0.01)
+        SyncedStore.persist(secondPayload, for: "observance_statuses")
+        let secondSync = try XCTUnwrap(UserDefaults.standard.object(forKey: "last_sync_date") as? Date)
+
+        XCTAssertGreaterThan(secondSync, firstSync)
     }
 
     func testHouseholdProfileDecodesLegacyBirthYearOnlyPayload() throws {
