@@ -68,11 +68,7 @@ extension ContentView {
             }
             if voiceSummaryEnabled {
                 Button("Read Voice Summary") {
-                    #if canImport(AVFoundation)
-                        let utterance = AVSpeechUtterance(string: voiceSummaryText)
-                        utterance.rate = 0.5
-                        AVSpeechSynthesizer().speak(utterance)
-                    #endif
+                    voiceSummarySpeaker.speak(voiceSummaryText)
                 }
                 .appSecondaryButtonStyle()
             }
@@ -222,6 +218,8 @@ extension ContentView {
                 .frame(width: 1, height: 1)
                 .accessibilityIdentifier(surfaceReadyIdentifier)
         }
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
     }
 
     var surfaceReadyIdentifier: String {

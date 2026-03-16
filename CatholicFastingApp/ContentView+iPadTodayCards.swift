@@ -121,26 +121,42 @@ extension ContentView {
             )
 
             HStack(spacing: 10) {
-                IPadWorkspaceActionButton(title: "Open Fasting Days", systemImage: "calendar", primary: true) {
+                IPadWorkspaceActionButton(
+                    title: "Open Fasting Days",
+                    systemImage: "calendar",
+                    primary: true,
+                    accessibilityIdentifier: "ipad.today.action.open_fasting_days"
+                ) {
                     focusFastingDaysOnUpcomingRequired()
                 }
-                IPadWorkspaceActionButton(title: "Open Planning", systemImage: "slider.horizontal.3", primary: false) {
+                IPadWorkspaceActionButton(
+                    title: "Open Planning",
+                    systemImage: "slider.horizontal.3",
+                    primary: false,
+                    accessibilityIdentifier: "ipad.today.action.open_planning"
+                ) {
                     homeSurface = .more
                     selectedMoreDestination = .profileAndNorms
                 }
             }
 
             HStack(spacing: 10) {
-                IPadWorkspaceActionButton(title: "Support & Premium", systemImage: "heart.circle", primary: false) {
+                IPadWorkspaceActionButton(
+                    title: "Support & Premium",
+                    systemImage: "heart.circle",
+                    primary: false,
+                    accessibilityIdentifier: "ipad.today.action.open_premium"
+                ) {
                     homeSurface = .more
                     selectedMoreDestination = .supportAndPremium
                 }
-                IPadWorkspaceActionButton(title: "Read Voice Summary", systemImage: "speaker.wave.2", primary: false) {
-                    #if canImport(AVFoundation)
-                        let utterance = AVSpeechUtterance(string: voiceSummaryText)
-                        utterance.rate = 0.5
-                        AVSpeechSynthesizer().speak(utterance)
-                    #endif
+                IPadWorkspaceActionButton(
+                    title: "Read Voice Summary",
+                    systemImage: "speaker.wave.2",
+                    primary: false,
+                    accessibilityIdentifier: "ipad.today.action.read_voice_summary"
+                ) {
+                    voiceSummarySpeaker.speak(voiceSummaryText)
                 }
             }
         }

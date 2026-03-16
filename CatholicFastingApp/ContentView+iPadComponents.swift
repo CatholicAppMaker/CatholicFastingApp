@@ -195,10 +195,11 @@ struct IPadWorkspaceActionButton: View {
     let title: String
     let systemImage: String
     let primary: Bool
+    var accessibilityIdentifier: String? = nil
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
+        let button = Button(action: action) {
             Label(title, systemImage: systemImage)
                 .frame(maxWidth: .infinity)
         }
@@ -208,6 +209,12 @@ struct IPadWorkspaceActionButton: View {
         }
         .if(!primary) { view in
             view.appSecondaryButtonStyle()
+        }
+
+        if let accessibilityIdentifier {
+            button.accessibilityIdentifier(accessibilityIdentifier)
+        } else {
+            button
         }
     }
 }

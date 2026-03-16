@@ -2,6 +2,9 @@ import SwiftUI
 #if canImport(UIKit)
     import UIKit
 #endif
+#if canImport(AVFoundation)
+    import AVFoundation
+#endif
 
 #if canImport(UserNotifications)
     import UserNotifications
@@ -9,6 +12,25 @@ import SwiftUI
 #if canImport(TipKit)
     import TipKit
 #endif
+
+@MainActor
+final class VoiceSummarySpeaker: ObservableObject {
+    #if canImport(AVFoundation)
+        private let synthesizer = AVSpeechSynthesizer()
+
+        func speak(_ text: String) {
+            guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+            if synthesizer.isSpeaking {
+                synthesizer.stopSpeaking(at: .immediate)
+            }
+            let utterance = AVSpeechUtterance(string: text)
+            utterance.rate = 0.5
+            synthesizer.speak(utterance)
+        }
+    #else
+        func speak(_ text: String) {}
+    #endif
+}
 
 struct ContentView: View {
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
@@ -19,6 +41,7 @@ struct ContentView: View {
     @StateObject var penanceNotes = FridayPenanceNotes()
     @StateObject var intermittentTracker = IntermittentFastTracker()
     @StateObject var monetizationStore = MonetizationStore()
+    @StateObject var voiceSummarySpeaker = VoiceSummarySpeaker()
     @State var notificationStatus = "Not scheduled"
     @State var premiumCoachStatus = ""
     @State var showDeleteDataConfirm = false

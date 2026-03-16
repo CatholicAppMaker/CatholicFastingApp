@@ -42,7 +42,7 @@ extension View {
     @ViewBuilder
     func appRoundedGlass(cornerRadius: CGFloat) -> some View {
         if #available(iOS 26.0, *) {
-            glassEffect(in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+            glassEffect(.regular.interactive(), in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
         } else {
             self
         }
@@ -110,17 +110,19 @@ struct AppSurfaceCardModifier: ViewModifier {
             .background(
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
                     .fill(CatholicTheme.parchment.opacity(style.fillOpacity))
+                    .allowsHitTesting(false)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
                     .fill(CatholicTheme.accent.opacity(style.tintOpacity))
+                    .allowsHitTesting(false)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
                     .stroke(CatholicTheme.cardBorder.opacity(style.strokeOpacity), lineWidth: 1)
+                    .allowsHitTesting(false)
             )
             .shadow(color: CatholicTheme.primary.opacity(style == .primary ? 0.08 : 0.04), radius: style == .primary ? 18 : 10, y: style == .primary ? 10 : 5)
-            .appRoundedGlass(cornerRadius: cornerRadius)
     }
 }
 

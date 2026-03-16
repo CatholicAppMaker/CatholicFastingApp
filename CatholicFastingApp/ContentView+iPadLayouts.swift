@@ -60,6 +60,7 @@ extension ContentView {
             NavigationStack {
                 ipadSurfaceWorkspace(for: homeSurface)
             }
+            .id(homeSurface)
         }
         .navigationSplitViewStyle(.balanced)
         .tint(CatholicTheme.primary)
