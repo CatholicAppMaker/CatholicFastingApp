@@ -856,18 +856,14 @@ final class CatholicFastingAppUITests: XCTestCase {
         }
     }
 
-    func testIPadVoiceSummaryTapKeepsTodayActionsResponsive() {
+    func testIPadTodayActionsDoNotShowVoiceSummaryAndRemainResponsive() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
 
         openIPadSurface("today", in: app)
 
-        let readVoiceSummary = app.buttons["ipad.today.action.read_voice_summary"].firstMatch
-        XCTAssertTrue(scrollToElement(readVoiceSummary, in: app))
-        readVoiceSummary.tap()
-        readVoiceSummary.tap()
-
+        XCTAssertFalse(app.buttons["ipad.today.action.read_voice_summary"].firstMatch.exists)
         XCTAssertTrue(app.otherElements["ipad.today.workspace"].waitForExistence(timeout: 4))
 
         let openPlanning = app.buttons["ipad.today.action.open_planning"].firstMatch
@@ -876,6 +872,23 @@ final class CatholicFastingAppUITests: XCTestCase {
 
         XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
         XCTAssertTrue(scrollToElement(app.pickers["settings.region_picker"].firstMatch, in: app))
+    }
+
+    func testIPhoneAccessibilitySettingsDoNotShowVoiceSummary() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openSurface("More", in: app)
+        openMoreDestination("Setup & Reminders", in: app)
+
+        let advancedAccessibility = app.buttons["settings.accessibility.advanced"].firstMatch
+        XCTAssertTrue(scrollToElement(advancedAccessibility, in: app))
+        advancedAccessibility.tap()
+
+        XCTAssertFalse(app.switches["settings.accessibility.voice_summary"].firstMatch.exists)
+        XCTAssertFalse(app.buttons["Read Voice Summary"].firstMatch.exists)
+        XCTAssertFalse(app.staticTexts["Enable Voice Summary"].firstMatch.exists)
     }
 
     func testIPadMoreDestinationsRemainResponsiveAcrossRepeatedCycles() {

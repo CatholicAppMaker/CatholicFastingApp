@@ -2,9 +2,6 @@ import SwiftUI
 #if canImport(TipKit)
     import TipKit
 #endif
-#if canImport(AVFoundation)
-    import AVFoundation
-#endif
 
 extension ContentView {
     var dashboardHeroArtwork: SacredHeroArtwork {
@@ -65,12 +62,6 @@ extension ContentView {
             if simplifiedModeEnabled {
                 Text("Simplified mode is enabled.")
                     .foregroundStyle(CatholicTheme.primary)
-            }
-            if voiceSummaryEnabled {
-                Button("Read Voice Summary") {
-                    voiceSummarySpeaker.speak(voiceSummaryText)
-                }
-                .appSecondaryButtonStyle()
             }
         }
     }

@@ -349,15 +349,13 @@ extension ContentView {
                 .accessibilityIdentifier("settings.accessibility.simplified_mode")
 
             DisclosureGroup("Advanced accessibility options") {
-                Toggle("Enable Voice Summary", isOn: $voiceSummaryEnabled)
-                    .accessibilityIdentifier("settings.accessibility.voice_summary")
                 Toggle("Haptic Alerts", isOn: $hapticsEnabled)
                     .accessibilityIdentifier("settings.accessibility.haptics")
             }
             .accessibilityIdentifier("settings.accessibility.advanced")
 
             Text(
-                "Simplified mode reduces visual density on Today. Voice summary reads a short daily status. Haptic alerts notify when intermittent fasting milestones are reached."
+                "Simplified mode reduces visual density on Today. Haptic alerts notify when intermittent fasting milestones are reached."
             )
             .font(.caption)
             .foregroundStyle(.secondary)
@@ -645,7 +643,6 @@ extension ContentView {
         fastingDaysIncludeFeastAndHolyDays = false
         supportPremiumSurfaceRaw = DefaultValues.supportPremiumSurface.rawValue
         simplifiedModeEnabled = false
-        voiceSummaryEnabled = true
         launchFunnelSnapshot = .default
 
         notificationStatus = "Not scheduled"

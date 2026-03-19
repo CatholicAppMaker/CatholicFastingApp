@@ -704,7 +704,6 @@ enum StorageKeys {
     static let hapticsEnabled = "haptics_enabled"
     static let intermittentShowAdvanced = "intermittent_show_advanced"
     static let simplifiedModeEnabled = "simplified_mode_enabled"
-    static let voiceSummaryEnabled = "voice_summary_enabled"
     static let fastingDaysShowAllYearDays = "fasting_days_show_all_year_days"
     static let fastingDaysIncludeOptionalDays = "fasting_days_include_optional_days"
     static let fastingDaysIncludeFeastAndHolyDays = "fasting_days_include_feast_and_holy_days"

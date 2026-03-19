@@ -19,6 +19,7 @@ IPHONE_TESTS=(
   "CatholicFastingAppUITests/testDeepIPhonePremiumScreenShowsPlansTipsAndLegal"
   "CatholicFastingAppUITests/testDeepIPhonePremiumUnlockButtonsExist"
   "CatholicFastingAppUITests/testDeepIPhonePremiumTipsAndLegalStayBelowSubscriptionPlans"
+  "CatholicFastingAppUITests/testIPhoneAccessibilitySettingsDoNotShowVoiceSummary"
   "CatholicFastingAppUITests/testDeepDashboardOpenFastingDaysQuickAction"
   "CatholicFastingAppUITests/testSmokeFastingDaysControlsVisible"
   "CatholicFastingAppUITests/testDeepFastingDaysScopePickerVisible"
@@ -51,7 +52,7 @@ IPAD_TESTS=(
   "CatholicFastingAppUITests/testIPadTodayAndMoreCanBeVisitedRepeatedly"
   "CatholicFastingAppUITests/testIPadTodayQuickActionsOpenTargetWorkspaces"
   "CatholicFastingAppUITests/testIPadTodayQuickActionsRemainResponsiveAcrossRepeatedCycles"
-  "CatholicFastingAppUITests/testIPadVoiceSummaryTapKeepsTodayActionsResponsive"
+  "CatholicFastingAppUITests/testIPadTodayActionsDoNotShowVoiceSummaryAndRemainResponsive"
   "CatholicFastingAppUITests/testIPadMoreDestinationsRemainResponsiveAcrossRepeatedCycles"
   "CatholicFastingAppUITests/testIPadTrackFastShowsLiveWorkspaceAndControls"
 )

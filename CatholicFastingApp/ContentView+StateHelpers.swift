@@ -163,11 +163,6 @@ extension ContentView {
         """
     }
 
-    var voiceSummaryText: String {
-        let nextRequired = upcomingMandatoryObservance?.title ?? "No required observance soon"
-        return "Today completion is \(completionRateText). Current streak is \(currentStreak) days. Next required observance is \(nextRequired)."
-    }
-
     func addSeasonCommitment() {
         let title = newSeasonCommitmentTitle.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !title.isEmpty else { return }

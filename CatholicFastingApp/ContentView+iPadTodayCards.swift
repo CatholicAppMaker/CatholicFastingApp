@@ -151,12 +151,13 @@ extension ContentView {
                     selectedMoreDestination = .supportAndPremium
                 }
                 IPadWorkspaceActionButton(
-                    title: "Read Voice Summary",
-                    systemImage: "speaker.wave.2",
+                    title: "Open full food guidance",
+                    systemImage: "book",
                     primary: false,
-                    accessibilityIdentifier: "ipad.today.action.read_voice_summary"
+                    accessibilityIdentifier: "ipad.today.action.open_food_guidance"
                 ) {
-                    voiceSummarySpeaker.speak(voiceSummaryText)
+                    homeSurface = .more
+                    selectedMoreDestination = .guidanceAndRules
                 }
             }
         }
