@@ -278,6 +278,7 @@ extension ContentView {
                 Group {
                     todayTenSecondSection
                     todayDecisionCardSection
+                    todaySection
                     dashboardQuickActionsSection
                     setupProgressSection
                     todayRecoverySection
@@ -291,7 +292,6 @@ extension ContentView {
                         planningProgressSection
                         dashboardSeasonSection
                         dashboardHeroSection
-                        todaySection
                         progressSection
                         analyticsSection
                         milestoneReferralSection
