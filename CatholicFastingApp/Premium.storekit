@@ -72,14 +72,14 @@
         {
           "adHocOffers" : [],
           "codeOffers" : [],
-          "displayPrice" : "1.99",
+          "displayPrice" : "3.99",
           "familyShareable" : true,
           "groupNumber" : 1,
           "internalID" : "1A51159F-E64A-4DF2-8897-C11E70A8CC61",
           "introductoryOffer" : null,
           "localizations" : [
             {
-              "description" : "Unlock monthly premium fasting planning features.",
+              "description" : "Lower-friction monthly premium access for planning, reminders, and review.",
               "displayName" : "Premium Monthly",
               "locale" : "en_US"
             }
@@ -94,14 +94,14 @@
         {
           "adHocOffers" : [],
           "codeOffers" : [],
-          "displayPrice" : "9.99",
+          "displayPrice" : "19.99",
           "familyShareable" : true,
           "groupNumber" : 2,
           "internalID" : "E53CB0C4-2AFB-41C8-8DBF-1D3D9CC90A9E",
           "introductoryOffer" : null,
           "localizations" : [
             {
-              "description" : "Unlock yearly premium fasting planning features.",
+              "description" : "Best-value yearly premium access for one steady rhythm through the Church year.",
               "displayName" : "Premium Yearly",
               "locale" : "en_US"
             }

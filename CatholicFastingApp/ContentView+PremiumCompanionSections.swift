@@ -58,7 +58,7 @@ extension ContentView {
 
             Text(
                 selectedSupportPremiumSurface == .upgrade
-                    ? "Choose a plan, send a tip, or manage billing."
+                    ? "Choose a plan first, then use tips or billing tools if needed."
                     : "Open premium planning, journaling, and exports."
             )
             .font(.caption)
@@ -106,7 +106,7 @@ extension ContentView {
             if monetizationStore.premiumUnlocked {
                 premiumActiveStateCard
             } else {
-                Text("Choose monthly or yearly below.")
+                Text("Choose the yearly or monthly plan below.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .accessibilityIdentifier("premium.upgrade_summary")
@@ -130,18 +130,7 @@ extension ContentView {
                 }
 
                 if !monetizationStore.tipProducts.isEmpty {
-                    Text("Optional support tips")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(.secondary)
-                    ForEach(monetizationStore.tipProducts, id: \.id) { product in
-                        Button("Send Tip • \(product.displayPrice)") {
-                            Task {
-                                await monetizationStore.purchase(product)
-                            }
-                        }
-                        .appSecondaryButtonStyle()
-                        .disabled(monetizationStore.isPurchasing)
-                    }
+                    premiumTipsSupportCard
                 }
 
                 let loadedTipIDs = Set(monetizationStore.tipProducts.map(\.id))
@@ -214,7 +203,7 @@ extension ContentView {
                 title: monetizationStore.premiumUnlocked ? "Formation Toolkit Active" : "Formation Toolkit",
                 subtitle: monetizationStore.premiumUnlocked
                     ? "Keep planning, recovery, reflection, and review in one focused Catholic workflow."
-                    : "Build steadier fasting habits with planning, accountability, and reflection rooted in the Church year.",
+                    : "Choose one clear premium path for planning, reminders, reflection, and review through the Church year.",
                 height: 156,
                 accessibilityIdentifier: "premium.hero"
             )
@@ -408,7 +397,7 @@ extension ContentView {
                 }
 
                 if offer?.isPrimaryAnchor == true {
-                    Text("Best for one steady rhythm through the Church year.")
+                    Text(offer?.outcomeSummary ?? "Best value for one steady rhythm through the Church year.")
                         .font(.caption)
                         .foregroundStyle(CatholicTheme.primary.opacity(0.9))
                 } else if let summary = offer?.outcomeSummary {
@@ -432,10 +421,41 @@ extension ContentView {
         }
     #endif
 
+    var premiumTipsSupportCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Optional support tips")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+
+            Text("Tips support ongoing development and do not unlock features.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            ForEach(monetizationStore.tipProducts, id: \.id) { product in
+                Button("Send Tip • \(product.displayPrice)") {
+                    Task {
+                        await monetizationStore.purchase(product)
+                    }
+                }
+                .appSecondaryButtonStyle()
+                .disabled(monetizationStore.isPurchasing)
+                .accessibilityIdentifier("premium.tip.\(product.id)")
+            }
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .appSurfaceCard(.utility, cornerRadius: 16)
+        .accessibilityIdentifier("premium.tips_card")
+    }
+
     var premiumLegalSupportCard: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Restore / Manage / Legal")
                 .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+
+            Text("Use these after choosing a plan if you need to restore billing or open legal links.")
+                .font(.caption)
                 .foregroundStyle(.secondary)
 
             Button("Restore Purchases") {

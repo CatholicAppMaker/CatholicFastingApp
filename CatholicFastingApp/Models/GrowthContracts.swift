@@ -25,7 +25,7 @@ struct SubscriptionOfferCatalog {
 
     static let catholicFasting = SubscriptionOfferCatalog(
         title: "Formation Toolkit",
-        subtitle: "Premium helps users plan ahead, stay steady after misses, and reflect prayerfully.",
+        subtitle: "Premium keeps planning, reminders, review, and reflection in one steady Catholic workflow.",
         pillars: [
             Pillar(
                 id: "planning",
@@ -67,7 +67,7 @@ struct SubscriptionOfferCatalog {
                 displayTitle: "Premium Yearly",
                 durationLabel: "1 year",
                 billingCadenceLabel: "Billed once per year",
-                outcomeSummary: "Best value for staying consistent through the full liturgical year.",
+                outcomeSummary: "Best value for one steady rhythm through the full liturgical year.",
                 isPrimaryAnchor: true
             ),
             Offer(
@@ -75,7 +75,7 @@ struct SubscriptionOfferCatalog {
                 displayTitle: "Premium Monthly",
                 durationLabel: "1 month",
                 billingCadenceLabel: "Billed monthly",
-                outcomeSummary: "Lower-friction way to begin premium support and review habits.",
+                outcomeSummary: "Lower-friction way to begin premium planning and review habits.",
                 isPrimaryAnchor: false
             ),
         ]

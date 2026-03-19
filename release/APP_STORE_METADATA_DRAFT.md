@@ -18,6 +18,8 @@ Features:
 - Calendar of mandatory and optional observances
 - Fast and abstinence guidance for common scenarios
 - Personal tracking with statuses and notes
+- Free core guidance with optional Premium Monthly and Premium Yearly plans
+- Optional one-time tips to support the app without unlocking features
 - Rule-bundle transparency with sources and rationale
 - Local-only data storage and export controls
 - English and Spanish support
@@ -29,10 +31,10 @@ This app supports personal discipline and pastoral formation. It does not replac
 Catholic,fasting,abstinence,Lent,Ash Wednesday,Good Friday,USCCB,penance,liturgical calendar
 
 ## What's New (for next version)
-- Improved Spanish localization via Localizable.strings
-- Refined guidance and settings language
-- Streamlined regional settings and consent flows
-- Reliability improvements in tests and local data handling
+- Clearer Premium Monthly and Premium Yearly options
+- Simpler Support & Premium screens on iPhone and iPad
+- Improved premium wording and pricing consistency
+- Reliability improvements for premium flows and related tests
 
 ## Support & Marketing URLs
 - Support URL: https://YOUR_DOMAIN/support

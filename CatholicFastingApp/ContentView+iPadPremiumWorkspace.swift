@@ -12,7 +12,7 @@ extension ContentView {
                         assetName: moreDestinationHeroItem(for: .supportAndPremium).assetName,
                         seasonLabel: currentLiturgicalSeason.label,
                         title: "Premium Formation Toolkit",
-                        subtitle: "On iPad, premium becomes a workspace for planning, reminders, reflection, analytics, and exports.",
+                        subtitle: "Keep plans, reminders, reflection, and review together in one clear premium workspace.",
                         quote: dailySeasonalQuote,
                         regionContext: RegionalGuidanceContextFactory.generalContext(for: settings),
                         compact: compact,
@@ -55,7 +55,7 @@ extension ContentView {
             IPadWorkspaceHeader(
                 eyebrow: "Access",
                 title: monetizationStore.premiumUnlocked ? "Premium active" : "Unlock Premium",
-                detail: "Keep billing, legal links, and subscription actions in one place."
+                detail: "Choose yearly or monthly first. Billing and legal tools stay below."
             )
             premiumSurfacePickerSection
             if selectedSupportPremiumSurface == .upgrade {
@@ -211,8 +211,8 @@ extension ContentView {
         VStack(alignment: .leading, spacing: 12) {
             IPadWorkspaceHeader(
                 eyebrow: "Restore / Manage / Legal",
-                title: "Subscription details remain visible",
-                detail: "Keep legal and support links visible in every premium workflow."
+                title: "Billing and legal tools",
+                detail: "Use these after choosing a plan if you need to restore billing or open legal links."
             )
 
             HStack(spacing: 10) {

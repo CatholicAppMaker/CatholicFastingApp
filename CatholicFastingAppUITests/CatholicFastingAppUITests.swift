@@ -124,9 +124,11 @@ final class CatholicFastingAppUITests: XCTestCase {
         XCTAssertTrue(scrollToElement(app.staticTexts["Premium Yearly"].firstMatch, in: app))
         XCTAssertTrue(scrollToElement(app.staticTexts["Premium Monthly"].firstMatch, in: app))
         XCTAssertTrue(scrollToElement(app.staticTexts["Optional support tips"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Unlock Premium Yearly")).firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Unlock Premium Monthly")).firstMatch, in: app))
         XCTAssertTrue(scrollToElement(app.buttons["premium.restore"].firstMatch, in: app))
         XCTAssertTrue(scrollToElement(app.buttons["premium.manage"].firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(app.links["Terms of Use (EULA)"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.legal.terms", in: app), in: app))
     }
 
     func testDeepIPhonePremiumUnlockButtonsExist() {
@@ -140,6 +142,25 @@ final class CatholicFastingAppUITests: XCTestCase {
 
         let monthlyButton = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Unlock Premium Monthly")).firstMatch
         XCTAssertTrue(scrollToElement(monthlyButton, in: app))
+        XCTAssertLessThan(yearlyButton.frame.minY, monthlyButton.frame.minY)
+    }
+
+    func testDeepIPhonePremiumTipsAndLegalStayBelowSubscriptionPlans() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openMoreDestination("Support & Premium", in: app)
+
+        let monthlyButton = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Unlock Premium Monthly")).firstMatch
+        let tipButton = app.buttons["premium.tip.com.kevpierce.catholicfasting.tip.small"].firstMatch
+        let restoreButton = app.buttons["premium.restore"].firstMatch
+
+        XCTAssertTrue(scrollToElement(monthlyButton, in: app))
+        XCTAssertTrue(scrollToElement(tipButton, in: app))
+        XCTAssertTrue(scrollToElement(restoreButton, in: app))
+
+        XCTAssertLessThan(monthlyButton.frame.minY, tipButton.frame.minY)
+        XCTAssertLessThan(tipButton.frame.minY, restoreButton.frame.minY)
     }
 
     func testDeepGuidanceSacredGalleryVisible() {
@@ -627,7 +648,7 @@ final class CatholicFastingAppUITests: XCTestCase {
         XCTAssertTrue(premiumWorkspace.waitForExistence(timeout: 4))
         XCTAssertTrue(app.otherElements["ipad.premium.dashboard"].waitForExistence(timeout: 4))
         XCTAssertTrue(app.otherElements["ipad.premium.legal_footer"].waitForExistence(timeout: 4))
-        XCTAssertTrue(scrollToElement(app.links["Terms of Use (EULA)"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.legal.terms", in: app), in: app))
         XCTAssertTrue(scrollToElement(app.links["Privacy Policy"].firstMatch, in: app))
     }
 
@@ -696,8 +717,55 @@ final class CatholicFastingAppUITests: XCTestCase {
         XCTAssertTrue(scrollToElement(app.staticTexts["Support & Premium"].firstMatch, in: app))
         XCTAssertTrue(scrollToElement(app.staticTexts["Premium Yearly"].firstMatch, in: app))
         XCTAssertTrue(scrollToElement(app.staticTexts["Premium Monthly"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Unlock Premium Yearly")).firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Unlock Premium Monthly")).firstMatch, in: app))
         XCTAssertTrue(scrollToElement(app.buttons["premium.restore"].firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(app.links["Terms of Use (EULA)"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.legal.terms", in: app), in: app))
+    }
+
+    func testIPadPremiumYearlyAppearsBeforeMonthly() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadMoreDestination("supportAndPremium", in: app)
+
+        let yearlyButton = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Unlock Premium Yearly")).firstMatch
+        let monthlyButton = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Unlock Premium Monthly")).firstMatch
+        XCTAssertTrue(scrollToElement(yearlyButton, in: app))
+        XCTAssertTrue(scrollToElement(monthlyButton, in: app))
+        XCTAssertLessThan(yearlyButton.frame.minY, monthlyButton.frame.minY)
+    }
+
+    func testIPadMoreDefaultsToPremiumWorkspace() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadSurface("more", in: app)
+
+        XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Support & Premium"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Premium Yearly"].firstMatch, in: app))
+    }
+
+    func testIPadPremiumTipsAndLegalStayBelowSubscriptionPlans() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadMoreDestination("supportAndPremium", in: app)
+
+        let monthlyButton = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Unlock Premium Monthly")).firstMatch
+        let tipButton = app.buttons["ipad.more.tip.com.kevpierce.catholicfasting.tip.small"].firstMatch
+        let restoreButton = app.buttons["premium.restore"].firstMatch
+
+        XCTAssertTrue(scrollToElement(monthlyButton, in: app))
+        XCTAssertTrue(scrollToElement(tipButton, in: app))
+        XCTAssertTrue(scrollToElement(restoreButton, in: app))
+
+        XCTAssertLessThan(monthlyButton.frame.minY, tipButton.frame.minY)
+        XCTAssertLessThan(tipButton.frame.minY, restoreButton.frame.minY)
     }
 
     func testIPadTrackFastPresetSelectionStaysVisible() {
@@ -922,6 +990,10 @@ final class CatholicFastingAppUITests: XCTestCase {
     private func openIPadMoreDestination(_ rawValue: String, in app: XCUIApplication) {
         openIPadSurface("more", in: app)
 
+        if rawValue == "supportAndPremium" {
+            return
+        }
+
         let destination = app.buttons["ipad.more.destination.\(rawValue)"].firstMatch
         let compactDestination = app.buttons["ipad.more.compact.\(rawValue)"].firstMatch
         let target = destination.waitForExistence(timeout: 2) ? destination : compactDestination
@@ -971,12 +1043,12 @@ final class CatholicFastingAppUITests: XCTestCase {
             return true
         }
 
-        let scrollContainer: XCUIElement = if app.collectionViews.firstMatch.exists {
-            app.collectionViews.firstMatch
+        let scrollContainer: XCUIElement = if app.scrollViews.firstMatch.exists {
+            app.scrollViews.firstMatch
         } else if app.tables.firstMatch.exists {
             app.tables.firstMatch
-        } else if app.scrollViews.firstMatch.exists {
-            app.scrollViews.firstMatch
+        } else if app.collectionViews.firstMatch.exists {
+            app.collectionViews.firstMatch
         } else {
             app
         }

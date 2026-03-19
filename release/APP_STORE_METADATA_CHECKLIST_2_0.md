@@ -26,7 +26,7 @@ This file is the source-of-truth mapping between App Store Connect fields and in
 | Display text in-app | `ContentView+PremiumCompanionSections.swift` | Must show title, duration, billing cadence, and price |
 | Legal links in purchase UI | `UIConstants` | Terms + Privacy visible near restore/manage controls |
 | Review Notes | ASC version page | Include navigation path to Support & Premium page and premium outcomes |
-| Post-approval pricing plan | `release/ROADMAP_3X_TO_4_0.md` | Keep current pricing through approval; move to Monthly `3.99` / Yearly `19.99` only after live subscription health is confirmed |
+| 3.3 pricing target | `release/PRICING_ROLLOUT_PLAN_3_3.md` | Monthly `3.99` / Yearly `19.99`; keep the same `v3` product IDs and one subscription group |
 
 ## In-App Purchase Metadata (Tips)
 

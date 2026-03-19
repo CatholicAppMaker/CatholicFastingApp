@@ -59,7 +59,11 @@ extension ContentView {
                     if !monetizationStore.tipProducts.isEmpty {
                         VStack(alignment: .leading, spacing: 10) {
                             Text("Optional support tips")
-                                .font(.headline)
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(.secondary)
+                            Text("Tips support ongoing development and do not unlock features.")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
                             ForEach(monetizationStore.tipProducts, id: \.id) { product in
                                 Button {
                                     Task { await monetizationStore.purchase(product) }
@@ -70,6 +74,8 @@ extension ContentView {
                                 .accessibilityIdentifier("ipad.more.tip.\(product.id)")
                             }
                         }
+                        .padding(14)
+                        .appSurfaceCard(.utility, cornerRadius: 16)
                     }
                 #endif
 
@@ -98,7 +104,7 @@ extension ContentView {
 
                     Spacer()
 
-                    if offer?.isPrimaryAnchor == true {
+                if offer?.isPrimaryAnchor == true {
                         Text("Best value")
                             .font(.caption2.weight(.semibold))
                             .padding(.horizontal, 8)
@@ -106,6 +112,13 @@ extension ContentView {
                             .background(Capsule().fill(CatholicTheme.accent.opacity(0.18)))
                             .foregroundStyle(CatholicTheme.primary)
                     }
+                }
+
+                if let summary = offer?.outcomeSummary {
+                    Text(summary)
+                        .font(.caption)
+                        .foregroundStyle(offer?.isPrimaryAnchor == true ? CatholicTheme.primary.opacity(0.9) : .secondary)
+                        .lineLimit(2)
                 }
 
                 Button("Unlock \(offer?.displayTitle ?? product.displayName) • \(product.displayPrice)") {
@@ -138,6 +151,10 @@ extension ContentView {
         VStack(alignment: .leading, spacing: 10) {
             Text("Restore / Manage / Legal")
                 .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+
+            Text("Use these after choosing a plan if you need billing or legal help.")
+                .font(.caption)
                 .foregroundStyle(.secondary)
 
             Button("Restore Purchases") {
