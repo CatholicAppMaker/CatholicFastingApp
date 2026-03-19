@@ -28,6 +28,8 @@ IPHONE_TESTS=(
   "CatholicFastingAppUITests/testIntermittentCanStartAndCancelFast"
   "CatholicFastingAppUITests/testIntermittentCanEndFastAndWriteSessionHistory"
   "CatholicFastingAppUITests/testIntermittentTargetPickerVisible"
+  "CatholicFastingAppUITests/testIntermittentDefaultViewPrioritizesLiveStateAndKeepsAdvancedCollapsed"
+  "CatholicFastingAppUITests/testIntermittentAdvancedToolsCanExpandFromCollapsedDefault"
 )
 
 IPAD_TESTS=(
@@ -55,6 +57,8 @@ IPAD_TESTS=(
   "CatholicFastingAppUITests/testIPadTodayActionsDoNotShowVoiceSummaryAndRemainResponsive"
   "CatholicFastingAppUITests/testIPadMoreDestinationsRemainResponsiveAcrossRepeatedCycles"
   "CatholicFastingAppUITests/testIPadTrackFastShowsLiveWorkspaceAndControls"
+  "CatholicFastingAppUITests/testIPadTrackFastDefaultsToLiveControlsAndCollapsedAdvancedTools"
+  "CatholicFastingAppUITests/testIPadTrackFastAdvancedToolsCanExpandWithoutHidingHistory"
 )
 
 boot_simulator() {

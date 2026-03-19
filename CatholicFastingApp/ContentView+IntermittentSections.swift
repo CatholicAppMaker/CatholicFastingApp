@@ -64,6 +64,14 @@ extension ContentView {
 
                 CatholicFastingQuoteCard(quote: intermittentFastingQuote, compact: true)
                     .accessibilityIdentifier("intermittent.fasting_quote")
+
+                Text(
+                    intermittentTracker.activeStart == nil
+                        ? "Choose a target, then start when ready."
+                        : "Your live fast and next action are below."
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
             }
             .accessibilityIdentifier("intermittent.hero")
         }
@@ -71,9 +79,6 @@ extension ContentView {
 
     var intermittentOverviewSection: some View {
         Section("Plan Snapshot") {
-            Text("Keep your personal fasting rhythm separate from Church obligation days.")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
             ViewThatFits(in: .horizontal) {
                 HStack {
                     MetricTile(title: "Sessions", value: "\(intermittentTracker.sessions.count)")
@@ -90,12 +95,9 @@ extension ContentView {
             }
 
             if let activeStart = intermittentTracker.activeStart {
-                Text("Current fast began \(activeStart.formatted(date: .abbreviated, time: .shortened)).")
+                Text("Started \(activeStart.formatted(date: .abbreviated, time: .shortened)).")
                     .font(.caption)
                     .foregroundStyle(CatholicTheme.primary.opacity(0.9))
-                Text("Hold steady until the tracker reaches your target.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
             } else if let latestSession = intermittentTracker.sessions.first {
                 Text("Last fast ended \(latestSession.end.formatted(date: .abbreviated, time: .shortened)).")
                     .font(.caption)
@@ -105,10 +107,10 @@ extension ContentView {
                         ? "Repeat this rhythm or increase only if it remains prudent."
                         : "Choose a lighter target or re-enter with a simpler plan."
                 )
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             } else {
-                Text("Choose a plan below and begin when ready.")
+                Text("Plan first. Start when ready.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -116,7 +118,7 @@ extension ContentView {
     }
 
     var intermittentControlsSection: some View {
-        Section("Start or End Fast") {
+        Section("Controls") {
             Picker("Quick Plan", selection: intermittentPresetBinding) {
                 ForEach([12, 14, 16, 18, 20, 24, 36], id: \.self) { hours in
                     Text(intermittentPlanDescription(hours)).tag(hours)
@@ -180,12 +182,32 @@ extension ContentView {
         }
     }
 
-    var intermittentAdvancedToggleSection: some View {
+    var intermittentAdvancedToolsSection: some View {
         Section("Advanced Tools") {
-            DisclosureGroup("Show schedules, milestones, and history") {
-                Toggle("Keep advanced intermittent tools visible", isOn: $intermittentShowAdvanced)
-                    .accessibilityIdentifier("intermittent.advanced.toggle")
-                Text("Saved schedules, milestones, recovery guidance, and fuller history.")
+            DisclosureGroup(
+                isExpanded: $intermittentShowAdvanced,
+                content: {
+                    VStack(alignment: .leading, spacing: 0) {
+                        intermittentScheduleSection
+                        intermittentMilestonesSection
+                        intermittentRecoverySection
+                        intermittentSessionHistorySection
+                    }
+                },
+                label: {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Show schedules, milestones, recovery, and history")
+                            .font(.subheadline.weight(.semibold))
+                        Text("Keep the tracker focused until you need more detail.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            )
+            .accessibilityIdentifier("intermittent.advanced.disclosure")
+
+            if !intermittentShowAdvanced {
+                Text("Saved schedules, milestone stats, recovery guidance, and recent history stay here.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -356,9 +378,9 @@ extension ContentView {
                             VStack(spacing: 8) {
                                 LiveTrackerMetricChip(title: "Elapsed", value: countdownText(elapsed))
                                     .accessibilityIdentifier("intermittent.active_elapsed")
-                                LiveTrackerMetricChip(title: "Plan", value: "\(intermittentTracker.presetHours)h fast")
+                                LiveTrackerMetricChip(title: "Target", value: "\(intermittentTracker.presetHours)h fast")
                                 LiveTrackerMetricChip(
-                                    title: "Eating Window",
+                                    title: "Next",
                                     value: eatingHours > 0 ? "\(eatingHours)h after fast" : "Custom rhythm"
                                 )
                             }
@@ -366,9 +388,9 @@ extension ContentView {
                             HStack(spacing: 8) {
                                 LiveTrackerMetricChip(title: "Elapsed", value: countdownText(elapsed))
                                     .accessibilityIdentifier("intermittent.active_elapsed")
-                                LiveTrackerMetricChip(title: "Plan", value: "\(intermittentTracker.presetHours)h fast")
+                                LiveTrackerMetricChip(title: "Target", value: "\(intermittentTracker.presetHours)h fast")
                                 LiveTrackerMetricChip(
-                                    title: "Eating Window",
+                                    title: "Next",
                                     value: eatingHours > 0 ? "\(eatingHours)h after fast" : "Custom rhythm"
                                 )
                             }
@@ -450,7 +472,7 @@ extension ContentView {
                         Text("No fasting session yet.")
                             .font(.headline)
                             .foregroundStyle(CatholicTheme.primary)
-                        Text("Start your first intermittent fast to unlock the live countdown and eating-window tracker.")
+                        Text("Pick a target below and start when ready.")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                             .accessibilityIdentifier("intermittent.no_active")

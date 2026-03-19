@@ -5,8 +5,10 @@ extension ContentView {
         IPadWorkspaceHeroBand(
             assetName: intermittentHeroArtwork.assetName,
             seasonLabel: currentLiturgicalSeason.label,
-            title: "Intermittent Fasting Control Center",
-            subtitle: "Keep the live fast, next eating window, and schedule choices together.",
+            title: "Track Fast",
+            subtitle: intermittentTracker.activeStart == nil
+                ? "Choose a target, then start when ready."
+                : "Your live fast and next action stay here.",
             quote: intermittentFastingQuote,
             regionContext: RegionalGuidanceContextFactory.generalContext(for: settings),
             compact: compact,
@@ -19,7 +21,9 @@ extension ContentView {
             IPadWorkspaceHeader(
                 eyebrow: "Live",
                 title: intermittentTracker.activeStart == nil ? "No active fast" : "Fast in progress",
-                detail: "The ring, elapsed time, and next action stay in one place."
+                detail: intermittentTracker.activeStart == nil
+                    ? "Set a target and start when ready."
+                    : "Elapsed time, target, and next action stay together."
             )
 
             TimelineView(.periodic(from: .now, by: 1)) { context in
@@ -44,7 +48,7 @@ extension ContentView {
                                 Text("Target ends \(targetDate.formatted(date: .abbreviated, time: .shortened))")
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
-                                Text(progress >= 1 ? "You can end the fast at any time." : "Hold steady until the ring reaches the target.")
+                                Text(progress >= 1 ? "You can end the fast now." : "Keep going to complete this target.")
                                     .font(.caption)
                                     .foregroundStyle(progress >= 1 ? .green : .secondary)
                             }
@@ -65,7 +69,7 @@ extension ContentView {
                                 Text("Last fast ended \(latestSession.end.formatted(date: .abbreviated, time: .shortened))")
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
-                                Text(eatingSeconds > 0 ? "Eating window closes in \(countdownText(remaining))." : "This plan does not use a standard daily eating window.")
+                                Text(eatingSeconds > 0 ? "Eating window closes in \(countdownText(remaining))." : "This plan does not use a standard eating window.")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                             }
@@ -95,8 +99,8 @@ extension ContentView {
         return VStack(alignment: .leading, spacing: 16) {
             IPadWorkspaceHeader(
                 eyebrow: "Controls",
-                title: "Start, end, or adjust the fast",
-                detail: "Quick presets stay simple; custom longer fasts remain a premium option."
+                title: "Choose a target and act",
+                detail: "Quick presets first. Custom longer fasts stay premium."
             )
 
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
@@ -169,8 +173,8 @@ extension ContentView {
         VStack(alignment: .leading, spacing: 14) {
             IPadWorkspaceHeader(
                 eyebrow: "Planning",
-                title: "Schedule and cadence",
-                detail: "Review cadence, milestones, and recovery together."
+                title: "Plan snapshot",
+                detail: "Keep the current rhythm visible without crowding the live tracker."
             )
 
             HStack(spacing: 10) {
@@ -179,41 +183,52 @@ extension ContentView {
                 IPadSummaryMetricCard(title: "Longest", value: intermittentLongestSessionText, subtitle: "best recent duration", tint: .orange)
             }
 
-            DisclosureGroup("Schedules and milestones") {
-                VStack(alignment: .leading, spacing: 12) {
-                    intermittentScheduleSection
-                    intermittentMilestonesSection
-                    intermittentRecoverySection
-                }
-            }
+            Text(notificationStatus.isEmpty ? "Reminder status will appear after scheduling." : notificationStatus)
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
         .padding(18)
         .iPadPaneCard()
         .accessibilityIdentifier("ipad.intermittent.planning")
     }
 
-    var ipadIntermittentMilestoneCard: some View {
+    var ipadIntermittentAdvancedToolsCard: some View {
         VStack(alignment: .leading, spacing: 14) {
             IPadWorkspaceHeader(
-                eyebrow: "Status",
-                title: "Reminder and recovery status",
-                detail: "Pair the fast with a realistic cadence and recovery guidance."
+                eyebrow: "Advanced",
+                title: "Schedules, milestones, and recovery",
+                detail: "Keep deeper tools available without letting them lead the page."
             )
-            Text(notificationStatus.isEmpty ? "Reminder status will appear here after scheduling." : notificationStatus)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-            DisclosureGroup("Advanced tools") {
-                VStack(alignment: .leading, spacing: 12) {
-                    intermittentAdvancedToggleSection
-                    if intermittentShowAdvanced {
-                        intermittentOverviewSection
+            DisclosureGroup(
+                isExpanded: $intermittentShowAdvanced,
+                content: {
+                    VStack(alignment: .leading, spacing: 12) {
+                        intermittentScheduleSection
+                        intermittentMilestonesSection
+                        intermittentRecoverySection
+                    }
+                },
+                label: {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Show advanced tools")
+                            .font(.subheadline.weight(.semibold))
+                        Text("Schedules, milestone stats, and recovery guidance.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                     }
                 }
+            )
+            .accessibilityIdentifier("ipad.intermittent.advanced.disclosure")
+
+            if !intermittentShowAdvanced {
+                Text("Advanced tools stay collapsed until you need them.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
         }
         .padding(18)
         .iPadPaneCard()
-        .accessibilityIdentifier("ipad.intermittent.status")
+        .accessibilityIdentifier("ipad.intermittent.advanced")
     }
 
     var ipadIntermittentHistoryCard: some View {
@@ -221,7 +236,7 @@ extension ContentView {
             IPadWorkspaceHeader(
                 eyebrow: "History",
                 title: "Recent sessions",
-                detail: "Review the latest fasts without losing the live workspace."
+                detail: "Review recent fasts without crowding the live controls."
             )
             intermittentSessionHistorySection
         }

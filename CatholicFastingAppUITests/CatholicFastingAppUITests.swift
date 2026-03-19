@@ -336,6 +336,33 @@ final class CatholicFastingAppUITests: XCTestCase {
         XCTAssertTrue(scrollToElement(targetPicker, in: app))
     }
 
+    func testIntermittentDefaultViewPrioritizesLiveStateAndKeepsAdvancedCollapsed() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openSurface("Track Fast", in: app)
+
+        XCTAssertTrue(app.staticTexts["intermittent.no_active"].firstMatch.waitForExistence(timeout: 4))
+        XCTAssertTrue(scrollToElement(app.buttons["intermittent.start_fast"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.otherElements["intermittent.advanced.disclosure"].firstMatch, in: app))
+        XCTAssertFalse(app.textFields["intermittent.schedule.name"].firstMatch.exists)
+    }
+
+    func testIntermittentAdvancedToolsCanExpandFromCollapsedDefault() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openSurface("Track Fast", in: app)
+
+        let disclosure = app.otherElements["intermittent.advanced.disclosure"].firstMatch
+        XCTAssertTrue(scrollToElement(disclosure, in: app))
+        disclosure.tap()
+
+        let scheduleName = app.textFields["intermittent.schedule.name"].firstMatch
+        XCTAssertTrue(scrollToElement(scheduleName, in: app))
+        XCTAssertTrue(app.otherElements["intermittent.history_empty"].firstMatch.exists)
+    }
+
     func testDeepRecoveryPlanVisibleWhenMissedSeeded() {
         let app = makeApp(seedMissed: true)
         app.launch()
@@ -923,7 +950,38 @@ final class CatholicFastingAppUITests: XCTestCase {
         XCTAssertTrue(app.otherElements["ipad.intermittent.live"].waitForExistence(timeout: 4))
         XCTAssertTrue(app.otherElements["ipad.intermittent.controls"].waitForExistence(timeout: 4))
         XCTAssertTrue(app.otherElements["ipad.intermittent.planning"].waitForExistence(timeout: 4))
+        XCTAssertTrue(app.otherElements["ipad.intermittent.advanced"].waitForExistence(timeout: 4))
         XCTAssertTrue(app.otherElements["ipad.intermittent.history"].waitForExistence(timeout: 4))
+    }
+
+    func testIPadTrackFastDefaultsToLiveControlsAndCollapsedAdvancedTools() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadSurface("intermittent", in: app)
+
+        XCTAssertTrue(app.staticTexts["No active fast"].firstMatch.waitForExistence(timeout: 4))
+        XCTAssertTrue(scrollToElement(app.buttons["ipad.intermittent.start"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.otherElements["ipad.intermittent.advanced"].firstMatch, in: app))
+        XCTAssertFalse(app.textFields["intermittent.schedule.name"].firstMatch.exists)
+        XCTAssertTrue(scrollToElement(app.otherElements["ipad.intermittent.history"].firstMatch, in: app))
+    }
+
+    func testIPadTrackFastAdvancedToolsCanExpandWithoutHidingHistory() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadSurface("intermittent", in: app)
+
+        let disclosure = app.otherElements["ipad.intermittent.advanced.disclosure"].firstMatch
+        XCTAssertTrue(scrollToElement(disclosure, in: app))
+        disclosure.tap()
+
+        let scheduleName = app.textFields["intermittent.schedule.name"].firstMatch
+        XCTAssertTrue(scrollToElement(scheduleName, in: app))
+        XCTAssertTrue(scrollToElement(app.otherElements["ipad.intermittent.history"].firstMatch, in: app))
     }
 
     private func makeApp(skipOnboarding: Bool = true, seedMissed: Bool = false, regionProfile: String? = nil) -> XCUIApplication {

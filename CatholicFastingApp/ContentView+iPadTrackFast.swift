@@ -14,7 +14,7 @@ extension ContentView {
                             ipadIntermittentLiveControlCenter
                             ipadIntermittentQuickPlansCard
                             ipadIntermittentPlanningCard
-                            ipadIntermittentMilestoneCard
+                            ipadIntermittentAdvancedToolsCard
                             ipadIntermittentHistoryCard
                         }
                     } else {
@@ -28,7 +28,7 @@ extension ContentView {
 
                             VStack(alignment: .leading, spacing: 20) {
                                 ipadIntermittentPlanningCard
-                                ipadIntermittentMilestoneCard
+                                ipadIntermittentAdvancedToolsCard
                                 ipadIntermittentHistoryCard
                             }
                             .frame(width: compact ? 360 : 430, alignment: .top)

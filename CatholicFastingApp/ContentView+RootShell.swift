@@ -315,15 +315,9 @@ extension ContentView {
                 Group {
                     intermittentHeroSection
                     intermittentActiveSection
-                    intermittentOverviewSection
                     intermittentControlsSection
-                    intermittentAdvancedToggleSection
-                    if intermittentShowAdvanced {
-                        intermittentScheduleSection
-                        intermittentMilestonesSection
-                        intermittentRecoverySection
-                        intermittentSessionHistorySection
-                    }
+                    intermittentOverviewSection
+                    intermittentAdvancedToolsSection
                 }
             )
         case .more:
