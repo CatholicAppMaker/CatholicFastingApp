@@ -437,6 +437,18 @@ final class CatholicFastingAppUITests: XCTestCase {
         XCTAssertTrue(scrollToElement(supportButton, in: app))
     }
 
+    func testDeepQuickSetupShowsLanguageSelector() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openMoreDestination("Setup & Reminders", in: app)
+
+        let languagePicker = app.pickers["settings.quick.language"].firstMatch
+        XCTAssertTrue(scrollToElement(languagePicker, in: app))
+        let regionPicker = app.pickers["settings.quick.region"].firstMatch
+        XCTAssertTrue(scrollToElement(regionPicker, in: app))
+    }
+
     func testDeepHouseholdProfileCanBeCreatedAndReapplied() {
         let app = makeApp()
         app.launch()
@@ -638,7 +650,24 @@ final class CatholicFastingAppUITests: XCTestCase {
         let app = makeApp(skipOnboarding: false)
         app.launch()
 
+        XCTAssertTrue(app.pickers["onboarding.language"].waitForExistence(timeout: 4))
         XCTAssertTrue(app.pickers["onboarding.region"].waitForExistence(timeout: 4))
+    }
+
+    func testIPadOnboardingLanguageSelectionUpdatesVisibleCopy() {
+        let app = makeApp(skipOnboarding: false)
+        app.launch()
+
+        let languagePicker = app.pickers["onboarding.language"].firstMatch
+        XCTAssertTrue(scrollToElement(languagePicker, in: app))
+        selectMenuPicker(languagePicker, option: "Español", in: app)
+
+        XCTAssertTrue(app.navigationBars["Bienvenido"].waitForExistence(timeout: 4))
+
+        let continueButton = app.buttons["onboarding.continue"].firstMatch
+        XCTAssertTrue(continueButton.waitForExistence(timeout: 4))
+        XCTAssertEqual(continueButton.label, "Finalizar configuración")
+        XCTAssertTrue(app.staticTexts["Paso 2 de 4: Idioma y región"].firstMatch.waitForExistence(timeout: 4))
     }
 
     func testIPadMoreProfileDestinationShowsRegionPicker() {
@@ -705,6 +734,7 @@ final class CatholicFastingAppUITests: XCTestCase {
 
         openIPadMoreDestination("setupAndReminders", in: app)
 
+        XCTAssertTrue(scrollToElement(app.pickers["settings.quick.language"].firstMatch, in: app))
         let regionPicker = app.pickers["settings.region_picker"].firstMatch
         XCTAssertTrue(scrollToElement(regionPicker, in: app))
         XCTAssertTrue(scrollToElement(app.otherElements["settings.quick.reminder_actions"].firstMatch, in: app))
@@ -1155,6 +1185,15 @@ final class CatholicFastingAppUITests: XCTestCase {
         let text = app.staticTexts[label].firstMatch
         XCTAssertTrue(scrollToElement(text, in: app), "Unable to find disclosure group \(label)")
         text.tap()
+    }
+
+    private func selectMenuPicker(_ picker: XCUIElement, option: String, in app: XCUIApplication) {
+        XCTAssertTrue(scrollToElement(picker, in: app), "Unable to find picker \(picker)")
+        picker.tap()
+
+        let optionButton = app.buttons[option].firstMatch
+        XCTAssertTrue(optionButton.waitForExistence(timeout: 4), "Unable to find picker option \(option)")
+        optionButton.tap()
     }
 
     private func returnToMoreHome(in app: XCUIApplication) {
