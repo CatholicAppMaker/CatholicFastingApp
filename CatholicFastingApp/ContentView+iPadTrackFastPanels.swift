@@ -112,20 +112,11 @@ extension ContentView {
                             Text("\(hours)h")
                                 .font(.headline)
                             Text(intermittentPlanDescription(hours))
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .appSupportingTextStyle()
                                 .lineLimit(2)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(12)
-                        .background(
-                            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                .fill(intermittentTracker.presetHours == hours ? CatholicTheme.primary.opacity(0.12) : CatholicTheme.parchment.opacity(0.9))
-                        )
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                .stroke(intermittentTracker.presetHours == hours ? CatholicTheme.primary : CatholicTheme.cardBorder.opacity(0.4), lineWidth: 1)
-                        )
+                        .appInteractiveTileStyle(isSelected: intermittentTracker.presetHours == hours)
                     }
                     .buttonStyle(.plain)
                     .accessibilityIdentifier("ipad.intermittent.plan.\(hours)")
@@ -138,15 +129,13 @@ extension ContentView {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Custom target: \(intermittentTracker.presetHours)h")
                         Text("Longer personal disciplines up to 14 days remain available here.")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .appSupportingTextStyle()
                     }
                 }
                 .accessibilityIdentifier("ipad.intermittent.custom_target")
             } else {
                 Text("Custom targets above the preset plans remain a premium feature.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .appSupportingTextStyle()
             }
 
             HStack(spacing: 10) {
@@ -184,8 +173,7 @@ extension ContentView {
             }
 
             Text(notificationStatus.isEmpty ? "Reminder status will appear after scheduling." : notificationStatus)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .appSupportingTextStyle()
         }
         .padding(18)
         .iPadPaneCard()
@@ -213,8 +201,7 @@ extension ContentView {
                         Text("Show advanced tools")
                             .font(.subheadline.weight(.semibold))
                         Text("Schedules, milestone stats, and recovery guidance.")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .appSupportingTextStyle()
                     }
                 }
             )
@@ -222,8 +209,7 @@ extension ContentView {
 
             if !intermittentShowAdvanced {
                 Text("Advanced tools stay collapsed until you need them.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .appSupportingTextStyle()
             }
         }
         .padding(18)

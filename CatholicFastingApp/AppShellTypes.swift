@@ -10,10 +10,12 @@ extension View {
             tint(legacyTint)
                 .buttonStyle(.glassProminent)
                 .controlSize(.large)
+                .frame(minHeight: 44)
         } else {
             buttonStyle(.borderedProminent)
                 .tint(legacyTint)
                 .controlSize(.large)
+                .frame(minHeight: 44)
         }
     }
 
@@ -23,10 +25,12 @@ extension View {
             tint(legacyTint)
                 .buttonStyle(.glass)
                 .controlSize(.large)
+                .frame(minHeight: 44)
         } else {
             buttonStyle(.bordered)
                 .tint(legacyTint)
                 .controlSize(.large)
+                .frame(minHeight: 44)
         }
     }
 
@@ -82,13 +86,27 @@ extension View {
     }
 
     func appSupportingTextStyle() -> some View {
-        font(.caption)
+        font(.footnote)
             .foregroundStyle(.secondary)
     }
 
     func appMetricValueStyle() -> some View {
         font(.system(.title3, design: .rounded).weight(.bold))
             .foregroundStyle(CatholicTheme.primary)
+    }
+
+    func appInteractiveTileStyle(
+        isSelected: Bool = false,
+        cornerRadius: CGFloat = 16,
+        selectedTint: Color = CatholicTheme.primary
+    ) -> some View {
+        modifier(
+            AppInteractiveTileModifier(
+                isSelected: isSelected,
+                cornerRadius: cornerRadius,
+                selectedTint: selectedTint
+            )
+        )
     }
 
     func appSymbolStyle(_ role: AppSymbolRole = .standard) -> some View {
@@ -129,6 +147,30 @@ private struct AppSymbolModifier: ViewModifier {
         content
             .font(role.font)
             .foregroundStyle(role.color)
+    }
+}
+
+private struct AppInteractiveTileModifier: ViewModifier {
+    let isSelected: Bool
+    let cornerRadius: CGFloat
+    let selectedTint: Color
+
+    func body(content: Content) -> some View {
+        content
+            .padding(.horizontal, 14)
+            .padding(.vertical, 12)
+            .frame(minHeight: 52)
+            .background(
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .fill(isSelected ? selectedTint.opacity(0.12) : CatholicTheme.parchment.opacity(0.88))
+                    .allowsHitTesting(false)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .stroke(isSelected ? selectedTint : CatholicTheme.cardBorder.opacity(0.35), lineWidth: 1)
+                    .allowsHitTesting(false)
+            )
+            .shadow(color: isSelected ? selectedTint.opacity(0.10) : .clear, radius: 10, y: 4)
     }
 }
 

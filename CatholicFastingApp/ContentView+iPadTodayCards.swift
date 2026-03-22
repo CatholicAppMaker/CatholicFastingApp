@@ -46,7 +46,7 @@ extension ContentView {
 
             VStack(alignment: .leading, spacing: 8) {
                 Text("Food guidance")
-                    .font(.caption.weight(.semibold))
+                    .appEyebrowStyle()
                     .foregroundStyle(CatholicTheme.primary)
                     .textCase(.uppercase)
                 Label("Chicken and turkey count as meat.", systemImage: "xmark.circle")
@@ -62,12 +62,10 @@ extension ContentView {
 
             VStack(alignment: .leading, spacing: 6) {
                 Text("Next step")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(.secondary)
+                    .appEyebrowStyle()
                     .textCase(.uppercase)
                 Text(todayContext?.nextActionText ?? "Keep the next required day visible and review your region profile before planning optional disciplines.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .appLeadTextStyle()
             }
 
             Button {
@@ -186,12 +184,11 @@ extension ContentView {
 
             if currentSeasonCommitments.isEmpty {
                 Text("No active commitments for \(currentLiturgicalSeason.label).")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .appSupportingTextStyle()
             } else {
                 ForEach(currentSeasonCommitments.prefix(3)) { commitment in
                     Label(commitment.title, systemImage: "checkmark.circle")
-                        .font(.caption)
+                        .font(.footnote)
                 }
             }
         }
@@ -217,12 +214,10 @@ extension ContentView {
                     .foregroundStyle(.secondary)
                 ForEach(recovery.steps, id: \.self) { step in
                     Text("• \(step)")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .appSupportingTextStyle()
                 }
                 Text(recovery.nextRequiredLine)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .appSupportingTextStyle()
                 Button("Log recovery substitute today") {
                     logRecoverySubstituteForToday()
                 }
@@ -248,14 +243,12 @@ extension ContentView {
             )
 
             Text(dailySeasonalFormationLine)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .appLeadTextStyle()
 
             HStack(spacing: 8) {
                 ForEach(activeSeasonalContentPack.formationLines.prefix(2), id: \.self) { line in
                     Text(line)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .appSupportingTextStyle()
                         .padding(10)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .appSurfaceCard(.utility, cornerRadius: 14)
@@ -276,8 +269,7 @@ extension ContentView {
             )
 
             Text(todayFoodDecision.sourceLine)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .appSupportingTextStyle()
 
             HStack(spacing: 8) {
                 ForEach(regionContext.citations, id: \.self) { citation in
@@ -287,8 +279,7 @@ extension ContentView {
 
             if !acceptedLegalNotice {
                 Text("This remains an independent devotional app and not an official Church authority app.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .appSupportingTextStyle()
             }
         }
         .padding(18)

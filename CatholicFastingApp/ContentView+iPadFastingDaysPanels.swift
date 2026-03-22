@@ -82,13 +82,12 @@ extension ContentView {
                     IPadContextBadge(text: regionContext.supportLevel.label, supportLevel: regionContext.supportLevel)
                     DisclosureGroup("Region notes") {
                         Text(regionContext.disclosureText)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .appSupportingTextStyle()
                             .padding(.top, 4)
                     }
                     if let url = regionContext.sourceURL {
                         Link(regionContext.regionProfile == .canada ? "Read CCCB Friday guidance" : "Read official guidance", destination: url)
-                            .font(.caption.weight(.semibold))
+                            .font(.footnote.weight(.semibold))
                     }
                 }
                 .padding(18)
@@ -186,8 +185,7 @@ extension ContentView {
                         }
                         if let detail = selected.detail {
                             Text(detail)
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .appSupportingTextStyle()
                         }
                         Text(context.nextActionText)
                             .font(.subheadline.weight(.semibold))
@@ -255,16 +253,14 @@ extension ContentView {
                 DisclosureGroup("Sources and transparency") {
                     VStack(alignment: .leading, spacing: 12) {
                         Text(context.sourceSummary)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .appSupportingTextStyle()
                         ForEach(context.regionalContext.citations, id: \.self) { citation in
                             Text("• \(citation.authority.rawValue): \(citation.title) (\(citation.shortReference))")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .appSupportingTextStyle()
                         }
                         if let url = context.regionalContext.sourceURL {
                             Link("Open source guidance", destination: url)
-                                .font(.caption.weight(.semibold))
+                                .font(.footnote.weight(.semibold))
                         }
                     }
                     .padding(.top, 8)
@@ -277,8 +273,7 @@ extension ContentView {
                         .font(.system(.title3, design: .serif).weight(.bold))
                         .foregroundStyle(CatholicTheme.primary)
                     Text("Pick a day to review its obligation and log it.")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .appLeadTextStyle()
                 }
                 .padding(18)
                 .iPadPaneCard()

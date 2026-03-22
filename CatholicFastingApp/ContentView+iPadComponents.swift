@@ -17,18 +17,16 @@ struct IPadWorkspaceHeader: View {
     let eyebrow: String
     let title: String
     let detail: String
+    var serifTitle: Bool = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(eyebrow.uppercased())
-                .font(.caption2.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .appEyebrowStyle()
             Text(title)
-                .font(.system(.title3, design: .serif).weight(.bold))
-                .foregroundStyle(CatholicTheme.primary)
+                .appSectionTitleStyle(serif: serifTitle)
             Text(detail)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .appLeadTextStyle()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -43,15 +41,13 @@ struct IPadSummaryMetricCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(title.uppercased())
-                .font(.caption2.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .appEyebrowStyle()
             Text(value)
                 .font(.system(.title2, design: .rounded).weight(.bold))
                 .foregroundStyle(tint)
             if let subtitle {
                 Text(subtitle)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .appSupportingTextStyle()
                     .lineLimit(2)
             }
         }
@@ -97,24 +93,14 @@ struct IPadKeyDateChip: View {
         Button(action: action) {
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(.caption.weight(.semibold))
+                    .font(.footnote.weight(.semibold))
                 Text(subtitle)
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
+                    .appSupportingTextStyle()
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 10)
-            .background(
-                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .fill(isSelected ? CatholicTheme.primary.opacity(0.14) : CatholicTheme.parchment.opacity(0.9))
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .stroke(isSelected ? CatholicTheme.primary : CatholicTheme.cardBorder.opacity(0.45), lineWidth: 1)
-            )
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .appInteractiveTileStyle(isSelected: isSelected, cornerRadius: 14)
         }
         .buttonStyle(.plain)
-        .shadow(color: isSelected ? CatholicTheme.primary.opacity(0.10) : .clear, radius: 10, y: 4)
     }
 }
 
@@ -143,7 +129,7 @@ struct IPadWorkspaceHeroBand: View {
 
                     VStack(alignment: .leading, spacing: 10) {
                         Label("Liturgical Season: \(seasonLabel)", systemImage: "sparkles")
-                            .font(.subheadline.weight(.semibold))
+                            .font(.footnote.weight(.semibold))
                             .foregroundStyle(CatholicTheme.primary)
                         CatholicFastingQuoteCard(quote: quote, compact: true)
                         HStack(spacing: 8) {
@@ -151,8 +137,7 @@ struct IPadWorkspaceHeroBand: View {
                             IPadContextBadge(text: regionContext.supportLevel.label, supportLevel: regionContext.supportLevel)
                         }
                         Text(regionContext.disclosureText)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .appSupportingTextStyle()
                             .lineLimit(2)
                     }
                 }
@@ -170,7 +155,7 @@ struct IPadWorkspaceHeroBand: View {
 
                     VStack(alignment: .leading, spacing: 12) {
                         Label("Liturgical Season: \(seasonLabel)", systemImage: "sparkles")
-                            .font(.subheadline.weight(.semibold))
+                            .font(.footnote.weight(.semibold))
                             .foregroundStyle(CatholicTheme.primary)
                         CatholicFastingQuoteCard(quote: quote, compact: false)
                         HStack(spacing: 8) {
@@ -178,8 +163,7 @@ struct IPadWorkspaceHeroBand: View {
                             IPadContextBadge(text: regionContext.supportLevel.label, supportLevel: regionContext.supportLevel)
                         }
                         Text(regionContext.disclosureText)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .appSupportingTextStyle()
                     }
                     .frame(width: 340, alignment: .leading)
                 }

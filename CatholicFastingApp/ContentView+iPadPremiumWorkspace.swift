@@ -87,19 +87,10 @@ extension ContentView {
                             .font(.headline)
                             .foregroundStyle(selectedPremiumToolDestination == destination ? CatholicTheme.primary : .primary)
                         Text(surface.guidance)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .appSupportingTextStyle()
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(12)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .fill(selectedPremiumToolDestination == destination ? CatholicTheme.primary.opacity(0.12) : CatholicTheme.parchment.opacity(0.85))
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .stroke(selectedPremiumToolDestination == destination ? CatholicTheme.primary : CatholicTheme.cardBorder.opacity(0.35), lineWidth: 1)
-                    )
+                    .appInteractiveTileStyle(isSelected: selectedPremiumToolDestination == destination)
                 }
                 .buttonStyle(.plain)
                 .disabled(!monetizationStore.premiumUnlocked)

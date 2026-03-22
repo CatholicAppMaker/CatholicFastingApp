@@ -11,8 +11,7 @@ extension ContentView {
     var ipadMoreCompactSelector: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Choose a workspace")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .appEyebrowStyle()
                 .textCase(.uppercase)
 
             ForEach(ipadMoreDestinationGroups, id: \.0) { groupTitle, destinations in
@@ -27,13 +26,13 @@ extension ContentView {
                         } label: {
                             HStack(spacing: 10) {
                                 Image(systemName: destination.iconName)
-                                    .font(.subheadline.weight(.semibold))
+                                    .appSymbolStyle(.standard)
                                     .frame(width: 18)
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(destination.title)
-                                        .font(.subheadline.weight(.semibold))
+                                        .font(.headline.weight(.semibold))
                                     Text(destination.subtitle)
-                                        .font(.caption)
+                                        .appSupportingTextStyle()
                                         .foregroundStyle(selectedMoreDestination == destination ? Color.white.opacity(0.85) : .secondary)
                                         .lineLimit(1)
                                 }
@@ -41,17 +40,19 @@ extension ContentView {
                             }
                             .foregroundStyle(selectedMoreDestination == destination ? .white : CatholicTheme.primary)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.horizontal, 14)
-                            .padding(.vertical, 12)
+                            .appInteractiveTileStyle(
+                                isSelected: selectedMoreDestination == destination,
+                                cornerRadius: 18
+                            )
                             .background(
-                                RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                    .fill(selectedMoreDestination == destination ? CatholicTheme.primary : CatholicTheme.parchment.opacity(0.92))
+                                Group {
+                                    if selectedMoreDestination == destination {
+                                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                            .fill(CatholicTheme.primary)
+                                            .allowsHitTesting(false)
+                                    }
+                                }
                             )
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                    .stroke(selectedMoreDestination == destination ? CatholicTheme.primary : CatholicTheme.cardBorder.opacity(0.35), lineWidth: 1)
-                            )
-                            .shadow(color: selectedMoreDestination == destination ? CatholicTheme.primary.opacity(0.10) : .clear, radius: 10, y: 4)
                         }
                         .buttonStyle(.plain)
                         .accessibilityIdentifier("ipad.more.compact.\(destination.rawValue)")
@@ -80,19 +81,10 @@ extension ContentView {
                                         .font(.headline)
                                         .foregroundStyle(selectedMoreDestination == destination ? CatholicTheme.primary : .primary)
                                     Text(destination.subtitle)
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
+                                        .appSupportingTextStyle()
                                 }
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(12)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                        .fill(selectedMoreDestination == destination ? CatholicTheme.primary.opacity(0.12) : CatholicTheme.parchment.opacity(0.85))
-                                )
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                        .stroke(selectedMoreDestination == destination ? CatholicTheme.primary : CatholicTheme.cardBorder.opacity(0.35), lineWidth: 1)
-                                )
+                                .appInteractiveTileStyle(isSelected: selectedMoreDestination == destination)
                             }
                             .buttonStyle(.plain)
                             .accessibilityIdentifier("ipad.more.destination.\(destination.rawValue)")
