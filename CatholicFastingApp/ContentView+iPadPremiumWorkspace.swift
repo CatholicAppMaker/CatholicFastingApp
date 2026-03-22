@@ -129,12 +129,14 @@ extension ContentView {
 
             HStack(alignment: .top, spacing: 14) {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Active plan")
+                    Text("Guided Journey")
                         .appEyebrowStyle()
                         .textCase(.uppercase)
-                    Text(PremiumSeasonPlanEngine.plan(for: currentLiturgicalSeason, settings: settings).titleLine)
+                    Text(premiumGuidedJourneyWeek.title)
                         .appSectionTitleStyle(serif: true)
-                    Text(PremiumSeasonPlanEngine.plan(for: currentLiturgicalSeason, settings: settings).focusLine)
+                    Text(premiumGuidedJourneyWeek.summary)
+                        .appSupportingTextStyle()
+                    Text(premiumJourneyCompletionSummary)
                         .appSupportingTextStyle()
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -155,17 +157,48 @@ extension ContentView {
                 .appSurfaceCard(.utility, cornerRadius: 16)
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Reflection")
+                    Text("Next step")
                         .appEyebrowStyle()
                         .textCase(.uppercase)
-                    Text(reflectionEntries.first?.title ?? "No recent reflection yet")
+                    Text(premiumGuidedJourneyNextAction?.title ?? "Week complete")
                         .appSectionTitleStyle(serif: true)
-                    Text("Use the selected tool below to review or write a new entry.")
+                    Text(premiumGuidedJourneyNextAction?.detail ?? "Use the reflection or accountability tools below to keep the rhythm steady.")
                         .appSupportingTextStyle()
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(12)
                 .appSurfaceCard(.utility, cornerRadius: 16)
+            }
+
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Current journey actions")
+                    .appEyebrowStyle()
+                ForEach(premiumGuidedJourneyWeek.actions, id: \.id) { action in
+                    Button {
+                        if monetizationStore.premiumUnlocked {
+                            togglePremiumJourneyAction(action)
+                        }
+                    } label: {
+                        HStack(alignment: .top, spacing: 10) {
+                            Image(systemName: isPremiumJourneyActionCompleted(action) ? "checkmark.circle.fill" : "circle")
+                                .foregroundStyle(isPremiumJourneyActionCompleted(action) ? .green : CatholicTheme.primary)
+                                .padding(.top, 2)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(action.category.label)
+                                    .appEyebrowStyle()
+                                Text(action.title)
+                                    .font(.subheadline.weight(.semibold))
+                                Text(action.detail)
+                                    .appSupportingTextStyle()
+                            }
+                            Spacer()
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .appInteractiveTileStyle(isSelected: isPremiumJourneyActionCompleted(action), cornerRadius: 14)
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(!monetizationStore.premiumUnlocked)
+                }
             }
         }
         .padding(18)

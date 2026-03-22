@@ -2,6 +2,18 @@
 import XCTest
 
 final class PremiumExperienceEngineTests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+        beginStoreIsolation()
+        resetStores()
+    }
+
+    override func tearDown() {
+        resetStores()
+        endStoreIsolation()
+        super.tearDown()
+    }
+
     func testSeasonPlanLentWithoutDispensationIsStrong() {
         let settings = RuleSettings(
             birthYear: 1991,
@@ -153,6 +165,36 @@ final class PremiumExperienceEngineTests: XCTestCase {
         XCTAssertTrue(summary.contains("Discipline Metrics"))
         XCTAssertTrue(summary.contains("Reminder Strategy"))
         XCTAssertTrue(summary.contains("Reflection"))
+    }
+
+    func testGuidedJourneyUsesSeasonSpecificWeeklyStructure() {
+        let lentWeek = GuidedSeasonalJourneyEngine.week(
+            for: .lent,
+            program: .lentDeepen,
+            week: 2
+        )
+
+        XCTAssertEqual(lentWeek.weekNumber, 2)
+        XCTAssertEqual(lentWeek.actions.count, 4)
+        XCTAssertTrue(lentWeek.title.localizedCaseInsensitiveContains("lenten"))
+        XCTAssertEqual(lentWeek.actions.map(\.category), [.fasting, .prayer, .charity, .review])
+    }
+
+    func testGuidedJourneyActionKeyIsStableAndProgressPersists() {
+        let key = GuidedSeasonalJourneyEngine.actionKey(
+            program: .adventWatch,
+            week: 3,
+            actionID: "prayer"
+        )
+
+        var state = PremiumCompanionState.default
+        state.seasonProgramRawValue = PremiumSeasonProgram.adventWatch.rawValue
+        state.completedProgramActions = [key]
+        LocalFeatureStore.savePremiumCompanionState(state)
+
+        let loaded = LocalFeatureStore.loadPremiumCompanionState()
+        XCTAssertEqual(loaded.completedProgramActions, [key])
+        XCTAssertTrue(loaded.completedProgramActions.contains("adventWatch-w3-prayer"))
     }
 
     func testSubscriptionHealthMatrixPrioritizesCriticalStates() {

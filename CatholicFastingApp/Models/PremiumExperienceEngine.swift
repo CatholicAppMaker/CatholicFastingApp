@@ -228,6 +228,165 @@ struct PremiumReflection: Hashable {
     let action: String
 }
 
+enum GuidedSeasonalJourneyCategory: String, Hashable {
+    case fasting
+    case prayer
+    case charity
+    case review
+
+    var label: String {
+        switch self {
+        case .fasting: "Fasting focus"
+        case .prayer: "Prayer focus"
+        case .charity: "Penance / charity"
+        case .review: "Weekly checkpoint"
+        }
+    }
+}
+
+struct GuidedSeasonalJourneyAction: Hashable, Identifiable {
+    let id: String
+    let category: GuidedSeasonalJourneyCategory
+    let title: String
+    let detail: String
+}
+
+struct GuidedSeasonalJourneyWeek: Hashable {
+    let season: LiturgicalSeason
+    let program: PremiumSeasonProgram
+    let weekNumber: Int
+    let title: String
+    let summary: String
+    let actions: [GuidedSeasonalJourneyAction]
+
+    var reviewAction: GuidedSeasonalJourneyAction? {
+        actions.first(where: { $0.category == .review })
+    }
+}
+
+enum GuidedSeasonalJourneyEngine {
+    static func week(
+        for season: LiturgicalSeason,
+        program: PremiumSeasonProgram,
+        week: Int
+    ) -> GuidedSeasonalJourneyWeek {
+        let normalizedWeek = max(1, week)
+
+        switch season {
+        case .lent:
+            return GuidedSeasonalJourneyWeek(
+                season: season,
+                program: program,
+                weekNumber: normalizedWeek,
+                title: "Lenten Week \(normalizedWeek)",
+                summary: "Keep one sacrificial rhythm, one concrete prayer, and one act of mercy in the same week.",
+                actions: [
+                    GuidedSeasonalJourneyAction(
+                        id: "fasting",
+                        category: .fasting,
+                        title: "Protect the next required observance",
+                        detail: "Plan Ash Wednesday, Friday abstinence, or your next required day before the week gets noisy."
+                    ),
+                    GuidedSeasonalJourneyAction(
+                        id: "prayer",
+                        category: .prayer,
+                        title: "Pair hunger with repentance prayer",
+                        detail: "Use one hunger moment each day for a short prayer of repentance or Psalm 51."
+                    ),
+                    GuidedSeasonalJourneyAction(
+                        id: "charity",
+                        category: .charity,
+                        title: "Add one hidden act of mercy",
+                        detail: "Choose one charitable or penitential act that costs you something but stays sustainable."
+                    ),
+                    GuidedSeasonalJourneyAction(
+                        id: "review",
+                        category: .review,
+                        title: "Review the week honestly",
+                        detail: "Ask what actually helped conversion, not just what looked strict on paper."
+                    ),
+                ]
+            )
+        case .advent:
+            return GuidedSeasonalJourneyWeek(
+                season: season,
+                program: program,
+                weekNumber: normalizedWeek,
+                title: "Advent Week \(normalizedWeek)",
+                summary: "Build watchfulness through simplicity, quiet prayer, and one restrained work of charity.",
+                actions: [
+                    GuidedSeasonalJourneyAction(
+                        id: "fasting",
+                        category: .fasting,
+                        title: "Simplify one meal pattern this week",
+                        detail: "Choose one modest food sacrifice that creates room for recollection rather than performance."
+                    ),
+                    GuidedSeasonalJourneyAction(
+                        id: "prayer",
+                        category: .prayer,
+                        title: "Keep a short evening watch",
+                        detail: "Add a brief Scripture reading or silent prayer before your final meal or before bed."
+                    ),
+                    GuidedSeasonalJourneyAction(
+                        id: "charity",
+                        category: .charity,
+                        title: "Practice hidden generosity",
+                        detail: "Choose one concrete act of generosity that prepares your heart for Christ’s coming."
+                    ),
+                    GuidedSeasonalJourneyAction(
+                        id: "review",
+                        category: .review,
+                        title: "Check for noise versus attention",
+                        detail: "Review whether your week made you more attentive, more grateful, and less scattered."
+                    ),
+                ]
+            )
+        case .ordinary, .christmas, .easter:
+            return GuidedSeasonalJourneyWeek(
+                season: season,
+                program: program,
+                weekNumber: normalizedWeek,
+                title: "\(season.label) Week \(normalizedWeek)",
+                summary: "Use one steady rhythm for fasting, prayer, mercy, and review so the season forms habit instead of good intentions only.",
+                actions: [
+                    GuidedSeasonalJourneyAction(
+                        id: "fasting",
+                        category: .fasting,
+                        title: "Keep one fixed discipline day",
+                        detail: "Protect one weekly fasting or penitential day that fits your actual state in life."
+                    ),
+                    GuidedSeasonalJourneyAction(
+                        id: "prayer",
+                        category: .prayer,
+                        title: "Add one anchored prayer cue",
+                        detail: "Tie your discipline to a stable cue such as breakfast prayer, the Angelus, or evening examen."
+                    ),
+                    GuidedSeasonalJourneyAction(
+                        id: "charity",
+                        category: .charity,
+                        title: "Choose one practical mercy step",
+                        detail: "Make the week concrete with one act of mercy, generosity, or patient self-denial."
+                    ),
+                    GuidedSeasonalJourneyAction(
+                        id: "review",
+                        category: .review,
+                        title: "Close the week with review",
+                        detail: "Review what stayed faithful, what slipped, and what one next adjustment should be."
+                    ),
+                ]
+            )
+        }
+    }
+
+    static func actionKey(
+        program: PremiumSeasonProgram,
+        week: Int,
+        actionID: String
+    ) -> String {
+        "\(program.rawValue)-w\(max(1, week))-\(actionID)"
+    }
+}
+
 enum PremiumReflectionEngine {
     static func reflection(
         for date: Date = Date(),

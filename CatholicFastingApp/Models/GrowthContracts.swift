@@ -25,15 +25,15 @@ struct SubscriptionOfferCatalog {
 
     static let catholicFasting = SubscriptionOfferCatalog(
         title: "Formation Toolkit",
-        subtitle: "Premium keeps planning, reminders, review, and reflection in one steady Catholic workflow.",
+        subtitle: "Premium keeps a guided seasonal journey, reminders, review, and reflection in one steady Catholic workflow.",
         pillars: [
             Pillar(
                 id: "planning",
-                title: "Planning",
-                subtitle: "Know what to do next without fighting the Church calendar.",
+                title: "Guided Journey",
+                subtitle: "Follow one weekly seasonal path instead of guessing what to do next.",
                 outcomes: [
-                    "See a realistic season path instead of guessing week to week",
-                    "Shape personal long-fast disciplines without losing feast-day balance",
+                    "Move through Lent, Advent, and Ordinary Time with one weekly rhythm",
+                    "Keep fasting, prayer, charity, and review tied together in the same plan",
                     "Protect celebration days so personal discipline does not overreach",
                 ],
                 requiredSurface: .planning

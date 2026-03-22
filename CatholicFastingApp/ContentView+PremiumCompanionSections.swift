@@ -101,6 +101,14 @@ extension ContentView {
 
     var premiumAndSupportSection: some View {
         Section("Premium Upgrade") {
+            premiumStatusSummaryCard
+
+            if monetizationStore.premiumUnlocked {
+                premiumJourneyCard(sample: false)
+            } else {
+                premiumJourneyCard(sample: true)
+            }
+
             if monetizationStore.premiumUnlocked {
                 premiumActiveStateCard
             } else {
@@ -280,29 +288,57 @@ extension ContentView {
         .appRoundedGlass(cornerRadius: 16)
     }
 
-    var premiumSamplePreviewCard: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("See a sample premium plan")
+    func premiumJourneyCard(sample: Bool) -> some View {
+        let journey = premiumGuidedJourneyWeek
+        let previewActions = sample ? Array(journey.actions.prefix(3)) : journey.actions
+
+        return VStack(alignment: .leading, spacing: 10) {
+            Text(sample ? "See the Guided Seasonal Journey" : "Your Guided Seasonal Journey")
                 .appSectionTitleStyle(serif: true)
 
-            Text("This sample shows how the Guided Seasonal Journey can turn premium into one steady weekly rhythm.")
+            Text(
+                sample
+                    ? "This preview shows how premium turns the current season into one steady weekly rhythm."
+                    : "Premium keeps the current week visible so you know what to do next without rebuilding the whole plan."
+            )
                 .appSupportingTextStyle()
 
             VStack(alignment: .leading, spacing: 6) {
-                Text("Sample journey week: Lenten Discipline Path")
+                Text("\(sample ? "Preview" : "Current") journey week: \(journey.title)")
                     .font(.subheadline.weight(.semibold))
-                Text("Example weekly rhythm")
+                Text(sample ? "Seasonal rhythm" : "Current weekly rhythm")
                     .appEyebrowStyle()
-                Text("• Keep the next required observance visible and scheduled ahead of time.")
+                Text(journey.summary)
                     .appSupportingTextStyle()
-                Text("• Add one personal discipline without overriding feast or memorial days.")
-                    .appSupportingTextStyle()
-                Text("• Review the week with one reflection prompt and one accountability checkpoint.")
-                    .appSupportingTextStyle()
+
+                ForEach(previewActions, id: \.id) { action in
+                    HStack(alignment: .top, spacing: 8) {
+                        Image(systemName: sample ? "circle" : (isPremiumJourneyActionCompleted(action) ? "checkmark.circle.fill" : "circle"))
+                            .foregroundStyle(sample ? CatholicTheme.primary : (isPremiumJourneyActionCompleted(action) ? .green : CatholicTheme.primary))
+                            .padding(.top, 2)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(action.category.label)
+                                .appEyebrowStyle()
+                            Text(action.title)
+                                .font(.subheadline.weight(.semibold))
+                            Text(action.detail)
+                                .appSupportingTextStyle()
+                        }
+                    }
+                }
             }
 
-            Text("Sample only. Unlock premium below.")
-                .appSupportingTextStyle()
+            if sample {
+                Text("Preview only. Unlock premium below to track progress, keep the current week, and carry the journey through the season.")
+                    .appSupportingTextStyle()
+            } else {
+                Text(premiumJourneyCompletionSummary)
+                    .appSupportingTextStyle()
+                if let nextAction = premiumGuidedJourneyNextAction {
+                    Text("Next step: \(nextAction.title)")
+                        .appEyebrowStyle()
+                }
+            }
         }
         .padding(14)
         .background(
@@ -981,6 +1017,31 @@ extension ContentView {
         )
     }
 
+    var premiumGuidedJourneyWeek: GuidedSeasonalJourneyWeek {
+        GuidedSeasonalJourneyEngine.week(
+            for: currentLiturgicalSeason,
+            program: selectedPremiumSeasonProgram,
+            week: premiumProgramWeek
+        )
+    }
+
+    var premiumJourneyCompletedCount: Int {
+        premiumGuidedJourneyWeek.actions.filter(isPremiumJourneyActionCompleted).count
+    }
+
+    var premiumGuidedJourneyNextAction: GuidedSeasonalJourneyAction? {
+        premiumGuidedJourneyWeek.actions.first(where: { !isPremiumJourneyActionCompleted($0) })
+    }
+
+    var premiumJourneyCompletionSummary: String {
+        let total = premiumGuidedJourneyWeek.actions.count
+        let done = premiumJourneyCompletedCount
+        if done == total {
+            return "This week is complete. Reuse the review prompt and carry the rhythm into the next week."
+        }
+        return "\(done) of \(total) journey actions completed this week."
+    }
+
     var premiumPrepAndRefeedGuidance: [String] {
         PremiumFastPrepGuidanceEngine.prepAndRefeed(
             targetHours: intermittentTracker.presetHours,
@@ -1078,7 +1139,11 @@ extension ContentView {
     }
 
     func togglePremiumSeasonProgramAction(_ action: String) {
-        let key = "\(selectedPremiumSeasonProgram.rawValue)-w\(premiumProgramWeek)-\(action)"
+        let key = GuidedSeasonalJourneyEngine.actionKey(
+            program: selectedPremiumSeasonProgram,
+            week: premiumProgramWeek,
+            actionID: action
+        )
         if premiumCompanion.completedProgramActions.contains(key) {
             premiumCompanion.completedProgramActions.removeAll { $0 == key }
         } else {
@@ -1087,8 +1152,20 @@ extension ContentView {
     }
 
     func isPremiumSeasonProgramActionCompleted(_ action: String) -> Bool {
-        let key = "\(selectedPremiumSeasonProgram.rawValue)-w\(premiumProgramWeek)-\(action)"
+        let key = GuidedSeasonalJourneyEngine.actionKey(
+            program: selectedPremiumSeasonProgram,
+            week: premiumProgramWeek,
+            actionID: action
+        )
         return premiumCompanion.completedProgramActions.contains(key)
+    }
+
+    func togglePremiumJourneyAction(_ action: GuidedSeasonalJourneyAction) {
+        togglePremiumSeasonProgramAction(action.id)
+    }
+
+    func isPremiumJourneyActionCompleted(_ action: GuidedSeasonalJourneyAction) -> Bool {
+        isPremiumSeasonProgramActionCompleted(action.id)
     }
 
     func restartPremiumSeasonProgram() {

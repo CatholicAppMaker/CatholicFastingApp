@@ -171,7 +171,7 @@ final class CatholicFastingAppUITests: XCTestCase {
 
         let preview = app.otherElements["premium.sample_preview"].firstMatch
         XCTAssertTrue(scrollToElement(preview, in: app))
-        XCTAssertTrue(scrollToElement(app.staticTexts["Sample journey week: Lenten Discipline Path"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Preview journey week:")).firstMatch, in: app))
     }
 
     func testDeepGuidanceSacredGalleryVisible() {
@@ -727,8 +727,8 @@ final class CatholicFastingAppUITests: XCTestCase {
         openIPadMoreDestination("supportAndPremium", in: app)
 
         XCTAssertTrue(app.otherElements["ipad.premium.dashboard"].waitForExistence(timeout: 4))
-        XCTAssertTrue(scrollToElement(app.staticTexts["Active plan"].firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(app.staticTexts["Reminder readiness"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Guided Journey"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Current journey actions"].firstMatch, in: app))
     }
 
     func testIPadMoreAllDestinationsOpenWithoutBreakingWorkspace() {
