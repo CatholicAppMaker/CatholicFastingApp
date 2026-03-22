@@ -46,8 +46,7 @@ extension ContentView {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 Text("Support & Premium")
-                    .font(.system(.title2, design: .serif).weight(.bold))
-                    .foregroundStyle(CatholicTheme.primary)
+                    .appDisplayTitleStyle(serif: true)
 
                 #if canImport(StoreKit)
                     VStack(alignment: .leading, spacing: 12) {
@@ -59,11 +58,9 @@ extension ContentView {
                     if !monetizationStore.tipProducts.isEmpty {
                         VStack(alignment: .leading, spacing: 10) {
                             Text("Optional support tips")
-                                .font(.caption.weight(.semibold))
-                                .foregroundStyle(.secondary)
+                                .appEyebrowStyle()
                             Text("Tips support ongoing development and do not unlock features.")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .appSupportingTextStyle()
                             ForEach(monetizationStore.tipProducts, id: \.id) { product in
                                 Button {
                                     Task { await monetizationStore.purchase(product) }
@@ -93,13 +90,11 @@ extension ContentView {
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(offer?.displayTitle ?? product.displayName)
-                            .font(.headline)
-                            .foregroundStyle(CatholicTheme.primary)
+                            .appSectionTitleStyle(serif: offer?.isPrimaryAnchor == true)
                         Text(product.displayPrice)
-                            .font(.title3.weight(.bold))
+                            .appMetricValueStyle()
                         Text(offer?.billingCadenceLabel ?? "Auto-renewing subscription")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .appSupportingTextStyle()
                     }
 
                     Spacer()
@@ -116,7 +111,7 @@ extension ContentView {
 
                 if let summary = offer?.outcomeSummary {
                     Text(summary)
-                        .font(.caption)
+                        .appSupportingTextStyle()
                         .foregroundStyle(offer?.isPrimaryAnchor == true ? CatholicTheme.primary.opacity(0.9) : .secondary)
                         .lineLimit(2)
                 }
@@ -150,12 +145,10 @@ extension ContentView {
     var ipadCompactPremiumUtilitiesCard: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Restore / Manage / Legal")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .appEyebrowStyle()
 
             Text("Use these after choosing a plan if you need billing or legal help.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .appSupportingTextStyle()
 
             Button("Restore Purchases") {
                 Task {
@@ -176,13 +169,13 @@ extension ContentView {
             .accessibilityIdentifier("premium.manage")
 
             Link("Terms of Use (EULA)", destination: UIConstants.termsOfUseURL)
-                .font(.caption)
+                .appSupportingTextStyle()
                 .accessibilityIdentifier("premium.legal.terms")
             Link("Privacy Policy", destination: UIConstants.privacyPolicyURL)
-                .font(.caption)
+                .appSupportingTextStyle()
                 .accessibilityIdentifier("premium.legal.privacy")
             Link("Support", destination: UIConstants.supportSiteURL)
-                .font(.caption)
+                .appSupportingTextStyle()
                 .accessibilityIdentifier("premium.legal.support")
         }
         .padding(14)

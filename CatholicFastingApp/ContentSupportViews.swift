@@ -574,12 +574,10 @@ struct MetricTile: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title)
-                .font(.caption2.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .appEyebrowStyle()
                 .textCase(.uppercase)
             Text(value)
-                .font(.system(.title3, design: .rounded).weight(.bold))
-                .foregroundStyle(CatholicTheme.primary)
+                .appMetricValueStyle()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 12)

@@ -137,8 +137,7 @@ extension ContentView {
                 CatholicFastingQuoteCard(quote: dashboardFastingQuote, compact: true)
                     .accessibilityIdentifier("dashboard.fasting_quote")
                 Text(dailySeasonalFormationLine)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .appSupportingTextStyle()
             }
         }
     }
@@ -170,11 +169,9 @@ extension ContentView {
                 }
 
                 Text(monetizationStore.premiumUnlocked ? weeklyFormationRecapPremium : weeklyFormationRecapFree)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .appSupportingTextStyle()
                 Text(streakResilienceMessage)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .appSupportingTextStyle()
             }
             .padding(14)
             .appSurfaceCard(.primary, cornerRadius: 22)
@@ -185,8 +182,7 @@ extension ContentView {
     var dashboardDevotionalGallerySection: some View {
         Section("Sacred Fasting Imagery") {
             Text("Keep these Catholic symbols in view as you pray, abstain, and fast.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .appSupportingTextStyle()
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
@@ -229,14 +225,16 @@ extension ContentView {
     var dashboardHeroSection: some View {
         Section {
             VStack(alignment: .leading, spacing: 12) {
-                Label("Daily Catholic Fasting Plan", systemImage: "cross.fill")
-                    .font(.system(.headline, design: .serif))
-                    .foregroundStyle(CatholicTheme.primary)
+                HStack(spacing: 8) {
+                    Image(systemName: "cross.fill")
+                        .appSymbolStyle(.standard)
+                    Text("Daily Catholic Fasting Plan")
+                        .appSectionTitleStyle(serif: true)
+                }
                 Text(heroSummaryText)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .appLeadTextStyle()
                 Text("Offer each observance with prayer, fasting, and charity.")
-                    .font(.caption)
+                    .appSupportingTextStyle()
                     .foregroundStyle(CatholicTheme.primary.opacity(0.85))
                 ProgressView(value: completionRateValue)
                     .tint(CatholicTheme.accent)

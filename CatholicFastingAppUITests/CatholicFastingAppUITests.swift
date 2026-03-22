@@ -163,6 +163,17 @@ final class CatholicFastingAppUITests: XCTestCase {
         XCTAssertLessThan(tipButton.frame.minY, restoreButton.frame.minY)
     }
 
+    func testDeepIPhonePremiumShowsJourneyPreview() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openMoreDestination("Support & Premium", in: app)
+
+        let preview = app.otherElements["premium.sample_preview"].firstMatch
+        XCTAssertTrue(scrollToElement(preview, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Sample journey week: Lenten Discipline Path"].firstMatch, in: app))
+    }
+
     func testDeepGuidanceSacredGalleryVisible() {
         let app = makeApp()
         app.launch()
@@ -706,6 +717,18 @@ final class CatholicFastingAppUITests: XCTestCase {
         XCTAssertTrue(app.otherElements["ipad.premium.legal_footer"].waitForExistence(timeout: 4))
         XCTAssertTrue(scrollToElement(elementByIdentifier("premium.legal.terms", in: app), in: app))
         XCTAssertTrue(scrollToElement(app.links["Privacy Policy"].firstMatch, in: app))
+    }
+
+    func testIPadPremiumWorkspaceShowsJourneyOrPlanContext() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadMoreDestination("supportAndPremium", in: app)
+
+        XCTAssertTrue(app.otherElements["ipad.premium.dashboard"].waitForExistence(timeout: 4))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Active plan"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Reminder readiness"].firstMatch, in: app))
     }
 
     func testIPadMoreAllDestinationsOpenWithoutBreakingWorkspace() {

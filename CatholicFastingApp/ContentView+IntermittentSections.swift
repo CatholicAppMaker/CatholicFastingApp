@@ -10,11 +10,10 @@ private struct LiveTrackerMetricChip: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
             Text(title)
-                .font(.caption2.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .appEyebrowStyle()
                 .textCase(.uppercase)
             Text(value)
-                .font(.system(.body, design: .rounded).weight(.bold))
+                .font(.system(.body, design: .rounded).weight(.semibold))
                 .foregroundStyle(CatholicTheme.primary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -87,23 +86,20 @@ extension ContentView {
 
             if let activeStart = intermittentTracker.activeStart {
                 Text("Started \(activeStart.formatted(date: .abbreviated, time: .shortened)).")
-                    .font(.caption)
+                    .appSupportingTextStyle()
                     .foregroundStyle(CatholicTheme.primary.opacity(0.9))
             } else if let latestSession = intermittentTracker.sessions.first {
                 Text("Last fast ended \(latestSession.end.formatted(date: .abbreviated, time: .shortened)).")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .appSupportingTextStyle()
                 Text(
                     latestSession.completedTarget
                         ? "Repeat this rhythm or increase only if it remains prudent."
                         : "Choose a lighter target or re-enter with a simpler plan."
                 )
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .appSupportingTextStyle()
             } else {
                 Text("Plan first. Start when ready.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .appSupportingTextStyle()
             }
         }
     }
@@ -123,15 +119,13 @@ extension ContentView {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Custom target: \(intermittentTracker.presetHours)h")
                         Text("Longer disciplines remain available here (up to 14 days / 336h).")
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
+                            .appEyebrowStyle()
                     }
                 }
                 .accessibilityIdentifier("intermittent.custom_target_stepper")
             } else {
                 Text("Custom targets beyond presets are part of Premium.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .appSupportingTextStyle()
                 Button("Unlock Custom Long Fasts") {
                     openPremiumUpgrade(focusingOn: .planning)
                 }
@@ -140,8 +134,7 @@ extension ContentView {
             }
 
             Text("Current target: \(intermittentWindowLabel)")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .appSupportingTextStyle()
 
             if intermittentTracker.activeStart == nil {
                 Button {
@@ -190,8 +183,7 @@ extension ContentView {
                         Text("Schedules, milestones, recovery, and history")
                             .font(.subheadline.weight(.semibold))
                         Text("Open these only when you need the deeper tools.")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .appSupportingTextStyle()
                     }
                 }
             )
@@ -199,8 +191,7 @@ extension ContentView {
 
             if !intermittentShowAdvanced {
                 Text("Saved schedules, milestone stats, recovery guidance, and recent history stay here.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .appSupportingTextStyle()
             }
         }
     }

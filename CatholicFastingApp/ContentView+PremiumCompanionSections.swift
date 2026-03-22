@@ -61,8 +61,7 @@ extension ContentView {
                     ? "Choose a plan first, then use tips or billing tools if needed."
                     : "Open premium planning, journaling, and exports."
             )
-            .font(.caption)
-            .foregroundStyle(.secondary)
+            .appSupportingTextStyle()
         }
     }
 
@@ -90,8 +89,7 @@ extension ContentView {
                             .font(.headline)
                             .foregroundStyle(CatholicTheme.primary)
                         Text(surface.guidance)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .appSupportingTextStyle()
                     }
                     .padding(.vertical, 2)
                 }
@@ -107,8 +105,7 @@ extension ContentView {
                 premiumActiveStateCard
             } else {
                 Text("Choose the yearly or monthly plan below.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .appSupportingTextStyle()
                     .accessibilityIdentifier("premium.upgrade_summary")
                 if monetizationStore.isLoading {
                     HStack(spacing: 8) {
@@ -125,8 +122,7 @@ extension ContentView {
                     }
                 } else {
                     Text("Premium plans are temporarily unavailable. Try again in a moment, then use Restore Purchases if needed.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .appSupportingTextStyle()
                 }
 
                 if !monetizationStore.tipProducts.isEmpty {
@@ -137,8 +133,7 @@ extension ContentView {
                 let missingTipIDs = MonetizationStore.tipProductIDs.subtracting(loadedTipIDs)
                 if !missingTipIDs.isEmpty {
                     Text("Optional support tips may take a moment to appear after the App Store finishes loading.")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
+                        .appEyebrowStyle()
                 }
             }
 
@@ -171,8 +166,7 @@ extension ContentView {
     var premiumActiveStateCard: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Premium is active.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .appSupportingTextStyle()
                 .accessibilityIdentifier("premium.active_summary")
 
             Button("Open Premium Tools") {
@@ -220,19 +214,18 @@ extension ContentView {
         VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .top, spacing: 10) {
                 Image(systemName: monetizationStore.premiumUnlocked ? "checkmark.seal.fill" : "star.circle.fill")
-                    .font(.title3)
+                    .appSymbolStyle(.prominent)
                     .foregroundStyle(monetizationStore.premiumUnlocked ? .green : CatholicTheme.primary)
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(monetizationStore.premiumUnlocked ? "Premium active" : premiumOfferCatalog.title)
-                        .font(.headline)
+                        .appSectionTitleStyle(serif: true)
                     Text(
                         monetizationStore.premiumUnlocked
                             ? "Your planning, accountability, reflection, and export tools are unlocked."
                             : "Stay steady through the Church year with one clear premium path for planning, reminders, and review."
                     )
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .appLeadTextStyle()
                 }
             }
 
@@ -245,7 +238,7 @@ extension ContentView {
             } else {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Premium adds:")
-                        .font(.caption.weight(.semibold))
+                        .appEyebrowStyle()
                         .foregroundStyle(CatholicTheme.primary)
 
                     ForEach(premiumOfferCatalog.pillars) { pillar in
@@ -257,8 +250,7 @@ extension ContentView {
                                 Text(pillar.title)
                                     .font(.subheadline.weight(.semibold))
                                 Text(pillar.subtitle)
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
+                                    .appSupportingTextStyle()
                             }
                         }
                     }
@@ -267,8 +259,7 @@ extension ContentView {
 
             VStack(alignment: .leading, spacing: 8) {
                 Text("Why users upgrade")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(.secondary)
+                    .appEyebrowStyle()
 
                 HStack(spacing: 8) {
                     premiumTrustPill(text: "Local-only data", systemImage: "lock.shield")
@@ -292,30 +283,26 @@ extension ContentView {
     var premiumSamplePreviewCard: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("See a sample premium plan")
-                .font(.headline)
-                .foregroundStyle(CatholicTheme.primary)
+                .appSectionTitleStyle(serif: true)
 
-            Text("This sample shows the kind of planning and review support premium adds.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+            Text("This sample shows how the Guided Seasonal Journey can turn premium into one steady weekly rhythm.")
+                .appSupportingTextStyle()
 
             VStack(alignment: .leading, spacing: 6) {
-                Text("Sample season plan: Lenten Discipline Path")
+                Text("Sample journey week: Lenten Discipline Path")
                     .font(.subheadline.weight(.semibold))
                 Text("Example weekly rhythm")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(.secondary)
+                    .appEyebrowStyle()
                 Text("• Keep the next required observance visible and scheduled ahead of time.")
-                    .font(.caption)
+                    .appSupportingTextStyle()
                 Text("• Add one personal discipline without overriding feast or memorial days.")
-                    .font(.caption)
+                    .appSupportingTextStyle()
                 Text("• Review the week with one reflection prompt and one accountability checkpoint.")
-                    .font(.caption)
+                    .appSupportingTextStyle()
             }
 
             Text("Sample only. Unlock premium below.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .appSupportingTextStyle()
         }
         .padding(14)
         .background(
@@ -342,18 +329,16 @@ extension ContentView {
                 .foregroundStyle(CatholicTheme.primary)
 
             Text(pillar.subtitle)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .appSupportingTextStyle()
 
             ForEach(pillar.outcomes, id: \.self) { outcome in
                 HStack(alignment: .top, spacing: 8) {
                     Image(systemName: "circle.fill")
-                        .font(.system(size: 6))
+                        .appSymbolStyle(.subtle)
                         .foregroundStyle(CatholicTheme.accent)
                         .padding(.top, 5)
                     Text(outcome)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .appSupportingTextStyle()
                 }
             }
         }
@@ -375,13 +360,11 @@ extension ContentView {
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(offer?.displayTitle ?? product.displayName)
-                            .font(.headline)
-                            .foregroundStyle(CatholicTheme.primary)
+                            .appSectionTitleStyle(serif: offer?.isPrimaryAnchor == true)
                         Text(product.displayPrice)
-                            .font(.title3.weight(.bold))
+                            .appMetricValueStyle()
                         Text(offer?.billingCadenceLabel ?? "Auto-renewing subscription")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .appSupportingTextStyle()
                     }
 
                     Spacer()
@@ -398,12 +381,11 @@ extension ContentView {
 
                 if offer?.isPrimaryAnchor == true {
                     Text(offer?.outcomeSummary ?? "Best value for one steady rhythm through the Church year.")
-                        .font(.caption)
+                        .appSupportingTextStyle()
                         .foregroundStyle(CatholicTheme.primary.opacity(0.9))
                 } else if let summary = offer?.outcomeSummary {
                     Text(summary)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .appSupportingTextStyle()
                         .lineLimit(2)
                 }
 
@@ -424,12 +406,10 @@ extension ContentView {
     var premiumTipsSupportCard: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Optional support tips")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .appEyebrowStyle()
 
             Text("Tips support ongoing development and do not unlock features.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .appSupportingTextStyle()
 
             ForEach(monetizationStore.tipProducts, id: \.id) { product in
                 Button("Send Tip • \(product.displayPrice)") {
@@ -451,12 +431,10 @@ extension ContentView {
     var premiumLegalSupportCard: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Restore / Manage / Legal")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .appEyebrowStyle()
 
             Text("Use these after choosing a plan if you need to restore billing or open legal links.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .appSupportingTextStyle()
 
             Button("Restore Purchases") {
                 Task {
@@ -477,13 +455,13 @@ extension ContentView {
             .accessibilityIdentifier("premium.manage")
 
             Link("Terms of Use (EULA)", destination: UIConstants.termsOfUseURL)
-                .font(.caption)
+                .appSupportingTextStyle()
                 .accessibilityIdentifier("premium.legal.terms")
             Link("Privacy Policy", destination: UIConstants.privacyPolicyURL)
-                .font(.caption)
+                .appSupportingTextStyle()
                 .accessibilityIdentifier("premium.legal.privacy")
             Link("Support", destination: UIConstants.supportSiteURL)
-                .font(.caption)
+                .appSupportingTextStyle()
                 .accessibilityIdentifier("premium.legal.support")
         }
         .padding(14)

@@ -373,11 +373,9 @@ extension ContentView {
     var fastingDaysOverviewSection: some View {
         Section("Fasting Days") {
             Text("Start with required days, then add optional or celebration days when you need more context.")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .appLeadTextStyle()
             Text(regionalNormSummaryLine)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .appSupportingTextStyle()
 
             fastingDaysFilterTags
 
@@ -396,7 +394,7 @@ extension ContentView {
                         .textCase(.uppercase)
 
                     Text(nextRequired.title)
-                        .font(.system(.title3, design: .serif).weight(.bold))
+                        .appSectionTitleStyle(serif: true)
 
                     Text(nextRequired.date.formatted(date: .abbreviated, time: .omitted))
                         .font(.headline)
@@ -412,27 +410,24 @@ extension ContentView {
                         .textCase(.uppercase)
 
                     Text(nextPotential.title)
-                        .font(.system(.title3, design: .serif).weight(.bold))
+                        .appSectionTitleStyle(serif: true)
 
                     Text(nextPotential.date.formatted(date: .abbreviated, time: .omitted))
                         .font(.headline)
                         .foregroundStyle(.orange)
 
                     Text("Confirm your age-profile toggles in Settings if needed.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .appSupportingTextStyle()
                 }
                 .padding(12)
                 .appSurfaceCard(.utility, cornerRadius: 16)
             } else {
                 Text("No upcoming required observance day found in the loaded date range.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .appSupportingTextStyle()
             }
 
             Text(fastingDaysDisplaySummaryText)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .appSupportingTextStyle()
         }
     }
 
@@ -446,8 +441,7 @@ extension ContentView {
                 Toggle("Include feast, holy, and memorial celebration days", isOn: $fastingDaysIncludeFeastAndHolyDays)
                     .accessibilityIdentifier("fasting_days.toggle.celebrations")
                 Text("Celebration days are shown for planning, not obligation.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .appSupportingTextStyle()
             }
         }
     }

@@ -4,8 +4,7 @@ extension ContentView {
     var quickSetupSection: some View {
         Section("Quick Setup") {
             Text("Set these once, then mostly use Today and Fasting Days.")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .appLeadTextStyle()
 
             Toggle("I am 14 or older (abstinence age)", isOn: $age14OrOlderForAbstinence)
                 .accessibilityIdentifier("settings.quick.age14_toggle")
@@ -49,12 +48,11 @@ extension ContentView {
                 }
             } else {
                 Text("Turn on reminder support to choose a strategy.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .appSupportingTextStyle()
             }
 
             Text("Setup progress: \(setupChecklistCompleted)/\(setupChecklistTotal)")
-                .font(.caption.weight(.semibold))
+                .appEyebrowStyle()
                 .foregroundStyle(CatholicTheme.primary)
                 .accessibilityIdentifier("settings.quick.progress")
 
@@ -67,8 +65,7 @@ extension ContentView {
                             .accessibilityIdentifier("settings.quick.reminder_evening")
                     } else {
                         Text("Advanced support reminders require Premium.")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .appSupportingTextStyle()
                         Button("Unlock Support Reminders") {
                             openPremiumUpgrade(focusingOn: .accountability)
                         }
@@ -77,8 +74,7 @@ extension ContentView {
                     }
 
                     Text(notificationStatus)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .appSupportingTextStyle()
                         .accessibilityIdentifier("settings.quick.reminder_status")
 
                     Button("Request Notification Permission") {
@@ -117,8 +113,7 @@ extension ContentView {
 
                     if !monetizationStore.premiumUnlocked {
                         Text("Premium is required for daily support reminders beyond required-day alerts.")
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
+                            .appEyebrowStyle()
                     }
 
                     Button("Refresh Reminder Status") {
@@ -134,7 +129,7 @@ extension ContentView {
 
             if !acceptedLegalNotice {
                 Text("Enable consent above to request and schedule reminders.")
-                    .font(.caption2)
+                    .appEyebrowStyle()
                     .foregroundStyle(.orange)
             }
         }
@@ -165,8 +160,7 @@ extension ContentView {
             }
 
             Text("Age eligibility is managed in Setup & Reminders so it stays easy to review.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .appSupportingTextStyle()
         }
     }
 
@@ -212,8 +206,7 @@ extension ContentView {
             Text(
                 regionPastoralGuidanceText
             )
-            .font(.caption)
-            .foregroundStyle(.secondary)
+            .appSupportingTextStyle()
         }
     }
 

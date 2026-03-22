@@ -139,14 +139,12 @@ extension ContentView {
             HStack(alignment: .top, spacing: 14) {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Active plan")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(.secondary)
+                        .appEyebrowStyle()
                         .textCase(.uppercase)
                     Text(PremiumSeasonPlanEngine.plan(for: currentLiturgicalSeason, settings: settings).titleLine)
-                        .font(.headline)
+                        .appSectionTitleStyle(serif: true)
                     Text(PremiumSeasonPlanEngine.plan(for: currentLiturgicalSeason, settings: settings).focusLine)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .appSupportingTextStyle()
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(12)
@@ -154,14 +152,12 @@ extension ContentView {
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Reminder readiness")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(.secondary)
+                        .appEyebrowStyle()
                         .textCase(.uppercase)
                     Text(reminderRecommendation.summaryLine)
-                        .font(.headline)
+                        .appSectionTitleStyle()
                     Text("Current tier: \(reminderTier.label)")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .appSupportingTextStyle()
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(12)
@@ -169,14 +165,12 @@ extension ContentView {
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Reflection")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(.secondary)
+                        .appEyebrowStyle()
                         .textCase(.uppercase)
                     Text(reflectionEntries.first?.title ?? "No recent reflection yet")
-                        .font(.headline)
+                        .appSectionTitleStyle(serif: true)
                     Text("Use the selected tool below to review or write a new entry.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .appSupportingTextStyle()
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(12)
@@ -232,7 +226,7 @@ extension ContentView {
                 Link("Privacy Policy", destination: UIConstants.privacyPolicyURL)
                 Link("Support", destination: UIConstants.supportSiteURL)
             }
-            .font(.caption.weight(.semibold))
+            .appSupportingTextStyle()
         }
         .padding(18)
         .iPadPaneCard()

@@ -60,6 +60,76 @@ extension View {
     func appSurfaceCard(_ style: AppSurfaceCardStyle = .standard, cornerRadius: CGFloat = 18) -> some View {
         modifier(AppSurfaceCardModifier(style: style, cornerRadius: cornerRadius))
     }
+
+    func appEyebrowStyle() -> some View {
+        font(.caption2.weight(.semibold))
+            .foregroundStyle(.secondary)
+    }
+
+    func appSectionTitleStyle(serif: Bool = false) -> some View {
+        font(serif ? .system(.title3, design: .serif).weight(.bold) : .system(.title3, design: .rounded).weight(.bold))
+            .foregroundStyle(CatholicTheme.primary)
+    }
+
+    func appDisplayTitleStyle(serif: Bool = false) -> some View {
+        font(serif ? .system(.title2, design: .serif).weight(.bold) : .system(.title2, design: .rounded).weight(.bold))
+            .foregroundStyle(CatholicTheme.primary)
+    }
+
+    func appLeadTextStyle() -> some View {
+        font(.subheadline)
+            .foregroundStyle(.secondary)
+    }
+
+    func appSupportingTextStyle() -> some View {
+        font(.caption)
+            .foregroundStyle(.secondary)
+    }
+
+    func appMetricValueStyle() -> some View {
+        font(.system(.title3, design: .rounded).weight(.bold))
+            .foregroundStyle(CatholicTheme.primary)
+    }
+
+    func appSymbolStyle(_ role: AppSymbolRole = .standard) -> some View {
+        modifier(AppSymbolModifier(role: role))
+    }
+}
+
+enum AppSymbolRole {
+    case prominent
+    case standard
+    case subtle
+
+    var font: Font {
+        switch self {
+        case .prominent:
+            .system(size: 18, weight: .semibold)
+        case .standard:
+            .system(size: 15, weight: .semibold)
+        case .subtle:
+            .system(size: 13, weight: .medium)
+        }
+    }
+
+    var color: Color {
+        switch self {
+        case .prominent, .standard:
+            CatholicTheme.primary
+        case .subtle:
+            .secondary
+        }
+    }
+}
+
+private struct AppSymbolModifier: ViewModifier {
+    let role: AppSymbolRole
+
+    func body(content: Content) -> some View {
+        content
+            .font(role.font)
+            .foregroundStyle(role.color)
+    }
 }
 
 enum AppSurfaceCardStyle {
@@ -319,12 +389,12 @@ struct SacredHeroCard: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
-                    .font(.system(.headline, design: .serif))
+                    .font(.system(.title3, design: .serif).weight(.bold))
                     .foregroundStyle(.white)
                     .lineLimit(2)
                     .minimumScaleFactor(0.9)
                 Text(subtitle)
-                    .font(.caption)
+                    .font(.subheadline)
                     .foregroundStyle(Color.white.opacity(0.92))
                     .lineLimit(3)
                     .minimumScaleFactor(0.9)
@@ -419,13 +489,11 @@ struct SacredImageryCard: View {
             .appRoundedGlass(cornerRadius: 14)
 
             Text(item.title)
-                .font(.system(.subheadline, design: .serif).weight(.semibold))
-                .foregroundStyle(CatholicTheme.primary)
+                .appSectionTitleStyle(serif: true)
                 .lineLimit(1)
 
             Text(item.subtitle)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .appSupportingTextStyle()
                 .lineLimit(2)
         }
         .frame(width: width, alignment: .leading)
@@ -445,11 +513,10 @@ struct CatholicFastingQuoteCard: View {
                 .italic()
                 .foregroundStyle(CatholicTheme.primary)
             Text("— \(quote.author)")
-                .font(.subheadline.weight(.semibold))
+                .font(.headline.weight(.semibold))
                 .foregroundStyle(CatholicTheme.primary)
             Text("\(quote.tradition) • \(quote.source)")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .appSupportingTextStyle()
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
