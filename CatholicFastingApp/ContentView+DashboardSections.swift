@@ -89,29 +89,29 @@ extension ContentView {
         }
 
         return AnyView(
-            Section("Finish Setup") {
-                Text("Complete these once for clearer, safer guidance.")
+        Section(localized("today.setup.title", default: "Finish Setup")) {
+                Text(localized("today.setup.intro", default: "Complete these once for clearer, safer guidance."))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
-                Text("Setup progress: \(setupChecklistCompleted)/\(setupChecklistTotal)")
+                Text(localizedFormat("today.setup.progress_format", default: "Setup progress: %d/%d", setupChecklistCompleted, setupChecklistTotal))
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(CatholicTheme.primary)
                     .accessibilityIdentifier("today.setup.progress")
 
                 setupChecklistRow(
-                    title: "Pastoral consent acknowledged",
+                    title: localized("today.setup.consent", default: "Pastoral consent acknowledged"),
                     isComplete: hasConfiguredConsent
                 )
                 setupChecklistRow(
-                    title: "Region profile selected",
+                    title: localized("today.setup.region", default: "Region profile selected"),
                     isComplete: hasConfiguredRegionProfile
                 )
                 setupChecklistRow(
-                    title: "Reminder plan selected",
+                    title: localized("today.setup.reminders", default: "Reminder plan selected"),
                     isComplete: hasConfiguredReminderPlan
                 )
 
-                Button("Open Quick Setup") {
+                Button(localized("today.setup.open", default: "Open Quick Setup")) {
                     homeSurface = .more
                 }
                 .appPrimaryButtonStyle()
@@ -147,7 +147,7 @@ extension ContentView {
             VStack(alignment: .leading, spacing: 12) {
                 SacredHeroCard(
                     assetName: dashboardHeroArtwork.assetName,
-                    title: "Today at a Glance",
+                    title: localized("today.glance.title", default: "Today at a Glance"),
                     subtitle: heroSummaryText,
                     height: 182,
                     accessibilityIdentifier: "dashboard.today_glance.hero"
@@ -155,16 +155,16 @@ extension ContentView {
 
                 ViewThatFits(in: .horizontal) {
                     HStack(spacing: 8) {
-                        MetricTile(title: "Next", value: todayAtAGlanceNextLabel)
-                        MetricTile(title: "Week", value: todayAtAGlanceWeekLabel)
-                        MetricTile(title: "Streak", value: "\(currentStreak)d")
+                        MetricTile(title: localized("today.metric.next", default: "Next"), value: todayAtAGlanceNextLabel)
+                        MetricTile(title: localized("today.metric.week", default: "Week"), value: todayAtAGlanceWeekLabel)
+                        MetricTile(title: localized("today.metric.streak", default: "Streak"), value: "\(currentStreak)d")
                     }
                     VStack(spacing: 8) {
                         HStack(spacing: 8) {
-                            MetricTile(title: "Next", value: todayAtAGlanceNextLabel)
-                            MetricTile(title: "Week", value: todayAtAGlanceWeekLabel)
+                            MetricTile(title: localized("today.metric.next", default: "Next"), value: todayAtAGlanceNextLabel)
+                            MetricTile(title: localized("today.metric.week", default: "Week"), value: todayAtAGlanceWeekLabel)
                         }
-                        MetricTile(title: "Streak", value: "\(currentStreak)d")
+                        MetricTile(title: localized("today.metric.streak", default: "Streak"), value: "\(currentStreak)d")
                     }
                 }
 
@@ -180,8 +180,8 @@ extension ContentView {
     }
 
     var dashboardDevotionalGallerySection: some View {
-        Section("Sacred Fasting Imagery") {
-            Text("Keep these Catholic symbols in view as you pray, abstain, and fast.")
+        Section(localized("today.gallery.title", default: "Sacred Fasting Imagery")) {
+            Text(localized("today.gallery.intro", default: "Keep these Catholic symbols in view as you pray, abstain, and fast."))
                 .appSupportingTextStyle()
 
             ScrollView(.horizontal, showsIndicators: false) {
@@ -228,28 +228,28 @@ extension ContentView {
                 HStack(spacing: 8) {
                     Image(systemName: "cross.fill")
                         .appSymbolStyle(.standard)
-                    Text("Daily Catholic Fasting Plan")
+                    Text(localized("today.hero.title", default: "Daily Catholic Fasting Plan"))
                         .appSectionTitleStyle(serif: true)
                 }
                 Text(heroSummaryText)
                     .appLeadTextStyle()
-                Text("Offer each observance with prayer, fasting, and charity.")
+                Text(localized("today.hero.subtitle", default: "Offer each observance with prayer, fasting, and charity."))
                     .appSupportingTextStyle()
                     .foregroundStyle(CatholicTheme.primary.opacity(0.85))
                 ProgressView(value: completionRateValue)
                     .tint(CatholicTheme.accent)
                 ViewThatFits(in: .horizontal) {
                     HStack(spacing: 8) {
-                        MetricTile(title: "Required", value: "\(mandatoryObservanceCount)")
-                        MetricTile(title: "Done", value: "\(completedCount)")
-                        MetricTile(title: "Streak", value: "\(currentStreak)d")
+                        MetricTile(title: localized("today.metric.required", default: "Required"), value: "\(mandatoryObservanceCount)")
+                        MetricTile(title: localized("today.metric.done", default: "Done"), value: "\(completedCount)")
+                        MetricTile(title: localized("today.metric.streak", default: "Streak"), value: "\(currentStreak)d")
                     }
                     VStack(spacing: 8) {
                         HStack(spacing: 8) {
-                            MetricTile(title: "Required", value: "\(mandatoryObservanceCount)")
-                            MetricTile(title: "Done", value: "\(completedCount)")
+                            MetricTile(title: localized("today.metric.required", default: "Required"), value: "\(mandatoryObservanceCount)")
+                            MetricTile(title: localized("today.metric.done", default: "Done"), value: "\(completedCount)")
                         }
-                        MetricTile(title: "Streak", value: "\(currentStreak)d")
+                        MetricTile(title: localized("today.metric.streak", default: "Streak"), value: "\(currentStreak)d")
                     }
                 }
             }
@@ -266,11 +266,11 @@ extension ContentView {
     }
 
     var dashboardQuickActionsSection: some View {
-        Section("Primary Actions") {
+        Section(localized("today.actions.title", default: "Primary Actions")) {
             Button {
                 homeSurface = .fastingDays
             } label: {
-                Label("Open Fasting Days", systemImage: "calendar")
+                Label(localized("today.actions.fasting_days", default: "Open Fasting Days"), systemImage: "calendar")
             }
             .accessibilityIdentifier("today.quick.fasting_days")
             .appPrimaryButtonStyle()
@@ -281,7 +281,7 @@ extension ContentView {
             Button {
                 homeSurface = .intermittent
             } label: {
-                Label("Track Fast Now", systemImage: "timer")
+                Label(localized("today.actions.track_fast", default: "Track Fast Now"), systemImage: "timer")
             }
             .accessibilityIdentifier("today.quick.intermittent")
             .appSecondaryButtonStyle(legacyTint: CatholicTheme.accent)
@@ -292,7 +292,7 @@ extension ContentView {
             Button {
                 homeSurface = .more
             } label: {
-                Label("Open More Tools", systemImage: "ellipsis.circle")
+                Label(localized("today.actions.more", default: "Open More Tools"), systemImage: "ellipsis.circle")
             }
             .accessibilityIdentifier("today.quick.more")
             .appSecondaryButtonStyle()
@@ -304,7 +304,7 @@ extension ContentView {
 
     var todayDecisionCardSection: some View {
         let decision = todayFoodDecision
-        return Section("What Can I Eat Today?") {
+        return Section(localized("today.food.title", default: "What Can I Eat Today?")) {
             VStack(alignment: .leading, spacing: 14) {
                 Text(decision.obligationLine)
                     .font(.system(.title3, design: .serif).weight(.bold))
@@ -313,7 +313,7 @@ extension ContentView {
 
                 if !decision.allowed.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Okay today")
+                        Text(localized("today.food.okay", default: "Okay today"))
                             .font(.caption.weight(.semibold))
                             .foregroundStyle(.secondary)
                             .textCase(.uppercase)
@@ -325,7 +325,7 @@ extension ContentView {
 
                 if !decision.avoid.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Avoid today")
+                        Text(localized("today.food.avoid", default: "Avoid today"))
                             .font(.caption.weight(.semibold))
                             .foregroundStyle(.secondary)
                             .textCase(.uppercase)
@@ -340,15 +340,15 @@ extension ContentView {
                     .foregroundStyle(.secondary)
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Common food questions")
+                    Text(localized("today.food.common_questions", default: "Common food questions"))
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(.secondary)
                         .textCase(.uppercase)
-                    Label("Chicken and turkey count as meat.", systemImage: "xmark.circle")
-                    Label("Eggs, milk, butter, and cheese are generally permitted.", systemImage: "checkmark.circle")
-                    Label("Fish and shellfish are generally permitted.", systemImage: "checkmark.circle")
+                    Label(localized("today.food.common.chicken", default: "Chicken and turkey count as meat."), systemImage: "xmark.circle")
+                    Label(localized("today.food.common.dairy", default: "Eggs, milk, butter, and cheese are generally permitted."), systemImage: "checkmark.circle")
+                    Label(localized("today.food.common.fish", default: "Fish and shellfish are generally permitted."), systemImage: "checkmark.circle")
                     Label(
-                        "Broths and gravies may be technically permitted, but many Catholics still avoid them in stricter practice.",
+                        localized("today.food.common.broth", default: "Broths and gravies may be technically permitted, but many Catholics still avoid them in stricter practice."),
                         systemImage: "questionmark.circle"
                     )
                     .foregroundStyle(.secondary)
@@ -358,7 +358,7 @@ extension ContentView {
                 NavigationLink {
                     moreDestinationList(for: .guidanceAndRules)
                 } label: {
-                    Label("Open full food guidance", systemImage: "book.closed")
+                    Label(localized("today.food.open_guidance", default: "Open full food guidance"), systemImage: "book.closed")
                 }
                 .accessibilityIdentifier("today.decision.open_full_food_guidance")
 
@@ -368,8 +368,8 @@ extension ContentView {
 
                 Link(
                     regionProfile == .canada
-                        ? "Read CCCB Friday guidance"
-                        : "Read official USCCB fast/abstinence guidance",
+                        ? localized("today.food.link.cccb", default: "Read CCCB Friday guidance")
+                        : localized("today.food.link.usccb", default: "Read official USCCB fast/abstinence guidance"),
                     destination: regionProfile == .canada ? UIConstants.cccbKeepingFridayURL : UIConstants.usccbFastAbstinenceURL
                 )
             }
@@ -384,7 +384,7 @@ extension ContentView {
         }
 
         return AnyView(
-            Section("Recovery Plan") {
+            Section(localized("today.recovery.section", default: "Recovery Plan")) {
                 Text(plan.titleLine)
                     .font(.headline)
                     .foregroundStyle(CatholicTheme.primary)
@@ -399,14 +399,14 @@ extension ContentView {
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
-                Button("Mark Today as Recovery Substitute") {
+                Button(localized("today.recovery.mark", default: "Mark Today as Recovery Substitute")) {
                     logRecoverySubstituteForToday()
                 }
                 .accessibilityIdentifier("today.recovery.mark_substitute")
                 .appPrimaryButtonStyle(legacyTint: CatholicTheme.accent)
                 .disabled(!canLogRecoverySubstituteToday)
 
-                Button("Focus Required Fasting Days") {
+                Button(localized("today.recovery.focus", default: "Focus Required Fasting Days")) {
                     focusFastingDaysOnUpcomingRequired()
                 }
                 .accessibilityIdentifier("today.recovery.open_fasting_days")
@@ -421,16 +421,16 @@ extension ContentView {
         }
 
         return AnyView(
-            Section("Share With a Friend") {
-                Text("You completed a \(currentStreak)-day streak. Share the app if it is helping.")
+            Section(localized("today.share.section", default: "Share With a Friend")) {
+                Text(localizedFormat("today.share.intro_format", default: "You completed a %d-day streak. Share the app if it is helping.", currentStreak))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                 ShareLink(
                     item:
                     "I have been using Catholic Fasting App for daily fasting guidance and tracking. It has helped me stay consistent.",
-                    subject: Text("Catholic Fasting App")
+                    subject: Text(localized("today.share.subject", default: "Catholic Fasting App"))
                 ) {
-                    Label("Share App", systemImage: "square.and.arrow.up")
+                    Label(localized("today.share.button", default: "Share App"), systemImage: "square.and.arrow.up")
                 }
                 .appSecondaryButtonStyle()
             }
@@ -438,7 +438,7 @@ extension ContentView {
     }
 
     var dashboardSeasonSection: some View {
-        Section("Liturgical Season") {
+        Section(localized("today.season.section", default: "Liturgical Season")) {
             HStack(alignment: .top, spacing: 10) {
                 Image(systemName: "sparkles")
                     .font(.headline.weight(.semibold))
@@ -449,7 +449,7 @@ extension ContentView {
                     Text(CatholicTheme.seasonLabel)
                         .font(.system(.headline, design: .serif))
                         .foregroundStyle(CatholicTheme.primary)
-                    Text("Offer your fasting with the spirit of this season through prayer, sacrifice, and charity.")
+                    Text(localized("today.season.intro", default: "Offer your fasting with the spirit of this season through prayer, sacrifice, and charity."))
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -470,24 +470,24 @@ extension ContentView {
     }
 
     var dashboardHighlightsSection: some View {
-        Section("Overview") {
-            Text("Completion rate: \(completionRateText)")
+        Section(localized("today.overview.section", default: "Overview")) {
+            Text(localizedFormat("today.overview.completion_format", default: "Completion rate: %@", completionRateText))
                 .foregroundStyle(CatholicTheme.primary)
-            Text("Current streak: \(currentStreak) day(s)")
+            Text(localizedFormat("today.overview.streak_format", default: "Current streak: %d day(s)", currentStreak))
                 .foregroundStyle(CatholicTheme.primary.opacity(0.9))
             if let next = upcomingMandatoryObservance {
-                Text("Next required: \(next.title) • \(next.date.formatted(date: .abbreviated, time: .omitted))")
+                Text(localizedFormat("today.overview.next_required_format", default: "Next required: %@ • %@", next.title, next.date.formatted(date: .abbreviated, time: .omitted)))
                     .foregroundStyle(.red.opacity(0.85))
             } else {
-                Text("No upcoming required observances this year.")
+                Text(localized("today.overview.none", default: "No upcoming required observances this year."))
                     .foregroundStyle(.secondary)
             }
-            Button("Open Fasting Days View") {
+            Button(localized("today.overview.open_view", default: "Open Fasting Days View")) {
                 homeSurface = .fastingDays
             }
             .accessibilityIdentifier("dashboard.open_fasting_days")
             .appPrimaryButtonStyle()
-            Button("Focus Required (Next 30 Days)") {
+            Button(localized("today.overview.focus_required", default: "Focus Required (Next 30 Days)")) {
                 focusFastingDaysOnUpcomingRequired()
             }
             .accessibilityIdentifier("dashboard.focus_required")
@@ -496,19 +496,19 @@ extension ContentView {
     }
 
     var todaySimpleSummarySection: some View {
-        Section("Today Summary") {
-            Text("Completion rate: \(completionRateText)")
+        Section(localized("today.summary.section", default: "Today Summary")) {
+            Text(localizedFormat("today.overview.completion_format", default: "Completion rate: %@", completionRateText))
                 .foregroundStyle(CatholicTheme.primary)
-            Text("Current streak: \(currentStreak) day(s)")
+            Text(localizedFormat("today.overview.streak_format", default: "Current streak: %d day(s)", currentStreak))
                 .foregroundStyle(CatholicTheme.primary.opacity(0.9))
             if let next = upcomingMandatoryObservance {
-                Text("Next required: \(next.title) • \(next.date.formatted(date: .abbreviated, time: .omitted))")
+                Text(localizedFormat("today.overview.next_required_format", default: "Next required: %@ • %@", next.title, next.date.formatted(date: .abbreviated, time: .omitted)))
                     .foregroundStyle(.red.opacity(0.85))
             } else {
-                Text("No upcoming required observances this year.")
+                Text(localized("today.overview.none", default: "No upcoming required observances this year."))
                     .foregroundStyle(.secondary)
             }
-            Button("Open Fasting Days") {
+            Button(localized("today.actions.fasting_days", default: "Open Fasting Days")) {
                 homeSurface = .fastingDays
             }
             .appPrimaryButtonStyle()

@@ -41,9 +41,9 @@ extension ContentView {
     }
 
     var premiumSurfacePickerSection: some View {
-        Section("Support & Premium") {
+        Section(localized("premium.section.support", default: "Support & Premium")) {
             Picker(
-                "View",
+                localized("premium.section.view", default: "View"),
                 selection: Binding(
                     get: { selectedSupportPremiumSurface },
                     set: { supportPremiumSurfaceRaw = $0.rawValue }
@@ -58,18 +58,18 @@ extension ContentView {
 
             Text(
                 selectedSupportPremiumSurface == .upgrade
-                    ? "Choose a plan first, then use tips or billing tools if needed."
-                    : "Open premium planning, journaling, and exports."
+                    ? localized("premium.section.upgrade_hint", default: "Choose a plan first, then use tips or billing tools if needed.")
+                    : localized("premium.section.tools_hint", default: "Open premium planning, journaling, and exports.")
             )
             .appSupportingTextStyle()
         }
     }
 
     var premiumToolsLockedSection: some View {
-        Section("Premium Tools") {
-            Text("Unlock premium to open planning, reminders, analytics, journaling, and exports.")
+        Section(localized("premium.tools.section", default: "Premium Tools")) {
+            Text(localized("premium.tools.locked_hint", default: "Unlock premium to open planning, reminders, analytics, journaling, and exports."))
                 .foregroundStyle(.secondary)
-            Button("Go to Upgrade") {
+            Button(localized("premium.tools.go_to_upgrade", default: "Go to Upgrade")) {
                 openPremiumUpgrade(focusingOn: .planning)
             }
             .appPrimaryButtonStyle()
@@ -78,7 +78,7 @@ extension ContentView {
     }
 
     var premiumToolsHubSection: some View {
-        Section("Formation Toolkit") {
+        Section(localized("premium.tools.formation", default: "Formation Toolkit")) {
             ForEach(PremiumEntitlementSurface.allCases) { surface in
                 let destination = premiumToolDestination(for: surface)
                 NavigationLink {
@@ -100,7 +100,7 @@ extension ContentView {
     }
 
     var premiumAndSupportSection: some View {
-        Section("Premium Upgrade") {
+        Section(localized("premium.upgrade.section", default: "Premium Upgrade")) {
             premiumStatusSummaryCard
 
             if monetizationStore.premiumUnlocked {
@@ -112,13 +112,13 @@ extension ContentView {
             if monetizationStore.premiumUnlocked {
                 premiumActiveStateCard
             } else {
-                Text("Choose the yearly or monthly plan below.")
+                Text(localized("premium.upgrade.choose_plan", default: "Choose the yearly or monthly plan below."))
                     .appSupportingTextStyle()
                     .accessibilityIdentifier("premium.upgrade_summary")
                 if monetizationStore.isLoading {
                     HStack(spacing: 8) {
                         ProgressView()
-                        Text("Loading purchases…")
+                        Text(localized("premium.upgrade.loading", default: "Loading purchases…"))
                     }
                     .font(.caption)
                 }
@@ -129,7 +129,7 @@ extension ContentView {
                         premiumOfferCard(product: product, offer: offer)
                     }
                 } else {
-                    Text("Premium plans are temporarily unavailable. Try again in a moment, then use Restore Purchases if needed.")
+                    Text(localized("premium.upgrade.unavailable", default: "Premium plans are temporarily unavailable. Try again in a moment, then use Restore Purchases if needed."))
                         .appSupportingTextStyle()
                 }
 
@@ -140,7 +140,7 @@ extension ContentView {
                 let loadedTipIDs = Set(monetizationStore.tipProducts.map(\.id))
                 let missingTipIDs = MonetizationStore.tipProductIDs.subtracting(loadedTipIDs)
                 if !missingTipIDs.isEmpty {
-                    Text("Optional support tips may take a moment to appear after the App Store finishes loading.")
+                    Text(localized("premium.tips.loading_hint", default: "Optional support tips may take a moment to appear after the App Store finishes loading."))
                         .appEyebrowStyle()
                 }
             }
@@ -173,11 +173,11 @@ extension ContentView {
 
     var premiumActiveStateCard: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Premium is active.")
+            Text(localized("premium.active.label", default: "Premium is active."))
                 .appSupportingTextStyle()
                 .accessibilityIdentifier("premium.active_summary")
 
-            Button("Open Premium Tools") {
+            Button(localized("premium.active.open_tools", default: "Open Premium Tools")) {
                 supportPremiumSurfaceRaw = SupportPremiumSurface.tools.rawValue
             }
             .appPrimaryButtonStyle()
@@ -202,10 +202,12 @@ extension ContentView {
         VStack(alignment: .leading, spacing: 12) {
             SacredHeroCard(
                 assetName: guidanceHeroArtwork.assetName,
-                title: monetizationStore.premiumUnlocked ? "Formation Toolkit Active" : "Formation Toolkit",
+                title: monetizationStore.premiumUnlocked
+                    ? localized("premium.hero.active_title", default: "Formation Toolkit Active")
+                    : localized("premium.hero.title", default: "Formation Toolkit"),
                 subtitle: monetizationStore.premiumUnlocked
-                    ? "Keep planning, recovery, reflection, and review in one focused Catholic workflow."
-                    : "Choose one clear premium path for planning, reminders, reflection, and review through the Church year.",
+                    ? localized("premium.hero.active_subtitle", default: "Keep planning, recovery, reflection, and review in one focused Catholic workflow.")
+                    : localized("premium.hero.subtitle", default: "Choose one clear premium path for planning, reminders, reflection, and review through the Church year."),
                 height: 156,
                 accessibilityIdentifier: "premium.hero"
             )
@@ -226,26 +228,26 @@ extension ContentView {
                     .foregroundStyle(monetizationStore.premiumUnlocked ? .green : CatholicTheme.primary)
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(monetizationStore.premiumUnlocked ? "Premium active" : premiumOfferCatalog.title)
+                    Text(monetizationStore.premiumUnlocked ? localized("premium.active.title", default: "Premium active") : premiumOfferCatalog.title)
                         .appSectionTitleStyle(serif: true)
                     Text(
                         monetizationStore.premiumUnlocked
-                            ? "Your planning, accountability, reflection, and export tools are unlocked."
-                            : "Stay steady through the Church year with one clear premium path for planning, reminders, and review."
+                            ? localized("premium.active.summary", default: "Your planning, accountability, reflection, and export tools are unlocked.")
+                            : localized("premium.locked.summary", default: "Stay steady through the Church year with one clear premium path for planning, reminders, and review.")
                     )
                     .appLeadTextStyle()
                 }
             }
 
             if monetizationStore.premiumUnlocked {
-                Button("Open Premium Tools") {
+                Button(localized("premium.active.open_tools", default: "Open Premium Tools")) {
                     supportPremiumSurfaceRaw = SupportPremiumSurface.tools.rawValue
                 }
                 .appPrimaryButtonStyle()
                 .accessibilityIdentifier("premium.open_tools")
             } else {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Premium adds:")
+                    Text(localized("premium.locked.adds", default: "Premium adds:"))
                         .appEyebrowStyle()
                         .foregroundStyle(CatholicTheme.primary)
 
@@ -266,13 +268,13 @@ extension ContentView {
             }
 
             VStack(alignment: .leading, spacing: 8) {
-                Text("Why users upgrade")
+                Text(localized("premium.trust.title", default: "Why users upgrade"))
                     .appEyebrowStyle()
 
                 HStack(spacing: 8) {
-                    premiumTrustPill(text: "Local-only data", systemImage: "lock.shield")
-                    premiumTrustPill(text: "No ads", systemImage: "nosign")
-                    premiumTrustPill(text: "Cancel anytime", systemImage: "creditcard")
+                    premiumTrustPill(text: localized("premium.trust.local_only", default: "Local-only data"), systemImage: "lock.shield")
+                    premiumTrustPill(text: localized("premium.trust.no_ads", default: "No ads"), systemImage: "nosign")
+                    premiumTrustPill(text: localized("premium.trust.cancel_anytime", default: "Cancel anytime"), systemImage: "creditcard")
                 }
             }
         }
@@ -293,20 +295,22 @@ extension ContentView {
         let previewActions = sample ? Array(journey.actions.prefix(3)) : journey.actions
 
         return VStack(alignment: .leading, spacing: 10) {
-            Text(sample ? "See the Guided Seasonal Journey" : "Your Guided Seasonal Journey")
+            Text(sample ? localized("premium.journey.preview_title", default: "See the Guided Seasonal Journey") : localized("premium.journey.current_title", default: "Your Guided Seasonal Journey"))
                 .appSectionTitleStyle(serif: true)
 
             Text(
                 sample
-                    ? "This preview shows how premium turns the current season into one steady weekly rhythm."
-                    : "Premium keeps the current week visible so you know what to do next without rebuilding the whole plan."
+                    ? localized("premium.journey.preview_intro", default: "This preview shows how premium turns the current season into one steady weekly rhythm.")
+                    : localized("premium.journey.current_intro", default: "Premium keeps the current week visible so you know what to do next without rebuilding the whole plan.")
             )
                 .appSupportingTextStyle()
 
             VStack(alignment: .leading, spacing: 6) {
-                Text("\(sample ? "Preview" : "Current") journey week: \(journey.title)")
+                Text(sample
+                    ? localizedFormat("premium.journey.preview_week_format", default: "Preview journey week: %@", journey.title)
+                    : localizedFormat("premium.journey.current_week_format", default: "Current journey week: %@", journey.title))
                     .font(.subheadline.weight(.semibold))
-                Text(sample ? "Seasonal rhythm" : "Current weekly rhythm")
+                Text(sample ? localized("premium.journey.preview_eyebrow", default: "Seasonal rhythm") : localized("premium.journey.current_eyebrow", default: "Current weekly rhythm"))
                     .appEyebrowStyle()
                 Text(journey.summary)
                     .appSupportingTextStyle()
@@ -329,13 +333,13 @@ extension ContentView {
             }
 
             if sample {
-                Text("Preview only. Unlock premium below to track progress, keep the current week, and carry the journey through the season.")
+                Text(localized("premium.journey.preview_hint", default: "Preview only. Unlock premium below to track progress, keep the current week, and carry the journey through the season."))
                     .appSupportingTextStyle()
             } else {
                 Text(premiumJourneyCompletionSummary)
                     .appSupportingTextStyle()
                 if let nextAction = premiumGuidedJourneyNextAction {
-                    Text("Next step: \(nextAction.title)")
+                    Text(localizedFormat("premium.journey.next_step_format", default: "Next step: %@", nextAction.title))
                         .appEyebrowStyle()
                 }
             }
@@ -399,14 +403,14 @@ extension ContentView {
                             .appSectionTitleStyle(serif: offer?.isPrimaryAnchor == true)
                         Text(product.displayPrice)
                             .appMetricValueStyle()
-                        Text(offer?.billingCadenceLabel ?? "Auto-renewing subscription")
+                        Text(offer?.billingCadenceLabel ?? localized("premium.offer.auto_renew", default: "Auto-renewing subscription"))
                             .appSupportingTextStyle()
                     }
 
                     Spacer()
 
                     if offer?.isPrimaryAnchor == true {
-                        Text("Best value")
+                        Text(localized("premium.offer.best_value", default: "Best value"))
                             .font(.caption2.weight(.semibold))
                             .padding(.horizontal, 8)
                             .padding(.vertical, 5)
@@ -416,7 +420,7 @@ extension ContentView {
                 }
 
                 if offer?.isPrimaryAnchor == true {
-                    Text(offer?.outcomeSummary ?? "Best value for one steady rhythm through the Church year.")
+                    Text(offer?.outcomeSummary ?? localized("premium.offer.best_value_summary", default: "Best value for one steady rhythm through the Church year."))
                         .appSupportingTextStyle()
                         .foregroundStyle(CatholicTheme.primary.opacity(0.9))
                 } else if let summary = offer?.outcomeSummary {
@@ -425,7 +429,7 @@ extension ContentView {
                         .lineLimit(2)
                 }
 
-                Button("Unlock \(offer?.displayTitle ?? product.displayName) • \(product.displayPrice)") {
+                Button(localizedFormat("premium.offer.unlock_format", default: "Unlock %@ • %@", offer?.displayTitle ?? product.displayName, product.displayPrice)) {
                     Task {
                         await monetizationStore.purchase(product)
                     }
@@ -441,14 +445,14 @@ extension ContentView {
 
     var premiumTipsSupportCard: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Optional support tips")
+            Text(localized("premium.tips.title", default: "Optional support tips"))
                 .appEyebrowStyle()
 
-            Text("Tips support ongoing development and do not unlock features.")
+            Text(localized("premium.tips.summary", default: "Tips support ongoing development and do not unlock features."))
                 .appSupportingTextStyle()
 
             ForEach(monetizationStore.tipProducts, id: \.id) { product in
-                Button("Send Tip • \(product.displayPrice)") {
+                Button(localizedFormat("premium.tips.send_tip_format", default: "Send Tip • %@", product.displayPrice)) {
                     Task {
                         await monetizationStore.purchase(product)
                     }
@@ -466,13 +470,13 @@ extension ContentView {
 
     var premiumLegalSupportCard: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Restore / Manage / Legal")
+            Text(localized("premium.legal.title", default: "Restore / Manage / Legal"))
                 .appEyebrowStyle()
 
-            Text("Use these after choosing a plan if you need to restore billing or open legal links.")
+            Text(localized("premium.legal.summary", default: "Use these after choosing a plan if you need to restore billing or open legal links."))
                 .appSupportingTextStyle()
 
-            Button("Restore Purchases") {
+            Button(localized("premium.legal.restore", default: "Restore Purchases")) {
                 Task {
                     await monetizationStore.restorePurchases()
                 }
@@ -481,7 +485,7 @@ extension ContentView {
             .disabled(monetizationStore.isPurchasing)
             .accessibilityIdentifier("premium.restore")
 
-            Button("Manage Subscription") {
+            Button(localized("premium.legal.manage", default: "Manage Subscription")) {
                 Task {
                     await monetizationStore.openManageSubscriptions()
                 }
@@ -490,13 +494,13 @@ extension ContentView {
             .disabled(monetizationStore.isPurchasing)
             .accessibilityIdentifier("premium.manage")
 
-            Link("Terms of Use (EULA)", destination: UIConstants.termsOfUseURL)
+            Link(localized("premium.legal.terms", default: "Terms of Use (EULA)"), destination: UIConstants.termsOfUseURL)
                 .appSupportingTextStyle()
                 .accessibilityIdentifier("premium.legal.terms")
-            Link("Privacy Policy", destination: UIConstants.privacyPolicyURL)
+            Link(localized("premium.legal.privacy", default: "Privacy Policy"), destination: UIConstants.privacyPolicyURL)
                 .appSupportingTextStyle()
                 .accessibilityIdentifier("premium.legal.privacy")
-            Link("Support", destination: UIConstants.supportSiteURL)
+            Link(localized("premium.legal.support", default: "Support"), destination: UIConstants.supportSiteURL)
                 .appSupportingTextStyle()
                 .accessibilityIdentifier("premium.legal.support")
         }

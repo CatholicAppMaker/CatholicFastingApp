@@ -790,6 +790,40 @@ final class CatholicFastingAppUITests: XCTestCase {
         XCTAssertTrue(scrollToElement(app.pickers["settings.quick.language"].firstMatch, in: app))
     }
 
+    func testIPhoneTodaySpanishShowsLocalizedCoreSections() {
+        let app = makeApp(languageMode: "spanish")
+        app.launch()
+        ensureOnHomeScreen(app)
+        openSurface("Today", in: app)
+
+        XCTAssertTrue(scrollToElement(app.staticTexts["Plan diario de ayuno católico"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Guía de alimentos"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Acciones rápidas"].firstMatch, in: app))
+    }
+
+    func testIPhoneFastingDaysSpanishShowsLocalizedPlanningCopy() {
+        let app = makeApp(languageMode: "spanish")
+        app.launch()
+        ensureOnHomeScreen(app)
+        openSurface("Fasting Days", in: app)
+
+        XCTAssertTrue(scrollToElement(app.staticTexts["Días de ayuno"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Personalizar lista"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Recordatorios"].firstMatch, in: app))
+    }
+
+    func testIPhonePremiumSpanishShowsLocalizedJourneyAndSupportCopy() {
+        let app = makeApp(languageMode: "spanish")
+        app.launch()
+        ensureOnHomeScreen(app)
+        openMoreDestination("Support & Premium", in: app)
+
+        XCTAssertTrue(scrollToElement(app.staticTexts["Apoyo y Premium"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Vea el Camino estacional guiado"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Propinas opcionales de apoyo"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.buttons["premium.restore"].firstMatch, in: app))
+    }
+
     func testIPadGuidanceFrenchCanadianShowsLocalizedSectionTitles() {
         let app = makeApp(languageMode: "frenchCanadian")
         app.launch()
@@ -800,6 +834,18 @@ final class CatholicFastingAppUITests: XCTestCase {
         XCTAssertTrue(scrollToElement(app.otherElements["guidance.food.section"].firstMatch, in: app))
         XCTAssertTrue(scrollToElement(app.staticTexts["Guide alimentaire"].firstMatch, in: app))
         XCTAssertTrue(scrollToElement(app.staticTexts["Orientation pastorale"].firstMatch, in: app))
+    }
+
+    func testIPadPremiumSpanishShowsLocalizedWorkspaceCopy() {
+        let app = makeApp(languageMode: "spanish")
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadMoreDestination("supportAndPremium", in: app)
+
+        XCTAssertTrue(scrollToElement(app.staticTexts["Apoyo y Premium"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Vea el Camino estacional guiado"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Propinas opcionales de apoyo"].firstMatch, in: app))
     }
 
     func testIPadMoreGuidanceDestinationShowsFoodSection() {

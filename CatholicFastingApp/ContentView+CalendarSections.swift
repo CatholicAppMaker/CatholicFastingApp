@@ -371,24 +371,24 @@ extension ContentView {
     }
 
     var fastingDaysOverviewSection: some View {
-        Section("Fasting Days") {
-            Text("Start with required days, then add optional or celebration days when you need more context.")
+        Section(localized("fasting_days.section.title", default: "Fasting Days")) {
+            Text(localized("fasting_days.section.intro", default: "Start with required days, then add optional or celebration days when you need more context."))
                 .appLeadTextStyle()
             Text(regionalNormSummaryLine)
                 .appSupportingTextStyle()
 
             fastingDaysFilterTags
 
-            Picker("Scope", selection: fastingDaysScopeSelection) {
-                Text("Upcoming").tag(0)
-                Text("Full Year").tag(1)
+            Picker(localized("fasting_days.scope.title", default: "Scope"), selection: fastingDaysScopeSelection) {
+                Text(localized("fasting_days.scope.upcoming", default: "Upcoming")).tag(0)
+                Text(localized("fasting_days.scope.full_year", default: "Full Year")).tag(1)
             }
             .pickerStyle(.segmented)
             .accessibilityIdentifier("fasting_days.scope_picker")
 
             if let nextRequired = upcomingMandatoryObservance {
                 VStack(alignment: .leading, spacing: 10) {
-                    Label("Next required", systemImage: "calendar.badge.exclamationmark")
+                    Label(localized("fasting_days.next_required", default: "Next required"), systemImage: "calendar.badge.exclamationmark")
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(.secondary)
                         .textCase(.uppercase)
@@ -404,7 +404,7 @@ extension ContentView {
                 .appSurfaceCard(.utility, cornerRadius: 16)
             } else if let nextPotential = upcomingPotentialFastingObservance {
                 VStack(alignment: .leading, spacing: 10) {
-                    Label("Next possible observance", systemImage: "calendar")
+                    Label(localized("fasting_days.next_possible", default: "Next possible observance"), systemImage: "calendar")
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(.secondary)
                         .textCase(.uppercase)
@@ -416,13 +416,13 @@ extension ContentView {
                         .font(.headline)
                         .foregroundStyle(.orange)
 
-                    Text("Confirm your age-profile toggles in Settings if needed.")
+                    Text(localized("fasting_days.confirm_age", default: "Confirm your age-profile toggles in Settings if needed."))
                         .appSupportingTextStyle()
                 }
                 .padding(12)
                 .appSurfaceCard(.utility, cornerRadius: 16)
             } else {
-                Text("No upcoming required observance day found in the loaded date range.")
+                Text(localized("fasting_days.none_upcoming", default: "No upcoming required observance day found in the loaded date range."))
                     .appSupportingTextStyle()
             }
 
@@ -432,15 +432,15 @@ extension ContentView {
     }
 
     var fastingDaysDisplayOptionsSection: some View {
-        Section("List Filters") {
-            DisclosureGroup("Customize List") {
-                Toggle("Show all fasting days in this Catholic calendar year", isOn: $fastingDaysShowAllYearDays)
+        Section(localized("fasting_days.filters.section", default: "List Filters")) {
+            DisclosureGroup(localized("fasting_days.filters.customize", default: "Customize List")) {
+                Toggle(localized("fasting_days.filters.full_year", default: "Show all fasting days in this Catholic calendar year"), isOn: $fastingDaysShowAllYearDays)
                     .accessibilityIdentifier("fasting_days.toggle.full_year")
-                Toggle("Include optional fasting days (Ember days, optional Friday penance)", isOn: $fastingDaysIncludeOptionalDays)
+                Toggle(localized("fasting_days.filters.optional", default: "Include optional fasting days (Ember days, optional Friday penance)"), isOn: $fastingDaysIncludeOptionalDays)
                     .accessibilityIdentifier("fasting_days.toggle.optional")
-                Toggle("Include feast, holy, and memorial celebration days", isOn: $fastingDaysIncludeFeastAndHolyDays)
+                Toggle(localized("fasting_days.filters.celebrations", default: "Include feast, holy, and memorial celebration days"), isOn: $fastingDaysIncludeFeastAndHolyDays)
                     .accessibilityIdentifier("fasting_days.toggle.celebrations")
-                Text("Celebration days are shown for planning, not obligation.")
+                Text(localized("fasting_days.filters.celebrations_hint", default: "Celebration days are shown for planning, not obligation."))
                     .appSupportingTextStyle()
             }
         }
@@ -486,15 +486,17 @@ extension ContentView {
         let displayItems = fastingDaysShowAllYearDays ? filteredByObligation : Array(filteredByObligation.prefix(20))
         let baseTitle =
             fastingDaysShowAllYearDays
-                ? (fastingDaysIncludeOptionalDays ? "All Discipline Days This Year" : "Required Discipline Days This Year")
+                ? (fastingDaysIncludeOptionalDays
+                    ? localized("fasting_days.list.title.full_year_all", default: "All Discipline Days This Year")
+                    : localized("fasting_days.list.title.full_year_required", default: "Required Discipline Days This Year"))
                 : (fastingDaysIncludeOptionalDays
-                    ? "Upcoming Discipline Days (Required + Optional)"
-                    : "Upcoming Required Discipline Days")
-        let title = fastingDaysIncludeFeastAndHolyDays ? "\(baseTitle) + Celebration Days" : baseTitle
+                    ? localized("fasting_days.list.title.upcoming_all", default: "Upcoming Discipline Days (Required + Optional)")
+                    : localized("fasting_days.list.title.upcoming_required", default: "Upcoming Required Discipline Days"))
+        let title = fastingDaysIncludeFeastAndHolyDays ? localizedFormat("fasting_days.list.title.celebrations_format", default: "%@ + Celebration Days", baseTitle) : baseTitle
 
         return Section(title) {
             if displayItems.isEmpty {
-                Text("No observance days match the current list filters.")
+                Text(localized("fasting_days.list.empty", default: "No observance days match the current list filters."))
                     .foregroundStyle(.secondary)
             } else {
                 ForEach(displayItems) { observance in
@@ -528,7 +530,7 @@ extension ContentView {
                 }
 
                 if !fastingDaysShowAllYearDays, filteredByObligation.count > displayItems.count {
-                    Text("Showing next \(displayItems.count) observance days. Turn on \"Show full-year observance list\" for the full list.")
+                    Text(localizedFormat("fasting_days.list.more_format", default: "Showing next %d observance days. Turn on \"Show full-year observance list\" for the full list.", displayItems.count))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -537,19 +539,19 @@ extension ContentView {
     }
 
     var progressSection: some View {
-        Section("Progress") {
-            Text("Completed \(completedCount) of \(actionableObservances.count) required/optional observances")
+        Section(localized("fasting_days.progress.section", default: "Progress")) {
+            Text(localizedFormat("fasting_days.progress.format", default: "Completed %d of %d required/optional observances", completedCount, actionableObservances.count))
                 .font(.subheadline)
         }
     }
 
     var todaySection: some View {
         let todayItems = observancesForToday
-        return Section("Today") {
+        return Section(localized("fasting_days.today.section", default: "Today")) {
             if todayItems.isEmpty {
-                Text("No listed observances today.")
+                Text(localized("fasting_days.today.empty", default: "No listed observances today."))
                     .foregroundStyle(.secondary)
-                Button("Open Fasting Days to Plan Ahead") {
+                Button(localized("fasting_days.today.plan_ahead", default: "Open Fasting Days to Plan Ahead")) {
                     homeSurface = .fastingDays
                 }
                 .appSecondaryButtonStyle()
@@ -577,30 +579,30 @@ extension ContentView {
     }
 
     var analyticsSection: some View {
-        Section("Streaks and Completion") {
-            Text("Completion Rate: \(completionRateText)")
+        Section(localized("fasting_days.analytics.section", default: "Streaks and Completion")) {
+            Text(localizedFormat("fasting_days.analytics.completion_format", default: "Completion Rate: %@", completionRateText))
                 .accessibilityIdentifier("today.analytics.completion_rate")
-            Text("Current Streak: \(currentStreak) day(s)")
+            Text(localizedFormat("fasting_days.analytics.current_streak_format", default: "Current Streak: %d day(s)", currentStreak))
                 .accessibilityIdentifier("today.analytics.current_streak")
-            Text("Best Streak: \(bestStreak) day(s)")
+            Text(localizedFormat("fasting_days.analytics.best_streak_format", default: "Best Streak: %d day(s)", bestStreak))
                 .accessibilityIdentifier("today.analytics.best_streak")
         }
     }
 
     var notificationsSection: some View {
-        Section("Reminder Center") {
+        Section(localized("fasting_days.reminders.section", default: "Reminder Center")) {
             Text(notificationStatus)
                 .foregroundStyle(.secondary)
-            Text("Use Quick Setup for the normal plan. Open advanced controls only when you need to tune reminders.")
+            Text(localized("fasting_days.reminders.intro", default: "Use Quick Setup for the normal plan. Open advanced controls only when you need to tune reminders."))
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
-            DisclosureGroup("Advanced Reminder Controls") {
-                Toggle("Enable reminder support", isOn: $dailyReminderSupportEnabled)
+            DisclosureGroup(localized("fasting_days.reminders.advanced", default: "Advanced Reminder Controls")) {
+                Toggle(localized("settings.quick.reminder_support", default: "Enable reminder support"), isOn: $dailyReminderSupportEnabled)
                     .accessibilityIdentifier("settings.reminders.support_toggle")
-                Picker("Reminder strategy", selection: $reminderTierRaw) {
+                Picker(localized("settings.quick.reminder_strategy", default: "Reminder strategy"), selection: $reminderTierRaw) {
                     ForEach(ReminderTier.allCases) { tier in
-                        Text("\(tier.label) - \(tier.summary)").tag(tier.rawValue)
+                        Text("\(localizedReminderTierLabel(tier)) - \(localizedReminderTierSummary(tier))").tag(tier.rawValue)
                     }
                 }
                 .pickerStyle(.menu)
@@ -609,38 +611,38 @@ extension ContentView {
                     applyReminderTier(ReminderTier(rawValue: newValue) ?? .balanced)
                 }
                 if monetizationStore.premiumUnlocked {
-                    Toggle("Morning check-in (7:00 AM)", isOn: $morningReminderEnabled)
+                    Toggle(localized("settings.quick.reminder_morning", default: "Morning check-in (7:00 AM)"), isOn: $morningReminderEnabled)
                         .accessibilityIdentifier("settings.reminders.morning_toggle")
                         .disabled(!dailyReminderSupportEnabled)
-                    Toggle("Evening examen (8:00 PM)", isOn: $eveningReminderEnabled)
+                    Toggle(localized("settings.quick.reminder_evening", default: "Evening examen (8:00 PM)"), isOn: $eveningReminderEnabled)
                         .accessibilityIdentifier("settings.reminders.evening_toggle")
                         .disabled(!dailyReminderSupportEnabled)
                 } else if dailyReminderSupportEnabled {
-                    Text("Morning/evening support reminders are a Premium feature.")
+                    Text(localized("fasting_days.reminders.premium_feature", default: "Morning/evening support reminders are a Premium feature."))
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                    Button("Unlock Support Reminders") {
+                    Button(localized("settings.quick.unlock_support", default: "Unlock Support Reminders")) {
                         openPremiumUpgrade(focusingOn: .accountability)
                     }
                     .appSecondaryButtonStyle()
                     .accessibilityIdentifier("settings.reminders.unlock_support")
                 }
-                Button("Request Notification Permission") {
+                Button(localized("settings.quick.request_permission", default: "Request Notification Permission")) {
                     Task {
                         notificationStatus = await ReminderScheduler.requestPermission()
                     }
                 }
                 .disabled(!acceptedLegalNotice)
-                .accessibilityHint("Requires consent acknowledgment before reminders are enabled.")
-                Button("Schedule Required-Day Reminders") {
+                .accessibilityHint(localized("settings.quick.permission_hint", default: "Requires consent acknowledgment before reminders are enabled."))
+                Button(localized("settings.quick.schedule_required", default: "Schedule Required-Day Reminders")) {
                     Task {
                         notificationStatus = await ReminderScheduler.schedule(observances: rollingUpcomingObservances)
                     }
                 }
                 .disabled(!acceptedLegalNotice)
-                .accessibilityHint("Requires consent acknowledgment before scheduling.")
+                .accessibilityHint(localized("settings.quick.schedule_required_hint", default: "Requires consent acknowledgment before scheduling."))
 
-                Button("Schedule Daily Support Reminders") {
+                Button(localized("settings.quick.schedule_support", default: "Schedule Daily Support Reminders")) {
                     Task {
                         notificationStatus = await ReminderScheduler.scheduleHabitSupport(
                             morning: dailyReminderSupportEnabled && morningReminderEnabled,
@@ -650,15 +652,15 @@ extension ContentView {
                 }
                 .disabled(!acceptedLegalNotice || !dailyReminderSupportEnabled || !monetizationStore.premiumUnlocked)
                 .accessibilityIdentifier("settings.reminders.schedule_support")
-                .accessibilityHint("Schedules daily habit reminders when support is enabled.")
+                .accessibilityHint(localized("fasting_days.reminders.schedule_support_hint", default: "Schedules daily habit reminders when support is enabled."))
 
                 if dailyReminderSupportEnabled, !monetizationStore.premiumUnlocked {
-                    Text("Premium is required to schedule daily support reminders and apply morning/evening habit support.")
+                    Text(localized("settings.quick.support_premium_hint", default: "Premium is required to schedule daily support reminders and apply morning/evening habit support."))
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
 
-                Button("Refresh Reminder Status") {
+                Button(localized("settings.quick.refresh_status", default: "Refresh Reminder Status")) {
                     Task {
                         notificationStatus = await ReminderScheduler.notificationSummary()
                     }
@@ -669,8 +671,8 @@ extension ContentView {
     }
 
     var notesSection: some View {
-        Section("Friday Notes") {
-            NavigationLink("Friday Notes History") {
+        Section(localized("fasting_days.notes.section", default: "Friday Notes")) {
+            NavigationLink(localized("fasting_days.notes.history", default: "Friday Notes History")) {
                 FridayNotesHistoryView(notesStore: penanceNotes)
             }
         }
@@ -712,11 +714,11 @@ extension ContentView {
 
     private var fastingDaysDisplaySummaryText: String {
         var parts: [String] = [
-            fastingDaysShowAllYearDays ? "Full-year list" : "Upcoming list",
-            fastingDaysIncludeOptionalDays ? "optional days included" : "required days only",
+            fastingDaysShowAllYearDays ? localized("fasting_days.summary.full_year", default: "Full-year list") : localized("fasting_days.summary.upcoming", default: "Upcoming list"),
+            fastingDaysIncludeOptionalDays ? localized("fasting_days.summary.optional", default: "optional days included") : localized("fasting_days.summary.required_only", default: "required days only"),
         ]
         if fastingDaysIncludeFeastAndHolyDays {
-            parts.append("celebration days included")
+            parts.append(localized("fasting_days.summary.celebrations", default: "celebration days included"))
         }
         return parts.joined(separator: " • ")
     }
