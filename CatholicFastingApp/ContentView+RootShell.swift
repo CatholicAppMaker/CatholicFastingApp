@@ -90,6 +90,7 @@ extension ContentView {
                     age14OrOlderForAbstinence: $age14OrOlderForAbstinence,
                     age18OrOlderForFasting: $age18OrOlderForFasting,
                     medicalDispensation: $medicalDispensation,
+                    languageModeRaw: $languageModeRaw,
                     regionProfileRaw: $regionProfileRaw,
                     fridayModeRaw: $fridayModeRaw,
                     reminderTierRaw: $reminderTierRaw,

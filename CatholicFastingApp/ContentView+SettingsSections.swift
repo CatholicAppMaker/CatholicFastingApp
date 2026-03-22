@@ -20,6 +20,14 @@ extension ContentView {
             .pickerStyle(.menu)
             .accessibilityIdentifier("settings.quick.region")
 
+            Picker("Language", selection: $languageModeRaw) {
+                ForEach(LanguageMode.allCases) { option in
+                    Text(option.label).tag(option.rawValue)
+                }
+            }
+            .pickerStyle(.menu)
+            .accessibilityIdentifier("settings.quick.language")
+
             Toggle(
                 "I understand this is an independent app, not an official Church authority app",
                 isOn: $acceptedLegalNotice
