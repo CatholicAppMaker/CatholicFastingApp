@@ -3,8 +3,7 @@ import AppKit
 
 let assetsRoot = URL(
     fileURLWithPath: "/Users/kevpierce/Desktop/CatholicFastingApp/CatholicFastingApp/Assets.xcassets",
-    isDirectory: true
-)
+    isDirectory: true)
 let canvas = CGSize(width: 1600, height: 1000)
 
 func color(_ r: CGFloat, _ g: CGFloat, _ b: CGFloat, _ a: CGFloat = 1.0) -> NSColor {
@@ -23,8 +22,7 @@ func makeRep() -> NSBitmapImageRep {
         colorSpaceName: .deviceRGB,
         bitmapFormat: [],
         bytesPerRow: 0,
-        bitsPerPixel: 0
-    )!
+        bitsPerPixel: 0)!
 }
 
 func writeAsset(name: String, fileName: String, draw: () -> Void) throws {
@@ -60,16 +58,14 @@ func writeAsset(name: String, fileName: String, draw: () -> Void) throws {
     try contents.write(
         to: imageSetURL.appendingPathComponent("Contents.json"),
         atomically: true,
-        encoding: .utf8
-    )
+        encoding: .utf8)
 }
 
 func backgroundGradient(_ top: NSColor, _ bottom: NSColor) {
     let gradient = NSGradient(starting: top, ending: bottom)!
     gradient.draw(
         in: NSBezierPath(rect: CGRect(origin: .zero, size: canvas)),
-        angle: -90
-    )
+        angle: -90)
 }
 
 func drawHalo(center: CGPoint, outer: CGFloat, inner: CGFloat) {
@@ -88,21 +84,17 @@ func drawCross(center: CGPoint, size: CGSize, color crossColor: NSColor) {
             x: center.x - size.width * 0.12,
             y: center.y - size.height * 0.5,
             width: size.width * 0.24,
-            height: size.height
-        ),
+            height: size.height),
         xRadius: 16,
-        yRadius: 16
-    ).fill()
+        yRadius: 16).fill()
     NSBezierPath(
         roundedRect: CGRect(
             x: center.x - size.width * 0.45,
             y: center.y - size.height * 0.08,
             width: size.width * 0.9,
-            height: size.height * 0.2
-        ),
+            height: size.height * 0.2),
         xRadius: 16,
-        yRadius: 16
-    ).fill()
+        yRadius: 16).fill()
 }
 
 func drawStars(count: Int, yMin: CGFloat, yMax: CGFloat) {
@@ -195,8 +187,7 @@ do {
             path.curve(
                 to: CGPoint(x: 360 + CGFloat(i) * 150, y: 860),
                 controlPoint1: CGPoint(x: 700, y: 520),
-                controlPoint2: CGPoint(x: 520 + CGFloat(i) * 120, y: 680)
-            )
+                controlPoint2: CGPoint(x: 520 + CGFloat(i) * 120, y: 680))
             path.lineWidth = 9
             path.stroke()
         }
@@ -218,8 +209,7 @@ do {
             vine.curve(
                 to: CGPoint(x: 1180, y: 280 + CGFloat(i) * 140),
                 controlPoint1: CGPoint(x: 620, y: 360 + CGFloat(i) * 80),
-                controlPoint2: CGPoint(x: 980, y: 100 + CGFloat(i) * 110)
-            )
+                controlPoint2: CGPoint(x: 980, y: 100 + CGFloat(i) * 110))
             vine.lineWidth = 8
             vine.stroke()
         }

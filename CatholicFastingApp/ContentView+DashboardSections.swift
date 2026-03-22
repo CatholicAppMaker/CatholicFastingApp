@@ -1,6 +1,6 @@
 import SwiftUI
 #if canImport(TipKit)
-    import TipKit
+import TipKit
 #endif
 
 extension ContentView {
@@ -69,17 +69,15 @@ extension ContentView {
     var unofficialAppNoticeSection: some View {
         Section("Important Notice") {
             Text(
-                "This is an independent devotional app. It is not an official app of the Catholic Church, USCCB, the Vatican, or any diocese/parish."
-            )
-            .font(.subheadline)
-            .foregroundStyle(CatholicTheme.primary)
+                "This is an independent devotional app. It is not an official app of the Catholic Church, USCCB, the Vatican, or any diocese/parish.")
+                .font(.subheadline)
+                .foregroundStyle(CatholicTheme.primary)
 
             Text(
-                "Always follow your pastor, local bishop, and legitimate Church authority when guidance differs."
-            )
-            .font(.caption)
-            .foregroundStyle(.secondary)
-            .accessibilityIdentifier("notice.unofficial")
+                "Always follow your pastor, local bishop, and legitimate Church authority when guidance differs.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .accessibilityIdentifier("notice.unofficial")
         }
     }
 
@@ -89,7 +87,7 @@ extension ContentView {
         }
 
         return AnyView(
-        Section(localized("today.setup.title", default: "Finish Setup")) {
+            Section(localized("today.setup.title", default: "Finish Setup")) {
                 Text(localized("today.setup.intro", default: "Complete these once for clearer, safer guidance."))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
@@ -100,24 +98,20 @@ extension ContentView {
 
                 setupChecklistRow(
                     title: localized("today.setup.consent", default: "Pastoral consent acknowledged"),
-                    isComplete: hasConfiguredConsent
-                )
+                    isComplete: hasConfiguredConsent)
                 setupChecklistRow(
                     title: localized("today.setup.region", default: "Region profile selected"),
-                    isComplete: hasConfiguredRegionProfile
-                )
+                    isComplete: hasConfiguredRegionProfile)
                 setupChecklistRow(
                     title: localized("today.setup.reminders", default: "Reminder plan selected"),
-                    isComplete: hasConfiguredReminderPlan
-                )
+                    isComplete: hasConfiguredReminderPlan)
 
                 Button(localized("today.setup.open", default: "Open Quick Setup")) {
                     homeSurface = .more
                 }
                 .appPrimaryButtonStyle()
                 .accessibilityIdentifier("today.setup.open_quick_setup")
-            }
-        )
+            })
     }
 
     var dashboardSacredImageSection: some View {
@@ -131,8 +125,7 @@ extension ContentView {
                     title: activeSeasonalContentPack.campaignTitle,
                     subtitle: activeSeasonalContentPack.campaignSubtitle,
                     height: 210,
-                    accessibilityIdentifier: "dashboard.sacred_image"
-                )
+                    accessibilityIdentifier: "dashboard.sacred_image")
 
                 CatholicFastingQuoteCard(quote: dashboardFastingQuote, compact: true)
                     .accessibilityIdentifier("dashboard.fasting_quote")
@@ -150,8 +143,7 @@ extension ContentView {
                     title: localized("today.glance.title", default: "Today at a Glance"),
                     subtitle: heroSummaryText,
                     height: 182,
-                    accessibilityIdentifier: "dashboard.today_glance.hero"
-                )
+                    accessibilityIdentifier: "dashboard.today_glance.hero")
 
                 ViewThatFits(in: .horizontal) {
                     HStack(spacing: 8) {
@@ -259,8 +251,7 @@ extension ContentView {
             .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(CatholicTheme.accent.opacity(0.10))
-            )
+                    .fill(CatholicTheme.accent.opacity(0.10)))
             .appRoundedGlass(cornerRadius: 12)
         }
     }
@@ -349,9 +340,8 @@ extension ContentView {
                     Label(localized("today.food.common.fish", default: "Fish and shellfish are generally permitted."), systemImage: "checkmark.circle")
                     Label(
                         localized("today.food.common.broth", default: "Broths and gravies may be technically permitted, but many Catholics still avoid them in stricter practice."),
-                        systemImage: "questionmark.circle"
-                    )
-                    .foregroundStyle(.secondary)
+                        systemImage: "questionmark.circle")
+                        .foregroundStyle(.secondary)
                 }
                 .accessibilityIdentifier("today.decision.common_food_questions")
 
@@ -370,8 +360,7 @@ extension ContentView {
                     regionProfile == .canada
                         ? localized("today.food.link.cccb", default: "Read CCCB Friday guidance")
                         : localized("today.food.link.usccb", default: "Read official USCCB fast/abstinence guidance"),
-                    destination: regionProfile == .canada ? UIConstants.cccbKeepingFridayURL : UIConstants.usccbFastAbstinenceURL
-                )
+                    destination: regionProfile == .canada ? UIConstants.cccbKeepingFridayURL : UIConstants.usccbFastAbstinenceURL)
             }
             .padding(14)
             .appSurfaceCard(.standard, cornerRadius: 20)
@@ -411,8 +400,7 @@ extension ContentView {
                 }
                 .accessibilityIdentifier("today.recovery.open_fasting_days")
                 .appSecondaryButtonStyle()
-            }
-        )
+            })
     }
 
     var milestoneReferralSection: some View {
@@ -428,13 +416,12 @@ extension ContentView {
                 ShareLink(
                     item:
                     "I have been using Catholic Fasting App for daily fasting guidance and tracking. It has helped me stay consistent.",
-                    subject: Text(localized("today.share.subject", default: "Catholic Fasting App"))
-                ) {
+                    subject: Text(localized("today.share.subject", default: "Catholic Fasting App")))
+                {
                     Label(localized("today.share.button", default: "Share App"), systemImage: "square.and.arrow.up")
                 }
                 .appSecondaryButtonStyle()
-            }
-        )
+            })
     }
 
     var dashboardSeasonSection: some View {
@@ -459,12 +446,10 @@ extension ContentView {
             .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(CatholicTheme.accent.opacity(0.10))
-            )
+                    .fill(CatholicTheme.accent.opacity(0.10)))
             .overlay(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .stroke(CatholicTheme.cardBorder.opacity(0.6), lineWidth: 1)
-            )
+                    .stroke(CatholicTheme.cardBorder.opacity(0.6), lineWidth: 1))
             .appRoundedGlass(cornerRadius: 12)
         }
     }

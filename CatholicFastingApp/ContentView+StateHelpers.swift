@@ -1,6 +1,6 @@
 import SwiftUI
 #if canImport(TipKit)
-    import TipKit
+import TipKit
 #endif
 
 extension ContentView {
@@ -31,8 +31,7 @@ extension ContentView {
                 text: "Fast with fidelity, pray with humility, and give with charity.",
                 author: "Catholic Fasting",
                 source: "In-app formation",
-                tradition: "Pastoral"
-            )
+                tradition: "Pastoral")
         }
         let day = liturgicalCalendar.ordinality(of: .day, in: .year, for: Date()) ?? 1
         let quote = quotes[(day - 1) % quotes.count]
@@ -41,8 +40,7 @@ extension ContentView {
             text: quote.text,
             author: quote.author,
             source: quote.source,
-            tradition: quote.tradition
-        )
+            tradition: quote.tradition)
     }
 
     var weeklyFormationRecapFree: String {
@@ -53,7 +51,7 @@ extension ContentView {
     }
 
     var weeklyFormationRecapPremium: String {
-        let missed = currentYearObservances.filter { tracker.status(for: $0.id) == .missed }.count
+        let missed = currentYearObservances.count(where: { tracker.status(for: $0.id) == .missed })
         if missed == 0 {
             return "Premium insight: strong consistency. Keep your reminder cadence steady."
         }
@@ -93,23 +91,23 @@ extension ContentView {
         let now = Date()
         let month = liturgicalCalendar.component(.month, from: now)
         let year = liturgicalCalendar.component(.year, from: now)
-        return currentYearObservances.filter {
+        return currentYearObservances.count(where: {
             liturgicalCalendar.component(.month, from: $0.date) == month
                 && liturgicalCalendar.component(.year, from: $0.date) == year
                 && tracker.status(for: $0.id).countsTowardProgress
-        }.count
+        })
     }
 
     var yearlyRequiredCompletions: Int {
-        currentYearObservances.filter {
+        currentYearObservances.count(where: {
             $0.obligation == .mandatory && tracker.status(for: $0.id).countsTowardProgress
-        }.count
+        })
     }
 
     var yearlyOptionalCompletions: Int {
-        currentYearObservances.filter {
+        currentYearObservances.count(where: {
             $0.obligation == .optional && tracker.status(for: $0.id).countsTowardProgress
-        }.count
+        })
     }
 
     var weeklyActionableObservances: [Observance] {
@@ -118,7 +116,7 @@ extension ContentView {
     }
 
     var weeklyCompletedObservancesCount: Int {
-        weeklyActionableObservances.filter { tracker.status(for: $0.id).countsTowardProgress }.count
+        weeklyActionableObservances.count(where: { tracker.status(for: $0.id).countsTowardProgress })
     }
 
     var requirementGoalProgress: Double {
@@ -170,9 +168,7 @@ extension ContentView {
                 id: UUID().uuidString,
                 season: currentLiturgicalSeason,
                 title: title,
-                isEnabled: true
-            )
-        )
+                isEnabled: true))
         newSeasonCommitmentTitle = ""
     }
 
@@ -196,8 +192,7 @@ extension ContentView {
                 name: trimmedName.isEmpty ? "Plan \(count)" : trimmedName,
                 targetHours: intermittentTracker.presetHours,
                 startHour: normalizedHour,
-                weekdays: weekdays
-            )
+                weekdays: weekdays)
             intermittentSchedules.append(newPlan)
             activeIntermittentScheduleID = newPlan.id
         }
@@ -251,8 +246,7 @@ extension ContentView {
             name: name,
             isAge14OrOlderForAbstinence: age14OrOlderForAbstinence,
             isAge18OrOlderForFasting: age18OrOlderForFasting,
-            medicalDispensation: medicalDispensation
-        )
+            medicalDispensation: medicalDispensation)
         householdProfiles.append(profile)
         activeHouseholdProfileID = profile.id
         newHouseholdProfileName = ""
@@ -276,12 +270,12 @@ extension ContentView {
 
     func performInitialStartupTasks() async {
         #if canImport(TipKit)
-            if !didConfigureTips {
-                try? Tips.configure([
-                    .displayFrequency(.daily),
-                ])
-                didConfigureTips = true
-            }
+        if !didConfigureTips {
+            try? Tips.configure([
+                .displayFrequency(.daily),
+            ])
+            didConfigureTips = true
+        }
         #endif
         if launchFunnelSnapshot.completedOnboardingAt == nil {
             launchFunnelSnapshot.startedAt = Date()
@@ -307,8 +301,7 @@ extension ContentView {
         let inferred = ReminderTier.infer(
             supportEnabled: dailyReminderSupportEnabled,
             morningEnabled: morningReminderEnabled,
-            eveningEnabled: eveningReminderEnabled
-        )
+            eveningEnabled: eveningReminderEnabled)
         if reminderTierRaw != inferred.rawValue {
             reminderTierRaw = inferred.rawValue
         }
@@ -324,10 +317,8 @@ extension ContentView {
                 id: UUID().uuidString,
                 createdAt: Date(),
                 title: title.isEmpty ? "Reflection" : title,
-                body: body
-            ),
-            at: 0
-        )
+                body: body),
+            at: 0)
         newReflectionTitle = ""
         newReflectionBody = ""
     }
@@ -340,7 +331,7 @@ extension ContentView {
     func handleDeepLink(_ url: URL) {
         guard let target = AppDeepLinkTarget.parse(url: url) else { return }
         switch target {
-        case let .surface(surface):
+        case .surface(let surface):
             homeSurface = surface
         }
     }
@@ -373,8 +364,7 @@ extension ContentView {
             hasActiveIntermittentFast: intermittentTracker.activeStart != nil,
             activeIntermittentFastStart: intermittentTracker.activeStart,
             activeIntermittentTargetHours: intermittentTracker.presetHours,
-            premiumMotivationLine: premiumMotivationLine
-        )
+            premiumMotivationLine: premiumMotivationLine)
     }
 
     func persistWidgetSnapshot() {
@@ -384,8 +374,7 @@ extension ContentView {
     func noteBinding(for observanceID: String) -> Binding<String> {
         Binding(
             get: { penanceNotes.note(for: observanceID) },
-            set: { penanceNotes.setNote($0, for: observanceID) }
-        )
+            set: { penanceNotes.setNote($0, for: observanceID) })
     }
 
     func focusFastingDaysOnUpcomingRequired() {
@@ -433,7 +422,7 @@ extension ContentView {
     }
 
     var mandatoryObservanceCount: Int {
-        currentYearObservances.filter { $0.obligation == .mandatory }.count
+        currentYearObservances.count(where: { $0.obligation == .mandatory })
     }
 
     var heroSummaryText: String {
@@ -447,8 +436,7 @@ extension ContentView {
         DailyFoodDecisionEngine.decision(
             for: currentYearObservances,
             settings: settings,
-            calendar: liturgicalCalendar
-        )
+            calendar: liturgicalCalendar)
     }
 
     var hasConfiguredRegionProfile: Bool {
@@ -483,8 +471,7 @@ extension ContentView {
     var missedDayRecoveryPlan: MissedDayRecoveryPlan? {
         MissedDayRecoveryEngine.plan(
             observances: rollingUpcomingObservances,
-            statusesByID: tracker.statusesByID
-        )
+            statusesByID: tracker.statusesByID)
     }
 
     var currentLiturgicalSeason: LiturgicalSeason {
@@ -518,8 +505,7 @@ extension ContentView {
     var intermittentPresetBinding: Binding<Int> {
         Binding(
             get: { intermittentTracker.presetHours },
-            set: { intermittentTracker.setPresetHours($0) }
-        )
+            set: { intermittentTracker.setPresetHours($0) })
     }
 
     func durationText(_ duration: TimeInterval) -> String {
@@ -615,8 +601,7 @@ extension ContentView {
                 if !newValue {
                     didCompleteOnboarding = true
                 }
-            }
-        )
+            })
     }
 
     var canAddHouseholdProfile: Bool {

@@ -10,6 +10,8 @@ SUITE="${SUITE:-iphone}"
 
 IPHONE_TESTS=(
   "CatholicFastingAppUITests/testSmokeOnboardingCanBeCompleted"
+  "CatholicFastingAppUITests/testIPhoneOnboardingSpanishSelectionUpdatesVisibleCopy"
+  "CatholicFastingAppUITests/testIPhoneOnboardingFrenchCanadianSelectionUpdatesVisibleCopy"
   "CatholicFastingAppUITests/testDeepCanOpenFridayNotesHistory"
   "CatholicFastingAppUITests/testDeepLaunchReadinessControlsVisible"
   "CatholicFastingAppUITests/testSmokeExportsRequireLegalAcknowledgment"
@@ -20,8 +22,10 @@ IPHONE_TESTS=(
   "CatholicFastingAppUITests/testDeepIPhonePremiumUnlockButtonsExist"
   "CatholicFastingAppUITests/testDeepIPhonePremiumTipsAndLegalStayBelowSubscriptionPlans"
   "CatholicFastingAppUITests/testDeepIPhonePremiumShowsJourneyPreview"
+  "CatholicFastingAppUITests/testDeepIPhonePremiumUnlockedShowsCurrentJourneyState"
   "CatholicFastingAppUITests/testIPhoneAccessibilitySettingsDoNotShowVoiceSummary"
   "CatholicFastingAppUITests/testDeepDashboardOpenFastingDaysQuickAction"
+  "CatholicFastingAppUITests/testIPhoneCanadaModeCanMoveAcrossTodayFastingDaysAndGuidance"
   "CatholicFastingAppUITests/testSmokeFastingDaysControlsVisible"
   "CatholicFastingAppUITests/testDeepFastingDaysScopePickerVisible"
   "CatholicFastingAppUITests/testDeepDashboardFocusRequiredQuickAction"
@@ -40,6 +44,7 @@ IPHONE_TESTS=(
 
 IPAD_TESTS=(
   "CatholicFastingAppUITests/testIPadSidebarSwitchesPrimaryWorkspaces"
+  "CatholicFastingAppUITests/testIPadSidebarLoopsAcrossAllWorkspacesAfterCanadaFrenchSelection"
   "CatholicFastingAppUITests/testIPadTodayDashboardShowsHeroAndCoreCards"
   "CatholicFastingAppUITests/testIPadFastingDaysSelectionShowsDetail"
   "CatholicFastingAppUITests/testIPadFastingDaysShowsFiltersAndQuickDates"

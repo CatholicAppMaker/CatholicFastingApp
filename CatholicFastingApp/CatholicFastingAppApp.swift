@@ -1,6 +1,6 @@
 import SwiftUI
 #if canImport(UIKit)
-    import UIKit
+import UIKit
 #endif
 import os
 
@@ -32,22 +32,22 @@ private enum SeasonalIconManager {
 
     static func applyForCurrentSeasonIfNeeded() {
         #if canImport(UIKit)
-            guard ProcessInfo.processInfo.environment["UITEST_MODE"] != "1" else { return }
-            guard UIApplication.shared.supportsAlternateIcons else { return }
+        guard ProcessInfo.processInfo.environment["UITEST_MODE"] != "1" else { return }
+        guard UIApplication.shared.supportsAlternateIcons else { return }
 
-            let seasonModeEnabled =
-                UserDefaults.standard.object(forKey: StorageKeys.liturgicalSeasonColorsEnabled) == nil
-                    ? true
-                    : UserDefaults.standard.bool(forKey: StorageKeys.liturgicalSeasonColorsEnabled)
-            let season = LiturgicalSeasonThemeEngine.season(for: Date())
-            let target = iconName(for: seasonModeEnabled ? season : .ordinary)
-            guard UIApplication.shared.alternateIconName != target else { return }
+        let seasonModeEnabled =
+            UserDefaults.standard.object(forKey: StorageKeys.liturgicalSeasonColorsEnabled) == nil
+                ? true
+                : UserDefaults.standard.bool(forKey: StorageKeys.liturgicalSeasonColorsEnabled)
+        let season = LiturgicalSeasonThemeEngine.season(for: Date())
+        let target = iconName(for: seasonModeEnabled ? season : .ordinary)
+        guard UIApplication.shared.alternateIconName != target else { return }
 
-            UIApplication.shared.setAlternateIconName(target) { error in
-                if let error {
-                    logger.error("Seasonal icon update failed: \(error.localizedDescription)")
-                }
+        UIApplication.shared.setAlternateIconName(target) { error in
+            if let error {
+                logger.error("Seasonal icon update failed: \(error.localizedDescription)")
             }
+        }
         #endif
     }
 
@@ -152,6 +152,10 @@ private enum UITestBootstrap {
             defaults.set(languageOverride, forKey: "language_mode")
         }
 
+        if let premiumUnlockedOverride = environment["UITEST_PREMIUM_UNLOCKED"], !premiumUnlockedOverride.isEmpty {
+            defaults.set(premiumUnlockedOverride == "1", forKey: "debug_simulator_premium_unlocked")
+        }
+
         if arguments.contains("-uitest-seed-missed") {
             let settings = RuleSettings(
                 birthYear: 0,
@@ -162,8 +166,7 @@ private enum UITestBootstrap {
                 hasMedicalDispensation: false,
                 ascensionObservance: .sunday,
                 fridayOutsideLentMode: .substitutePenance,
-                calendarMode: .usccb
-            )
+                calendarMode: .usccb)
             let year = Calendar.current.component(.year, from: Date())
             let observances = ObservanceCalculator.makeCalendar(for: year, settings: settings)
             let today = Calendar.current.startOfDay(for: Date())
@@ -187,7 +190,7 @@ private enum UITestBootstrap {
 
         if arguments.contains("-uitest-disable-animations") {
             #if canImport(UIKit)
-                UIView.setAnimationsEnabled(false)
+            UIView.setAnimationsEnabled(false)
             #endif
         }
     }

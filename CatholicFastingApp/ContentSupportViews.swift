@@ -1,392 +1,388 @@
 import SwiftUI
 #if canImport(StoreKit)
-    import StoreKit
+import StoreKit
 #endif
 #if canImport(AppIntents)
-    import AppIntents
+import AppIntents
 #endif
 #if canImport(TipKit)
-    import TipKit
+import TipKit
 #endif
 #if canImport(UIKit)
-    import UIKit
+import UIKit
 #endif
 #if canImport(UserNotifications)
-    import UserNotifications
+import UserNotifications
 #endif
 
 #if canImport(TipKit)
-    @available(iOS 18.0, *)
-    struct FastingDaysFocusTip: Tip {
-        var title: Text {
-            Text("Focus Required Days")
-        }
-
-        var message: Text? {
-            Text("Open Fasting Days to filter required observances and plan ahead.")
-        }
-
-        var image: Image? {
-            Image(systemName: "calendar.badge.clock")
-        }
+@available(iOS 18.0, *)
+struct FastingDaysFocusTip: Tip {
+    var title: Text {
+        Text("Focus Required Days")
     }
 
-    @available(iOS 18.0, *)
-    struct IntermittentTrackerTip: Tip {
-        var title: Text {
-            Text("Track Personal Fasts")
-        }
-
-        var message: Text? {
-            Text("Use Track Fast for optional intermittent disciplines.")
-        }
-
-        var image: Image? {
-            Image(systemName: "timer")
-        }
+    var message: Text? {
+        Text("Open Fasting Days to filter required observances and plan ahead.")
     }
 
-    @available(iOS 18.0, *)
-    struct MoreToolsTip: Tip {
-        var title: Text {
-            Text("Everything Else Is in More")
-        }
-
-        var message: Text? {
-            Text("Use More for setup, reminders, premium, and privacy controls.")
-        }
-
-        var image: Image? {
-            Image(systemName: "ellipsis.circle")
-        }
+    var image: Image? {
+        Image(systemName: "calendar.badge.clock")
     }
+}
+
+@available(iOS 18.0, *)
+struct IntermittentTrackerTip: Tip {
+    var title: Text {
+        Text("Track Personal Fasts")
+    }
+
+    var message: Text? {
+        Text("Use Track Fast for optional intermittent disciplines.")
+    }
+
+    var image: Image? {
+        Image(systemName: "timer")
+    }
+}
+
+@available(iOS 18.0, *)
+struct MoreToolsTip: Tip {
+    var title: Text {
+        Text("Everything Else Is in More")
+    }
+
+    var message: Text? {
+        Text("Use More for setup, reminders, premium, and privacy controls.")
+    }
+
+    var image: Image? {
+        Image(systemName: "ellipsis.circle")
+    }
+}
 #endif
 
 #if canImport(StoreKit)
-    @MainActor
-    final class MonetizationStore: ObservableObject {
-        static let premiumCatalog = SubscriptionOfferCatalog.catholicFasting
-        static let premiumMonthlyID = "com.kevpierce.catholicfasting.premium.monthly.v3"
-        static let premiumYearlyID = "com.kevpierce.catholicfasting.premium.yearly.v3"
-        static let tipSmallID = "com.kevpierce.catholicfasting.tip.small"
-        static let tipMediumID = "com.kevpierce.catholicfasting.tip.medium"
-        static let tipLargeID = "com.kevpierce.catholicfasting.tip.large"
+@MainActor
+final class MonetizationStore: ObservableObject {
+    static let premiumCatalog = SubscriptionOfferCatalog.catholicFasting
+    static let premiumMonthlyID = "com.kevpierce.catholicfasting.premium.monthly.v3"
+    static let premiumYearlyID = "com.kevpierce.catholicfasting.premium.yearly.v3"
+    static let tipSmallID = "com.kevpierce.catholicfasting.tip.small"
+    static let tipMediumID = "com.kevpierce.catholicfasting.tip.medium"
+    static let tipLargeID = "com.kevpierce.catholicfasting.tip.large"
 
-        static let premiumProductIDs: Set<String> = premiumCatalog.canonicalSubscriptionProductIDs
-        static let tipProductIDs: Set<String> = [tipSmallID, tipMediumID, tipLargeID]
-        static let allProductIDs: Set<String> = premiumProductIDs.union(tipProductIDs)
+    static let premiumProductIDs: Set<String> = premiumCatalog.canonicalSubscriptionProductIDs
+    static let tipProductIDs: Set<String> = [tipSmallID, tipMediumID, tipLargeID]
+    static let allProductIDs: Set<String> = premiumProductIDs.union(tipProductIDs)
 
-        @Published var premiumUnlocked = false
-        @Published var isLoading = false
-        @Published var isPurchasing = false
-        @Published var statusMessage = ""
-        @Published var subscriptionHealthMessage = ""
-        @Published var premiumProducts: [Product] = []
-        @Published var tipProducts: [Product] = []
+    @Published var premiumUnlocked = false
+    @Published var isLoading = false
+    @Published var isPurchasing = false
+    @Published var statusMessage = ""
+    @Published var subscriptionHealthMessage = ""
+    @Published var premiumProducts: [Product] = []
+    @Published var tipProducts: [Product] = []
 
-        private static let debugPremiumUnlockedKey = "debug_simulator_premium_unlocked"
-        private var updatesTask: Task<Void, Never>?
+    private static let debugPremiumUnlockedKey = "debug_simulator_premium_unlocked"
+    private var updatesTask: Task<Void, Never>?
 
-        init() {
-            updatesTask = Task {
-                await monitorTransactionUpdates()
+    init() {
+        updatesTask = Task {
+            await monitorTransactionUpdates()
+        }
+    }
+
+    deinit {
+        updatesTask?.cancel()
+    }
+
+    func refreshCatalogAndEntitlements() async {
+        isLoading = true
+        defer { isLoading = false }
+
+        do {
+            let products = try await Product.products(for: Array(Self.allProductIDs))
+            premiumProducts =
+                products
+                    .filter { Self.premiumProductIDs.contains($0.id) }
+                    .sorted { premiumSortIndex(for: $0.id) < premiumSortIndex(for: $1.id) }
+            tipProducts =
+                products
+                    .filter { Self.tipProductIDs.contains($0.id) }
+                    .sorted { tipSortIndex(for: $0.id) < tipSortIndex(for: $1.id) }
+            await refreshEntitlements()
+            await refreshSubscriptionHealth()
+        } catch {
+            statusMessage = "Unable to load purchases right now."
+        }
+    }
+
+    func purchase(_ product: Product) async {
+        if Self.usesSimulatorDebugPurchases {
+            if Self.premiumProductIDs.contains(product.id) {
+                premiumUnlocked = true
+                UserDefaults.standard.set(true, forKey: Self.debugPremiumUnlockedKey)
+                statusMessage = "Premium unlocked (simulator debug purchase)."
+            } else {
+                statusMessage = "Thank you for supporting this app (simulator debug tip)."
             }
+            await refreshSubscriptionHealth()
+            return
         }
 
-        deinit {
-            updatesTask?.cancel()
-        }
+        isPurchasing = true
+        defer { isPurchasing = false }
 
-        func refreshCatalogAndEntitlements() async {
-            isLoading = true
-            defer { isLoading = false }
-
-            do {
-                let products = try await Product.products(for: Array(Self.allProductIDs))
-                premiumProducts =
-                    products
-                        .filter { Self.premiumProductIDs.contains($0.id) }
-                        .sorted { premiumSortIndex(for: $0.id) < premiumSortIndex(for: $1.id) }
-                tipProducts =
-                    products
-                        .filter { Self.tipProductIDs.contains($0.id) }
-                        .sorted { tipSortIndex(for: $0.id) < tipSortIndex(for: $1.id) }
-                await refreshEntitlements()
-                await refreshSubscriptionHealth()
-            } catch {
-                statusMessage = "Unable to load purchases right now."
-            }
-        }
-
-        func purchase(_ product: Product) async {
-            if Self.usesSimulatorDebugPurchases {
-                if Self.premiumProductIDs.contains(product.id) {
-                    premiumUnlocked = true
-                    UserDefaults.standard.set(true, forKey: Self.debugPremiumUnlockedKey)
-                    statusMessage = "Premium unlocked (simulator debug purchase)."
-                } else {
-                    statusMessage = "Thank you for supporting this app (simulator debug tip)."
-                }
-                await refreshSubscriptionHealth()
-                return
-            }
-
-            isPurchasing = true
-            defer { isPurchasing = false }
-
-            do {
-                let result = try await product.purchase()
-                switch result {
-                case let .success(verification):
-                    guard case let .verified(transaction) = verification else {
-                        statusMessage = "Purchase could not be verified."
-                        return
-                    }
-                    await transaction.finish()
-                    await refreshEntitlements()
-                    await refreshSubscriptionHealth()
-                    if Self.premiumProductIDs.contains(product.id) {
-                        statusMessage = "Premium unlocked."
-                    } else {
-                        statusMessage = "Thank you for supporting this app."
-                    }
-                case .pending:
-                    statusMessage = "Purchase pending approval."
-                case .userCancelled:
-                    statusMessage = "Purchase cancelled."
-                @unknown default:
-                    statusMessage = "Purchase did not complete."
-                }
-            } catch {
-                statusMessage = "Purchase failed: \(error.localizedDescription)"
-            }
-        }
-
-        func restorePurchases() async {
-            if Self.usesSimulatorDebugPurchases {
-                premiumUnlocked = UserDefaults.standard.bool(forKey: Self.debugPremiumUnlockedKey)
-                await refreshSubscriptionHealth()
-                statusMessage =
-                    premiumUnlocked
-                        ? "Simulator debug purchase restored."
-                        : "No simulator debug premium purchase found."
-                return
-            }
-
-            isPurchasing = true
-            defer { isPurchasing = false }
-
-            do {
-                try await AppStore.sync()
-                await refreshEntitlements()
-                await refreshSubscriptionHealth()
-                statusMessage = premiumUnlocked ? "Purchases restored." : "No active premium purchase found."
-            } catch {
-                statusMessage = "Could not restore purchases."
-            }
-        }
-
-        func openManageSubscriptions() async {
-            #if canImport(UIKit)
-                guard let scene = Self.activeWindowScene() else {
-                    if !openManageSubscriptionsFallback() {
-                        statusMessage = "Unable to open subscription management right now."
-                    }
+        do {
+            let result = try await product.purchase()
+            switch result {
+            case .success(let verification):
+                guard case .verified(let transaction) = verification else {
+                    statusMessage = "Purchase could not be verified."
                     return
                 }
-                do {
-                    try await AppStore.showManageSubscriptions(in: scene)
-                } catch {
-                    if !openManageSubscriptionsFallback() {
-                        statusMessage = "Unable to open subscription settings."
-                    }
-                }
-            #else
-                statusMessage = "Subscription management is unavailable on this platform."
-            #endif
-        }
-
-        func resetSimulatorDebugPurchase() async {
-            guard Self.usesSimulatorDebugPurchases else { return }
-            UserDefaults.standard.removeObject(forKey: Self.debugPremiumUnlockedKey)
-            premiumUnlocked = false
-            statusMessage = "Simulator debug premium reset."
-            await refreshSubscriptionHealth()
-        }
-
-        private func refreshEntitlements() async {
-            if Self.usesSimulatorDebugPurchases {
-                premiumUnlocked = UserDefaults.standard.bool(forKey: Self.debugPremiumUnlockedKey)
-                return
-            }
-
-            premiumUnlocked = false
-            for await verification in Transaction.currentEntitlements {
-                guard case let .verified(transaction) = verification else { continue }
-                guard Self.premiumProductIDs.contains(transaction.productID) else { continue }
-                if transaction.revocationDate != nil { continue }
-                if let expiration = transaction.expirationDate, expiration <= Date() { continue }
-                premiumUnlocked = true
-            }
-        }
-
-        private func monitorTransactionUpdates() async {
-            if Self.usesSimulatorDebugPurchases {
-                return
-            }
-
-            for await verification in Transaction.updates {
-                guard case let .verified(transaction) = verification else { continue }
                 await transaction.finish()
                 await refreshEntitlements()
                 await refreshSubscriptionHealth()
+                if Self.premiumProductIDs.contains(product.id) {
+                    statusMessage = "Premium unlocked."
+                } else {
+                    statusMessage = "Thank you for supporting this app."
+                }
+            case .pending:
+                statusMessage = "Purchase pending approval."
+            case .userCancelled:
+                statusMessage = "Purchase cancelled."
+            @unknown default:
+                statusMessage = "Purchase did not complete."
             }
+        } catch {
+            statusMessage = "Purchase failed: \(error.localizedDescription)"
+        }
+    }
+
+    func restorePurchases() async {
+        if Self.usesSimulatorDebugPurchases {
+            premiumUnlocked = UserDefaults.standard.bool(forKey: Self.debugPremiumUnlockedKey)
+            await refreshSubscriptionHealth()
+            statusMessage =
+                premiumUnlocked
+                    ? "Simulator debug purchase restored."
+                    : "No simulator debug premium purchase found."
+            return
         }
 
-        private func refreshSubscriptionHealth() async {
-            var states: [PremiumSubscriptionState] = []
-            for product in premiumProducts {
-                guard let subscription = product.subscription else { continue }
-                guard let statuses = try? await subscription.status else { continue }
-                for status in statuses {
-                    switch status.state {
-                    case .subscribed:
-                        states.append(.subscribed)
-                    case .expired:
-                        states.append(.expired)
-                    case .inGracePeriod:
-                        states.append(.inGracePeriod)
-                    case .inBillingRetryPeriod:
-                        states.append(.inBillingRetry)
-                    case .revoked:
-                        states.append(.revoked)
-                    default:
-                        continue
-                    }
+        isPurchasing = true
+        defer { isPurchasing = false }
+
+        do {
+            try await AppStore.sync()
+            await refreshEntitlements()
+            await refreshSubscriptionHealth()
+            statusMessage = premiumUnlocked ? "Purchases restored." : "No active premium purchase found."
+        } catch {
+            statusMessage = "Could not restore purchases."
+        }
+    }
+
+    func openManageSubscriptions() async {
+        #if canImport(UIKit)
+        guard let scene = Self.activeWindowScene() else {
+            if !openManageSubscriptionsFallback() {
+                statusMessage = "Unable to open subscription management right now."
+            }
+            return
+        }
+        do {
+            try await AppStore.showManageSubscriptions(in: scene)
+        } catch {
+            if !openManageSubscriptionsFallback() {
+                statusMessage = "Unable to open subscription settings."
+            }
+        }
+        #else
+        statusMessage = "Subscription management is unavailable on this platform."
+        #endif
+    }
+
+    func resetSimulatorDebugPurchase() async {
+        guard Self.usesSimulatorDebugPurchases else { return }
+        UserDefaults.standard.removeObject(forKey: Self.debugPremiumUnlockedKey)
+        premiumUnlocked = false
+        statusMessage = "Simulator debug premium reset."
+        await refreshSubscriptionHealth()
+    }
+
+    private func refreshEntitlements() async {
+        if Self.usesSimulatorDebugPurchases {
+            premiumUnlocked = UserDefaults.standard.bool(forKey: Self.debugPremiumUnlockedKey)
+            return
+        }
+
+        premiumUnlocked = false
+        for await verification in Transaction.currentEntitlements {
+            guard case .verified(let transaction) = verification else { continue }
+            guard Self.premiumProductIDs.contains(transaction.productID) else { continue }
+            if transaction.revocationDate != nil { continue }
+            if let expiration = transaction.expirationDate, expiration <= Date() { continue }
+            premiumUnlocked = true
+        }
+    }
+
+    private func monitorTransactionUpdates() async {
+        if Self.usesSimulatorDebugPurchases {
+            return
+        }
+
+        for await verification in Transaction.updates {
+            guard case .verified(let transaction) = verification else { continue }
+            await transaction.finish()
+            await refreshEntitlements()
+            await refreshSubscriptionHealth()
+        }
+    }
+
+    private func refreshSubscriptionHealth() async {
+        var states: [PremiumSubscriptionState] = []
+        for product in premiumProducts {
+            guard let subscription = product.subscription else { continue }
+            guard let statuses = try? await subscription.status else { continue }
+            for status in statuses {
+                switch status.state {
+                case .subscribed:
+                    states.append(.subscribed)
+                case .expired:
+                    states.append(.expired)
+                case .inGracePeriod:
+                    states.append(.inGracePeriod)
+                case .inBillingRetryPeriod:
+                    states.append(.inBillingRetry)
+                case .revoked:
+                    states.append(.revoked)
+                default:
+                    continue
                 }
             }
-            subscriptionHealthMessage = PremiumSubscriptionHealthEvaluator.message(
-                states: states,
-                premiumUnlocked: premiumUnlocked
-            )
         }
+        subscriptionHealthMessage = PremiumSubscriptionHealthEvaluator.message(
+            states: states,
+            premiumUnlocked: premiumUnlocked)
+    }
 
-        #if canImport(UIKit)
-            private static func activeWindowScene() -> UIWindowScene? {
-                UIApplication.shared.connectedScenes
-                    .compactMap { $0 as? UIWindowScene }
-                    .first(where: { $0.activationState == .foregroundActive })
-                    ?? UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first
-            }
+    #if canImport(UIKit)
+    private static func activeWindowScene() -> UIWindowScene? {
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .first(where: { $0.activationState == .foregroundActive })
+            ?? UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first
+    }
 
-            private func openManageSubscriptionsFallback() -> Bool {
-                UIApplication.shared.open(UIConstants.manageSubscriptionsURL)
-                statusMessage = "Opened account subscriptions in App Store."
-                return true
-            }
+    private func openManageSubscriptionsFallback() -> Bool {
+        UIApplication.shared.open(UIConstants.manageSubscriptionsURL)
+        statusMessage = "Opened account subscriptions in App Store."
+        return true
+    }
+    #endif
+
+    private func premiumSortIndex(for productID: String) -> Int {
+        Self.premiumCatalog.offers.firstIndex(where: { $0.id == productID }) ?? 99
+    }
+
+    private func tipSortIndex(for productID: String) -> Int {
+        switch productID {
+        case Self.tipSmallID:
+            0
+        case Self.tipMediumID:
+            1
+        case Self.tipLargeID:
+            2
+        default:
+            99
+        }
+    }
+
+    private static var usesSimulatorDebugPurchases: Bool {
+        #if DEBUG && targetEnvironment(simulator)
+        true
+        #else
+        false
         #endif
-
-        private func premiumSortIndex(for productID: String) -> Int {
-            Self.premiumCatalog.offers.firstIndex(where: { $0.id == productID }) ?? 99
-        }
-
-        private func tipSortIndex(for productID: String) -> Int {
-            switch productID {
-            case Self.tipSmallID:
-                0
-            case Self.tipMediumID:
-                1
-            case Self.tipLargeID:
-                2
-            default:
-                99
-            }
-        }
-
-        private static var usesSimulatorDebugPurchases: Bool {
-            #if DEBUG && targetEnvironment(simulator)
-                true
-            #else
-                false
-            #endif
-        }
     }
+}
 #else
-    @MainActor
-    final class MonetizationStore: ObservableObject {
-        @Published var premiumUnlocked = false
-        @Published var isLoading = false
-        @Published var isPurchasing = false
-        @Published var statusMessage = "Purchases unavailable on this platform."
-        @Published var subscriptionHealthMessage = ""
-        @Published var premiumProducts: [String] = []
-        @Published var tipProducts: [String] = []
+@MainActor
+final class MonetizationStore: ObservableObject {
+    @Published var premiumUnlocked = false
+    @Published var isLoading = false
+    @Published var isPurchasing = false
+    @Published var statusMessage = "Purchases unavailable on this platform."
+    @Published var subscriptionHealthMessage = ""
+    @Published var premiumProducts: [String] = []
+    @Published var tipProducts: [String] = []
 
-        func refreshCatalogAndEntitlements() async {}
-        func restorePurchases() async {}
-        func purchase(_: String) async {}
-        func openManageSubscriptions() async {}
-        func resetSimulatorDebugPurchase() async {}
-    }
+    func refreshCatalogAndEntitlements() async {}
+    func restorePurchases() async {}
+    func purchase(_: String) async {}
+    func openManageSubscriptions() async {}
+    func resetSimulatorDebugPurchase() async {}
+}
 #endif
 
 #if canImport(AppIntents)
-    @available(iOS 18.0, *)
-    struct OpenTodayIntent: AppIntent {
-        static let title: LocalizedStringResource = "Open Today Plan"
-        static let description = IntentDescription("Open the Today tab in Catholic Fasting.")
-        static var openAppWhenRun: Bool = true
+@available(iOS 18.0, *)
+struct OpenTodayIntent: AppIntent {
+    static let title: LocalizedStringResource = "Open Today Plan"
+    static let description = IntentDescription("Open the Today tab in Catholic Fasting.")
+    static var openAppWhenRun: Bool = true
 
-        func perform() async throws -> some IntentResult & OpensIntent {
-            .result(opensIntent: OpenURLIntent(UIConstants.deepLinkTodayURL))
-        }
+    func perform() async throws -> some IntentResult & OpensIntent {
+        .result(opensIntent: OpenURLIntent(UIConstants.deepLinkTodayURL))
     }
+}
 
-    @available(iOS 18.0, *)
-    struct OpenFastingDaysIntent: AppIntent {
-        static let title: LocalizedStringResource = "Open Fasting Days"
-        static let description = IntentDescription("Open the fasting days list.")
-        static var openAppWhenRun: Bool = true
+@available(iOS 18.0, *)
+struct OpenFastingDaysIntent: AppIntent {
+    static let title: LocalizedStringResource = "Open Fasting Days"
+    static let description = IntentDescription("Open the fasting days list.")
+    static var openAppWhenRun: Bool = true
 
-        func perform() async throws -> some IntentResult & OpensIntent {
-            .result(opensIntent: OpenURLIntent(UIConstants.deepLinkFastingDaysURL))
-        }
+    func perform() async throws -> some IntentResult & OpensIntent {
+        .result(opensIntent: OpenURLIntent(UIConstants.deepLinkFastingDaysURL))
     }
+}
 
-    @available(iOS 18.0, *)
-    struct OpenIntermittentTrackerIntent: AppIntent {
-        static let title: LocalizedStringResource = "Open Fast Tracker"
-        static let description = IntentDescription("Open the intermittent fasting tracker.")
-        static var openAppWhenRun: Bool = true
+@available(iOS 18.0, *)
+struct OpenIntermittentTrackerIntent: AppIntent {
+    static let title: LocalizedStringResource = "Open Fast Tracker"
+    static let description = IntentDescription("Open the intermittent fasting tracker.")
+    static var openAppWhenRun: Bool = true
 
-        func perform() async throws -> some IntentResult & OpensIntent {
-            .result(opensIntent: OpenURLIntent(UIConstants.deepLinkIntermittentURL))
-        }
+    func perform() async throws -> some IntentResult & OpensIntent {
+        .result(opensIntent: OpenURLIntent(UIConstants.deepLinkIntermittentURL))
     }
+}
 
-    @available(iOS 18.0, *)
-    struct CatholicFastingAppShortcuts: AppShortcutsProvider {
-        static var appShortcuts: [AppShortcut] {
-            AppShortcut(
-                intent: OpenTodayIntent(),
-                phrases: ["Open \(.applicationName) today"],
-                shortTitle: "Today Plan",
-                systemImageName: "sun.max"
-            )
-            AppShortcut(
-                intent: OpenFastingDaysIntent(),
-                phrases: ["Open \(.applicationName) fasting days"],
-                shortTitle: "Fasting Days",
-                systemImageName: "calendar"
-            )
-            AppShortcut(
-                intent: OpenIntermittentTrackerIntent(),
-                phrases: ["Open \(.applicationName) fast tracker"],
-                shortTitle: "Track Fast",
-                systemImageName: "timer"
-            )
-        }
+@available(iOS 18.0, *)
+struct CatholicFastingAppShortcuts: AppShortcutsProvider {
+    static var appShortcuts: [AppShortcut] {
+        AppShortcut(
+            intent: OpenTodayIntent(),
+            phrases: ["Open \(.applicationName) today"],
+            shortTitle: "Today Plan",
+            systemImageName: "sun.max")
+        AppShortcut(
+            intent: OpenFastingDaysIntent(),
+            phrases: ["Open \(.applicationName) fasting days"],
+            shortTitle: "Fasting Days",
+            systemImageName: "calendar")
+        AppShortcut(
+            intent: OpenIntermittentTrackerIntent(),
+            phrases: ["Open \(.applicationName) fast tracker"],
+            shortTitle: "Track Fast",
+            systemImageName: "timer")
     }
+}
 #endif
 
 struct ObservanceRowView: View {
@@ -466,12 +462,10 @@ struct ObservanceRowView: View {
         .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(rowTint.opacity(0.12))
-        )
+                .fill(rowTint.opacity(0.12)))
         .overlay(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(rowBorderColor, lineWidth: 1)
-        )
+                .stroke(rowBorderColor, lineWidth: 1))
         .appRoundedGlass(cornerRadius: 12)
     }
 
@@ -557,12 +551,10 @@ struct StatusTag: View {
             .background(.thinMaterial, in: Capsule())
             .overlay(
                 Capsule()
-                    .fill(color.opacity(0.16))
-            )
+                    .fill(color.opacity(0.16)))
             .overlay(
                 Capsule()
-                    .stroke(color.opacity(0.55), lineWidth: 0.8)
-            )
+                    .stroke(color.opacity(0.55), lineWidth: 0.8))
             .appCapsuleGlass()
     }
 }
@@ -584,16 +576,13 @@ struct MetricTile: View {
         .padding(.vertical, 10)
         .background(
             RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(CatholicTheme.parchment.opacity(0.92))
-        )
+                .fill(CatholicTheme.parchment.opacity(0.92)))
         .overlay(
             RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(tileTint.opacity(0.08))
-        )
+                .fill(tileTint.opacity(0.08)))
         .overlay(
             RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .stroke(CatholicTheme.cardBorder.opacity(0.45), lineWidth: 1)
-        )
+                .stroke(CatholicTheme.cardBorder.opacity(0.45), lineWidth: 1))
         .shadow(color: tileTint.opacity(0.08), radius: 10, y: 4)
         .appRoundedGlass(cornerRadius: 14)
     }
@@ -668,8 +657,8 @@ struct FridayNotesHistoryView: View {
             ShareLink(
                 item: exportText,
                 subject: Text("Friday Penance Notes Export"),
-                message: Text("Exported from Catholic Fasting")
-            ) {
+                message: Text("Exported from Catholic Fasting"))
+            {
                 Label("Export", systemImage: "square.and.arrow.up")
             }
             .disabled(filteredRecords.isEmpty)
@@ -705,35 +694,27 @@ struct OnboardingView: View {
                     Text(
                         localized(
                             "onboarding.step1.intro",
-                            default: "Use simple eligibility toggles to keep guidance accurate without sharing your birthday."
-                        )
-                    )
+                            default: "Use simple eligibility toggles to keep guidance accurate without sharing your birthday."))
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
 
                     Toggle(
                         localized(
                             "onboarding.step1.age14",
-                            default: "I am 14 or older (abstinence age)"
-                        ),
-                        isOn: $age14OrOlderForAbstinence
-                    )
+                            default: "I am 14 or older (abstinence age)"),
+                        isOn: $age14OrOlderForAbstinence)
                         .accessibilityIdentifier("onboarding.age14_toggle")
                     Toggle(
                         localized(
                             "onboarding.step1.age18",
-                            default: "I am 18 or older (fasting age)"
-                        ),
-                        isOn: $age18OrOlderForFasting
-                    )
+                            default: "I am 18 or older (fasting age)"),
+                        isOn: $age18OrOlderForFasting)
                         .accessibilityIdentifier("onboarding.age18_toggle")
                     Toggle(
                         localized(
                             "onboarding.step1.dispensation",
-                            default: "Health/pastoral dispensation (if needed)"
-                        ),
-                        isOn: $medicalDispensation
-                    )
+                            default: "Health/pastoral dispensation (if needed)"),
+                        isOn: $medicalDispensation)
                         .accessibilityIdentifier("onboarding.dispensation")
                 }
 
@@ -748,8 +729,8 @@ struct OnboardingView: View {
 
                     Picker(
                         localized("onboarding.step2.region", default: "Region"),
-                        selection: $regionProfileRaw
-                    ) {
+                        selection: $regionProfileRaw)
+                    {
                         ForEach(RuleSettings.RegionProfile.allCases) { option in
                             Text(localizedRegionLabel(option)).tag(option.rawValue)
                         }
@@ -760,10 +741,9 @@ struct OnboardingView: View {
                     Picker(
                         localized(
                             "onboarding.step2.friday_mode",
-                            default: "Friday practice outside Lent"
-                        ),
-                        selection: $fridayModeRaw
-                    ) {
+                            default: "Friday practice outside Lent"),
+                        selection: $fridayModeRaw)
+                    {
                         ForEach(RuleSettings.FridayOutsideLentMode.allCases) { option in
                             Text(localizedFridayModeLabel(option)).tag(option.rawValue)
                         }
@@ -773,9 +753,7 @@ struct OnboardingView: View {
                     Text(
                         localized(
                             "onboarding.step2.helper",
-                            default: "You can change all of this later in Profile & Norms."
-                        )
-                    )
+                            default: "You can change all of this later in Profile & Norms."))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -798,9 +776,7 @@ struct OnboardingView: View {
                     Text(
                         localized(
                             "onboarding.step3.helper",
-                            default: "Reminders can be changed any time in Setup & Reminders."
-                        )
-                    )
+                            default: "Reminders can be changed any time in Setup & Reminders."))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -809,9 +785,7 @@ struct OnboardingView: View {
                     Text(
                         localized(
                             "onboarding.step4.intro",
-                            default: "Free core gives required fasting guidance. Premium adds a focused Formation Toolkit."
-                        )
-                    )
+                            default: "Free core gives required fasting guidance. Premium adds a focused Formation Toolkit."))
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
 
@@ -836,35 +810,27 @@ struct OnboardingView: View {
                     Text(
                         localized(
                             "onboarding.trust.independent",
-                            default: "This is an independent Catholic devotional app with cited guidance references."
-                        )
-                    )
+                            default: "This is an independent Catholic devotional app with cited guidance references."))
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                     Text(
                         localized(
                             "onboarding.trust.sources",
-                            default: "Sources: USCCB liturgical calendar and fast/abstinence guidance, with in-app citation links."
-                        )
-                    )
+                            default: "Sources: USCCB liturgical calendar and fast/abstinence guidance, with in-app citation links."))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     Text(
                         localized(
                             "onboarding.trust.unofficial",
-                            default: "This is an independent devotional app and not an official app of the Catholic Church, USCCB, Vatican, or any diocese/parish."
-                        )
-                    )
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                            default: "This is an independent devotional app and not an official app of the Catholic Church, USCCB, Vatican, or any diocese/parish."))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                     Text(
                         localized(
                             "onboarding.trust.follow_guidance",
-                            default: "Always follow your pastor, local Church norms, and medical guidance."
-                        )
-                    )
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                            default: "Always follow your pastor, local Church norms, and medical guidance."))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
             }
             .navigationTitle(localized("onboarding.title", default: "Welcome"))

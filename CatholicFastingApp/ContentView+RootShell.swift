@@ -28,8 +28,7 @@ extension ContentView {
                     }
                     .tag(HomeSurface.more)
                     .accessibilityIdentifier("tab.more")
-            }
-        )
+            })
     }
 
     var body: some View {
@@ -42,8 +41,7 @@ extension ContentView {
                         tabRootScaffold
                     }
                 }
-            }
-        )
+            })
     }
 
     var tabRootScaffold: AnyView {
@@ -69,8 +67,7 @@ extension ContentView {
                         }
                     }
                 }
-                .tint(CatholicTheme.primary)
-        )
+                .tint(CatholicTheme.primary))
     }
 
     func applyRootLifecycleHandlers(to content: some View) -> some View {
@@ -96,8 +93,8 @@ extension ContentView {
                     reminderTierRaw: $reminderTierRaw,
                     dailyReminderSupportEnabled: $dailyReminderSupportEnabled,
                     morningReminderEnabled: $morningReminderEnabled,
-                    eveningReminderEnabled: $eveningReminderEnabled
-                ) {
+                    eveningReminderEnabled: $eveningReminderEnabled)
+                {
                     didCompleteOnboarding = true
                     launchFunnelSnapshot.completedOnboardingAt = Date()
                 }
@@ -255,12 +252,10 @@ extension ContentView {
             content
                 .background(
                     Capsule()
-                        .fill(CatholicTheme.parchment)
-                )
+                        .fill(CatholicTheme.parchment))
                 .overlay(
                     Capsule()
-                        .stroke(CatholicTheme.cardBorder.opacity(0.6), lineWidth: 1)
-                )
+                        .stroke(CatholicTheme.cardBorder.opacity(0.6), lineWidth: 1))
         }
     }
 
@@ -300,8 +295,7 @@ extension ContentView {
                         accessibilitySupportSection
                         dashboardHighlightsSection
                     }
-                }
-            )
+                })
         case .fastingDays:
             AnyView(
                 Group {
@@ -309,8 +303,7 @@ extension ContentView {
                     fastingDaysOverviewSection
                     fastingDaysDisplayOptionsSection
                     fastingDaysListSection
-                }
-            )
+                })
         case .intermittent:
             AnyView(
                 Group {
@@ -319,15 +312,13 @@ extension ContentView {
                     intermittentControlsSection
                     intermittentOverviewSection
                     intermittentAdvancedToolsSection
-                }
-            )
+                })
         case .more:
             AnyView(
                 Group {
                     unofficialAppNoticeSection
                     moreHubSection
-                }
-            )
+                })
         }
     }
 
@@ -459,8 +450,7 @@ extension ContentView {
                 id: "fallback-hero",
                 assetName: "HeroSacred",
                 title: destination.title,
-                subtitle: destination.subtitle
-            )
+                subtitle: destination.subtitle)
         }
         let all = MoreHubDestination.allCases
         let idx = all.firstIndex(of: destination) ?? 0
@@ -476,8 +466,7 @@ extension ContentView {
                 subtitle: hero.subtitle,
                 height: 122,
                 cornerRadius: 16,
-                accessibilityIdentifier: "more.\(destination.rawValue).hero"
-            )
+                accessibilityIdentifier: "more.\(destination.rawValue).hero")
         }
     }
 }

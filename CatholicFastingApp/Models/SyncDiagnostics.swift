@@ -17,21 +17,18 @@ enum SyncDiagnostics {
             .count
         let notesCount = SyncedStore.mergedStringDictionary(for: SyncStoreKeys.fridayPenanceNotes)
             .values
-            .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
-            .count
+            .count(where: { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty })
 
         let warnings =
             consistencyWarnings(
                 completionCount: completedCount,
-                notesCount: notesCount
-            ) + bundleAuditWarnings
+                notesCount: notesCount) + bundleAuditWarnings
 
         return SyncSnapshot(
             lastSyncDate: UserDefaults.standard.object(forKey: SyncStoreKeys.lastSyncDate) as? Date,
             completedObservancesCount: completedCount,
             fridayNotesCount: notesCount,
-            warnings: warnings
-        )
+            warnings: warnings)
     }
 
     private static func consistencyWarnings(completionCount: Int, notesCount: Int) -> [String] {

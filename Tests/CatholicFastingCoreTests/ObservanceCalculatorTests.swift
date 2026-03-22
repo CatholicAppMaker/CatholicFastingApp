@@ -8,8 +8,7 @@ final class ObservanceCalculatorTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
 
         let observances = ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
 
@@ -24,15 +23,13 @@ final class ObservanceCalculatorTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
         let adult = RuleSettings(
             birthYear: 1990,
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
 
         let youngAsh = ObservanceCalculator.makeCalendar(for: 2026, settings: young).first(where: { $0.title == "Ash Wednesday" })
         let adultAsh = ObservanceCalculator.makeCalendar(for: 2026, settings: adult).first(where: { $0.title == "Ash Wednesday" })
@@ -52,8 +49,7 @@ final class ObservanceCalculatorTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
 
         let ashWednesday = ObservanceCalculator.makeCalendar(for: 2026, settings: teen)
             .first(where: { $0.title == "Ash Wednesday" })
@@ -73,8 +69,7 @@ final class ObservanceCalculatorTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
 
         let observances = ObservanceCalculator.makeCalendar(for: 2026, settings: freshInstall)
         let ashWednesday = observances.first(where: { $0.title == "Ash Wednesday" })
@@ -93,8 +88,7 @@ final class ObservanceCalculatorTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
         let stillSeventeen = RuleSettings(
             birthYear: 2008,
             birthMonth: 2,
@@ -103,8 +97,7 @@ final class ObservanceCalculatorTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
 
         let ashTurningEighteen = ObservanceCalculator.makeCalendar(for: 2026, settings: turningEighteen)
             .first(where: { $0.title == "Ash Wednesday" })
@@ -124,8 +117,7 @@ final class ObservanceCalculatorTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
         let turningSixty = RuleSettings(
             birthYear: 1966,
             birthMonth: 2,
@@ -134,8 +126,7 @@ final class ObservanceCalculatorTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
 
         let ashStillFiftyNine = ObservanceCalculator.makeCalendar(for: 2026, settings: stillFiftyNine)
             .first(where: { $0.title == "Ash Wednesday" })
@@ -155,8 +146,7 @@ final class ObservanceCalculatorTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
         let stillThirteen = RuleSettings(
             birthYear: 2012,
             birthMonth: 2,
@@ -166,8 +156,7 @@ final class ObservanceCalculatorTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
 
         let targetDate = Calendar.gregorian.date(from: DateComponents(year: 2026, month: 2, day: 20, hour: 12))
         let mandatoryFriday = ObservanceCalculator.makeCalendar(for: 2026, settings: turningFourteen).first {
@@ -189,15 +178,13 @@ final class ObservanceCalculatorTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
         let thursday = RuleSettings(
             birthYear: 1990,
             hasMedicalDispensation: false,
             ascensionObservance: .thursday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
 
         let sundayAscension = ObservanceCalculator.makeCalendar(for: 2026, settings: sunday).first(where: { $0.title == "Ascension" })
         let thursdayAscension = ObservanceCalculator.makeCalendar(for: 2026, settings: thursday).first(where: { $0.title == "Ascension" })
@@ -213,8 +200,7 @@ final class ObservanceCalculatorTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
 
         let observances = ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
         let outsideLentFridays = observances.filter { $0.kind == .fridayPenance }
@@ -231,8 +217,7 @@ final class ObservanceCalculatorTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
 
         let observances = ObservanceCalculator.makeCalendar(for: 2025, settings: settings)
         let allSaints = observances.first(where: { $0.title == "All Saints" })
@@ -247,8 +232,7 @@ final class ObservanceCalculatorTests: XCTestCase {
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
             calendarMode: .usccb,
-            regionProfile: .canada
-        )
+            regionProfile: .canada)
 
         let observances = ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
         let maryMotherOfGod = observances.first(where: { $0.title == "Mary, Mother of God" && $0.kind == .holyDay })
@@ -275,8 +259,7 @@ final class ObservanceCalculatorTests: XCTestCase {
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
             calendarMode: .usccb,
-            regionProfile: .canada
-        )
+            regionProfile: .canada)
 
         let observances = ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
         let canadaFriday = observances.first {
@@ -298,8 +281,7 @@ final class ObservanceCalculatorTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
 
         let observances = ObservanceCalculator.makeCalendar(for: 2024, settings: settings)
         let transferredImmaculate = observances.first(where: { $0.title == "Immaculate Conception (Transferred)" })
@@ -314,8 +296,7 @@ final class ObservanceCalculatorTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
 
         let observances = ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
         let immaculate = observances.first(where: { $0.title == "Immaculate Conception" })
@@ -329,22 +310,18 @@ final class ObservanceCalculatorTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .abstainFromMeat,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
         let substituteSettings = RuleSettings(
             birthYear: 1990,
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
 
         let abstainFriday = try XCTUnwrap(
-            ObservanceCalculator.makeCalendar(for: 2026, settings: abstainSettings).first(where: { $0.kind == .fridayPenance })
-        )
+            ObservanceCalculator.makeCalendar(for: 2026, settings: abstainSettings).first(where: { $0.kind == .fridayPenance }))
         let substituteFriday = try XCTUnwrap(
-            ObservanceCalculator.makeCalendar(for: 2026, settings: substituteSettings).first(where: { $0.kind == .fridayPenance })
-        )
+            ObservanceCalculator.makeCalendar(for: 2026, settings: substituteSettings).first(where: { $0.kind == .fridayPenance }))
 
         XCTAssertTrue((abstainFriday.detail ?? "").localizedCaseInsensitiveContains("abstain from meat"))
         XCTAssertTrue((substituteFriday.detail ?? "").localizedCaseInsensitiveContains("penitential act"))
@@ -358,8 +335,7 @@ final class ObservanceCalculatorTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
 
         let observances = ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
         let ashWednesday = observances.first(where: { $0.title == "Ash Wednesday" })
@@ -384,8 +360,7 @@ final class ObservanceCalculatorTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .abstainFromMeat,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
 
         let observances = ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
         let ashWednesday = try XCTUnwrap(observances.first(where: { $0.title == "Ash Wednesday" }))
@@ -404,8 +379,7 @@ final class ObservanceCalculatorTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
         let observances = ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
 
         func dateParts(for title: String) -> DateComponents? {
@@ -440,8 +414,7 @@ final class ObservanceCalculatorTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
         let observances = ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
 
         func dateParts(for title: String) -> DateComponents? {
@@ -476,8 +449,7 @@ final class ObservanceCalculatorTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
         let observances = ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
 
         let epiphany = observances.first { $0.title == "Epiphany of the Lord" && $0.kind == .feastDay }
@@ -493,8 +465,7 @@ final class ObservanceCalculatorTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
         let observances = ObservanceCalculator.makeCalendar(for: 2027, settings: settings)
 
         let rose = observances.first {
@@ -523,19 +494,16 @@ final class ObservanceCalculatorTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
         let observances = ObservanceCalculator.makeCalendar(for: 2028, settings: settings)
 
         XCTAssertNotNil(
             observances.first {
                 $0.title == "Saint Rose Philippine Duchesne, Virgin" && $0.kind == .memorialDay
-            }
-        )
+            })
         XCTAssertNotNil(
             observances.first {
                 $0.title == "Saint Miguel Agustín Pro, Priest and Martyr" && $0.kind == .memorialDay
-            }
-        )
+            })
     }
 }

@@ -1,6 +1,6 @@
 import SwiftUI
 #if canImport(StoreKit)
-    import StoreKit
+import StoreKit
 #endif
 
 extension ContentView {
@@ -49,31 +49,31 @@ extension ContentView {
                     .appDisplayTitleStyle(serif: true)
 
                 #if canImport(StoreKit)
-                    VStack(alignment: .leading, spacing: 12) {
-                        ForEach(monetizationStore.premiumProducts, id: \.id) { product in
-                            ipadCompactPremiumOfferCard(product: product, offer: premiumOfferCatalog.offer(for: product.id))
-                        }
+                VStack(alignment: .leading, spacing: 12) {
+                    ForEach(monetizationStore.premiumProducts, id: \.id) { product in
+                        ipadCompactPremiumOfferCard(product: product, offer: premiumOfferCatalog.offer(for: product.id))
                     }
+                }
 
-                    if !monetizationStore.tipProducts.isEmpty {
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text("Optional support tips")
-                                .appEyebrowStyle()
-                            Text("Tips support ongoing development and do not unlock features.")
-                                .appSupportingTextStyle()
-                            ForEach(monetizationStore.tipProducts, id: \.id) { product in
-                                Button {
-                                    Task { await monetizationStore.purchase(product) }
-                                } label: {
-                                    Text("Send Tip • \(product.displayPrice)")
-                                }
-                                .appSecondaryButtonStyle()
-                                .accessibilityIdentifier("ipad.more.tip.\(product.id)")
+                if !monetizationStore.tipProducts.isEmpty {
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Optional support tips")
+                            .appEyebrowStyle()
+                        Text("Tips support ongoing development and do not unlock features.")
+                            .appSupportingTextStyle()
+                        ForEach(monetizationStore.tipProducts, id: \.id) { product in
+                            Button {
+                                Task { await monetizationStore.purchase(product) }
+                            } label: {
+                                Text("Send Tip • \(product.displayPrice)")
                             }
+                            .appSecondaryButtonStyle()
+                            .accessibilityIdentifier("ipad.more.tip.\(product.id)")
                         }
-                        .padding(14)
-                        .appSurfaceCard(.utility, cornerRadius: 16)
                     }
+                    .padding(14)
+                    .appSurfaceCard(.utility, cornerRadius: 16)
+                }
                 #endif
 
                 ipadCompactPremiumUtilitiesCard
@@ -85,61 +85,58 @@ extension ContentView {
     }
 
     #if canImport(StoreKit)
-        func ipadCompactPremiumOfferCard(product: Product, offer: SubscriptionOfferCatalog.Offer?) -> some View {
-            VStack(alignment: .leading, spacing: 10) {
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(offer?.displayTitle ?? product.displayName)
-                            .appSectionTitleStyle(serif: offer?.isPrimaryAnchor == true)
-                        Text(product.displayPrice)
-                            .appMetricValueStyle()
-                        Text(offer?.billingCadenceLabel ?? "Auto-renewing subscription")
-                            .appSupportingTextStyle()
-                    }
+    func ipadCompactPremiumOfferCard(product: Product, offer: SubscriptionOfferCatalog.Offer?) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(offer?.displayTitle ?? product.displayName)
+                        .appSectionTitleStyle(serif: offer?.isPrimaryAnchor == true)
+                    Text(product.displayPrice)
+                        .appMetricValueStyle()
+                    Text(offer?.billingCadenceLabel ?? "Auto-renewing subscription")
+                        .appSupportingTextStyle()
+                }
 
-                    Spacer()
+                Spacer()
 
                 if offer?.isPrimaryAnchor == true {
-                        Text("Best value")
-                            .font(.caption2.weight(.semibold))
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 5)
-                            .background(Capsule().fill(CatholicTheme.accent.opacity(0.18)))
-                            .foregroundStyle(CatholicTheme.primary)
-                    }
+                    Text("Best value")
+                        .font(.caption2.weight(.semibold))
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 5)
+                        .background(Capsule().fill(CatholicTheme.accent.opacity(0.18)))
+                        .foregroundStyle(CatholicTheme.primary)
                 }
-
-                if let summary = offer?.outcomeSummary {
-                    Text(summary)
-                        .appSupportingTextStyle()
-                        .foregroundStyle(offer?.isPrimaryAnchor == true ? CatholicTheme.primary.opacity(0.9) : .secondary)
-                        .lineLimit(2)
-                }
-
-                Button("Unlock \(offer?.displayTitle ?? product.displayName) • \(product.displayPrice)") {
-                    Task {
-                        await monetizationStore.purchase(product)
-                    }
-                }
-                .appPrimaryButtonStyle(legacyTint: offer?.isPrimaryAnchor == true ? CatholicTheme.primary : CatholicTheme.accent)
-                .disabled(monetizationStore.isPurchasing)
             }
-            .padding(14)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(
-                        offer?.isPrimaryAnchor == true
-                            ? CatholicTheme.accent.opacity(0.10)
-                            : CatholicTheme.parchment.opacity(0.92)
-                    )
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .stroke((offer?.isPrimaryAnchor == true ? CatholicTheme.primary : CatholicTheme.cardBorder).opacity(0.45), lineWidth: 1)
-            )
-            .appRoundedGlass(cornerRadius: 16)
+
+            if let summary = offer?.outcomeSummary {
+                Text(summary)
+                    .appSupportingTextStyle()
+                    .foregroundStyle(offer?.isPrimaryAnchor == true ? CatholicTheme.primary.opacity(0.9) : .secondary)
+                    .lineLimit(2)
+            }
+
+            Button("Unlock \(offer?.displayTitle ?? product.displayName) • \(product.displayPrice)") {
+                Task {
+                    await monetizationStore.purchase(product)
+                }
+            }
+            .appPrimaryButtonStyle(legacyTint: offer?.isPrimaryAnchor == true ? CatholicTheme.primary : CatholicTheme.accent)
+            .disabled(monetizationStore.isPurchasing)
         }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(
+                    offer?.isPrimaryAnchor == true
+                        ? CatholicTheme.accent.opacity(0.10)
+                        : CatholicTheme.parchment.opacity(0.92)))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke((offer?.isPrimaryAnchor == true ? CatholicTheme.primary : CatholicTheme.cardBorder).opacity(0.45), lineWidth: 1))
+        .appRoundedGlass(cornerRadius: 16)
+    }
     #endif
 
     var ipadCompactPremiumUtilitiesCard: some View {

@@ -35,8 +35,8 @@ struct WidgetSnapshot: Codable, Equatable {
         hasActiveIntermittentFast: Bool,
         activeIntermittentFastStart: Date?,
         activeIntermittentTargetHours: Int,
-        premiumMotivationLine: String = "Stay faithful in small daily disciplines."
-    ) {
+        premiumMotivationLine: String = "Stay faithful in small daily disciplines.")
+    {
         self.generatedAt = generatedAt
         self.todayTitle = todayTitle
         self.todayObligation = todayObligation
@@ -111,8 +111,7 @@ struct PremiumConditionRules: Codable, Equatable {
     static let `default` = PremiumConditionRules(
         remindIfUnloggedByNoon: true,
         requiredDaysDoubleReminder: true,
-        milestoneNudgesForActiveFast: true
-    )
+        milestoneNudgesForActiveFast: true)
 }
 
 enum PremiumSeasonProgram: String, Codable, CaseIterable, Identifiable {
@@ -162,8 +161,7 @@ struct PremiumCompanionState: Codable, Equatable {
         seasonProgramRawValue: PremiumSeasonProgram.liturgicalRhythm.rawValue,
         seasonProgramStartDate: Date(),
         completedProgramActions: [],
-        virtueLogs: []
-    )
+        virtueLogs: [])
 }
 
 struct PremiumHouseholdSharePacket: Codable, Equatable {
@@ -235,8 +233,7 @@ struct FastingPlanningData: Codable, Equatable {
             SeasonCommitment(id: UUID().uuidString, season: .lent, title: "Fast with daily Rosary", isEnabled: true),
             SeasonCommitment(id: UUID().uuidString, season: .easter, title: "Add thanksgiving prayer at meals", isEnabled: true),
             SeasonCommitment(id: UUID().uuidString, season: .ordinary, title: "Friday abstinence or substitute penance", isEnabled: true),
-        ]
-    )
+        ])
 }
 
 struct IntermittentSchedulePlan: Codable, Equatable, Identifiable {
@@ -259,8 +256,8 @@ struct HouseholdProfile: Codable, Equatable, Identifiable {
         name: String,
         isAge14OrOlderForAbstinence: Bool,
         isAge18OrOlderForFasting: Bool,
-        medicalDispensation: Bool
-    ) {
+        medicalDispensation: Bool)
+    {
         self.id = id
         self.name = name
         self.isAge14OrOlderForAbstinence = isAge14OrOlderForAbstinence
@@ -289,8 +286,7 @@ struct HouseholdProfile: Codable, Equatable, Identifiable {
 
         if let abstinence = try container.decodeIfPresent(
             Bool.self,
-            forKey: .isAge14OrOlderForAbstinence
-        ),
+            forKey: .isAge14OrOlderForAbstinence),
             let fasting = try container.decodeIfPresent(Bool.self, forKey: .isAge18OrOlderForFasting)
         {
             isAge14OrOlderForAbstinence = abstinence
@@ -304,8 +300,7 @@ struct HouseholdProfile: Codable, Equatable, Identifiable {
         let legacyAge = Self.legacyAge(
             birthYear: birthYear,
             birthMonth: birthMonth,
-            birthDay: birthDay
-        )
+            birthDay: birthDay)
         isAge14OrOlderForAbstinence = legacyAge.map { $0 >= 14 } ?? true
         isAge18OrOlderForFasting = legacyAge.map { (18 ..< 60).contains($0) } ?? true
     }
@@ -331,8 +326,7 @@ struct HouseholdProfile: Codable, Equatable, Identifiable {
 
         guard
             let birthDate = calendar.date(
-                from: DateComponents(year: birthYear, month: birthMonth, day: birthDay, hour: 12)
-            )
+                from: DateComponents(year: birthYear, month: birthMonth, day: birthDay, hour: 12))
         else {
             return max(0, currentYear - birthYear)
         }
@@ -375,29 +369,25 @@ enum DevotionalPack {
             title: "Morning Offering for Fasting",
             prayer: "Lord Jesus, receive this fast in union with Your sacrifice, for conversion and charity.",
             context: "Use at the start of a fast day.",
-            season: nil
-        ),
+            season: nil),
         DevotionalEntry(
             id: "advent-watch",
             title: "Advent Watchfulness",
             prayer: "Come, Lord Jesus. Purify my desires and make my discipline an act of hope.",
             context: "Advent preparation.",
-            season: .advent
-        ),
+            season: .advent),
         DevotionalEntry(
             id: "lent-penitence",
             title: "Lenten Penitence",
             prayer: "Merciful Father, let prayer, fasting, and almsgiving shape my heart to Christ.",
             context: "Lenten discipline.",
-            season: .lent
-        ),
+            season: .lent),
         DevotionalEntry(
             id: "friday-mercy",
             title: "Friday Act of Mercy",
             prayer: "Lord, unite this Friday penance to works of mercy for those in need.",
             context: "Friday abstinence or substitute penance.",
-            season: nil
-        ),
+            season: nil),
     ]
 }
 
@@ -446,8 +436,7 @@ enum LocalFeatureStore {
                     name: "My Profile",
                     isAge14OrOlderForAbstinence: true,
                     isAge18OrOlderForFasting: true,
-                    medicalDispensation: false
-                ),
+                    medicalDispensation: false),
             ]
     }
 

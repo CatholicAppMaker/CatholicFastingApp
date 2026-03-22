@@ -30,8 +30,8 @@ enum GuidanceScenario: String, CaseIterable, Identifiable {
 enum FoodGuidanceEngine {
     static func snapshot(
         for scenario: GuidanceScenario,
-        settings: RuleSettings
-    ) -> FoodGuidanceSnapshot {
+        settings: RuleSettings) -> FoodGuidanceSnapshot
+    {
         let sourceLine = switch settings.regionProfile {
         case .us:
             "Sources: USCCB fast/abstinence guidance and universal law."
@@ -75,8 +75,7 @@ enum FoodGuidanceEngine {
                 items: [
                     FoodGuidanceExample(title: "Generally avoid", detail: "Beef, pork, chicken, turkey, lamb, bacon, ham, and similar land-animal or bird meats."),
                     FoodGuidanceExample(title: "Chicken counts as meat", detail: "Poultry is included in abstinence from meat."),
-                ]
-            ),
+                ]),
             generallyPermitted: FoodGuidanceGroup(
                 title: "Generally permitted",
                 summary: "These are generally permitted on abstinence days.",
@@ -84,16 +83,14 @@ enum FoodGuidanceEngine {
                     FoodGuidanceExample(title: "Fish and shellfish", detail: "Fish, shellfish, and other seafood are generally permitted."),
                     FoodGuidanceExample(title: "Eggs and dairy", detail: "Eggs, milk, butter, cheese, and similar dairy products are not treated as meat."),
                     FoodGuidanceExample(title: "Plant foods", detail: "Grains, vegetables, legumes, fruit, breads, and oils are generally permitted."),
-                ]
-            ),
+                ]),
             mealPattern: FoodGuidanceGroup(
                 title: "Meal pattern on fasting days",
                 summary: "Fasting is distinct from abstinence.",
                 items: [
                     FoodGuidanceExample(title: "Core fasting norm", detail: "One full meal and up to two smaller meals that together do not equal a second full meal."),
                     FoodGuidanceExample(title: "What to avoid", detail: "Eating in a way that effectively becomes a second full meal, even if spread out."),
-                ]
-            ),
+                ]),
             extraGuidance: FoodGuidanceGroup(
                 title: "Extra guidance for common questions",
                 summary: "These are the gray-area cases people actually ask about.",
@@ -102,26 +99,24 @@ enum FoodGuidanceEngine {
                     FoodGuidanceExample(title: "Animal-fat seasonings", detail: "Condiments or seasonings made from animal fat can fall into the same technically-not-forbidden category."),
                     FoodGuidanceExample(title: "Fish remains permitted", detail: "Fish and shellfish remain permitted, even though they are animal foods."),
                     FoodGuidanceExample(title: "Dairy is generally permitted", detail: "Butter, cheese, milk, and eggs are generally permitted and do not count as meat."),
-                ]
-            ),
+                ]),
             stricterTraditionalPractice: [
                 "Many Catholics and traditional moral theologians choose to avoid meat broths, gravies, and animal-fat products as part of a stricter penitential practice.",
-                "If you want the simpler and more penitential option, avoid foods that are strongly meat-derived even when they may not be strictly forbidden."
+                "If you want the simpler and more penitential option, avoid foods that are strongly meat-derived even when they may not be strictly forbidden.",
             ],
             ifUnsure: [
                 "Choose the simpler non-meat option.",
                 "Consult your pastor if you need certainty in a disputed or local case.",
-                "Follow medical guidance where health is involved."
+                "Follow medical guidance where health is involved.",
             ],
             caveatLine: scenarioCaveat,
-            sourceLine: sourceLine
-        )
+            sourceLine: sourceLine)
     }
 
     static func recommendations(
         for scenario: GuidanceScenario,
-        settings: RuleSettings
-    ) -> [String] {
+        settings: RuleSettings) -> [String]
+    {
         let snapshot = snapshot(for: scenario, settings: settings)
         var lines: [String] = [snapshot.summaryLine]
         let medicallyDispensed = settings.hasMedicalDispensation || scenario == .medicalRecovery
@@ -129,8 +124,7 @@ enum FoodGuidanceEngine {
         if medicallyDispensed {
             lines.append("Your health comes first. A medical or pastoral dispensation likely applies.")
             lines.append(
-                "Choose a substitute penance if possible (prayer, charity, Scripture, or another sacrifice)."
-            )
+                "Choose a substitute penance if possible (prayer, charity, Scripture, or another sacrifice).")
             lines.append("Resume normal fasting only when it is prudent and safe.")
             return lines
         }
@@ -196,12 +190,11 @@ enum RequiredDayReminderPlanner {
 
     static func additionalRequiredReminderSlots(
         existingRequiredPendingCount: Int,
-        existingNonRequiredPendingCount: Int
-    ) -> Int {
+        existingNonRequiredPendingCount: Int) -> Int
+    {
         let requiredCount = max(0, existingRequiredPendingCount)
         let maxRequired = maximumRequiredReminders(
-            existingNonRequiredPendingCount: existingNonRequiredPendingCount
-        )
+            existingNonRequiredPendingCount: existingNonRequiredPendingCount)
         return max(0, maxRequired - requiredCount)
     }
 
@@ -209,8 +202,8 @@ enum RequiredDayReminderPlanner {
         from observances: [Observance],
         now: Date = Date(),
         calendar: Calendar = .gregorian,
-        limit: Int
-    ) -> [Observance] {
+        limit: Int) -> [Observance]
+    {
         guard limit > 0 else { return [] }
 
         let startOfToday = calendar.startOfDay(for: now)
@@ -248,8 +241,8 @@ enum DailyFoodDecisionEngine {
         for observances: [Observance],
         settings: RuleSettings,
         date: Date = Date(),
-        calendar: Calendar = .current
-    ) -> DailyFoodDecision {
+        calendar: Calendar = .current) -> DailyFoodDecision
+    {
         let generalNormSourceLine = switch settings.regionProfile {
         case .us:
             "Source: USCCB and pastoral guidance."
@@ -295,8 +288,7 @@ enum DailyFoodDecisionEngine {
                 allowed: ["Eat what is prudent and medically safe.", "Keep prayer/charity as substitute penance."],
                 avoid: ["Avoid self-imposed rigor that harms health."],
                 rationale: "Health and pastoral obedience take priority when obligations do not bind.",
-                sourceLine: generalNormSourceLine
-            )
+                sourceLine: generalNormSourceLine)
         }
 
         let requiresFasting = mandatoryToday.contains {
@@ -321,8 +313,7 @@ enum DailyFoodDecisionEngine {
                     "Eating patterns that effectively become a second full meal.",
                 ],
                 rationale: observanceReason(from: mandatoryToday),
-                sourceLine: fastingNormSourceLine
-            )
+                sourceLine: fastingNormSourceLine)
         }
 
         if requiresAbstinence {
@@ -334,8 +325,7 @@ enum DailyFoodDecisionEngine {
                 ],
                 avoid: ["Meat from land animals (beef, pork, poultry)."],
                 rationale: observanceReason(from: mandatoryToday),
-                sourceLine: fastingNormSourceLine
-            )
+                sourceLine: fastingNormSourceLine)
         }
 
         if requiresFridayPenance {
@@ -349,8 +339,7 @@ enum DailyFoodDecisionEngine {
                         ],
                         avoid: ["Meat from land animals (beef, pork, poultry)."],
                         rationale: observanceReason(from: mandatoryToday),
-                        sourceLine: fridayNormSourceLine
-                    )
+                        sourceLine: fridayNormSourceLine)
                 }
 
                 return DailyFoodDecision(
@@ -361,8 +350,7 @@ enum DailyFoodDecisionEngine {
                     ],
                     avoid: ["Do not skip Friday penance entirely."],
                     rationale: observanceReason(from: mandatoryToday),
-                    sourceLine: fridayNormSourceLine
-                )
+                    sourceLine: fridayNormSourceLine)
             } else if settings.fridayOutsideLentMode == .abstainFromMeat {
                 return DailyFoodDecision(
                     obligationLine: "Today requires Friday penance through abstinence from meat.",
@@ -372,8 +360,7 @@ enum DailyFoodDecisionEngine {
                     ],
                     avoid: ["Meat from land animals (beef, pork, poultry)."],
                     rationale: observanceReason(from: mandatoryToday),
-                    sourceLine: fridayNormSourceLine
-                )
+                    sourceLine: fridayNormSourceLine)
             }
 
             return DailyFoodDecision(
@@ -384,8 +371,7 @@ enum DailyFoodDecisionEngine {
                 ],
                 avoid: ["Do not skip Friday penance entirely."],
                 rationale: observanceReason(from: mandatoryToday),
-                sourceLine: fridayNormSourceLine
-            )
+                sourceLine: fridayNormSourceLine)
         }
 
         if !mandatoryToday.isEmpty {
@@ -394,8 +380,7 @@ enum DailyFoodDecisionEngine {
                 allowed: ["Normal meals are generally permitted.", "Keep the day with prayer and Mass obligations."],
                 avoid: [],
                 rationale: observanceReason(from: mandatoryToday),
-                sourceLine: holyDaySourceLine
-            )
+                sourceLine: holyDaySourceLine)
         }
 
         if !optionalFastOrAbstinenceToday.isEmpty {
@@ -418,8 +403,7 @@ enum DailyFoodDecisionEngine {
                 ],
                 avoid: ["Do not assume no obligation without confirming your profile."],
                 rationale: rationale,
-                sourceLine: fastingNormSourceLine
-            )
+                sourceLine: fastingNormSourceLine)
         }
 
         return DailyFoodDecision(
@@ -427,8 +411,7 @@ enum DailyFoodDecisionEngine {
             allowed: ["Normal meals are generally permitted.", "You may choose a voluntary penance."],
             avoid: [],
             rationale: "No mandatory fast/abstinence observance appears for today in your current profile.",
-            sourceLine: fastingNormSourceLine
-        )
+            sourceLine: fastingNormSourceLine)
     }
 
     private static func observanceReason(from observances: [Observance]) -> String {
@@ -448,8 +431,8 @@ enum MissedDayRecoveryEngine {
         observances: [Observance],
         statusesByID: [String: CompletionStatus],
         today: Date = Date(),
-        calendar: Calendar = .current
-    ) -> MissedDayRecoveryPlan? {
+        calendar: Calendar = .current) -> MissedDayRecoveryPlan?
+    {
         let startOfToday = calendar.startOfDay(for: today)
         let missedObservances = observances.filter { observance in
             statusesByID[observance.id] == .missed
@@ -481,8 +464,7 @@ enum MissedDayRecoveryEngine {
                 "Choose one concrete recovery act today (charity, Scripture, Rosary, or a simplified meal).",
                 "Plan the next required day now so it is easier to keep.",
             ],
-            nextRequiredLine: nextRequiredLine
-        )
+            nextRequiredLine: nextRequiredLine)
     }
 }
 
@@ -495,8 +477,8 @@ enum ObservanceQueryEngine {
         sortOrder: ObservanceSortOrder,
         statusesByID: [String: CompletionStatus],
         now: Date,
-        calendar: Calendar = .current
-    ) -> [Observance] {
+        calendar: Calendar = .current) -> [Observance]
+    {
         let normalizedQuery = query.trimmingCharacters(in: .whitespacesAndNewlines)
         let startOfToday = calendar.startOfDay(for: now)
         let endOfNext30Days = calendar.date(byAdding: .day, value: 30, to: startOfToday)
@@ -507,8 +489,7 @@ enum ObservanceQueryEngine {
             guard
                 matchesWindow(
                     observance, window: window, startOfToday: startOfToday, endOfNext30Days: endOfNext30Days,
-                    calendar: calendar
-                )
+                    calendar: calendar)
             else { return false }
             guard matchesQuery(observance, query: normalizedQuery) else { return false }
             return true
@@ -519,8 +500,8 @@ enum ObservanceQueryEngine {
     private static func matchesFilter(
         _ observance: Observance,
         filter: ObservanceFilter,
-        statusesByID: [String: CompletionStatus]
-    ) -> Bool {
+        statusesByID: [String: CompletionStatus]) -> Bool
+    {
         switch filter {
         case .all:
             true
@@ -536,8 +517,8 @@ enum ObservanceQueryEngine {
         window: CalendarWindow,
         startOfToday: Date,
         endOfNext30Days: Date?,
-        calendar: Calendar
-    ) -> Bool {
+        calendar: Calendar) -> Bool
+    {
         switch window {
         case .allYear:
             return true

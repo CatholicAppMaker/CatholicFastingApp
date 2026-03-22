@@ -16,8 +16,7 @@ extension ContentView {
                         quote: dailySeasonalQuote,
                         regionContext: regionContext,
                         compact: compact,
-                        accessibilityIdentifier: "ipad.today.hero"
-                    )
+                        accessibilityIdentifier: "ipad.today.hero")
 
                     if geometry.size.width < 1040 {
                         VStack(alignment: .leading, spacing: 20) {

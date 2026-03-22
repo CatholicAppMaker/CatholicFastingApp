@@ -22,8 +22,7 @@ final class GrowthContractsTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
 
         XCTAssertEqual(settings.regionProfile, .us)
     }

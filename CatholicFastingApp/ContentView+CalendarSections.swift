@@ -18,252 +18,204 @@ enum SacredHeroImageSelector {
         SacredHeroArtwork(
             assetName: "HeroSacred",
             title: "Christ Pantocrator",
-            subtitle: "Let your fasting be prayerful, intentional, and rooted in the Church."
-        ),
+            subtitle: "Let your fasting be prayerful, intentional, and rooted in the Church."),
         SacredHeroArtwork(
             assetName: "SacredMonstrance",
             title: "Eucharistic Devotion",
-            subtitle: "Keep your sacrifice oriented to worship and thanksgiving."
-        ),
+            subtitle: "Keep your sacrifice oriented to worship and thanksgiving."),
         SacredHeroArtwork(
             assetName: "SacredSacredHeart",
             title: "Sacred Heart",
-            subtitle: "Offer discipline with mercy, reparation, and love."
-        ),
+            subtitle: "Offer discipline with mercy, reparation, and love."),
         SacredHeroArtwork(
             assetName: "SacredCathedralLight",
             title: "Cathedral Light",
-            subtitle: "Bring your daily fast into the Church's worship and prayer."
-        ),
+            subtitle: "Bring your daily fast into the Church's worship and prayer."),
         SacredHeroArtwork(
             assetName: "SacredAshWednesday",
             title: "Ashes and Repentance",
-            subtitle: "Remember conversion of heart as the first work of fasting."
-        ),
+            subtitle: "Remember conversion of heart as the first work of fasting."),
         SacredHeroArtwork(
             assetName: "SacredPalmSunday",
             title: "Palm Sunday",
-            subtitle: "Walk with Christ through sacrifice toward the Paschal mystery."
-        ),
+            subtitle: "Walk with Christ through sacrifice toward the Paschal mystery."),
         SacredHeroArtwork(
             assetName: "SacredChaliceVine",
             title: "Chalice and Vine",
-            subtitle: "Offer fasting in union with the Eucharistic life of the Church."
-        ),
+            subtitle: "Offer fasting in union with the Eucharistic life of the Church."),
         SacredHeroArtwork(
             assetName: "SacredScriptureCandle",
             title: "Scripture Candle",
-            subtitle: "Let the Word of God shape your fasting and your charity."
-        ),
+            subtitle: "Let the Word of God shape your fasting and your charity."),
         SacredHeroArtwork(
             assetName: "SacredJerusalemCross",
             title: "Jerusalem Cross",
-            subtitle: "Carry each sacrifice with missionary charity."
-        ),
+            subtitle: "Carry each sacrifice with missionary charity."),
         SacredHeroArtwork(
             assetName: "SacredMarianMonogram",
             title: "Marian Monogram",
-            subtitle: "Ask Our Lady to steady your discipline and prayer."
-        ),
+            subtitle: "Ask Our Lady to steady your discipline and prayer."),
         SacredHeroArtwork(
             assetName: "SacredConceptChiRho",
             title: "Chi-Rho Crest",
-            subtitle: "Keep Christ first in every daily observance."
-        ),
+            subtitle: "Keep Christ first in every daily observance."),
         SacredHeroArtwork(
             assetName: "SacredConceptRosary",
             title: "Rosary Emblem",
-            subtitle: "Pair fasting with patient, persevering prayer."
-        ),
+            subtitle: "Pair fasting with patient, persevering prayer."),
         SacredHeroArtwork(
             assetName: "SacredConceptHeart",
             title: "Heart of Mercy",
-            subtitle: "Let fasting deepen mercy toward others."
-        ),
+            subtitle: "Let fasting deepen mercy toward others."),
     ]
 
     private static let fastingDaysArt: [SacredHeroArtwork] = [
         SacredHeroArtwork(
             assetName: "SacredAshWednesday",
             title: "Ash Wednesday",
-            subtitle: "Fasting begins with repentance, humility, and prayer."
-        ),
+            subtitle: "Fasting begins with repentance, humility, and prayer."),
         SacredHeroArtwork(
             assetName: "SacredPalmSunday",
             title: "Palm Branch",
-            subtitle: "Fasting days prepare us to follow Christ to the Cross."
-        ),
+            subtitle: "Fasting days prepare us to follow Christ to the Cross."),
         SacredHeroArtwork(
             assetName: "SacredMonstrance",
             title: "Eucharistic Focus",
-            subtitle: "Let every fast point toward worship and thanksgiving."
-        ),
+            subtitle: "Let every fast point toward worship and thanksgiving."),
         SacredHeroArtwork(
             assetName: "SacredRosaryCross",
             title: "Rosary and Cross",
-            subtitle: "Pair abstinence with prayer for deeper conversion."
-        ),
+            subtitle: "Pair abstinence with prayer for deeper conversion."),
         SacredHeroArtwork(
             assetName: "HeroSacred",
             title: "Christ Pantocrator",
-            subtitle: "Keep the Lord at the center of your fasting discipline."
-        ),
+            subtitle: "Keep the Lord at the center of your fasting discipline."),
         SacredHeroArtwork(
             assetName: "SacredCathedralLight",
             title: "Light in the Church",
-            subtitle: "Observe fast days within the life of the liturgy."
-        ),
+            subtitle: "Observe fast days within the life of the liturgy."),
         SacredHeroArtwork(
             assetName: "SacredJerusalemCross",
             title: "Jerusalem Cross",
-            subtitle: "Stay faithful on required days with a pilgrim spirit."
-        ),
+            subtitle: "Stay faithful on required days with a pilgrim spirit."),
         SacredHeroArtwork(
             assetName: "SacredMarianMonogram",
             title: "Marian Discipline",
-            subtitle: "Keep fasting days simple, humble, and prayerful."
-        ),
+            subtitle: "Keep fasting days simple, humble, and prayerful."),
         SacredHeroArtwork(
             assetName: "SacredConceptChiRho",
             title: "Christ-Centered Pattern",
-            subtitle: "Treat every fasting day as an offering to Christ."
-        ),
+            subtitle: "Treat every fasting day as an offering to Christ."),
         SacredHeroArtwork(
             assetName: "SacredConceptRosary",
             title: "Rosary Rhythm",
-            subtitle: "Let fasting days follow a stable rhythm of prayer."
-        ),
+            subtitle: "Let fasting days follow a stable rhythm of prayer."),
         SacredHeroArtwork(
             assetName: "SacredConceptHeart",
             title: "Merciful Discipline",
-            subtitle: "Hold firm discipline with real charity."
-        ),
+            subtitle: "Hold firm discipline with real charity."),
     ]
 
     private static let intermittentArt: [SacredHeroArtwork] = [
         SacredHeroArtwork(
             assetName: "SacredRosaryCross",
             title: "Rosary Cross",
-            subtitle: "Offer this fast with intention: prayer, almsgiving, and conversion."
-        ),
+            subtitle: "Offer this fast with intention: prayer, almsgiving, and conversion."),
         SacredHeroArtwork(
             assetName: "SacredChiRho",
             title: "Chi-Rho",
-            subtitle: "Keep each session focused on Christ, not only performance."
-        ),
+            subtitle: "Keep each session focused on Christ, not only performance."),
         SacredHeroArtwork(
             assetName: "HeroSacred",
             title: "Daily Discipline",
-            subtitle: "Unite your fasting hours to repentance and gratitude."
-        ),
+            subtitle: "Unite your fasting hours to repentance and gratitude."),
         SacredHeroArtwork(
             assetName: "SacredDesertPilgrimage",
             title: "Desert Pilgrimage",
-            subtitle: "Persevere in sacrifice with trust, patience, and humility."
-        ),
+            subtitle: "Persevere in sacrifice with trust, patience, and humility."),
         SacredHeroArtwork(
             assetName: "SacredAshWednesday",
             title: "Discipline and Repentance",
-            subtitle: "Use optional fasting as a path of inner conversion."
-        ),
+            subtitle: "Use optional fasting as a path of inner conversion."),
         SacredHeroArtwork(
             assetName: "SacredScriptureCandle",
             title: "Prayer and the Word",
-            subtitle: "Keep intermittent fasting tied to prayer, not just metrics."
-        ),
+            subtitle: "Keep intermittent fasting tied to prayer, not just metrics."),
         SacredHeroArtwork(
             assetName: "SacredMonstrance",
             title: "Adoration",
-            subtitle: "Offer sacrifice as worship, gratitude, and reparation."
-        ),
+            subtitle: "Offer sacrifice as worship, gratitude, and reparation."),
         SacredHeroArtwork(
             assetName: "SacredChaliceVine",
             title: "Eucharistic Spirit",
-            subtitle: "Let personal discipline strengthen communion and charity."
-        ),
+            subtitle: "Let personal discipline strengthen communion and charity."),
         SacredHeroArtwork(
             assetName: "SacredJerusalemCross",
             title: "Pilgrim Endurance",
-            subtitle: "Persevere through fasting windows with trust in grace."
-        ),
+            subtitle: "Persevere through fasting windows with trust in grace."),
         SacredHeroArtwork(
             assetName: "SacredMarianMonogram",
             title: "Marian Steadiness",
-            subtitle: "Practice optional fasting with gentleness and consistency."
-        ),
+            subtitle: "Practice optional fasting with gentleness and consistency."),
         SacredHeroArtwork(
             assetName: "SacredConceptChiRho",
             title: "Focused Intention",
-            subtitle: "Keep optional fasts ordered to prayer and conversion."
-        ),
+            subtitle: "Keep optional fasts ordered to prayer and conversion."),
         SacredHeroArtwork(
             assetName: "SacredConceptRosary",
             title: "Prayerful Rhythm",
-            subtitle: "Let each fast hour become an hour of recollection."
-        ),
+            subtitle: "Let each fast hour become an hour of recollection."),
     ]
 
     private static let guidanceArt: [SacredHeroArtwork] = [
         SacredHeroArtwork(
             assetName: "GuidanceSacred",
             title: "St. Peter's Basilica",
-            subtitle: "Guidance should always be interpreted with pastoral direction."
-        ),
+            subtitle: "Guidance should always be interpreted with pastoral direction."),
         SacredHeroArtwork(
             assetName: "SacredMonstrance",
             title: "Rule and Reverence",
-            subtitle: "Follow Church norms with humility and consistency."
-        ),
+            subtitle: "Follow Church norms with humility and consistency."),
         SacredHeroArtwork(
             assetName: "SacredSacredHeart",
             title: "Pastoral Prudence",
-            subtitle: "Discipline and charity should always move together."
-        ),
+            subtitle: "Discipline and charity should always move together."),
         SacredHeroArtwork(
             assetName: "SacredScriptureCandle",
             title: "Scripture and Prayer",
-            subtitle: "Let guidance be read with prayerful attention and discernment."
-        ),
+            subtitle: "Let guidance be read with prayerful attention and discernment."),
         SacredHeroArtwork(
             assetName: "SacredAshWednesday",
             title: "Penitential Clarity",
-            subtitle: "Guidance should always serve conversion, not legalism."
-        ),
+            subtitle: "Guidance should always serve conversion, not legalism."),
         SacredHeroArtwork(
             assetName: "SacredPalmSunday",
             title: "Holy Week Orientation",
-            subtitle: "Read Church norms in light of Christ's Paschal mystery."
-        ),
+            subtitle: "Read Church norms in light of Christ's Paschal mystery."),
         SacredHeroArtwork(
             assetName: "SacredCathedralLight",
             title: "Pastoral Context",
-            subtitle: "Apply fasting rules with pastoral care and prudence."
-        ),
+            subtitle: "Apply fasting rules with pastoral care and prudence."),
         SacredHeroArtwork(
             assetName: "SacredChaliceVine",
             title: "Sacramental Life",
-            subtitle: "Fasting and feasting both belong to the rhythm of the Church."
-        ),
+            subtitle: "Fasting and feasting both belong to the rhythm of the Church."),
         SacredHeroArtwork(
             assetName: "SacredJerusalemCross",
             title: "Gospel Witness",
-            subtitle: "Apply guidance with conviction, prudence, and charity."
-        ),
+            subtitle: "Apply guidance with conviction, prudence, and charity."),
         SacredHeroArtwork(
             assetName: "SacredMarianMonogram",
             title: "Marian Prudence",
-            subtitle: "Follow norms faithfully with humility and peace."
-        ),
+            subtitle: "Follow norms faithfully with humility and peace."),
         SacredHeroArtwork(
             assetName: "SacredConceptChiRho",
             title: "Christ-Centered Rule",
-            subtitle: "Read every fasting norm through the mind of Christ."
-        ),
+            subtitle: "Read every fasting norm through the mind of Christ."),
         SacredHeroArtwork(
             assetName: "SacredConceptHeart",
             title: "Mercy and Truth",
-            subtitle: "Keep both fidelity to teaching and pastoral tenderness."
-        ),
+            subtitle: "Keep both fidelity to teaching and pastoral tenderness."),
     ]
 
     private static func pool(for scene: SacredHeroScene) -> [SacredHeroArtwork] {
@@ -326,8 +278,7 @@ extension ContentView {
                     fastingDaysShowAllYearDays = true
                     fastingDaysIncludeOptionalDays = true
                 }
-            }
-        )
+            })
     }
 
     var fastingDaysFilterTags: some View {
@@ -335,12 +286,10 @@ extension ContentView {
             HStack(spacing: 8) {
                 StatusTag(
                     text: fastingDaysShowAllYearDays ? "Full Year" : "Upcoming",
-                    color: fastingDaysShowAllYearDays ? CatholicTheme.primary : CatholicTheme.accent
-                )
+                    color: fastingDaysShowAllYearDays ? CatholicTheme.primary : CatholicTheme.accent)
                 StatusTag(
                     text: fastingDaysIncludeOptionalDays ? "Required + Optional" : "Required Only",
-                    color: fastingDaysIncludeOptionalDays ? .orange : .red
-                )
+                    color: fastingDaysIncludeOptionalDays ? .orange : .red)
                 if fastingDaysIncludeFeastAndHolyDays {
                     StatusTag(text: "Celebrations Included", color: .green)
                 }
@@ -358,8 +307,7 @@ extension ContentView {
                     title: fastingDaysHeroArtwork.title,
                     subtitle: fastingDaysHeroArtwork.subtitle,
                     height: 132,
-                    cornerRadius: 16
-                )
+                    cornerRadius: 16)
 
                 CatholicFastingQuoteCard(quote: fastingDaysFastingQuote, compact: true)
                     .accessibilityIdentifier("fasting_days.fasting_quote")
@@ -486,12 +434,14 @@ extension ContentView {
         let displayItems = fastingDaysShowAllYearDays ? filteredByObligation : Array(filteredByObligation.prefix(20))
         let baseTitle =
             fastingDaysShowAllYearDays
-                ? (fastingDaysIncludeOptionalDays
-                    ? localized("fasting_days.list.title.full_year_all", default: "All Discipline Days This Year")
-                    : localized("fasting_days.list.title.full_year_required", default: "Required Discipline Days This Year"))
-                : (fastingDaysIncludeOptionalDays
-                    ? localized("fasting_days.list.title.upcoming_all", default: "Upcoming Discipline Days (Required + Optional)")
-                    : localized("fasting_days.list.title.upcoming_required", default: "Upcoming Required Discipline Days"))
+                ? (
+                    fastingDaysIncludeOptionalDays
+                        ? localized("fasting_days.list.title.full_year_all", default: "All Discipline Days This Year")
+                        : localized("fasting_days.list.title.full_year_required", default: "Required Discipline Days This Year"))
+                : (
+                    fastingDaysIncludeOptionalDays
+                        ? localized("fasting_days.list.title.upcoming_all", default: "Upcoming Discipline Days (Required + Optional)")
+                        : localized("fasting_days.list.title.upcoming_required", default: "Upcoming Required Discipline Days"))
         let title = fastingDaysIncludeFeastAndHolyDays ? localizedFormat("fasting_days.list.title.celebrations_format", default: "%@ + Celebration Days", baseTitle) : baseTitle
 
         return Section(title) {
@@ -646,8 +596,7 @@ extension ContentView {
                     Task {
                         notificationStatus = await ReminderScheduler.scheduleHabitSupport(
                             morning: dailyReminderSupportEnabled && morningReminderEnabled,
-                            evening: dailyReminderSupportEnabled && eveningReminderEnabled
-                        )
+                            evening: dailyReminderSupportEnabled && eveningReminderEnabled)
                     }
                 }
                 .disabled(!acceptedLegalNotice || !dailyReminderSupportEnabled || !monetizationStore.premiumUnlocked)

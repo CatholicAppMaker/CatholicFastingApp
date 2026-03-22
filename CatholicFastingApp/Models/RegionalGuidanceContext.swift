@@ -4,8 +4,7 @@ private enum RegionalGuidanceLinks {
     static let privacy = URL(string: "https://x.com/CatholicFasting/status/2026354531273945191")
     static let usccbFastAbstinence = URL(
         string:
-        "https://www.usccb.org/prayer-and-worship/liturgical-year-and-calendar/lent/catholic-information-on-lenten-fast-and-abstinence"
-    )
+        "https://www.usccb.org/prayer-and-worship/liturgical-year-and-calendar/lent/catholic-information-on-lenten-fast-and-abstinence")
     static let cccbKeepingFriday = URL(string: "https://www.cccb.ca/document/keeping-friday/")
 }
 
@@ -94,8 +93,7 @@ enum RegionalGuidanceContextFactory {
                     RuleCitation(authority: .universalLaw, title: "Code of Canon Law", shortReference: "Can. 1249-1253"),
                     RuleCitation(authority: .usccb, title: "USCCB Liturgical Guidance", shortReference: "U.S. conference norms"),
                 ],
-                sourceURL: RegionalGuidanceLinks.usccbFastAbstinence
-            )
+                sourceURL: RegionalGuidanceLinks.usccbFastAbstinence)
         case .canada:
             RegionalRuleContext(
                 regionProfile: .canada,
@@ -107,8 +105,7 @@ enum RegionalGuidanceContextFactory {
                     RuleCitation(authority: .universalLaw, title: "Code of Canon Law", shortReference: "Can. 1249-1253"),
                     RuleCitation(authority: .cccb, title: "Keeping Friday", shortReference: "CCCB Friday guidance"),
                 ],
-                sourceURL: RegionalGuidanceLinks.cccbKeepingFriday
-            )
+                sourceURL: RegionalGuidanceLinks.cccbKeepingFriday)
         case .other:
             RegionalRuleContext(
                 regionProfile: .other,
@@ -120,8 +117,7 @@ enum RegionalGuidanceContextFactory {
                     RuleCitation(authority: .universalLaw, title: "Code of Canon Law", shortReference: "Can. 1249-1253"),
                     RuleCitation(authority: .pastoral, title: "Local Catholic Guidance", shortReference: "Consult local conference norms"),
                 ],
-                sourceURL: nil
-            )
+                sourceURL: nil)
         }
     }
 
@@ -137,8 +133,7 @@ enum RegionalGuidanceContextFactory {
                 citations: observance.citations,
                 sourceURL: settings.regionProfile == .canada
                     ? RegionalGuidanceLinks.cccbKeepingFriday
-                    : RegionalGuidanceLinks.usccbFastAbstinence
-            )
+                    : RegionalGuidanceLinks.usccbFastAbstinence)
         case .fridayPenance:
             switch settings.regionProfile {
             case .us:
@@ -149,8 +144,7 @@ enum RegionalGuidanceContextFactory {
                     authorityLabel: "USCCB guidance",
                     disclosureText: "Outside Lent Friday practice follows the U.S. mode selected in your profile.",
                     citations: observance.citations,
-                    sourceURL: RegionalGuidanceLinks.usccbFastAbstinence
-                )
+                    sourceURL: RegionalGuidanceLinks.usccbFastAbstinence)
             case .canada:
                 RegionalRuleContext(
                     regionProfile: .canada,
@@ -159,8 +153,7 @@ enum RegionalGuidanceContextFactory {
                     authorityLabel: "CCCB guidance",
                     disclosureText: "Friday remains penitential in the Canada profile. The app models abstinence or another charitable or pious practice based on CCCB guidance.",
                     citations: observance.citations,
-                    sourceURL: RegionalGuidanceLinks.cccbKeepingFriday
-                )
+                    sourceURL: RegionalGuidanceLinks.cccbKeepingFriday)
             case .other:
                 RegionalRuleContext(
                     regionProfile: .other,
@@ -169,8 +162,7 @@ enum RegionalGuidanceContextFactory {
                     authorityLabel: "Local conference law",
                     disclosureText: "Friday practice outside the U.S. and Canada profiles is shown for planning context only unless local law is modeled.",
                     citations: observance.citations,
-                    sourceURL: nil
-                )
+                    sourceURL: nil)
             }
         case .holyDay:
             switch settings.regionProfile {
@@ -182,8 +174,7 @@ enum RegionalGuidanceContextFactory {
                     authorityLabel: "Universal + U.S. holy day law",
                     disclosureText: "U.S. holy day handling is modeled directly, including transferred or abrogated cases where applicable.",
                     citations: observance.citations,
-                    sourceURL: RegionalGuidanceLinks.privacy
-                )
+                    sourceURL: RegionalGuidanceLinks.privacy)
             case .canada:
                 RegionalRuleContext(
                     regionProfile: .canada,
@@ -192,8 +183,7 @@ enum RegionalGuidanceContextFactory {
                     authorityLabel: "Universal law + Canada national baseline",
                     disclosureText: "Canada holy day handling is modeled for the national baseline only. The app includes Canada-wide obligations and planning context, but not diocesan proper calendars.",
                     citations: observance.citations,
-                    sourceURL: nil
-                )
+                    sourceURL: nil)
             case .other:
                 RegionalRuleContext(
                     regionProfile: .other,
@@ -202,8 +192,7 @@ enum RegionalGuidanceContextFactory {
                     authorityLabel: "Local conference law",
                     disclosureText: "Holy day handling is informational outside the U.S. profile unless a fully modeled local obligation rule exists.",
                     citations: observance.citations,
-                    sourceURL: nil
-                )
+                    sourceURL: nil)
             }
         case .feastDay, .memorialDay:
             switch settings.regionProfile {
@@ -215,8 +204,7 @@ enum RegionalGuidanceContextFactory {
                     authorityLabel: "Liturgical planning",
                     disclosureText: "These celebration days are included for liturgical and devotional planning. They are not fasting obligations.",
                     citations: observance.citations,
-                    sourceURL: RegionalGuidanceLinks.privacy
-                )
+                    sourceURL: RegionalGuidanceLinks.privacy)
             case .canada:
                 RegionalRuleContext(
                     regionProfile: .canada,
@@ -225,8 +213,7 @@ enum RegionalGuidanceContextFactory {
                     authorityLabel: "Liturgical planning",
                     disclosureText: "These celebration days are included for Canada-wide planning and devotion in the national baseline. Diocesan proper calendars are not included yet.",
                     citations: observance.citations,
-                    sourceURL: nil
-                )
+                    sourceURL: nil)
             case .other:
                 RegionalRuleContext(
                     regionProfile: .other,
@@ -235,8 +222,7 @@ enum RegionalGuidanceContextFactory {
                     authorityLabel: "Liturgical planning",
                     disclosureText: "These celebration days are informational outside fully modeled regional calendars.",
                     citations: observance.citations,
-                    sourceURL: nil
-                )
+                    sourceURL: nil)
             }
         case .optionalEmber:
             RegionalRuleContext(
@@ -246,8 +232,7 @@ enum RegionalGuidanceContextFactory {
                 authorityLabel: "Optional practice",
                 disclosureText: "Ember days are shown as devotional discipline and not as universal obligation days in this release.",
                 citations: observance.citations,
-                sourceURL: nil
-            )
+                sourceURL: nil)
         }
     }
 
@@ -277,7 +262,6 @@ enum RegionalGuidanceContextFactory {
             observance: observance,
             regionalContext: regionalContext,
             sourceSummary: sourceSummary,
-            nextActionText: nextActionText
-        )
+            nextActionText: nextActionText)
     }
 }

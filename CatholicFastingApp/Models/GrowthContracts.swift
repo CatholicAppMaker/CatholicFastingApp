@@ -36,8 +36,7 @@ struct SubscriptionOfferCatalog {
                     "Keep fasting, prayer, charity, and review tied together in the same plan",
                     "Protect celebration days so personal discipline does not overreach",
                 ],
-                requiredSurface: .planning
-            ),
+                requiredSurface: .planning),
             Pillar(
                 id: "accountability",
                 title: "Accountability",
@@ -47,8 +46,7 @@ struct SubscriptionOfferCatalog {
                     "Spot slippage early with completion trends and recovery guidance",
                     "Review longer intermittent history with milestone feedback",
                 ],
-                requiredSurface: .accountability
-            ),
+                requiredSurface: .accountability),
             Pillar(
                 id: "reflection",
                 title: "Reflection",
@@ -58,8 +56,7 @@ struct SubscriptionOfferCatalog {
                     "Keep a private local journal with virtue notes",
                     "Export a fasting summary for spiritual direction or personal review",
                 ],
-                requiredSurface: .reflection
-            ),
+                requiredSurface: .reflection),
         ],
         offers: [
             Offer(
@@ -68,18 +65,15 @@ struct SubscriptionOfferCatalog {
                 durationLabel: "1 year",
                 billingCadenceLabel: "Billed once per year",
                 outcomeSummary: "Best value for one steady rhythm through the full liturgical year.",
-                isPrimaryAnchor: true
-            ),
+                isPrimaryAnchor: true),
             Offer(
                 id: "com.kevpierce.catholicfasting.premium.monthly.v3",
                 displayTitle: "Premium Monthly",
                 durationLabel: "1 month",
                 billingCadenceLabel: "Billed monthly",
                 outcomeSummary: "Lower-friction way to begin premium planning and review habits.",
-                isPrimaryAnchor: false
-            ),
-        ]
-    )
+                isPrimaryAnchor: false),
+        ])
 
     var canonicalSubscriptionProductIDs: Set<String> {
         Set(offers.map(\.id))
@@ -151,8 +145,7 @@ struct LaunchFunnelSnapshot: Codable, Equatable {
         lockedUpgradeTapCount: 0,
         premiumPreviewSeenAt: nil,
         purchaseStartedAt: nil,
-        premiumUnlockedAt: nil
-    )
+        premiumUnlockedAt: nil)
 
     var selectedRegion: RuleSettings.RegionProfile {
         RuleSettings.RegionProfile(rawValue: selectedRegionRaw) ?? .us
@@ -212,8 +205,8 @@ enum ReminderTier: String, CaseIterable, Identifiable {
     static func infer(
         supportEnabled: Bool,
         morningEnabled: Bool,
-        eveningEnabled: Bool
-    ) -> ReminderTier {
+        eveningEnabled: Bool) -> ReminderTier
+    {
         if supportEnabled, morningEnabled, eveningEnabled {
             return .guided
         }
@@ -249,14 +242,13 @@ enum ContentLocale: String, Codable {
 
 enum SeasonalContentPackCatalog {
     static func pack(for season: LiturgicalSeason, locale: ContentLocale) -> SeasonalContentPack {
-        let packs: [LiturgicalSeason: SeasonalContentPack]
-        switch locale {
+        let packs: [LiturgicalSeason: SeasonalContentPack] = switch locale {
         case .english:
-            packs = englishPacks
+            englishPacks
         case .spanish:
-            packs = spanishPacks
+            spanishPacks
         case .frenchCanadian:
-            packs = frenchCanadianPacks
+            frenchCanadianPacks
         }
         return packs[season] ?? packs[.ordinary]!
     }
@@ -278,16 +270,13 @@ enum SeasonalContentPackCatalog {
                     text: "Prayer joined to sacrifice constitutes the most powerful force in human history.",
                     author: "Pope St. John Paul II",
                     source: "Address on Prayer and Sacrifice",
-                    tradition: "Pope"
-                ),
+                    tradition: "Pope"),
                 SeasonalContentPack.RotatingQuote(
                     text: "Fasting is the soul of prayer, and mercy is the lifeblood of fasting.",
                     author: "St. Peter Chrysologus",
                     source: "Sermon 43",
-                    tradition: "Church Father"
-                ),
-            ]
-        ),
+                    tradition: "Church Father"),
+            ]),
         .advent: SeasonalContentPack(
             season: .advent,
             locale: .english,
@@ -303,10 +292,8 @@ enum SeasonalContentPackCatalog {
                     text: "Denying material food helps us listen to Christ and be nourished by his saving word.",
                     author: "Pope Benedict XVI",
                     source: "Lenten Message",
-                    tradition: "Pope"
-                ),
-            ]
-        ),
+                    tradition: "Pope"),
+            ]),
         .christmas: SeasonalContentPack(
             season: .christmas,
             locale: .english,
@@ -322,10 +309,8 @@ enum SeasonalContentPackCatalog {
                     text: "Penance without love is heavy, but penance with love becomes joy.",
                     author: "St. Bernard of Clairvaux",
                     source: "Sermons",
-                    tradition: "Doctor of the Church"
-                ),
-            ]
-        ),
+                    tradition: "Doctor of the Church"),
+            ]),
         .easter: SeasonalContentPack(
             season: .easter,
             locale: .english,
@@ -341,10 +326,8 @@ enum SeasonalContentPackCatalog {
                     text: "The abstinence of one should become the refreshment of another.",
                     author: "St. Gregory the Great",
                     source: "Homilies on the Gospels",
-                    tradition: "Pope & Doctor"
-                ),
-            ]
-        ),
+                    tradition: "Pope & Doctor"),
+            ]),
         .ordinary: SeasonalContentPack(
             season: .ordinary,
             locale: .english,
@@ -360,10 +343,8 @@ enum SeasonalContentPackCatalog {
                     text: "A faithful small sacrifice is better than a dramatic one you cannot sustain.",
                     author: "Catholic Fasting",
                     source: "In-app formation",
-                    tradition: "Pastoral"
-                ),
-            ]
-        ),
+                    tradition: "Pastoral"),
+            ]),
     ]
 
     private static let spanishPacks: [LiturgicalSeason: SeasonalContentPack] = [
@@ -382,10 +363,8 @@ enum SeasonalContentPackCatalog {
                     text: "El ayuno es el alma de la oracion y la misericordia es su vida.",
                     author: "San Pedro Crisologo",
                     source: "Sermon 43",
-                    tradition: "Padre de la Iglesia"
-                ),
-            ]
-        ),
+                    tradition: "Padre de la Iglesia"),
+            ]),
         .ordinary: SeasonalContentPack(
             season: .ordinary,
             locale: .spanish,
@@ -401,10 +380,8 @@ enum SeasonalContentPackCatalog {
                     text: "La penitencia con amor se vuelve alegria.",
                     author: "San Bernardo",
                     source: "Sermones",
-                    tradition: "Doctor de la Iglesia"
-                ),
-            ]
-        ),
+                    tradition: "Doctor de la Iglesia"),
+            ]),
     ]
 
     private static let frenchCanadianPacks: [LiturgicalSeason: SeasonalContentPack] = [
@@ -424,16 +401,13 @@ enum SeasonalContentPackCatalog {
                     text: "La prière unie au sacrifice constitue la force la plus puissante de l’histoire humaine.",
                     author: "Saint Jean-Paul II",
                     source: "Discours sur la prière et le sacrifice",
-                    tradition: "Pape"
-                ),
+                    tradition: "Pape"),
                 SeasonalContentPack.RotatingQuote(
                     text: "Le jeûne est l’âme de la prière, et la miséricorde est le sang même du jeûne.",
                     author: "Saint Pierre Chrysologue",
                     source: "Sermon 43",
-                    tradition: "Père de l’Église"
-                ),
-            ]
-        ),
+                    tradition: "Père de l’Église"),
+            ]),
         .advent: SeasonalContentPack(
             season: .advent,
             locale: .frenchCanadian,
@@ -449,10 +423,8 @@ enum SeasonalContentPackCatalog {
                     text: "Le renoncement à la nourriture matérielle nous aide à écouter le Christ et à être nourris par sa parole de salut.",
                     author: "Benoît XVI",
                     source: "Message de Carême",
-                    tradition: "Pape"
-                ),
-            ]
-        ),
+                    tradition: "Pape"),
+            ]),
         .christmas: SeasonalContentPack(
             season: .christmas,
             locale: .frenchCanadian,
@@ -468,10 +440,8 @@ enum SeasonalContentPackCatalog {
                     text: "La pénitence sans amour est lourde, mais avec l’amour elle devient joie.",
                     author: "Saint Bernard de Clairvaux",
                     source: "Sermons",
-                    tradition: "Docteur de l’Église"
-                ),
-            ]
-        ),
+                    tradition: "Docteur de l’Église"),
+            ]),
         .easter: SeasonalContentPack(
             season: .easter,
             locale: .frenchCanadian,
@@ -487,10 +457,8 @@ enum SeasonalContentPackCatalog {
                     text: "L’abstinence de l’un devrait devenir le réconfort de l’autre.",
                     author: "Saint Grégoire le Grand",
                     source: "Homélies sur les Évangiles",
-                    tradition: "Pape et docteur"
-                ),
-            ]
-        ),
+                    tradition: "Pape et docteur"),
+            ]),
         .ordinary: SeasonalContentPack(
             season: .ordinary,
             locale: .frenchCanadian,
@@ -506,9 +474,7 @@ enum SeasonalContentPackCatalog {
                     text: "Un petit sacrifice fidèle vaut mieux qu’un grand geste impossible à soutenir.",
                     author: "Catholic Fasting",
                     source: "Formation intégrée",
-                    tradition: "Pastorale"
-                ),
-            ]
-        ),
+                    tradition: "Pastorale"),
+            ]),
     ]
 }

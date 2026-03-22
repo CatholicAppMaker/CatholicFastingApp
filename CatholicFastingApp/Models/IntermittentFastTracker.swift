@@ -2,7 +2,7 @@
 import os
 import SwiftUI
 #if canImport(ActivityKit) && os(iOS)
-    import ActivityKit
+import ActivityKit
 #endif
 
 struct IntermittentFastSession: Identifiable, Hashable {
@@ -44,10 +44,10 @@ final class IntermittentFastTracker: ObservableObject {
         activeStart = now
         persistMeta()
         #if canImport(ActivityKit) && os(iOS)
-            let targetHours = presetHours
-            Task {
-                await IntermittentFastLiveActivityManager.start(start: now, targetHours: targetHours)
-            }
+        let targetHours = presetHours
+        Task {
+            await IntermittentFastLiveActivityManager.start(start: now, targetHours: targetHours)
+        }
         #endif
     }
 
@@ -57,8 +57,7 @@ final class IntermittentFastTracker: ObservableObject {
             id: UUID().uuidString,
             start: start,
             end: now,
-            targetHours: presetHours
-        )
+            targetHours: presetHours)
         sessions.insert(session, at: 0)
         if sessions.count > Self.maxStoredSessions {
             sessions = Array(sessions.prefix(Self.maxStoredSessions))
@@ -67,9 +66,9 @@ final class IntermittentFastTracker: ObservableObject {
         persistSessions()
         persistMeta()
         #if canImport(ActivityKit) && os(iOS)
-            Task {
-                await IntermittentFastLiveActivityManager.endAll()
-            }
+        Task {
+            await IntermittentFastLiveActivityManager.endAll()
+        }
         #endif
     }
 
@@ -77,9 +76,9 @@ final class IntermittentFastTracker: ObservableObject {
         activeStart = nil
         persistMeta()
         #if canImport(ActivityKit) && os(iOS)
-            Task {
-                await IntermittentFastLiveActivityManager.endAll()
-            }
+        Task {
+            await IntermittentFastLiveActivityManager.endAll()
+        }
         #endif
     }
 
@@ -87,12 +86,12 @@ final class IntermittentFastTracker: ObservableObject {
         presetHours = Self.boundedPresetHours(hours)
         persistMeta()
         #if canImport(ActivityKit) && os(iOS)
-            if let activeStart {
-                let targetHours = presetHours
-                Task {
-                    await IntermittentFastLiveActivityManager.update(start: activeStart, targetHours: targetHours)
-                }
+        if let activeStart {
+            let targetHours = presetHours
+            Task {
+                await IntermittentFastLiveActivityManager.update(start: activeStart, targetHours: targetHours)
             }
+        }
         #endif
     }
 
@@ -167,8 +166,7 @@ final class IntermittentFastTracker: ObservableObject {
         let payload = SessionPayload(
             start: Self.encodeDate(session.start),
             end: Self.encodeDate(session.end),
-            targetHours: session.targetHours
-        )
+            targetHours: session.targetHours)
         guard
             let data = try? JSONEncoder().encode(payload),
             let text = String(data: data, encoding: .utf8)
@@ -218,59 +216,55 @@ final class IntermittentFastTracker: ObservableObject {
 extension IntermittentFastTracker: @unchecked Sendable {}
 
 #if canImport(ActivityKit) && os(iOS)
-    struct IntermittentFastActivityAttributes: ActivityAttributes {
-        struct ContentState: Codable, Hashable {
-            let start: Date
-            let targetDate: Date
-            let targetHours: Int
-        }
-
-        let title: String
+struct IntermittentFastActivityAttributes: ActivityAttributes {
+    struct ContentState: Codable, Hashable {
+        let start: Date
+        let targetDate: Date
+        let targetHours: Int
     }
 
-    enum IntermittentFastLiveActivityManager {
-        private static let logger = Logger(
-            subsystem: "com.kevpierce.CatholicFastingApp",
-            category: "IntermittentFast"
-        )
+    let title: String
+}
 
-        static func start(start: Date, targetHours: Int) async {
-            guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
-            await endAll()
-            let attributes = IntermittentFastActivityAttributes(title: "Intermittent Fast")
-            let state = IntermittentFastActivityAttributes.ContentState(
-                start: start,
-                targetDate: start.addingTimeInterval(TimeInterval(targetHours * 3600)),
-                targetHours: targetHours
-            )
-            do {
-                let content = ActivityContent(state: state, staleDate: nil)
-                _ = try Activity<IntermittentFastActivityAttributes>.request(
-                    attributes: attributes,
-                    content: content,
-                    pushType: nil
-                )
-            } catch {
-                logger.error("Live Activity start failed: \(error.localizedDescription)")
-            }
-        }
+enum IntermittentFastLiveActivityManager {
+    private static let logger = Logger(
+        subsystem: "com.kevpierce.CatholicFastingApp",
+        category: "IntermittentFast")
 
-        static func update(start: Date, targetHours: Int) async {
-            guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
-            let updated = IntermittentFastActivityAttributes.ContentState(
-                start: start,
-                targetDate: start.addingTimeInterval(TimeInterval(targetHours * 3600)),
-                targetHours: targetHours
-            )
-            for activity in Activity<IntermittentFastActivityAttributes>.activities {
-                await activity.update(ActivityContent(state: updated, staleDate: nil))
-            }
-        }
-
-        static func endAll() async {
-            for activity in Activity<IntermittentFastActivityAttributes>.activities {
-                await activity.end(nil, dismissalPolicy: .immediate)
-            }
+    static func start(start: Date, targetHours: Int) async {
+        guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
+        await endAll()
+        let attributes = IntermittentFastActivityAttributes(title: "Intermittent Fast")
+        let state = IntermittentFastActivityAttributes.ContentState(
+            start: start,
+            targetDate: start.addingTimeInterval(TimeInterval(targetHours * 3600)),
+            targetHours: targetHours)
+        do {
+            let content = ActivityContent(state: state, staleDate: nil)
+            _ = try Activity<IntermittentFastActivityAttributes>.request(
+                attributes: attributes,
+                content: content,
+                pushType: nil)
+        } catch {
+            logger.error("Live Activity start failed: \(error.localizedDescription)")
         }
     }
+
+    static func update(start: Date, targetHours: Int) async {
+        guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
+        let updated = IntermittentFastActivityAttributes.ContentState(
+            start: start,
+            targetDate: start.addingTimeInterval(TimeInterval(targetHours * 3600)),
+            targetHours: targetHours)
+        for activity in Activity<IntermittentFastActivityAttributes>.activities {
+            await activity.update(ActivityContent(state: updated, staleDate: nil))
+        }
+    }
+
+    static func endAll() async {
+        for activity in Activity<IntermittentFastActivityAttributes>.activities {
+            await activity.end(nil, dismissalPolicy: .immediate)
+        }
+    }
+}
 #endif

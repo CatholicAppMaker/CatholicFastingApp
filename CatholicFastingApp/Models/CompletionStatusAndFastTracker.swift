@@ -47,8 +47,7 @@ final class FastTracker: ObservableObject {
         Set(
             statusesByID.compactMap { id, status in
                 status.countsTowardProgress ? id : nil
-            }
-        )
+            })
     }
 
     func status(for id: String) -> CompletionStatus {

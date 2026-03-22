@@ -1,6 +1,6 @@
 @preconcurrency import Foundation
 #if canImport(CryptoKit)
-    import CryptoKit
+import CryptoKit
 #endif
 
 enum RuleBundleRepository {
@@ -57,8 +57,7 @@ enum RuleBundleRepository {
                         from: document,
                         source: "local override",
                         verified: true,
-                        warnings: verification.warnings
-                    )
+                        warnings: verification.warnings)
                 }
                 warningsFromLocal = verification.warnings + ["Local rule bundle signature check failed. Using bundled rules."]
             } else {
@@ -71,16 +70,14 @@ enum RuleBundleRepository {
             return fallbackSnapshot(
                 source: "bundled",
                 verified: false,
-                warnings: warningsFromLocal + bundledEvaluation.warnings + ["Failed to decode bundled rule bundle document."]
-            )
+                warnings: warningsFromLocal + bundledEvaluation.warnings + ["Failed to decode bundled rule bundle document."])
         }
         let bundledVerification = verify(document: bundledDocument, explicitSignature: nil)
         return makeSnapshot(
             from: bundledDocument,
             source: "bundled",
             verified: bundledVerification.isVerified,
-            warnings: warningsFromLocal + bundledEvaluation.warnings + bundledVerification.warnings
-        )
+            warnings: warningsFromLocal + bundledEvaluation.warnings + bundledVerification.warnings)
     }
 
     private static func decodeBundleDocument(data: Data) -> (document: BundleDocument?, warnings: [String]) {
@@ -94,8 +91,8 @@ enum RuleBundleRepository {
         from document: BundleDocument,
         source: String,
         verified: Bool,
-        warnings: [String]
-    ) -> BundleSnapshot {
+        warnings: [String]) -> BundleSnapshot
+    {
         guard
             let effective = DateFormatter.dayKeyParser.date(from: document.metadata.effectiveDate),
             let reviewed = DateFormatter.dayKeyParser.date(from: document.metadata.reviewedDate)
@@ -103,8 +100,7 @@ enum RuleBundleRepository {
             return fallbackSnapshot(
                 source: source,
                 verified: false,
-                warnings: warnings + ["Failed to decode rule bundle document."]
-            )
+                warnings: warnings + ["Failed to decode rule bundle document."])
         }
 
         let metadata = RuleBundleMetadata(
@@ -112,8 +108,7 @@ enum RuleBundleRepository {
             displayName: document.metadata.displayName,
             version: document.metadata.version,
             effectiveDate: effective,
-            reviewedDate: reviewed
-        )
+            reviewedDate: reviewed)
 
         let changes: [RuleBundleChange] = document.changes.compactMap { change -> RuleBundleChange? in
             guard let date = DateFormatter.dayKeyParser.date(from: change.date) else { return nil }
@@ -121,8 +116,7 @@ enum RuleBundleRepository {
                 id: "\(change.date)|\(change.title)",
                 date: date,
                 title: change.title,
-                detail: change.detail
-            )
+                detail: change.detail)
         }
         .sorted { (lhs: RuleBundleChange, rhs: RuleBundleChange) in lhs.date > rhs.date }
 
@@ -134,8 +128,7 @@ enum RuleBundleRepository {
         return BundleSnapshot(
             metadata: metadata,
             changes: changes,
-            audit: RuleBundleAudit(source: source, isVerified: verified, warnings: allWarnings)
-        )
+            audit: RuleBundleAudit(source: source, isVerified: verified, warnings: allWarnings))
     }
 
     private static func fallbackSnapshot(source: String, verified: Bool, warnings: [String]) -> BundleSnapshot {
@@ -144,13 +137,11 @@ enum RuleBundleRepository {
             displayName: "Fallback U.S. Rules",
             version: "fallback-1",
             effectiveDate: Calendar.gregorian.date(from: DateComponents(year: 2026, month: 1, day: 1)) ?? Date(),
-            reviewedDate: Date()
-        )
+            reviewedDate: Date())
         return BundleSnapshot(
             metadata: metadata,
             changes: [],
-            audit: RuleBundleAudit(source: source, isVerified: verified, warnings: warnings)
-        )
+            audit: RuleBundleAudit(source: source, isVerified: verified, warnings: warnings))
     }
 
     private enum LocalSignature {
@@ -201,25 +192,24 @@ enum RuleBundleRepository {
 
     private static func verify(
         document: BundleDocument,
-        explicitSignature: LocalSignature?
-    ) -> (isVerified: Bool, warnings: [String]) {
+        explicitSignature: LocalSignature?) -> (isVerified: Bool, warnings: [String])
+    {
         let signatureInput: BundleDocument.SigningDocument?
         var warnings: [String] = []
 
         switch explicitSignature {
         case .none:
             signatureInput = document.signing
-        case let .structured(structured):
+        case .structured(let structured):
             signatureInput = structured
-        case let .legacyDigest(digest):
+        case .legacyDigest(let digest):
             let payload = canonicalPayloadData(from: document)
             let matchesDigest = validateDigest(data: payload, expectedHexDigest: digest)
             return (
                 matchesDigest,
                 matchesDigest
                     ? ["Legacy digest signature accepted. Re-sign with Ed25519 for future compatibility."]
-                    : ["Legacy digest signature mismatch."]
-            )
+                    : ["Legacy digest signature mismatch."])
         }
 
         guard let signatureInput else {
@@ -235,22 +225,22 @@ enum RuleBundleRepository {
         }
 
         #if canImport(CryptoKit)
-            guard
-                let publicKeyRaw = Data(base64Encoded: publicKeyB64),
-                let signatureRaw = Data(base64Encoded: signatureInput.signature),
-                let publicKey = try? Curve25519.Signing.PublicKey(rawRepresentation: publicKeyRaw)
-            else {
-                return (false, ["Rule bundle signature payload is malformed."])
-            }
+        guard
+            let publicKeyRaw = Data(base64Encoded: publicKeyB64),
+            let signatureRaw = Data(base64Encoded: signatureInput.signature),
+            let publicKey = try? Curve25519.Signing.PublicKey(rawRepresentation: publicKeyRaw)
+        else {
+            return (false, ["Rule bundle signature payload is malformed."])
+        }
 
-            let payload = canonicalPayloadData(from: document)
-            let verified = publicKey.isValidSignature(signatureRaw, for: payload)
-            if !verified {
-                warnings.append("Rule bundle signature verification failed.")
-            }
-            return (verified, warnings)
+        let payload = canonicalPayloadData(from: document)
+        let verified = publicKey.isValidSignature(signatureRaw, for: payload)
+        if !verified {
+            warnings.append("Rule bundle signature verification failed.")
+        }
+        return (verified, warnings)
         #else
-            return (false, ["Signature verification unavailable on this platform."])
+        return (false, ["Signature verification unavailable on this platform."])
         #endif
     }
 
@@ -268,11 +258,11 @@ enum RuleBundleRepository {
 
     private static func validateDigest(data: Data, expectedHexDigest: String) -> Bool {
         #if canImport(CryptoKit)
-            let digest = SHA256.hash(data: data)
-            let hex = digest.map { String(format: "%02x", $0) }.joined()
-            return hex == expectedHexDigest.lowercased()
+        let digest = SHA256.hash(data: data)
+        let hex = digest.map { String(format: "%02x", $0) }.joined()
+        return hex == expectedHexDigest.lowercased()
         #else
-            return false
+        return false
         #endif
     }
 

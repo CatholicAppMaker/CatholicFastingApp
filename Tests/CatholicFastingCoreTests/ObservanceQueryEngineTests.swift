@@ -18,8 +18,7 @@ final class ObservanceQueryEngineTests: XCTestCase {
             sortOrder: .chronological,
             statusesByID: [:],
             now: now,
-            calendar: calendar
-        )
+            calendar: calendar)
 
         XCTAssertEqual(result.map(\.title), ["Ash Wednesday", "Good Friday"])
     }
@@ -38,8 +37,7 @@ final class ObservanceQueryEngineTests: XCTestCase {
             sortOrder: .chronological,
             statusesByID: statuses,
             now: makeDate(2026, 3, 1),
-            calendar: calendar
-        )
+            calendar: calendar)
 
         XCTAssertEqual(result.map(\.title), ["Good Friday", "Ember Day"])
     }
@@ -54,8 +52,7 @@ final class ObservanceQueryEngineTests: XCTestCase {
             sortOrder: .chronological,
             statusesByID: [:],
             now: makeDate(2026, 3, 1),
-            calendar: calendar
-        )
+            calendar: calendar)
         XCTAssertEqual(detailMatch.map(\.title), ["Friday Penance (Outside Lent)"])
 
         let kindMatch = ObservanceQueryEngine.filter(
@@ -66,8 +63,7 @@ final class ObservanceQueryEngineTests: XCTestCase {
             sortOrder: .chronological,
             statusesByID: [:],
             now: makeDate(2026, 3, 1),
-            calendar: calendar
-        )
+            calendar: calendar)
         XCTAssertEqual(kindMatch.map(\.title), ["Ascension"])
 
         let obligationMatch = ObservanceQueryEngine.filter(
@@ -78,8 +74,7 @@ final class ObservanceQueryEngineTests: XCTestCase {
             sortOrder: .chronological,
             statusesByID: [:],
             now: makeDate(2026, 3, 1),
-            calendar: calendar
-        )
+            calendar: calendar)
         XCTAssertTrue(obligationMatch.map(\.title).contains("Ash Wednesday"))
         XCTAssertTrue(obligationMatch.map(\.title).contains("Good Friday"))
     }
@@ -93,8 +88,7 @@ final class ObservanceQueryEngineTests: XCTestCase {
             sortOrder: .chronological,
             statusesByID: [:],
             now: makeDate(2026, 3, 20),
-            calendar: calendar
-        )
+            calendar: calendar)
 
         XCTAssertEqual(result.map(\.title), ["Ash Wednesday", "Good Friday"])
     }
@@ -108,8 +102,7 @@ final class ObservanceQueryEngineTests: XCTestCase {
             sortOrder: .chronological,
             statusesByID: [:],
             now: makeDate(2026, 3, 1),
-            calendar: calendar
-        )
+            calendar: calendar)
 
         XCTAssertEqual(result.map(\.title), ["Ash Wednesday", "Good Friday"])
     }
@@ -123,8 +116,7 @@ final class ObservanceQueryEngineTests: XCTestCase {
             sortOrder: .requiredFirst,
             statusesByID: [:],
             now: makeDate(2026, 3, 1),
-            calendar: calendar
-        )
+            calendar: calendar)
 
         XCTAssertEqual(result.first?.obligation, .mandatory)
         XCTAssertEqual(result.last?.obligation, .notApplicable)
@@ -143,8 +135,7 @@ final class ObservanceQueryEngineTests: XCTestCase {
             sortOrder: .chronological,
             statusesByID: [:],
             now: makeDate(2026, 3, 1),
-            calendar: calendar
-        )
+            calendar: calendar)
 
         XCTAssertEqual(result.map(\.title), ["A observance", "B observance"])
     }
@@ -158,8 +149,7 @@ final class ObservanceQueryEngineTests: XCTestCase {
             sortOrder: .requiredFirst,
             statusesByID: [:],
             now: makeDate(2026, 9, 1),
-            calendar: calendar
-        )
+            calendar: calendar)
 
         XCTAssertTrue(result.isEmpty)
     }
@@ -171,8 +161,7 @@ final class ObservanceQueryEngineTests: XCTestCase {
             date: makeDate(2026, 4, 1),
             obligation: .optional,
             detail: nil,
-            kind: .feastDay
-        )
+            kind: .feastDay)
 
         let result = ObservanceQueryEngine.filter(
             observances: sampleObservances() + [beyondWindow],
@@ -182,8 +171,7 @@ final class ObservanceQueryEngineTests: XCTestCase {
             sortOrder: .chronological,
             statusesByID: [:],
             now: makeDate(2026, 3, 1),
-            calendar: calendar
-        )
+            calendar: calendar)
 
         XCTAssertFalse(result.map(\.title).contains("Beyond Window"))
     }
@@ -203,8 +191,7 @@ final class ObservanceQueryEngineTests: XCTestCase {
             sortOrder: .chronological,
             statusesByID: statuses,
             now: makeDate(2026, 3, 1),
-            calendar: calendar
-        )
+            calendar: calendar)
 
         XCTAssertEqual(result.map(\.title), ["Good Friday"])
     }
@@ -222,8 +209,7 @@ final class ObservanceQueryEngineTests: XCTestCase {
             sortOrder: .requiredFirst,
             statusesByID: [:],
             now: makeDate(2026, 3, 1),
-            calendar: calendar
-        )
+            calendar: calendar)
 
         XCTAssertEqual(result.map(\.title), ["A optional", "B optional"])
     }
@@ -236,40 +222,35 @@ final class ObservanceQueryEngineTests: XCTestCase {
                 date: makeDate(2026, 3, 4),
                 obligation: .mandatory,
                 detail: "One full meal and two smaller meals.",
-                kind: .fastAndAbstinence
-            ),
+                kind: .fastAndAbstinence),
             makeObservance(
                 id: "2026-03-31|Good Friday|fastAndAbstinence",
                 title: "Good Friday",
                 date: makeDate(2026, 3, 31),
                 obligation: .mandatory,
                 detail: "Fast and abstinence are required.",
-                kind: .fastAndAbstinence
-            ),
+                kind: .fastAndAbstinence),
             makeObservance(
                 id: "2026-09-23|Ember Day|optionalEmber",
                 title: "Ember Day",
                 date: makeDate(2026, 9, 23),
                 obligation: .optional,
                 detail: "Optional in U.S. profile mode.",
-                kind: .optionalEmber
-            ),
+                kind: .optionalEmber),
             makeObservance(
                 id: "2026-05-22|Friday Penance (Outside Lent)|fridayPenance",
                 title: "Friday Penance (Outside Lent)",
                 date: makeDate(2026, 5, 22),
                 obligation: .notApplicable,
                 detail: "Outside Lent: abstain from meat as your Friday penance.",
-                kind: .fridayPenance
-            ),
+                kind: .fridayPenance),
             makeObservance(
                 id: "2026-05-17|Ascension|holyDay",
                 title: "Ascension",
                 date: makeDate(2026, 5, 17),
                 obligation: .optional,
                 detail: "Holy day obligation depends on local norms.",
-                kind: .holyDay
-            ),
+                kind: .holyDay),
         ]
     }
 
@@ -283,8 +264,8 @@ final class ObservanceQueryEngineTests: XCTestCase {
         date: Date,
         obligation: Observance.Obligation,
         detail: String?,
-        kind: Observance.Kind
-    ) -> Observance {
+        kind: Observance.Kind) -> Observance
+    {
         Observance(
             id: id,
             title: title,
@@ -294,7 +275,6 @@ final class ObservanceQueryEngineTests: XCTestCase {
             detail: detail,
             rationale: "test rationale",
             citations: [],
-            ruleVersion: "test"
-        )
+            ruleVersion: "test")
     }
 }

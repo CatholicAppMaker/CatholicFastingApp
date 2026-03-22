@@ -52,15 +52,13 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
         try localBundle.write(
             to: tempDirectory.appendingPathComponent("rule-bundle.json"),
             atomically: true,
-            encoding: .utf8
-        )
+            encoding: .utf8)
         try """
         {"key_id":"release-2026-q1","algorithm":"ed25519","signature":"AAAA"}
         """.write(
             to: tempDirectory.appendingPathComponent("rule-bundle.sig"),
             atomically: true,
-            encoding: .utf8
-        )
+            encoding: .utf8)
 
         UserDefaults.standard.set(tempDirectory.path, forKey: "rule_bundle_directory_override")
         defer {
@@ -79,8 +77,7 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
 
         let observances = ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
         let ashWednesday = try XCTUnwrap(observances.first { $0.title == "Ash Wednesday" })
@@ -95,8 +92,7 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
 
         let recommendations = FoodGuidanceEngine.recommendations(for: .medicalRecovery, settings: settings)
         XCTAssertTrue(recommendations.contains { $0.localizedCaseInsensitiveContains("dispensation") })
@@ -141,8 +137,7 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
 
         let recommendations = FoodGuidanceEngine.recommendations(for: .heavyLabor, settings: settings)
         XCTAssertTrue(recommendations.contains { $0.localizedCaseInsensitiveContains("heavy labor") || $0.localizedCaseInsensitiveContains("pastor") })
@@ -154,8 +149,7 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
 
         let recommendations = FoodGuidanceEngine.recommendations(for: .normalDay, settings: settings)
         XCTAssertTrue(recommendations.contains { $0.localizedCaseInsensitiveContains("abstinence") || $0.localizedCaseInsensitiveContains("avoid meat") })
@@ -168,8 +162,7 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
 
         let snapshot = FoodGuidanceEngine.snapshot(for: .normalDay, settings: settings)
 
@@ -185,8 +178,7 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
 
         let snapshot = FoodGuidanceEngine.snapshot(for: .normalDay, settings: settings)
 
@@ -201,8 +193,7 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
             calendarMode: .usccb,
-            regionProfile: .canada
-        )
+            regionProfile: .canada)
 
         let snapshot = FoodGuidanceEngine.snapshot(for: .normalDay, settings: settings)
 
@@ -217,15 +208,13 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
         let observances = ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
         let plan = MissedDayRecoveryEngine.plan(
             observances: observances,
             statusesByID: [:],
             today: fixedDate(year: 2026, month: 3, day: 1),
-            calendar: fixedCalendar
-        )
+            calendar: fixedCalendar)
 
         XCTAssertNil(plan)
     }
@@ -236,8 +225,7 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
         let observances = ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
         let ashWednesday = try XCTUnwrap(observances.first(where: { $0.title == "Ash Wednesday" }))
 
@@ -245,8 +233,7 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
             observances: observances,
             statusesByID: [ashWednesday.id: .missed],
             today: fixedDate(year: 2026, month: 3, day: 1),
-            calendar: fixedCalendar
-        )
+            calendar: fixedCalendar)
 
         XCTAssertNotNil(plan)
         XCTAssertTrue(plan?.titleLine.localizedCaseInsensitiveContains("ash wednesday") ?? false)
@@ -268,8 +255,7 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .abstainFromMeat,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
 
         var localCalendar = Calendar(identifier: .gregorian)
         localCalendar.timeZone = testTimeZone
@@ -283,8 +269,7 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
             for: observances,
             settings: settings,
             date: localEveningAshWednesday,
-            calendar: localCalendar
-        )
+            calendar: localCalendar)
 
         XCTAssertTrue(decision.obligationLine.localizedCaseInsensitiveContains("fasting and abstinence"))
         XCTAssertTrue(decision.rationale.localizedCaseInsensitiveContains("ash wednesday"))
@@ -296,16 +281,14 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .abstainFromMeat,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
 
         let observances = ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
         let decision = DailyFoodDecisionEngine.decision(
             for: observances,
             settings: settings,
             date: fixedDate(year: 2026, month: 5, day: 1),
-            calendar: fixedCalendar
-        )
+            calendar: fixedCalendar)
 
         XCTAssertTrue(decision.obligationLine.localizedCaseInsensitiveContains("friday penance"))
         XCTAssertTrue(decision.obligationLine.localizedCaseInsensitiveContains("abstinence"))
@@ -318,16 +301,14 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
             hasMedicalDispensation: false,
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
+            calendarMode: .usccb)
 
         let observances = ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
         let decision = DailyFoodDecisionEngine.decision(
             for: observances,
             settings: settings,
             date: fixedDate(year: 2026, month: 5, day: 1),
-            calendar: fixedCalendar
-        )
+            calendar: fixedCalendar)
 
         XCTAssertTrue(decision.obligationLine.localizedCaseInsensitiveContains("friday penance"))
         XCTAssertTrue(decision.obligationLine.localizedCaseInsensitiveContains("not mandatory fasting"))
@@ -341,16 +322,14 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
             calendarMode: .usccb,
-            regionProfile: .canada
-        )
+            regionProfile: .canada)
 
         let observances = ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
         let decision = DailyFoodDecisionEngine.decision(
             for: observances,
             settings: settings,
             date: fixedDate(year: 2026, month: 5, day: 1),
-            calendar: fixedCalendar
-        )
+            calendar: fixedCalendar)
 
         XCTAssertTrue(decision.obligationLine.localizedCaseInsensitiveContains("friday penance"))
         XCTAssertTrue(decision.allowed.joined(separator: " ").localizedCaseInsensitiveContains("charity"))
@@ -364,16 +343,14 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
             calendarMode: .usccb,
-            regionProfile: .canada
-        )
+            regionProfile: .canada)
 
         let observances = ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
         let decision = DailyFoodDecisionEngine.decision(
             for: observances,
             settings: settings,
             date: fixedDate(year: 2026, month: 5, day: 2),
-            calendar: fixedCalendar
-        )
+            calendar: fixedCalendar)
 
         XCTAssertTrue(decision.obligationLine.localizedCaseInsensitiveContains("no mandatory"))
         XCTAssertTrue(decision.sourceLine.localizedCaseInsensitiveContains("canada friday guidance"))
@@ -386,13 +363,11 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
             calendarMode: .usccb,
-            regionProfile: .canada
-        )
+            regionProfile: .canada)
 
         let observance = try XCTUnwrap(
             ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
-                .first(where: { $0.kind == .fridayPenance })
-        )
+                .first(where: { $0.kind == .fridayPenance }))
 
         let context = RegionalGuidanceContextFactory.context(for: observance, settings: settings)
 
@@ -410,13 +385,11 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
             calendarMode: .usccb,
-            regionProfile: .canada
-        )
+            regionProfile: .canada)
 
         let holyDay = try XCTUnwrap(
             ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
-                .first(where: { $0.title == "Christmas" && $0.kind == .holyDay })
-        )
+                .first(where: { $0.title == "Christmas" && $0.kind == .holyDay }))
 
         let context = RegionalGuidanceContextFactory.context(for: holyDay, settings: settings)
 
@@ -433,8 +406,7 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
             ascensionObservance: .sunday,
             fridayOutsideLentMode: .substitutePenance,
             calendarMode: .usccb,
-            regionProfile: .canada
-        )
+            regionProfile: .canada)
 
         let context = RegionalGuidanceContextFactory.generalContext(for: settings)
 

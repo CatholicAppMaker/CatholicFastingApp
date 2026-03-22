@@ -22,8 +22,7 @@ func makeRep() -> NSBitmapImageRep {
         colorSpaceName: .deviceRGB,
         bitmapFormat: [],
         bytesPerRow: 0,
-        bitsPerPixel: 0
-    )!
+        bitsPerPixel: 0)!
 }
 
 func writePNG(_ rep: NSBitmapImageRep, _ name: String) throws {

@@ -16,32 +16,27 @@ let iconSets: [(name: String, palette: Palette)] = [
         background: NSColor(calibratedRed: 32 / 255, green: 23 / 255, blue: 51 / 255, alpha: 1),
         glow: NSColor(calibratedRed: 248 / 255, green: 218 / 255, blue: 139 / 255, alpha: 0.24),
         ray: NSColor(calibratedRed: 248 / 255, green: 218 / 255, blue: 139 / 255, alpha: 1),
-        host: NSColor(calibratedRed: 253 / 255, green: 247 / 255, blue: 223 / 255, alpha: 1)
-    )),
+        host: NSColor(calibratedRed: 253 / 255, green: 247 / 255, blue: 223 / 255, alpha: 1))),
     ("AppIconAdvent.appiconset", Palette(
         background: NSColor(calibratedRed: 74 / 255, green: 50 / 255, blue: 118 / 255, alpha: 1),
         glow: NSColor(calibratedRed: 214 / 255, green: 179 / 255, blue: 118 / 255, alpha: 0.24),
         ray: NSColor(calibratedRed: 236 / 255, green: 198 / 255, blue: 128 / 255, alpha: 1),
-        host: NSColor(calibratedRed: 250 / 255, green: 244 / 255, blue: 226 / 255, alpha: 1)
-    )),
+        host: NSColor(calibratedRed: 250 / 255, green: 244 / 255, blue: 226 / 255, alpha: 1))),
     ("AppIconChristmas.appiconset", Palette(
         background: NSColor(calibratedRed: 22 / 255, green: 86 / 255, blue: 63 / 255, alpha: 1),
         glow: NSColor(calibratedRed: 254 / 255, green: 226 / 255, blue: 150 / 255, alpha: 0.24),
         ray: NSColor(calibratedRed: 250 / 255, green: 215 / 255, blue: 128 / 255, alpha: 1),
-        host: NSColor(calibratedRed: 255 / 255, green: 250 / 255, blue: 232 / 255, alpha: 1)
-    )),
+        host: NSColor(calibratedRed: 255 / 255, green: 250 / 255, blue: 232 / 255, alpha: 1))),
     ("AppIconLent.appiconset", Palette(
         background: NSColor(calibratedRed: 41 / 255, green: 27 / 255, blue: 68 / 255, alpha: 1),
         glow: NSColor(calibratedRed: 183 / 255, green: 147 / 255, blue: 88 / 255, alpha: 0.22),
         ray: NSColor(calibratedRed: 206 / 255, green: 166 / 255, blue: 94 / 255, alpha: 1),
-        host: NSColor(calibratedRed: 242 / 255, green: 230 / 255, blue: 201 / 255, alpha: 1)
-    )),
+        host: NSColor(calibratedRed: 242 / 255, green: 230 / 255, blue: 201 / 255, alpha: 1))),
     ("AppIconEaster.appiconset", Palette(
         background: NSColor(calibratedRed: 244 / 255, green: 247 / 255, blue: 252 / 255, alpha: 1),
         glow: NSColor(calibratedRed: 252 / 255, green: 220 / 255, blue: 138 / 255, alpha: 0.30),
         ray: NSColor(calibratedRed: 232 / 255, green: 185 / 255, blue: 92 / 255, alpha: 1),
-        host: NSColor(calibratedRed: 255 / 255, green: 255 / 255, blue: 251 / 255, alpha: 1)
-    )),
+        host: NSColor(calibratedRed: 255 / 255, green: 255 / 255, blue: 251 / 255, alpha: 1))),
 ]
 
 func iconPixels(from filename: String) -> Int? {
@@ -72,8 +67,7 @@ func renderMonstrance(size: Int, palette: Palette) -> NSBitmapImageRep {
         colorSpaceName: .deviceRGB,
         bitmapFormat: [],
         bytesPerRow: 0,
-        bitsPerPixel: 0
-    )!
+        bitsPerPixel: 0)!
 
     let scale = CGFloat(size) / 1024.0
     let smallMode = size <= 120
@@ -90,8 +84,10 @@ func renderMonstrance(size: Int, palette: Palette) -> NSBitmapImageRep {
     NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: rep)
 
     palette.background.setFill()
-    NSBezierPath(roundedRect: CGRect(x: 0, y: 0, width: CGFloat(size), height: CGFloat(size)),
-                 xRadius: 220 * scale, yRadius: 220 * scale).fill()
+    NSBezierPath(
+        roundedRect: CGRect(x: 0, y: 0, width: CGFloat(size), height: CGFloat(size)),
+        xRadius: 220 * scale,
+        yRadius: 220 * scale).fill()
 
     palette.glow.setFill()
     NSBezierPath(ovalIn: CGRect(x: 182 * scale, y: 282 * scale, width: 660 * scale, height: 660 * scale)).fill()
@@ -120,12 +116,18 @@ func renderMonstrance(size: Int, palette: Palette) -> NSBitmapImageRep {
     hostRing.stroke()
 
     palette.ray.setFill()
-    NSBezierPath(roundedRect: CGRect(x: 470 * scale, y: 220 * scale, width: 84 * scale, height: 230 * scale),
-                 xRadius: stemCorner, yRadius: stemCorner).fill()
-    NSBezierPath(roundedRect: CGRect(x: 388 * scale, y: 170 * scale, width: 248 * scale, height: 62 * scale),
-                 xRadius: stemCorner, yRadius: stemCorner).fill()
-    NSBezierPath(roundedRect: CGRect(x: 330 * scale, y: 92 * scale, width: 364 * scale, height: 74 * scale),
-                 xRadius: footCorner, yRadius: footCorner).fill()
+    NSBezierPath(
+        roundedRect: CGRect(x: 470 * scale, y: 220 * scale, width: 84 * scale, height: 230 * scale),
+        xRadius: stemCorner,
+        yRadius: stemCorner).fill()
+    NSBezierPath(
+        roundedRect: CGRect(x: 388 * scale, y: 170 * scale, width: 248 * scale, height: 62 * scale),
+        xRadius: stemCorner,
+        yRadius: stemCorner).fill()
+    NSBezierPath(
+        roundedRect: CGRect(x: 330 * scale, y: 92 * scale, width: 364 * scale, height: 74 * scale),
+        xRadius: footCorner,
+        yRadius: footCorner).fill()
 
     NSGraphicsContext.restoreGraphicsState()
     return rep

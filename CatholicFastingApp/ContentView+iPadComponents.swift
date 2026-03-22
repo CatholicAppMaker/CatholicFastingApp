@@ -124,8 +124,7 @@ struct IPadWorkspaceHeroBand: View {
                         subtitle: subtitle,
                         height: 144,
                         cornerRadius: 20,
-                        accessibilityIdentifier: accessibilityIdentifier
-                    )
+                        accessibilityIdentifier: accessibilityIdentifier)
 
                     VStack(alignment: .leading, spacing: 10) {
                         Label("Liturgical Season: \(seasonLabel)", systemImage: "sparkles")
@@ -149,9 +148,8 @@ struct IPadWorkspaceHeroBand: View {
                         subtitle: subtitle,
                         height: 196,
                         cornerRadius: 20,
-                        accessibilityIdentifier: accessibilityIdentifier
-                    )
-                    .frame(maxWidth: .infinity)
+                        accessibilityIdentifier: accessibilityIdentifier)
+                        .frame(maxWidth: .infinity)
 
                     VStack(alignment: .leading, spacing: 12) {
                         Label("Liturgical Season: \(seasonLabel)", systemImage: "sparkles")
@@ -179,7 +177,7 @@ struct IPadWorkspaceActionButton: View {
     let title: String
     let systemImage: String
     let primary: Bool
-    var accessibilityIdentifier: String? = nil
+    var accessibilityIdentifier: String?
     let action: () -> Void
 
     var body: some View {
@@ -220,8 +218,7 @@ struct IPadObservanceSelectionRow: View {
                     StatusTag(text: context.observance.kind.label, color: context.observance.kind.color)
                     StatusTag(
                         text: context.observance.dispositionLabel,
-                        color: context.observance.obligation == .mandatory ? .red : .blue
-                    )
+                        color: context.observance.obligation == .mandatory ? .red : .blue)
                     IPadContextBadge(text: context.regionalContext.classificationLabel, supportLevel: context.regionalContext.supportLevel)
                 }
             }

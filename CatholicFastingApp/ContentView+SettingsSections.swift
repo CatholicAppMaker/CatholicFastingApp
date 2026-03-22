@@ -30,11 +30,9 @@ extension ContentView {
             Toggle(
                 localized(
                     "settings.quick.consent_label",
-                    default: "I understand this is an independent app, not an official Church authority app"
-                ),
-                isOn: $acceptedLegalNotice
-            )
-            .accessibilityIdentifier("settings.quick.consent")
+                    default: "I understand this is an independent app, not an official Church authority app"),
+                isOn: $acceptedLegalNotice)
+                .accessibilityIdentifier("settings.quick.consent")
 
             Toggle(localized("settings.quick.reminder_support", default: "Enable reminder support"), isOn: $dailyReminderSupportEnabled)
                 .accessibilityIdentifier("settings.quick.reminder_support")
@@ -104,23 +102,19 @@ extension ContentView {
                         Task {
                             notificationStatus = await ReminderScheduler.scheduleHabitSupport(
                                 morning: dailyReminderSupportEnabled && morningReminderEnabled,
-                                evening: dailyReminderSupportEnabled && eveningReminderEnabled
-                            )
+                                evening: dailyReminderSupportEnabled && eveningReminderEnabled)
                         }
                     }
                     .appPrimaryButtonStyle(legacyTint: CatholicTheme.accent)
                     .disabled(
-                        !acceptedLegalNotice || !dailyReminderSupportEnabled || !monetizationStore.premiumUnlocked
-                    )
+                        !acceptedLegalNotice || !dailyReminderSupportEnabled || !monetizationStore.premiumUnlocked)
                     .accessibilityIdentifier("settings.quick.schedule_support")
 
                     if !monetizationStore.premiumUnlocked {
                         Text(
                             localized(
                                 "settings.quick.support_premium_hint",
-                                default: "Premium is required for daily support reminders beyond required-day alerts."
-                            )
-                        )
+                                default: "Premium is required for daily support reminders beyond required-day alerts."))
                             .appEyebrowStyle()
                     }
 
@@ -147,21 +141,17 @@ extension ContentView {
         Section(localized("settings.personal_profile.title", default: "Personal Profile")) {
             Toggle(
                 localized(
-                    "settings.personal_profile.dispensation", default: "Medical or pastoral dispensation"
-                ),
-                isOn: $medicalDispensation
-            )
-            .accessibilityHint(
-                localized(
-                    "settings.personal_profile.dispensation_hint",
-                    default: "Enable when fasting obligations do not bind due to health or pastoral reasons."
-                )
-            )
+                    "settings.personal_profile.dispensation", default: "Medical or pastoral dispensation"),
+                isOn: $medicalDispensation)
+                .accessibilityHint(
+                    localized(
+                        "settings.personal_profile.dispensation_hint",
+                        default: "Enable when fasting obligations do not bind due to health or pastoral reasons."))
 
             Picker(
                 localized("settings.personal_profile.language", default: "Language"),
-                selection: $languageModeRaw
-            ) {
+                selection: $languageModeRaw)
+            {
                 ForEach(LanguageMode.allCases) { option in
                     Text(option.label).tag(option.rawValue)
                 }
@@ -184,8 +174,8 @@ extension ContentView {
 
             Picker(
                 localized("settings.regional_norms.ascension_day", default: "Ascension Day"),
-                selection: $ascensionRaw
-            ) {
+                selection: $ascensionRaw)
+            {
                 ForEach(RuleSettings.AscensionObservance.allCases) { option in
                     Text(option.label).tag(option.rawValue)
                 }
@@ -193,14 +183,12 @@ extension ContentView {
             .accessibilityHint(
                 localized(
                     "settings.regional_norms.ascension_day_hint",
-                    default: "Set whether Ascension is observed on Thursday or Sunday."
-                )
-            )
+                    default: "Set whether Ascension is observed on Thursday or Sunday."))
 
             Picker(
                 localized("settings.regional_norms.fridays_outside_lent", default: "Fridays Outside Lent"),
-                selection: $fridayModeRaw
-            ) {
+                selection: $fridayModeRaw)
+            {
                 ForEach(RuleSettings.FridayOutsideLentMode.allCases) { option in
                     Text(localizedFridayModeLabel(option)).tag(option.rawValue)
                 }
@@ -208,13 +196,10 @@ extension ContentView {
             .accessibilityHint(
                 localized(
                     "settings.regional_norms.fridays_outside_lent_hint",
-                    default: "Choose abstinence from meat or another penitential act."
-                )
-            )
+                    default: "Choose abstinence from meat or another penitential act."))
             Text(
-                regionPastoralGuidanceText
-            )
-            .appSupportingTextStyle()
+                regionPastoralGuidanceText)
+                .appSupportingTextStyle()
         }
     }
 
@@ -222,27 +207,22 @@ extension ContentView {
         Section(localized("settings.theme.title", default: "Liturgical Theme")) {
             Toggle(
                 localized(
-                    "settings.theme.enable_liturgical_colors", default: "Enable Liturgical Season Colors"
-                ),
-                isOn: $liturgicalSeasonColorsEnabled
-            )
-            .accessibilityIdentifier("settings.liturgical_theme_toggle")
+                    "settings.theme.enable_liturgical_colors", default: "Enable Liturgical Season Colors"),
+                isOn: $liturgicalSeasonColorsEnabled)
+                .accessibilityIdentifier("settings.liturgical_theme_toggle")
             Text(
                 liturgicalSeasonColorsEnabled
                     ? localizedFormat(
                         "settings.theme.active_season_format",
                         default:
                         "Active season: %@. Colors update automatically throughout the liturgical year.",
-                        CatholicTheme.seasonLabel
-                    )
+                        CatholicTheme.seasonLabel)
                     : localized(
                         "settings.theme.disabled_hint",
                         default:
-                        "Season-based colors are off. Turn this on for Advent, Lent, Easter, and Ordinary Time palettes."
-                    )
-            )
-            .font(.caption)
-            .foregroundStyle(.secondary)
+                        "Season-based colors are off. Turn this on for Advent, Lent, Easter, and Ordinary Time palettes."))
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
     }
 
@@ -265,10 +245,9 @@ extension ContentView {
 
                 if let active = activeHouseholdProfile {
                     Text(
-                        "Active: \(active.name) • Abstinence: \(active.isAge14OrOlderForAbstinence ? "14+" : "Under 14") • Fasting: \(active.isAge18OrOlderForFasting ? "18-59" : "Not fasting age")"
-                    )
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                        "Active: \(active.name) • Abstinence: \(active.isAge14OrOlderForAbstinence ? "14+" : "Under 14") • Fasting: \(active.isAge18OrOlderForFasting ? "18-59" : "Not fasting age")")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
 
                 Button("Apply Active Profile") {
@@ -305,16 +284,14 @@ extension ContentView {
                 Stepper(
                     "Year required observance goal: \(planningData.requiredGoal)",
                     value: $planningData.requiredGoal,
-                    in: 1 ... 120
-                )
-                .accessibilityIdentifier("settings.plan.required_goal")
+                    in: 1 ... 120)
+                    .accessibilityIdentifier("settings.plan.required_goal")
 
                 Stepper(
                     "Year optional observance goal: \(planningData.optionalGoal)",
                     value: $planningData.optionalGoal,
-                    in: 1 ... 240
-                )
-                .accessibilityIdentifier("settings.plan.optional_goal")
+                    in: 1 ... 240)
+                    .accessibilityIdentifier("settings.plan.optional_goal")
 
                 ProgressView(value: requirementGoalProgress) {
                     Text("Required progress: \(yearlyRequiredCompletions)/\(planningData.requiredGoal)")
@@ -364,10 +341,9 @@ extension ContentView {
             .accessibilityIdentifier("settings.accessibility.advanced")
 
             Text(
-                "Simplified mode reduces visual density on Today. Haptic alerts notify when intermittent fasting milestones are reached."
-            )
-            .font(.caption)
-            .foregroundStyle(.secondary)
+                "Simplified mode reduces visual density on Today. Haptic alerts notify when intermittent fasting milestones are reached.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
     }
 
@@ -377,49 +353,39 @@ extension ContentView {
                 localized(
                     "settings.privacy.legal_ack",
                     default:
-                    "I understand this independent app supplements (not replaces) pastoral guidance"
-                ),
-                isOn: $acceptedLegalNotice
-            )
-            .accessibilityIdentifier("launch.accept_legal_notice")
+                    "I understand this independent app supplements (not replaces) pastoral guidance"),
+                isOn: $acceptedLegalNotice)
+                .accessibilityIdentifier("launch.accept_legal_notice")
 
             if acceptedLegalNoticeAt.isEmpty {
                 Text(
                     localized(
                         "settings.privacy.confirm_consent",
-                        default: "Please confirm consent to enable reminders and exports."
-                    )
-                )
-                .foregroundStyle(.orange)
+                        default: "Please confirm consent to enable reminders and exports."))
+                    .foregroundStyle(.orange)
             } else {
                 Text(
                     localizedFormat(
                         "settings.privacy.consent_confirmed_format", default: "Consent confirmed: %@",
-                        formattedConsentTimestamp(acceptedLegalNoticeAt)
-                    )
-                )
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                        formattedConsentTimestamp(acceptedLegalNoticeAt)))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
             Text(
                 localized(
                     "settings.privacy.data_storage_summary",
                     default:
-                    "This app stores only fasting-tracker data you enter, locally on this device."
-                )
-            )
-            .font(.caption)
-            .foregroundStyle(.secondary)
+                    "This app stores only fasting-tracker data you enter, locally on this device."))
+                .font(.caption)
+                .foregroundStyle(.secondary)
             NavigationLink {
                 DataPrivacyDetailsView(
                     languageCode: languageModeRaw,
-                    acceptedLegalNotice: acceptedLegalNotice
-                )
+                    acceptedLegalNotice: acceptedLegalNotice)
             } label: {
                 Label(
                     localized("settings.privacy.data_details_link", default: "View Data & Privacy Details"),
-                    systemImage: "hand.raised.fill"
-                )
+                    systemImage: "hand.raised.fill")
             }
             .accessibilityIdentifier("settings.privacy.details")
         }
@@ -429,46 +395,35 @@ extension ContentView {
         Section(localized("settings.backups.title", default: "Support & Backup")) {
             Link(
                 localized("settings.backups.usccb_guidance", default: "USCCB Liturgical Year Guidance"),
-                destination: UIConstants.legalPolicyURL
-            )
+                destination: UIConstants.legalPolicyURL)
             Link(
                 localized("settings.backups.send_feedback", default: "Send Feedback"),
-                destination: UIConstants.supportEmail
-            )
+                destination: UIConstants.supportEmail)
             ShareLink(
                 item: exportDataText,
                 subject: Text(
-                    localized("settings.backups.data_export_subject", default: "Catholic Fasting Data Export")
-                ),
+                    localized("settings.backups.data_export_subject", default: "Catholic Fasting Data Export")),
                 message: Text(
                     localized(
-                        "settings.backups.data_export_message", default: "Exported user data for backup/review"
-                    )
-                )
-            ) {
+                        "settings.backups.data_export_message", default: "Exported user data for backup/review")))
+            {
                 Label(
                     localized(
-                        "settings.backups.export_personal_backup", default: "Export Personal Data Backup"
-                    ),
-                    systemImage: "square.and.arrow.up"
-                )
+                        "settings.backups.export_personal_backup", default: "Export Personal Data Backup"),
+                    systemImage: "square.and.arrow.up")
             }
             .disabled(!acceptedLegalNotice)
             .accessibilityIdentifier("launch.export_data")
             .accessibilityHint(
                 localized(
                     "settings.backups.export_personal_hint",
-                    default: "Exports your profile settings, observance statuses, and notes."
-                )
-            )
+                    default: "Exports your profile settings, observance statuses, and notes."))
             if !acceptedLegalNotice {
                 Text(
                     localized(
-                        "settings.backups.enable_consent_hint", default: "Enable consent above to export data."
-                    )
-                )
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                        "settings.backups.enable_consent_hint", default: "Enable consent above to export data."))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
         }
     }
@@ -484,14 +439,13 @@ extension ContentView {
             .confirmationDialog(
                 localized(
                     "settings.data_management.delete_all_confirm",
-                    default: "Delete all app data on this device?"
-                ), isPresented: $showDeleteDataConfirm,
-                titleVisibility: .visible
-            ) {
+                    default: "Delete all app data on this device?"), isPresented: $showDeleteDataConfirm,
+                titleVisibility: .visible)
+            {
                 Button(
                     localized("settings.data_management.delete_everything", default: "Delete Everything"),
-                    role: .destructive
-                ) {
+                    role: .destructive)
+                {
                     deleteAllData()
                 }
                 Button(localized("settings.data_management.cancel", default: "Cancel"), role: .cancel) {}
@@ -665,8 +619,7 @@ extension ContentView {
     func jsonString(from payload: [String: Any], fallback: String) -> String {
         guard
             let data = try? JSONSerialization.data(
-                withJSONObject: payload, options: [.prettyPrinted, .sortedKeys]
-            ),
+                withJSONObject: payload, options: [.prettyPrinted, .sortedKeys]),
             let text = String(data: data, encoding: .utf8)
         else {
             return fallback
@@ -738,89 +691,66 @@ private struct DataPrivacyDetailsView: View {
                     localized(
                         "settings.privacy.data_details_intro",
                         default:
-                        "Your fasting records remain on your device. The app does not use cloud sync or analytics."
-                    )
-                )
-                .font(.callout)
-                .foregroundStyle(.secondary)
+                        "Your fasting records remain on your device. The app does not use cloud sync or analytics."))
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
             }
 
             Section(localized("settings.privacy.section_stored_title", default: "Data Stored In App")) {
                 dataLine(
                     localized(
                         "settings.privacy.stored_item_profile",
-                        default: "Profile and settings (age eligibility toggles, language, fasting preferences)."
-                    )
-                )
+                        default: "Profile and settings (age eligibility toggles, language, fasting preferences)."))
                 dataLine(
                     localized(
                         "settings.privacy.stored_item_observances",
-                        default: "Observance progress and completion status history."
-                    )
-                )
+                        default: "Observance progress and completion status history."))
                 dataLine(
                     localized(
                         "settings.privacy.stored_item_notes",
-                        default: "Friday penance notes that you manually enter."
-                    )
-                )
+                        default: "Friday penance notes that you manually enter."))
                 dataLine(
                     localized(
                         "settings.privacy.stored_item_intermittent",
-                        default: "Intermittent fasting sessions and active timer state."
-                    )
-                )
+                        default: "Intermittent fasting sessions and active timer state."))
                 dataLine(
                     localized(
                         "settings.privacy.stored_item_funnel",
-                        default: "First-run funnel state (onboarding, paywall seen, reminder tier) stored locally."
-                    )
-                )
+                        default: "First-run funnel state (onboarding, paywall seen, reminder tier) stored locally."))
             }
 
             Section(
-                localized("settings.privacy.section_shared_title", default: "Data Shared Or Transmitted")
-            ) {
+                localized("settings.privacy.section_shared_title", default: "Data Shared Or Transmitted"))
+            {
                 dataLine(
                     localized(
                         "settings.privacy.shared_item_default",
-                        default: "No automatic data upload to the developer."
-                    )
-                )
+                        default: "No automatic data upload to the developer."))
                 dataLine(
                     localized(
                         "settings.privacy.shared_item_export",
-                        default: "Export/share only when you tap an export action."
-                    )
-                )
+                        default: "Export/share only when you tap an export action."))
                 dataLine(
                     localized(
                         "settings.privacy.shared_item_feedback",
-                        default: "Feedback email opens your mail app and sends only what you choose."
-                    )
-                )
+                        default: "Feedback email opens your mail app and sends only what you choose."))
             }
 
             Section(localized("settings.privacy.section_not_collected_title", default: "Not Collected")) {
                 dataLine(
                     localized(
                         "settings.privacy.not_collected_tracking",
-                        default: "No ad tracking identifiers."
-                    )
-                )
+                        default: "No ad tracking identifiers."))
                 dataLine(
                     localized(
                         "settings.privacy.not_collected_third_party",
-                        default: "No third-party analytics SDKs in the app."
-                    )
-                )
+                        default: "No third-party analytics SDKs in the app."))
             }
 
             Section(localized("settings.privacy.section_controls_title", default: "Your Controls")) {
                 controlRow(
                     title: localized("settings.privacy.control_consent", default: "Consent"),
-                    value: consentStateText
-                )
+                    value: consentStateText)
             }
         }
         .navigationTitle(localized("settings.privacy.data_details_title", default: "Data & Privacy"))

@@ -1,6 +1,6 @@
 import SwiftUI
 #if canImport(UIKit)
-    import UIKit
+import UIKit
 #endif
 
 private struct LiveTrackerMetricChip: View {
@@ -29,9 +29,9 @@ extension ContentView {
         guard lastTargetReachedHapticKey != key else { return }
         lastTargetReachedHapticKey = key
         #if canImport(UIKit)
-            let generator = UINotificationFeedbackGenerator()
-            generator.prepare()
-            generator.notificationOccurred(.success)
+        let generator = UINotificationFeedbackGenerator()
+        generator.prepare()
+        generator.notificationOccurred(.success)
         #endif
     }
 
@@ -40,9 +40,9 @@ extension ContentView {
         guard lastEatingWindowClosedHapticKey != sessionID else { return }
         lastEatingWindowClosedHapticKey = sessionID
         #if canImport(UIKit)
-            let generator = UINotificationFeedbackGenerator()
-            generator.prepare()
-            generator.notificationOccurred(.warning)
+        let generator = UINotificationFeedbackGenerator()
+        generator.prepare()
+        generator.notificationOccurred(.warning)
         #endif
     }
 
@@ -60,8 +60,7 @@ extension ContentView {
                         ? "Choose a target, then start when ready."
                         : "Your live fast and next action are below.",
                     height: 168,
-                    accessibilityIdentifier: "intermittent.hero.card"
-                )
+                    accessibilityIdentifier: "intermittent.hero.card")
             }
             .accessibilityIdentifier("intermittent.hero")
         }
@@ -94,8 +93,7 @@ extension ContentView {
                 Text(
                     latestSession.completedTarget
                         ? "Repeat this rhythm or increase only if it remains prudent."
-                        : "Choose a lighter target or re-enter with a simpler plan."
-                )
+                        : "Choose a lighter target or re-enter with a simpler plan.")
                     .appSupportingTextStyle()
             } else {
                 Text("Plan first. Start when ready.")
@@ -185,9 +183,8 @@ extension ContentView {
                         Text("Open these only when you need the deeper tools.")
                             .appSupportingTextStyle()
                     }
-                }
-            )
-            .accessibilityIdentifier("intermittent.advanced.disclosure")
+                })
+                .accessibilityIdentifier("intermittent.advanced.disclosure")
 
             if !intermittentShowAdvanced {
                 Text("Saved schedules, milestone stats, recovery guidance, and recent history stay here.")
@@ -363,8 +360,7 @@ extension ContentView {
                                 LiveTrackerMetricChip(title: "Target", value: "\(intermittentTracker.presetHours)h fast")
                                 LiveTrackerMetricChip(
                                     title: "Next",
-                                    value: eatingHours > 0 ? "\(eatingHours)h after fast" : "Custom rhythm"
-                                )
+                                    value: eatingHours > 0 ? "\(eatingHours)h after fast" : "Custom rhythm")
                             }
                         } else {
                             HStack(spacing: 8) {
@@ -373,8 +369,7 @@ extension ContentView {
                                 LiveTrackerMetricChip(title: "Target", value: "\(intermittentTracker.presetHours)h fast")
                                 LiveTrackerMetricChip(
                                     title: "Next",
-                                    value: eatingHours > 0 ? "\(eatingHours)h after fast" : "Custom rhythm"
-                                )
+                                    value: eatingHours > 0 ? "\(eatingHours)h after fast" : "Custom rhythm")
                             }
                         }
                     }
@@ -402,8 +397,7 @@ extension ContentView {
                                 liveEatingSummary(
                                     hasEatingWindow: hasEatingWindow,
                                     lastEnded: lastEnded,
-                                    nextSuggestedStart: nextSuggestedStart
-                                )
+                                    nextSuggestedStart: nextSuggestedStart)
                             }
                         } else {
                             HStack(alignment: .center, spacing: 16) {
@@ -411,8 +405,7 @@ extension ContentView {
                                 liveEatingSummary(
                                     hasEatingWindow: hasEatingWindow,
                                     lastEnded: lastEnded,
-                                    nextSuggestedStart: nextSuggestedStart
-                                )
+                                    nextSuggestedStart: nextSuggestedStart)
                             }
                         }
 
@@ -424,8 +417,7 @@ extension ContentView {
                                     title: "Status",
                                     value: hasEatingWindow
                                         ? (eatingRemaining > 0 ? "Eating window open" : "Ready to fast")
-                                        : "Ready anytime"
-                                )
+                                        : "Ready anytime")
                             }
                         } else {
                             HStack(spacing: 8) {
@@ -435,16 +427,15 @@ extension ContentView {
                                     title: "Status",
                                     value: hasEatingWindow
                                         ? (eatingRemaining > 0 ? "Eating window open" : "Ready to fast")
-                                        : "Ready anytime"
-                                )
+                                        : "Ready anytime")
                             }
                         }
                     }
                     .padding(4)
                     .onChange(
                         of: hasEatingWindow && eatingRemaining <= 0,
-                        initial: true
-                    ) { _, closed in
+                        initial: true)
+                    { _, closed in
                         if closed {
                             fireIntermittentEatingWindowClosedHapticIfNeeded(sessionID: latestSession.id)
                         }
@@ -472,8 +463,7 @@ extension ContentView {
                 .trim(from: 0, to: progress)
                 .stroke(
                     reached ? .green : CatholicTheme.accent,
-                    style: StrokeStyle(lineWidth: 12, lineCap: .round)
-                )
+                    style: StrokeStyle(lineWidth: 12, lineCap: .round))
                 .rotationEffect(.degrees(-90))
             VStack(spacing: 2) {
                 Text(reached ? "Target" : "Remaining")
@@ -514,8 +504,7 @@ extension ContentView {
                 .trim(from: 0, to: progress)
                 .stroke(
                     hasEatingWindow ? CatholicTheme.accent : CatholicTheme.cardBorder,
-                    style: StrokeStyle(lineWidth: 12, lineCap: .round)
-                )
+                    style: StrokeStyle(lineWidth: 12, lineCap: .round))
                 .rotationEffect(.degrees(-90))
             VStack(spacing: 2) {
                 Text(hasEatingWindow ? "Eating Window" : "Next Fast")
@@ -534,8 +523,8 @@ extension ContentView {
     private func liveEatingSummary(
         hasEatingWindow: Bool,
         lastEnded: Date,
-        nextSuggestedStart: Date
-    ) -> some View {
+        nextSuggestedStart: Date) -> some View
+    {
         VStack(alignment: .leading, spacing: 8) {
             Text(hasEatingWindow ? "Eating window tracker" : "No fixed eating window")
                 .font(.headline.weight(.semibold))

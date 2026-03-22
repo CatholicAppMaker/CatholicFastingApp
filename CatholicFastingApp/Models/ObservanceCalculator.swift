@@ -37,8 +37,7 @@ enum ObservanceCalculator {
         let cacheKey = CalendarCacheKey(
             year: year,
             settings: settings,
-            timeZoneIdentifier: Calendar.gregorian.timeZone.identifier
-        )
+            timeZoneIdentifier: Calendar.gregorian.timeZone.identifier)
         if let cached = cachedCalendar(for: cacheKey) {
             return cached
         }
@@ -61,9 +60,7 @@ enum ObservanceCalculator {
                     .abstinence,
                     required ? .mandatory : .notApplicable,
                     required ? "No meat from mammals or poultry." : ageDispensationDetail(settings: settings),
-                    settings: settings
-                )
-            )
+                    settings: settings))
         }
 
         for friday in fridaysOutsideLent(for: year, lentStart: dates.ashWednesday, lentEnd: dates.easterVigil) {
@@ -76,9 +73,7 @@ enum ObservanceCalculator {
                     .fridayPenance,
                     required ? .mandatory : .notApplicable,
                     required ? detail : ageDispensationDetail(settings: settings),
-                    settings: settings
-                )
-            )
+                    settings: settings))
         }
 
         for holyDay in holyDaysOfObligation(for: year, ascension: dates.ascension, settings: settings) {
@@ -128,8 +123,8 @@ enum ObservanceCalculator {
     private static func holyDaysOfObligation(
         for year: Int,
         ascension: Date,
-        settings: RuleSettings
-    ) -> [(title: String, date: Date, detail: String?)] {
+        settings: RuleSettings) -> [(title: String, date: Date, detail: String?)]
+    {
         var holyDays: [(String, Date, String?)] = []
 
         if settings.regionProfile == .canada {
@@ -202,8 +197,7 @@ enum ObservanceCalculator {
             goodFriday: goodFriday,
             easterVigil: easterVigil,
             pentecost: pentecost,
-            ascension: ascension
-        )
+            ascension: ascension)
     }
 
     private static func fastAndAbstinenceObservance(title: String, date: Date, settings: RuleSettings) -> Observance {
@@ -217,8 +211,7 @@ enum ObservanceCalculator {
                 .fastAndAbstinence,
                 .mandatory,
                 fastDetail(settings: settings),
-                settings: settings
-            )
+                settings: settings)
         }
 
         if abstinenceRequired {
@@ -228,8 +221,7 @@ enum ObservanceCalculator {
                 .abstinence,
                 .mandatory,
                 "Abstinence from meat is required. Fasting does not bind for your age profile.",
-                settings: settings
-            )
+                settings: settings)
         }
 
         return makeObservance(
@@ -238,8 +230,7 @@ enum ObservanceCalculator {
             .fastAndAbstinence,
             .notApplicable,
             ageDispensationDetail(settings: settings),
-            settings: settings
-        )
+            settings: settings)
     }
 
     private static func holyDayDetail(title: String, date: Date, transferred: Bool, settings: RuleSettings) -> String {
@@ -324,8 +315,8 @@ enum ObservanceCalculator {
     private static func feastAndSolemnityDays(
         for year: Int,
         dates: LiturgicalDates,
-        settings: RuleSettings
-    ) -> [(title: String, date: Date, detail: String?)] {
+        settings: RuleSettings) -> [(title: String, date: Date, detail: String?)]
+    {
         var entries: [(String, Date, String?)] = []
 
         func append(_ title: String, _ date: Date, detail: String? = nil) {
@@ -364,8 +355,7 @@ enum ObservanceCalculator {
             append(
                 "Ascension",
                 dates.ascension,
-                detail: "Observed on Sunday in the Canada national baseline and shown here as a celebration rather than a separate weekday holy day obligation."
-            )
+                detail: "Observed on Sunday in the Canada national baseline and shown here as a celebration rather than a separate weekday holy day obligation.")
         }
 
         let trinity = dateByAdding(days: 56, to: dates.easter)
@@ -420,8 +410,8 @@ enum ObservanceCalculator {
         _ kind: Observance.Kind,
         _ obligation: Observance.Obligation,
         _ detail: String?,
-        settings: RuleSettings
-    ) -> Observance {
+        settings: RuleSettings) -> Observance
+    {
         let dayKey = DateFormatter.dayKey.string(from: date)
         let citations = defaultCitations(for: title, kind: kind, settings: settings)
         let rationale = defaultRationale(for: title, kind: kind, obligation: obligation, settings: settings)
@@ -434,16 +424,15 @@ enum ObservanceCalculator {
             detail: detail,
             rationale: rationale,
             citations: citations,
-            ruleVersion: ruleBundleMetadata().version
-        )
+            ruleVersion: ruleBundleMetadata().version)
     }
 
     private static func defaultRationale(
         for title: String,
         kind: Observance.Kind,
         obligation: Observance.Obligation,
-        settings: RuleSettings
-    ) -> String {
+        settings: RuleSettings) -> String
+    {
         switch kind {
         case .fastAndAbstinence:
             return obligation == .mandatory
@@ -548,8 +537,8 @@ enum ObservanceCalculator {
     private static func memorialDays(
         for year: Int,
         dates: LiturgicalDates,
-        settings: RuleSettings
-    ) -> [(title: String, date: Date, detail: String?)] {
+        settings: RuleSettings) -> [(title: String, date: Date, detail: String?)]
+    {
         var items: [(String, Date, String?)] = []
         let defaultDetail = switch settings.regionProfile {
         case .us:
@@ -599,8 +588,8 @@ enum ObservanceCalculator {
 
     private static func fridayPenanceDetail(
         mode: RuleSettings.FridayOutsideLentMode,
-        settings: RuleSettings
-    ) -> String {
+        settings: RuleSettings) -> String
+    {
         if settings.regionProfile == .canada {
             return switch mode {
             case .abstainFromMeat:
@@ -679,8 +668,7 @@ enum ObservanceCalculator {
 
         guard
             let birthDate = canonicalDate(
-                year: settings.birthYear, month: settings.birthMonth, day: settings.birthDay
-            )
+                year: settings.birthYear, month: settings.birthMonth, day: settings.birthDay)
         else {
             return max(0, year - settings.birthYear)
         }

@@ -2,32 +2,29 @@ import SwiftUI
 
 extension ContentView {
     func ipadFastingDaysSummaryCards(for items: [Observance]) -> some View {
-        let requiredCount = items.filter { $0.obligation == .mandatory }.count
-        let optionalCount = items.filter { $0.obligation == .optional }.count
-        let celebrationCount = items.filter { [.holyDay, .feastDay, .memorialDay].contains($0.kind) }.count
+        let requiredCount = items.count(where: { $0.obligation == .mandatory })
+        let optionalCount = items.count(where: { $0.obligation == .optional })
+        let celebrationCount = items.count(where: { [.holyDay, .feastDay, .memorialDay].contains($0.kind) })
 
         return LazyVGrid(
             columns: [GridItem(.adaptive(minimum: 150), spacing: 12, alignment: .top)],
             alignment: .leading,
-            spacing: 12
-        ) {
+            spacing: 12)
+        {
             IPadSummaryMetricCard(
                 title: "Required",
                 value: "\(requiredCount)",
-                subtitle: fastingDaysShowAllYearDays ? "days in view" : "upcoming days"
-            )
+                subtitle: fastingDaysShowAllYearDays ? "days in view" : "upcoming days")
             IPadSummaryMetricCard(
                 title: "Optional",
                 value: "\(optionalCount)",
                 subtitle: fastingDaysIncludeOptionalDays ? "included now" : "hidden from list",
-                tint: CatholicTheme.accent
-            )
+                tint: CatholicTheme.accent)
             IPadSummaryMetricCard(
                 title: "Celebrations",
                 value: "\(celebrationCount)",
                 subtitle: fastingDaysIncludeFeastAndHolyDays ? "shown now" : "hidden from list",
-                tint: .orange
-            )
+                tint: .orange)
         }
         .accessibilityIdentifier("ipad.fasting_days.summary_cards")
     }
@@ -41,16 +38,14 @@ extension ContentView {
                     IPadWorkspaceHeader(
                         eyebrow: "Filters",
                         title: "Fasting day scope",
-                        detail: "Keep scope, optional days, and celebrations in view."
-                    )
+                        detail: "Keep scope, optional days, and celebrations in view.")
 
                     Picker(
                         "Scope",
                         selection: Binding(
                             get: { fastingDaysShowAllYearDays ? 1 : 0 },
-                            set: { fastingDaysShowAllYearDays = $0 == 1 }
-                        )
-                    ) {
+                            set: { fastingDaysShowAllYearDays = $0 == 1 }))
+                    {
                         Text("Upcoming").tag(0)
                         Text("Full Year").tag(1)
                     }
@@ -77,8 +72,7 @@ extension ContentView {
                     IPadWorkspaceHeader(
                         eyebrow: "Region",
                         title: regionContext.classificationLabel,
-                        detail: regionalNormSummaryLine
-                    )
+                        detail: regionalNormSummaryLine)
                     IPadContextBadge(text: regionContext.supportLevel.label, supportLevel: regionContext.supportLevel)
                     DisclosureGroup("Region notes") {
                         Text(regionContext.disclosureText)
@@ -107,8 +101,7 @@ extension ContentView {
             quote: fastingDaysFastingQuote,
             regionContext: regionContext,
             compact: compact,
-            accessibilityIdentifier: "ipad.fasting_days.hero"
-        )
+            accessibilityIdentifier: "ipad.fasting_days.hero")
     }
 
     func ipadFastingDaysQuickDateStrip(from items: [Observance]) -> some View {
@@ -123,8 +116,8 @@ extension ContentView {
                             IPadKeyDateChip(
                                 title: observance.title,
                                 subtitle: observance.date.formatted(date: .abbreviated, time: .omitted),
-                                isSelected: selectedFastingObservanceID == observance.id
-                            ) {
+                                isSelected: selectedFastingObservanceID == observance.id)
+                            {
                                 selectedFastingObservanceID = observance.id
                             }
                         }
@@ -143,8 +136,7 @@ extension ContentView {
                     IPadWorkspaceHeader(
                         eyebrow: "Period",
                         title: title,
-                        detail: "\(observances.count) observance\(observances.count == 1 ? "" : "s")"
-                    )
+                        detail: "\(observances.count) observance\(observances.count == 1 ? "" : "s")")
                     ForEach(observances) { observance in
                         let context = RegionalGuidanceContextFactory.presentationContext(for: observance, settings: settings)
                         Button {
@@ -152,8 +144,7 @@ extension ContentView {
                         } label: {
                             IPadObservanceSelectionRow(
                                 context: context,
-                                isSelected: selectedFastingObservanceID == observance.id
-                            )
+                                isSelected: selectedFastingObservanceID == observance.id)
                         }
                         .buttonStyle(.plain)
                         .accessibilityIdentifier("ipad.fasting_days.row.\(observance.id)")
@@ -175,8 +166,7 @@ extension ContentView {
                     IPadWorkspaceHeader(
                         eyebrow: context.regionalContext.classificationLabel,
                         title: selected.title,
-                        detail: selected.date.formatted(date: .complete, time: .omitted)
-                    )
+                        detail: selected.date.formatted(date: .complete, time: .omitted))
                     VStack(alignment: .leading, spacing: 8) {
                         HStack(spacing: 8) {
                             StatusTag(text: selected.kind.label, color: selected.kind.color)
@@ -212,8 +202,7 @@ extension ContentView {
                     IPadWorkspaceHeader(
                         eyebrow: "Log",
                         title: "Mark today clearly",
-                        detail: "Keep status and notes together."
-                    )
+                        detail: "Keep status and notes together.")
                     if compact {
                         VStack(alignment: .leading, spacing: 10) {
                             HStack(spacing: 10) {

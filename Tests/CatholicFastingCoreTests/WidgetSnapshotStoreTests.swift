@@ -29,8 +29,7 @@ final class WidgetSnapshotStoreTests: XCTestCase {
             completionRate: 0.72,
             hasActiveIntermittentFast: true,
             activeIntermittentFastStart: generatedAt,
-            activeIntermittentTargetHours: 16
-        )
+            activeIntermittentTargetHours: 16)
 
         WidgetSnapshotStore.persist(snapshot)
         let loaded = WidgetSnapshotStore.load()
@@ -48,8 +47,7 @@ final class WidgetSnapshotStoreTests: XCTestCase {
             completionRate: 0,
             hasActiveIntermittentFast: false,
             activeIntermittentFastStart: nil,
-            activeIntermittentTargetHours: 16
-        )
+            activeIntermittentTargetHours: 16)
         let updated = WidgetSnapshot(
             generatedAt: Date(timeIntervalSince1970: 1_726_700_000),
             todayTitle: "Good Friday",
@@ -59,8 +57,7 @@ final class WidgetSnapshotStoreTests: XCTestCase {
             completionRate: 0.95,
             hasActiveIntermittentFast: false,
             activeIntermittentFastStart: nil,
-            activeIntermittentTargetHours: 20
-        )
+            activeIntermittentTargetHours: 20)
 
         WidgetSnapshotStore.persist(initial)
         WidgetSnapshotStore.persist(updated)
@@ -78,8 +75,7 @@ final class WidgetSnapshotStoreTests: XCTestCase {
             completionRate: 0.65,
             hasActiveIntermittentFast: false,
             activeIntermittentFastStart: nil,
-            activeIntermittentTargetHours: 16
-        )
+            activeIntermittentTargetHours: 16)
 
         WidgetSnapshotStore.persist(snapshot)
         XCTAssertEqual(WidgetSnapshotStore.load(), snapshot)

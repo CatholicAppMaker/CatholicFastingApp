@@ -1,0 +1,60 @@
+included:
+  - CatholicFastingApp
+  - Tests
+  - CatholicFastingAppUITests
+excluded:
+  - design
+  - build
+  - .build
+  - DerivedData
+  - CatholicFastingApp.xcodeproj
+
+opt_in_rules:
+  - array_init
+  - closure_spacing
+  - empty_count
+  - empty_string
+  - explicit_init
+  - first_where
+  - force_unwrapping
+  - modifier_order
+  - redundant_nil_coalescing
+  - sorted_first_last
+  - toggle_bool
+  - vertical_whitespace_closing_braces
+
+disabled_rules:
+  - opening_brace
+  - trailing_comma
+  - todo
+  - trailing_closure
+  - multiple_closures_with_trailing_closure
+  - identifier_name
+  - function_body_length
+  - type_body_length
+
+file_length:
+  warning: 950
+  error: 1400
+
+line_length:
+  warning: 180
+  error: 320
+  ignores_comments: true
+  ignores_urls: true
+
+function_parameter_count:
+  warning: 7
+  error: 10
+
+cyclomatic_complexity:
+  warning: 20
+  error: 30
+
+type_name:
+  min_length: 3
+  max_length:
+    warning: 50
+    error: 60
+
+reporter: "xcode"

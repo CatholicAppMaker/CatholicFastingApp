@@ -16,8 +16,7 @@ extension ContentView {
                         quote: dailySeasonalQuote,
                         regionContext: RegionalGuidanceContextFactory.generalContext(for: settings),
                         compact: compact,
-                        accessibilityIdentifier: "ipad.premium.hero"
-                    )
+                        accessibilityIdentifier: "ipad.premium.hero")
 
                     if stacked {
                         VStack(alignment: .leading, spacing: 18) {
@@ -55,8 +54,7 @@ extension ContentView {
             IPadWorkspaceHeader(
                 eyebrow: "Access",
                 title: monetizationStore.premiumUnlocked ? "Premium active" : "Unlock Premium",
-                detail: "Choose yearly or monthly first. Billing and legal tools stay below."
-            )
+                detail: "Choose yearly or monthly first. Billing and legal tools stay below.")
             premiumSurfacePickerSection
             if selectedSupportPremiumSurface == .upgrade {
                 premiumAndSupportSection
@@ -73,8 +71,7 @@ extension ContentView {
             IPadWorkspaceHeader(
                 eyebrow: "Pillars",
                 title: "Choose the workflow",
-                detail: "Planning, accountability, reflection, and exports stay grouped by outcome."
-            )
+                detail: "Planning, accountability, reflection, and exports stay grouped by outcome.")
 
             ForEach(PremiumEntitlementSurface.allCases) { surface in
                 let destination = premiumToolDestination(for: surface)
@@ -105,21 +102,18 @@ extension ContentView {
         let analytics = PremiumAnalyticsEngine.summary(
             observances: currentYearObservances,
             statusesByID: tracker.statusesByID,
-            sessions: intermittentTracker.sessions
-        )
+            sessions: intermittentTracker.sessions)
         let reminderRecommendation = PremiumReminderPlanner.recommendation(
             observances: rollingUpcomingObservances,
             statusesByID: tracker.statusesByID,
             now: Date(),
-            calendar: liturgicalCalendar
-        )
+            calendar: liturgicalCalendar)
 
         return VStack(alignment: .leading, spacing: 16) {
             IPadWorkspaceHeader(
                 eyebrow: "Dashboard",
                 title: "Formation Toolkit overview",
-                detail: "Keep premium in one coherent workspace."
-            )
+                detail: "Keep premium in one coherent workspace.")
 
             HStack(spacing: 10) {
                 IPadSummaryMetricCard(title: "Required", value: "\(analytics.requiredCompletionPercent)%", subtitle: "required days completed")
@@ -211,8 +205,7 @@ extension ContentView {
             IPadWorkspaceHeader(
                 eyebrow: "Selected tool",
                 title: (selectedPremiumToolDestination ?? .planner).title,
-                detail: (selectedPremiumToolDestination ?? .planner).subtitle
-            )
+                detail: (selectedPremiumToolDestination ?? .planner).subtitle)
             List {
                 premiumToolIntroSection(for: selectedPremiumToolDestination ?? .planner)
                 premiumToolSections(for: selectedPremiumToolDestination ?? .planner)
@@ -230,8 +223,7 @@ extension ContentView {
             IPadWorkspaceHeader(
                 eyebrow: "Restore / Manage / Legal",
                 title: "Billing and legal tools",
-                detail: "Use these after choosing a plan if you need to restore billing or open legal links."
-            )
+                detail: "Use these after choosing a plan if you need to restore billing or open legal links.")
 
             HStack(spacing: 10) {
                 Button("Restore Purchases") {

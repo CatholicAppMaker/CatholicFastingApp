@@ -1,13 +1,13 @@
 import SwiftUI
 #if canImport(UIKit)
-    import UIKit
+import UIKit
 #endif
 
 #if canImport(UserNotifications)
-    import UserNotifications
+import UserNotifications
 #endif
 #if canImport(TipKit)
-    import TipKit
+import TipKit
 #endif
 
 struct ContentView: View {
@@ -99,8 +99,7 @@ struct ContentView: View {
             fridayOutsideLentMode: RuleSettings.FridayOutsideLentMode(rawValue: fridayModeRaw)
                 ?? .substitutePenance,
             calendarMode: RuleSettings.CalendarMode(rawValue: calendarModeRaw) ?? .usccb,
-            regionProfile: RuleSettings.RegionProfile(rawValue: regionProfileRaw) ?? .us
-        )
+            regionProfile: RuleSettings.RegionProfile(rawValue: regionProfileRaw) ?? .us)
     }
 
     var provinceSelection: RuleSettings.USProvincePreset {
@@ -122,8 +121,7 @@ struct ContentView: View {
     var currentYearObservances: [Observance] {
         ObservanceCalculator.makeCalendar(
             for: Calendar.current.component(.year, from: Date()),
-            settings: settings
-        )
+            settings: settings)
     }
 
     var actionableObservances: [Observance] {
@@ -131,7 +129,7 @@ struct ContentView: View {
     }
 
     var completedCount: Int {
-        actionableObservances.filter { tracker.status(for: $0.id).countsTowardProgress }.count
+        actionableObservances.count(where: { tracker.status(for: $0.id).countsTowardProgress })
     }
 
     var ruleBundleMetadata: RuleBundleMetadata {
@@ -157,9 +155,9 @@ struct ContentView: View {
 
     var appLayoutProfile: AppLayoutProfile {
         #if canImport(UIKit)
-            if UIDevice.current.userInterfaceIdiom == .pad, horizontalSizeClass == .regular {
-                return .pad
-            }
+        if UIDevice.current.userInterfaceIdiom == .pad, horizontalSizeClass == .regular {
+            return .pad
+        }
         #endif
         return .phone
     }

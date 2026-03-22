@@ -12,8 +12,7 @@ extension ContentView {
             quote: intermittentFastingQuote,
             regionContext: RegionalGuidanceContextFactory.generalContext(for: settings),
             compact: compact,
-            accessibilityIdentifier: "ipad.intermittent.hero"
-        )
+            accessibilityIdentifier: "ipad.intermittent.hero")
     }
 
     var ipadIntermittentLiveControlCenter: some View {
@@ -23,8 +22,7 @@ extension ContentView {
                 title: intermittentTracker.activeStart == nil ? "No active fast" : "Fast in progress",
                 detail: intermittentTracker.activeStart == nil
                     ? "Set a target and start when ready."
-                    : "Elapsed time, target, and next action stay together."
-            )
+                    : "Elapsed time, target, and next action stay together.")
 
             TimelineView(.periodic(from: .now, by: 1)) { context in
                 Group {
@@ -100,8 +98,7 @@ extension ContentView {
             IPadWorkspaceHeader(
                 eyebrow: "Controls",
                 title: "Choose a target and act",
-                detail: "Quick presets first. Custom longer fasts stay premium."
-            )
+                detail: "Quick presets first. Custom longer fasts stay premium.")
 
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
                 ForEach(quickPlans, id: \.self) { hours in
@@ -163,8 +160,7 @@ extension ContentView {
             IPadWorkspaceHeader(
                 eyebrow: "Planning",
                 title: "Plan snapshot",
-                detail: "Keep the current rhythm visible without crowding the live tracker."
-            )
+                detail: "Keep the current rhythm visible without crowding the live tracker.")
 
             HStack(spacing: 10) {
                 IPadSummaryMetricCard(title: "Sessions", value: "\(intermittentTracker.sessions.count)", subtitle: "tracked locally")
@@ -185,8 +181,7 @@ extension ContentView {
             IPadWorkspaceHeader(
                 eyebrow: "Advanced",
                 title: "Schedules, milestones, and recovery",
-                detail: "Keep deeper tools available without letting them lead the page."
-            )
+                detail: "Keep deeper tools available without letting them lead the page.")
             DisclosureGroup(
                 isExpanded: $intermittentShowAdvanced,
                 content: {
@@ -203,9 +198,8 @@ extension ContentView {
                         Text("Schedules, milestone stats, and recovery guidance.")
                             .appSupportingTextStyle()
                     }
-                }
-            )
-            .accessibilityIdentifier("ipad.intermittent.advanced.disclosure")
+                })
+                .accessibilityIdentifier("ipad.intermittent.advanced.disclosure")
 
             if !intermittentShowAdvanced {
                 Text("Advanced tools stay collapsed until you need them.")
@@ -222,8 +216,7 @@ extension ContentView {
             IPadWorkspaceHeader(
                 eyebrow: "History",
                 title: "Recent sessions",
-                detail: "Review recent fasts without crowding the live controls."
-            )
+                detail: "Review recent fasts without crowding the live controls.")
             intermittentSessionHistorySection
         }
         .padding(18)

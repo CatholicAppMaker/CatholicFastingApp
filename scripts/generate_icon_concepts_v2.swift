@@ -22,8 +22,7 @@ func rep() -> NSBitmapImageRep {
         colorSpaceName: .deviceRGB,
         bitmapFormat: [],
         bytesPerRow: 0,
-        bitsPerPixel: 0
-    )!
+        bitsPerPixel: 0)!
 }
 
 func save(_ rep: NSBitmapImageRep, _ fileName: String) throws {

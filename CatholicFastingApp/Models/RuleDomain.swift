@@ -1,7 +1,7 @@
 @preconcurrency import Foundation
 import SwiftUI
 #if canImport(CryptoKit)
-    import CryptoKit
+import CryptoKit
 #endif
 
 struct RuleSettings: Hashable {
@@ -148,8 +148,8 @@ struct RuleSettings: Hashable {
         ascensionObservance: AscensionObservance,
         fridayOutsideLentMode: FridayOutsideLentMode,
         calendarMode: CalendarMode,
-        regionProfile: RegionProfile = .us
-    ) {
+        regionProfile: RegionProfile = .us)
+    {
         self.birthYear = birthYear
         self.birthMonth = birthMonth
         self.birthDay = birthDay
@@ -167,8 +167,7 @@ struct RuleSettings: Hashable {
         guard (1 ... 12).contains(birthMonth) else { return false }
         guard (1 ... 31).contains(birthDay) else { return false }
         return Calendar.gregorian.date(
-            from: DateComponents(year: birthYear, month: birthMonth, day: birthDay, hour: 12)
-        ) != nil
+            from: DateComponents(year: birthYear, month: birthMonth, day: birthDay, hour: 12)) != nil
     }
 }
 
@@ -247,8 +246,7 @@ enum USCCBYearlyCalendarData {
             Entry(month: 10, day: 6, title: "Blessed Marie Rose Durocher, Virgin", kind: .memorialDay, detail: "U.S. Proper Calendar celebration day."),
             Entry(month: 10, day: 9, title: "Saint John Henry Newman, Priest", kind: .memorialDay, detail: "U.S. Proper Calendar celebration day (emendation)."),
             Entry(
-                month: 10, day: 19, title: "Saints John de Brébeuf and Isaac Jogues, Priests, and Companions, Martyrs", kind: .memorialDay, detail: "U.S. Proper Calendar celebration day."
-            ),
+                month: 10, day: 19, title: "Saints John de Brébeuf and Isaac Jogues, Priests, and Companions, Martyrs", kind: .memorialDay, detail: "U.S. Proper Calendar celebration day."),
             Entry(month: 10, day: 20, title: "Saint Paul of the Cross, Priest", kind: .memorialDay, detail: "U.S. Proper Calendar celebration day."),
             Entry(month: 11, day: 13, title: "Saint Frances Xavier Cabrini, Virgin", kind: .memorialDay, detail: "U.S. Proper Calendar celebration day."),
         ],
@@ -269,8 +267,7 @@ enum USCCBYearlyCalendarData {
             Entry(month: 10, day: 6, title: "Blessed Marie Rose Durocher, Virgin", kind: .memorialDay, detail: "U.S. Proper Calendar celebration day."),
             Entry(month: 10, day: 9, title: "Saint John Henry Newman, Priest", kind: .memorialDay, detail: "U.S. Proper Calendar celebration day (emendation)."),
             Entry(
-                month: 10, day: 19, title: "Saints John de Brébeuf and Isaac Jogues, Priests, and Companions, Martyrs", kind: .memorialDay, detail: "U.S. Proper Calendar celebration day."
-            ),
+                month: 10, day: 19, title: "Saints John de Brébeuf and Isaac Jogues, Priests, and Companions, Martyrs", kind: .memorialDay, detail: "U.S. Proper Calendar celebration day."),
             Entry(month: 10, day: 20, title: "Saint Paul of the Cross, Priest", kind: .memorialDay, detail: "U.S. Proper Calendar celebration day."),
             Entry(month: 11, day: 13, title: "Saint Frances Xavier Cabrini, Virgin", kind: .memorialDay, detail: "U.S. Proper Calendar celebration day."),
             Entry(month: 11, day: 18, title: "Saint Rose Philippine Duchesne, Virgin", kind: .memorialDay, detail: "U.S. Proper Calendar celebration day."),

@@ -35,351 +35,301 @@ enum CatholicFastingQuoteSelector {
             text: "Do you wish your prayer to fly toward God? Give it two wings: fasting and almsgiving.",
             author: "St. Augustine",
             source: "Sermon on Prayer and Fasting",
-            tradition: "Church Father"
-        ),
+            tradition: "Church Father"),
         CatholicFastingQuote(
             id: "peter-chrysologus-soul-prayer",
             text: "Fasting is the soul of prayer, and mercy is the lifeblood of fasting.",
             author: "St. Peter Chrysologus",
             source: "Sermon 43",
-            tradition: "Church Father"
-        ),
+            tradition: "Church Father"),
         CatholicFastingQuote(
             id: "thomas-three-purposes",
             text: "Fasting is practiced to restrain the flesh, lift the mind to contemplation, and make satisfaction for sin.",
             author: "St. Thomas Aquinas",
             source: "Summa Theologiae II-II, q.147, a.1",
-            tradition: "Doctor of the Church"
-        ),
+            tradition: "Doctor of the Church"),
         CatholicFastingQuote(
             id: "basil-true-fast",
             text: "True fasting is not only abstinence from food, but withdrawal from evil.",
             author: "St. Basil the Great",
             source: "Homily on Fasting",
-            tradition: "Church Father"
-        ),
+            tradition: "Church Father"),
         CatholicFastingQuote(
             id: "leo-give-to-poor",
             text: "What we deny ourselves by fasting should be given to the poor.",
             author: "St. Leo the Great",
             source: "Sermons on Lent",
-            tradition: "Pope & Doctor of the Church"
-        ),
+            tradition: "Pope & Doctor of the Church"),
         CatholicFastingQuote(
             id: "chrysostom-fast-and-mercy",
             text: "Do you fast? Give me proof by your works of mercy.",
             author: "St. John Chrysostom",
             source: "Homilies on Fasting",
-            tradition: "Church Father"
-        ),
+            tradition: "Church Father"),
         CatholicFastingQuote(
             id: "francis-violence",
             text: "Fasting weakens our tendency to violence; it disarms us and becomes an opportunity for growth.",
             author: "Pope Francis",
             source: "Lenten Message",
-            tradition: "Pope"
-        ),
+            tradition: "Pope"),
         CatholicFastingQuote(
             id: "benedict-listen-word",
             text: "Denying material food helps us listen to Christ and be nourished by his saving word.",
             author: "Pope Benedict XVI",
             source: "Lenten Message",
-            tradition: "Pope"
-        ),
+            tradition: "Pope"),
         CatholicFastingQuote(
             id: "gregory-fast-charity",
             text: "The abstinence of one should become the refreshment of another.",
             author: "St. Gregory the Great",
             source: "Homilies on the Gospels",
-            tradition: "Pope & Doctor of the Church"
-        ),
+            tradition: "Pope & Doctor of the Church"),
         CatholicFastingQuote(
             id: "john-paul-prayer-sacrifice",
             text: "Prayer joined to sacrifice constitutes the most powerful force in human history.",
             author: "Pope St. John Paul II",
             source: "Address on Prayer and Sacrifice",
-            tradition: "Pope"
-        ),
+            tradition: "Pope"),
         CatholicFastingQuote(
             id: "ambrose-self-mastery",
             text: "By fasting, the body learns obedience and the soul learns freedom.",
             author: "St. Ambrose",
             source: "On Elijah and Fasting",
-            tradition: "Church Father"
-        ),
+            tradition: "Church Father"),
         CatholicFastingQuote(
             id: "isaac-syrian-humility",
             text: "Fasting is the beginning of humility and the companion of prayer.",
             author: "St. Isaac the Syrian",
             source: "Ascetical Homilies",
-            tradition: "Church Father"
-        ),
+            tradition: "Church Father"),
         CatholicFastingQuote(
             id: "alphonsus-discipline-soul",
             text: "He who mortifies his appetite is better prepared to belong wholly to God.",
             author: "St. Alphonsus Liguori",
             source: "Sermons for Lent",
-            tradition: "Doctor of the Church"
-        ),
+            tradition: "Doctor of the Church"),
         CatholicFastingQuote(
             id: "bonaventure-cross",
             text: "No one can enter into the joy of Easter unless he first passes through the labor of penance.",
             author: "St. Bonaventure",
             source: "Lenten Conferences",
-            tradition: "Doctor of the Church"
-        ),
+            tradition: "Doctor of the Church"),
         CatholicFastingQuote(
             id: "catherine-desire",
             text: "Discipline the body so the heart may burn more purely for God.",
             author: "St. Catherine of Siena",
             source: "Letters",
-            tradition: "Doctor of the Church"
-        ),
+            tradition: "Doctor of the Church"),
         CatholicFastingQuote(
             id: "josemaria-small-mortifications",
             text: "Choose small sacrifices with love, and they will become a school of holiness.",
             author: "St. Josemaria Escriva",
             source: "The Way",
-            tradition: "Saint"
-        ),
+            tradition: "Saint"),
         CatholicFastingQuote(
             id: "faustina-offer-suffering",
             text: "Offer your fast in silence and love, and Jesus will use it for souls.",
             author: "St. Faustina Kowalska",
             source: "Diary",
-            tradition: "Saint"
-        ),
+            tradition: "Saint"),
         CatholicFastingQuote(
             id: "therese-hidden-sacrifice",
             text: "Hidden sacrifices done for love delight the Heart of Jesus.",
             author: "St. Therese of Lisieux",
             source: "Story of a Soul",
-            tradition: "Doctor of the Church"
-        ),
+            tradition: "Doctor of the Church"),
         CatholicFastingQuote(
             id: "cyril-hunger-for-word",
             text: "When the body fasts, let the soul feast on the word of God.",
             author: "St. Cyril of Jerusalem",
             source: "Catechetical Lectures",
-            tradition: "Church Father"
-        ),
+            tradition: "Church Father"),
         CatholicFastingQuote(
             id: "jerome-scripture-bread",
             text: "As bread strengthens the body, Scripture strengthens the one who fasts in faith.",
             author: "St. Jerome",
             source: "Letters",
-            tradition: "Doctor of the Church"
-        ),
+            tradition: "Doctor of the Church"),
         CatholicFastingQuote(
             id: "paul-vi-conversion",
             text: "Penance is meaningful when it becomes a true conversion of heart.",
             author: "Pope St. Paul VI",
             source: "Apostolic Constitution Paenitemini",
-            tradition: "Pope"
-        ),
+            tradition: "Pope"),
         CatholicFastingQuote(
             id: "pius-xii-penance",
             text: "Voluntary penance prepares the Christian soul for deeper union with Christ.",
             author: "Pope Pius XII",
             source: "Lenten Address",
-            tradition: "Pope"
-        ),
+            tradition: "Pope"),
         CatholicFastingQuote(
             id: "john-xxiii-reparation",
             text: "Fasting offered with love becomes a prayer for peace and reparation.",
             author: "Pope St. John XXIII",
             source: "Lenten Message",
-            tradition: "Pope"
-        ),
+            tradition: "Pope"),
         CatholicFastingQuote(
             id: "teresa-calcutta-share",
             text: "When you give up something for love, let someone poorer than you receive what you spared.",
             author: "St. Teresa of Calcutta",
             source: "Lenten Reflection",
-            tradition: "Saint"
-        ),
+            tradition: "Saint"),
         CatholicFastingQuote(
             id: "bernard-penance-love",
             text: "Penance without love is heavy, but penance with love becomes joy.",
             author: "St. Bernard of Clairvaux",
             source: "Sermons",
-            tradition: "Doctor of the Church"
-        ),
+            tradition: "Doctor of the Church"),
         CatholicFastingQuote(
             id: "francis-sales-gentle-discipline",
             text: "Practice mortification with prudence and perseverance, not with haste.",
             author: "St. Francis de Sales",
             source: "Introduction to the Devout Life",
-            tradition: "Doctor of the Church"
-        ),
+            tradition: "Doctor of the Church"),
         CatholicFastingQuote(
             id: "john-climacus-vigilance",
             text: "A guarded appetite helps a guarded heart.",
             author: "St. John Climacus",
             source: "The Ladder of Divine Ascent",
-            tradition: "Church Father"
-        ),
+            tradition: "Church Father"),
         CatholicFastingQuote(
             id: "maximus-watchfulness",
             text: "Fasting teaches the mind watchfulness and the heart sobriety.",
             author: "St. Maximus the Confessor",
             source: "Chapters on Love",
-            tradition: "Church Father"
-        ),
+            tradition: "Church Father"),
         CatholicFastingQuote(
             id: "cassian-balance",
             text: "Wise fasting keeps the body in service of prayer, not in collapse.",
             author: "St. John Cassian",
             source: "Conferences",
-            tradition: "Church Father"
-        ),
+            tradition: "Church Father"),
         CatholicFastingQuote(
             id: "teresa-avila-detachment",
             text: "Detachment from comforts makes more room for friendship with God.",
             author: "St. Teresa of Avila",
             source: "The Way of Perfection",
-            tradition: "Doctor of the Church"
-        ),
+            tradition: "Doctor of the Church"),
         CatholicFastingQuote(
             id: "john-cross-purification",
             text: "The soul grows clearer when lesser appetites are quieted.",
             author: "St. John of the Cross",
             source: "Ascent of Mount Carmel",
-            tradition: "Doctor of the Church"
-        ),
+            tradition: "Doctor of the Church"),
         CatholicFastingQuote(
             id: "clement-alexandria-simplicity",
             text: "Simplicity at table can train the heart for holiness.",
             author: "St. Clement of Alexandria",
             source: "Paedagogus",
-            tradition: "Church Father"
-        ),
+            tradition: "Church Father"),
         CatholicFastingQuote(
             id: "paul-iii-penance-charity",
             text: "Christian penance bears fruit when it is joined to mercy and justice.",
             author: "Pope Paul III",
             source: "Call to Renewal",
-            tradition: "Pope"
-        ),
+            tradition: "Pope"),
         CatholicFastingQuote(
             id: "benedict-rule-measure",
             text: "Measure and steadiness in discipline help sustain a faithful life of prayer.",
             author: "St. Benedict",
             source: "Rule of St. Benedict",
-            tradition: "Saint"
-        ),
+            tradition: "Saint"),
         CatholicFastingQuote(
             id: "attributed-athanasius-fasting-prayer",
             text: "Prayer needs fasting to give it strength.",
             author: "St. Athanasius",
             source: "Paschal Letter tradition",
-            tradition: "Church Father"
-        ),
+            tradition: "Church Father"),
         CatholicFastingQuote(
             id: "attributed-vincent-paul-charity",
             text: "Let your penance become bread for someone in need.",
             author: "St. Vincent de Paul",
             source: "Conferences",
-            tradition: "Saint"
-        ),
+            tradition: "Saint"),
         CatholicFastingQuote(
             id: "attributed-cajetan-discipline",
             text: "Fasting trains desire so the heart may choose God first.",
             author: "St. Cajetan",
             source: "Spiritual Exhortations",
-            tradition: "Saint"
-        ),
+            tradition: "Saint"),
         CatholicFastingQuote(
             id: "attributed-ignatius-order",
             text: "Ordered penance supports freedom to love and serve God.",
             author: "St. Ignatius of Loyola",
             source: "Spiritual Exercises",
-            tradition: "Saint"
-        ),
+            tradition: "Saint"),
         CatholicFastingQuote(
             id: "attributed-philip-neri-cheerful",
             text: "Practice mortification with humility and a peaceful heart.",
             author: "St. Philip Neri",
             source: "Sayings and Maxims",
-            tradition: "Saint"
-        ),
+            tradition: "Saint"),
         CatholicFastingQuote(
             id: "attributed-curé-ars-penance",
             text: "Small penances done faithfully change the soul.",
             author: "St. John Vianney",
             source: "Catechetical Instructions",
-            tradition: "Saint"
-        ),
+            tradition: "Saint"),
         CatholicFastingQuote(
             id: "attributed-cyril-alexandria-watchful",
             text: "Bodily discipline can awaken spiritual vigilance.",
             author: "St. Cyril of Alexandria",
             source: "Homiletic tradition",
-            tradition: "Church Father"
-        ),
+            tradition: "Church Father"),
         CatholicFastingQuote(
             id: "attributed-ephrem-lent-heart",
             text: "Fast not only from food, but from everything that hardens the heart.",
             author: "St. Ephrem the Syrian",
             source: "Lenten Hymns",
-            tradition: "Church Father"
-        ),
+            tradition: "Church Father"),
         CatholicFastingQuote(
             id: "attributed-anselm-compunction",
             text: "Penance opens the soul to compunction and gratitude.",
             author: "St. Anselm",
             source: "Meditations and Prayers",
-            tradition: "Doctor of the Church"
-        ),
+            tradition: "Doctor of the Church"),
         CatholicFastingQuote(
             id: "attributed-robert-bellarmine-mortification",
             text: "Mortification helps the will remain steady in the good.",
             author: "St. Robert Bellarmine",
             source: "Spiritual Writings",
-            tradition: "Doctor of the Church"
-        ),
+            tradition: "Doctor of the Church"),
         CatholicFastingQuote(
             id: "attributed-camillus-mercy",
             text: "Every sacrifice should become mercy for the suffering.",
             author: "St. Camillus de Lellis",
             source: "Spiritual Letters",
-            tradition: "Saint"
-        ),
+            tradition: "Saint"),
         CatholicFastingQuote(
             id: "attributed-pius-x-communion-penance",
             text: "Penance and Eucharistic devotion strengthen one another.",
             author: "Pope St. Pius X",
             source: "Pastoral Instruction",
-            tradition: "Pope"
-        ),
+            tradition: "Pope"),
         CatholicFastingQuote(
             id: "attributed-john-paul-ii-lent-charity",
             text: "Lenten sacrifice bears fruit when it becomes love in action.",
             author: "Pope St. John Paul II",
             source: "Lenten Message",
-            tradition: "Pope"
-        ),
+            tradition: "Pope"),
         CatholicFastingQuote(
             id: "attributed-benedict-xvi-heart-conversion",
             text: "Exterior fasting should lead to interior conversion.",
             author: "Pope Benedict XVI",
             source: "General Audience on Lent",
-            tradition: "Pope"
-        ),
+            tradition: "Pope"),
         CatholicFastingQuote(
             id: "attributed-francis-ash-heart",
             text: "Fasting has meaning when it touches our hearts and changes our lives.",
             author: "Pope Francis",
             source: "Ash Wednesday Homily",
-            tradition: "Pope"
-        ),
+            tradition: "Pope"),
         CatholicFastingQuote(
             id: "attributed-bonaventure-lent-school",
             text: "Lent is a school of conversion, prayer, and self-denial.",
             author: "St. Bonaventure",
             source: "Lenten Conferences",
-            tradition: "Doctor of the Church"
-        ),
+            tradition: "Doctor of the Church"),
     ]
 
     static func quote(for context: CatholicQuoteContext, date: Date = Date()) -> CatholicFastingQuote {
@@ -389,8 +339,7 @@ enum CatholicFastingQuoteSelector {
                 text: "Offer every fast with prayer, mercy, and gratitude.",
                 author: "Catholic Fasting",
                 source: "In-app reflection",
-                tradition: "Devotional"
-            )
+                tradition: "Devotional")
         }
         let calendar = Calendar.gregorian
         let day = (calendar.ordinality(of: .day, in: .year, for: date) ?? 1) - 1
@@ -414,8 +363,7 @@ extension ContentView {
                     title: guidanceHeroArtwork.title,
                     subtitle: guidanceHeroArtwork.subtitle,
                     height: 200,
-                    accessibilityIdentifier: "guidance.sacred_image.card"
-                )
+                    accessibilityIdentifier: "guidance.sacred_image.card")
 
                 CatholicFastingQuoteCard(quote: guidanceFastingQuote, compact: true)
                     .accessibilityIdentifier("guidance.fasting_quote")
@@ -452,30 +400,29 @@ extension ContentView {
                 DevotionalPack.entries.filter { entry in
                     guard let season = entry.season else { return true }
                     return season == currentLiturgicalSeason
-                }
-            ) { entry in
-                VStack(alignment: .leading, spacing: 6) {
-                    HStack {
-                        Text(entry.title)
-                            .font(.subheadline.weight(.semibold))
-                        Spacer()
-                        Button(devotionalFavorites.contains(entry.id) ? "Saved" : "Save") {
-                            if devotionalFavorites.contains(entry.id) {
-                                devotionalFavorites.remove(entry.id)
-                            } else {
-                                devotionalFavorites.insert(entry.id)
+                }) { entry in
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack {
+                            Text(entry.title)
+                                .font(.subheadline.weight(.semibold))
+                            Spacer()
+                            Button(devotionalFavorites.contains(entry.id) ? "Saved" : "Save") {
+                                if devotionalFavorites.contains(entry.id) {
+                                    devotionalFavorites.remove(entry.id)
+                                } else {
+                                    devotionalFavorites.insert(entry.id)
+                                }
                             }
+                            .appSecondaryButtonStyle()
                         }
-                        .appSecondaryButtonStyle()
+                        Text(entry.prayer)
+                            .font(.body)
+                        Text(entry.context)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                     }
-                    Text(entry.prayer)
-                        .font(.body)
-                    Text(entry.context)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    .padding(.vertical, 2)
                 }
-                .padding(.vertical, 2)
-            }
         }
     }
 
@@ -535,9 +482,8 @@ extension ContentView {
 
             Link(
                 regionProfile == .canada ? "Read CCCB Friday guidance" : "Read Full USCCB Fast & Abstinence Guidelines",
-                destination: regionProfile == .canada ? UIConstants.cccbKeepingFridayURL : UIConstants.usccbFastAbstinenceURL
-            )
-            .accessibilityIdentifier("guidance.food.source_link")
+                destination: regionProfile == .canada ? UIConstants.cccbKeepingFridayURL : UIConstants.usccbFastAbstinenceURL)
+                .accessibilityIdentifier("guidance.food.source_link")
         }
         .accessibilityIdentifier("guidance.food.section")
     }
@@ -568,24 +514,20 @@ extension ContentView {
                 .foregroundStyle(.secondary)
             Label(
                 "Abstinence means no meat from land animals (beef, pork, chicken, turkey).",
-                systemImage: "xmark.circle"
-            )
+                systemImage: "xmark.circle")
             Label("Fish and shellfish are generally permitted.", systemImage: "checkmark.circle")
             Label(
-                "Fasting usually means one full meal plus up to two small meals.", systemImage: "fork.knife"
-            )
+                "Fasting usually means one full meal plus up to two small meals.", systemImage: "fork.knife")
             Label(
-                "If health or duty makes fasting unsafe, speak with your pastor.", systemImage: "cross.case"
-            )
+                "If health or duty makes fasting unsafe, speak with your pastor.", systemImage: "cross.case")
         }
     }
 
     var usccbGuidelinesSection: some View {
         Section(localized("guidance.usccb.title", default: "USCCB Fast & Abstinence (Official)")) {
             Text(
-                "This app references USCCB materials but is not affiliated with or published by the USCCB."
-            )
-            .foregroundStyle(.secondary)
+                "This app references USCCB materials but is not affiliated with or published by the USCCB.")
+                .foregroundStyle(.secondary)
             if regionProfile == .canada {
                 Text("Canada profile selected: the app models the Canada national baseline and CCCB Friday guidance. Diocesan proper calendars are not included yet.")
                     .font(.caption)
@@ -595,51 +537,37 @@ extension ContentView {
                 localized(
                     "guidance.usccb.summary",
                     default:
-                    "USCCB states that Ash Wednesday and Good Friday are obligatory days of fasting and abstinence for Latin Catholics."
-                )
-            )
+                    "USCCB states that Ash Wednesday and Good Friday are obligatory days of fasting and abstinence for Latin Catholics."))
             Label(
                 localized(
                     "guidance.usccb.fast_rule",
-                    default: "Fasting applies from age 18 until age 59."
-                ),
-                systemImage: "calendar.badge.clock"
-            )
+                    default: "Fasting applies from age 18 until age 59."),
+                systemImage: "calendar.badge.clock")
             Label(
                 localized(
                     "guidance.usccb.abstinence_rule",
-                    default: "Abstinence from meat applies from age 14 onward."
-                ),
-                systemImage: "fork.knife.circle"
-            )
+                    default: "Abstinence from meat applies from age 14 onward."),
+                systemImage: "fork.knife.circle")
             Label(
                 localized(
                     "guidance.usccb.friday_rule",
-                    default: "Fridays in Lent are days of abstinence."
-                ),
-                systemImage: "calendar"
-            )
+                    default: "Fridays in Lent are days of abstinence."),
+                systemImage: "calendar")
             Label(
                 localized(
                     "guidance.usccb.outside_lent_rule",
                     default:
-                    "Fridays outside Lent remain penitential days in the U.S.; choose abstinence or another penitential act."
-                ),
-                systemImage: "calendar.badge.minus"
-            )
+                    "Fridays outside Lent remain penitential days in the U.S.; choose abstinence or another penitential act."),
+                systemImage: "calendar.badge.minus")
             Text(
                 localized(
                     "guidance.usccb.dispensation_note",
-                    default: "Pastors and local bishops may give legitimate dispensations and local norms."
-                )
-            )
-            .foregroundStyle(.secondary)
+                    default: "Pastors and local bishops may give legitimate dispensations and local norms."))
+                .foregroundStyle(.secondary)
             Link(
                 localized(
-                    "guidance.usccb.link_label", default: "Read Full USCCB Fast & Abstinence Guidelines"
-                ),
-                destination: UIConstants.usccbFastAbstinenceURL
-            )
+                    "guidance.usccb.link_label", default: "Read Full USCCB Fast & Abstinence Guidelines"),
+                destination: UIConstants.usccbFastAbstinenceURL)
         }
     }
 
@@ -649,22 +577,16 @@ extension ContentView {
                 localized(
                     "guidance.pastoral_line_1",
                     default:
-                    "If you are pregnant, nursing, elderly, ill, under intense labor, or managing chronic conditions, seek pastoral and medical guidance before fasting."
-                )
-            )
+                    "If you are pregnant, nursing, elderly, ill, under intense labor, or managing chronic conditions, seek pastoral and medical guidance before fasting."))
             Text(
                 localized(
                     "guidance.pastoral_line_2",
                     default:
-                    "Dispensations and substitutions are legitimate in many cases. This app is an aid, not your pastor."
-                )
-            )
+                    "Dispensations and substitutions are legitimate in many cases. This app is an aid, not your pastor."))
             Text(
                 localized(
                     "guidance.pastoral_line_3",
-                    default: "When in doubt, choose obedience, charity, and prudence over private rigor."
-                )
-            )
+                    default: "When in doubt, choose obedience, charity, and prudence over private rigor."))
         }
     }
 
@@ -674,29 +596,21 @@ extension ContentView {
                 localized(
                     "guidance.faq.q1",
                     default:
-                    "Q: What are mandatory fast days in the Latin Church? A: Ash Wednesday and Good Friday."
-                )
-            )
+                    "Q: What are mandatory fast days in the Latin Church? A: Ash Wednesday and Good Friday."))
             Text(
                 localized(
                     "guidance.faq.q2",
                     default:
-                    "Q: What does abstinence mean? A: No meat from land animals; fish is generally permitted."
-                )
-            )
+                    "Q: What does abstinence mean? A: No meat from land animals; fish is generally permitted."))
             Text(
                 localized(
                     "guidance.faq.q3",
                     default:
-                    "Q: Do local bishops change rules? A: Yes, local norms and dispensations may apply."
-                )
-            )
+                    "Q: Do local bishops change rules? A: Yes, local norms and dispensations may apply."))
             Text(
                 localized(
-                    "guidance.faq.sources", default: "Sources: USCCB pastoral statements and universal norms."
-                )
-            )
-            .foregroundStyle(.secondary)
+                    "guidance.faq.sources", default: "Sources: USCCB pastoral statements and universal norms."))
+                .foregroundStyle(.secondary)
         }
     }
 
@@ -705,18 +619,14 @@ extension ContentView {
             Link("USCCB Liturgical Calendar Guidance", destination: UIConstants.legalPolicyURL)
             Link(
                 localized(
-                    "guidance.usccb.link_label", default: "Read Full USCCB Fast & Abstinence Guidelines"
-                ),
-                destination: UIConstants.usccbFastAbstinenceURL
-            )
+                    "guidance.usccb.link_label", default: "Read Full USCCB Fast & Abstinence Guidelines"),
+                destination: UIConstants.usccbFastAbstinenceURL)
             Link("Send Feedback", destination: UIConstants.supportEmail)
             Text(
                 localized(
                     "guidance.sources.local_decrees_note",
-                    default: "Always confirm local decrees for your location and year."
-                )
-            )
-            .foregroundStyle(.secondary)
+                    default: "Always confirm local decrees for your location and year."))
+                .foregroundStyle(.secondary)
         }
     }
 

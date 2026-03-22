@@ -1,7 +1,7 @@
 import SwiftUI
 
 #if canImport(AVFoundation)
-    import AVFoundation
+import AVFoundation
 #endif
 
 extension ContentView {
@@ -13,14 +13,12 @@ extension ContentView {
             IPadWorkspaceHeader(
                 eyebrow: "Today",
                 title: todayActionableObservances.isEmpty ? "No mandatory observance today" : "Today requires attention",
-                detail: heroSummaryText
-            )
+                detail: heroSummaryText)
 
             HStack(spacing: 10) {
                 IPadContextBadge(
                     text: todayContext?.regionalContext.classificationLabel ?? RegionalGuidanceContextFactory.generalContext(for: settings).classificationLabel,
-                    supportLevel: todayContext?.regionalContext.supportLevel ?? RegionalGuidanceContextFactory.generalContext(for: settings).supportLevel
-                )
+                    supportLevel: todayContext?.regionalContext.supportLevel ?? RegionalGuidanceContextFactory.generalContext(for: settings).supportLevel)
                 if let today = todayActionableObservances.first {
                     StatusTag(text: today.kind.label, color: today.kind.color)
                     StatusTag(text: today.dispositionLabel, color: today.obligation == .mandatory ? .red : .blue)
@@ -54,9 +52,8 @@ extension ContentView {
                 Label("Fish and shellfish are generally permitted.", systemImage: "checkmark.circle")
                 Label(
                     "Broths and gravies may be technically permitted, but many Catholics still avoid them in stricter practice.",
-                    systemImage: "questionmark.circle"
-                )
-                .foregroundStyle(.secondary)
+                    systemImage: "questionmark.circle")
+                    .foregroundStyle(.secondary)
             }
             .accessibilityIdentifier("ipad.today.food_guidance_preview")
 
@@ -87,25 +84,21 @@ extension ContentView {
             IPadSummaryMetricCard(
                 title: "Next required",
                 value: upcomingMandatoryObservance?.title ?? "None ahead",
-                subtitle: upcomingMandatoryObservance?.date.formatted(date: .abbreviated, time: .omitted) ?? "Current year clear"
-            )
+                subtitle: upcomingMandatoryObservance?.date.formatted(date: .abbreviated, time: .omitted) ?? "Current year clear")
             IPadSummaryMetricCard(
                 title: "This week",
                 value: "\(weeklyCompletedObservancesCount)/\(weeklyActionableObservances.count)",
                 subtitle: "discipline days completed",
-                tint: CatholicTheme.accent
-            )
+                tint: CatholicTheme.accent)
             IPadSummaryMetricCard(
                 title: "Current streak",
                 value: "\(currentStreak) days",
-                subtitle: streakResilienceMessage
-            )
+                subtitle: streakResilienceMessage)
             IPadSummaryMetricCard(
                 title: "This month",
                 value: "\(monthlyCompletionCount)",
                 subtitle: "logged observances",
-                tint: .orange
-            )
+                tint: .orange)
         }
         .accessibilityIdentifier("ipad.today.metrics")
     }
@@ -115,24 +108,23 @@ extension ContentView {
             IPadWorkspaceHeader(
                 eyebrow: "Do next",
                 title: "Quick actions",
-                detail: "Keep the next obligation and planning one tap away."
-            )
+                detail: "Keep the next obligation and planning one tap away.")
 
             HStack(spacing: 10) {
                 IPadWorkspaceActionButton(
                     title: "Open Fasting Days",
                     systemImage: "calendar",
                     primary: true,
-                    accessibilityIdentifier: "ipad.today.action.open_fasting_days"
-                ) {
+                    accessibilityIdentifier: "ipad.today.action.open_fasting_days")
+                {
                     focusFastingDaysOnUpcomingRequired()
                 }
                 IPadWorkspaceActionButton(
                     title: "Open Planning",
                     systemImage: "slider.horizontal.3",
                     primary: false,
-                    accessibilityIdentifier: "ipad.today.action.open_planning"
-                ) {
+                    accessibilityIdentifier: "ipad.today.action.open_planning")
+                {
                     homeSurface = .more
                     selectedMoreDestination = .profileAndNorms
                 }
@@ -143,8 +135,8 @@ extension ContentView {
                     title: "Support & Premium",
                     systemImage: "heart.circle",
                     primary: false,
-                    accessibilityIdentifier: "ipad.today.action.open_premium"
-                ) {
+                    accessibilityIdentifier: "ipad.today.action.open_premium")
+                {
                     homeSurface = .more
                     selectedMoreDestination = .supportAndPremium
                 }
@@ -152,8 +144,8 @@ extension ContentView {
                     title: "Open full food guidance",
                     systemImage: "book",
                     primary: false,
-                    accessibilityIdentifier: "ipad.today.action.open_food_guidance"
-                ) {
+                    accessibilityIdentifier: "ipad.today.action.open_food_guidance")
+                {
                     homeSurface = .more
                     selectedMoreDestination = .guidanceAndRules
                 }
@@ -169,8 +161,7 @@ extension ContentView {
             IPadWorkspaceHeader(
                 eyebrow: "Planning",
                 title: "Year and season snapshot",
-                detail: "See progress without leaving the dashboard."
-            )
+                detail: "See progress without leaving the dashboard.")
 
             HStack(spacing: 10) {
                 IPadSummaryMetricCard(title: "Required goal", value: "\(yearlyRequiredCompletions)/\(planningData.requiredGoal)", subtitle: "required days logged")
@@ -202,8 +193,7 @@ extension ContentView {
             IPadWorkspaceHeader(
                 eyebrow: "Recovery",
                 title: missedDayRecoveryPlan == nil ? "No urgent recovery" : "Recovery path ready",
-                detail: monetizationStore.premiumUnlocked ? weeklyFormationRecapPremium : weeklyFormationRecapFree
-            )
+                detail: monetizationStore.premiumUnlocked ? weeklyFormationRecapPremium : weeklyFormationRecapFree)
 
             if let recovery = missedDayRecoveryPlan {
                 Text(recovery.titleLine)
@@ -239,8 +229,7 @@ extension ContentView {
             IPadWorkspaceHeader(
                 eyebrow: "Season",
                 title: activeSeasonalContentPack.campaignTitle,
-                detail: activeSeasonalContentPack.campaignSubtitle
-            )
+                detail: activeSeasonalContentPack.campaignSubtitle)
 
             Text(dailySeasonalFormationLine)
                 .appLeadTextStyle()
@@ -265,8 +254,7 @@ extension ContentView {
             IPadWorkspaceHeader(
                 eyebrow: "Transparency",
                 title: regionContext.authorityLabel,
-                detail: regionContext.disclosureText
-            )
+                detail: regionContext.disclosureText)
 
             Text(todayFoodDecision.sourceLine)
                 .appSupportingTextStyle()

@@ -42,8 +42,7 @@ extension ContentView {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .appInteractiveTileStyle(
                                 isSelected: selectedMoreDestination == destination,
-                                cornerRadius: 18
-                            )
+                                cornerRadius: 18)
                             .background(
                                 Group {
                                     if selectedMoreDestination == destination {
@@ -51,8 +50,7 @@ extension ContentView {
                                             .fill(CatholicTheme.primary)
                                             .allowsHitTesting(false)
                                     }
-                                }
-                            )
+                                })
                         }
                         .buttonStyle(.plain)
                         .accessibilityIdentifier("ipad.more.compact.\(destination.rawValue)")
