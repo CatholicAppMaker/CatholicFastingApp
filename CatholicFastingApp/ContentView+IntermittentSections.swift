@@ -53,42 +53,33 @@ extension ContentView {
 
     var intermittentHeroSection: some View {
         Section {
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 8) {
                 SacredHeroCard(
                     assetName: intermittentHeroArtwork.assetName,
-                    title: intermittentHeroArtwork.title,
-                    subtitle: intermittentHeroArtwork.subtitle,
-                    height: 190,
+                    title: intermittentTracker.activeStart == nil ? "Track Fast" : "Fast in progress",
+                    subtitle: intermittentTracker.activeStart == nil
+                        ? "Choose a target, then start when ready."
+                        : "Your live fast and next action are below.",
+                    height: 168,
                     accessibilityIdentifier: "intermittent.hero.card"
                 )
-
-                CatholicFastingQuoteCard(quote: intermittentFastingQuote, compact: true)
-                    .accessibilityIdentifier("intermittent.fasting_quote")
-
-                Text(
-                    intermittentTracker.activeStart == nil
-                        ? "Choose a target, then start when ready."
-                        : "Your live fast and next action are below."
-                )
-                .font(.caption)
-                .foregroundStyle(.secondary)
             }
             .accessibilityIdentifier("intermittent.hero")
         }
     }
 
     var intermittentOverviewSection: some View {
-        Section("Plan Snapshot") {
+        Section("Current Plan") {
             ViewThatFits(in: .horizontal) {
                 HStack {
                     MetricTile(title: "Sessions", value: "\(intermittentTracker.sessions.count)")
-                    MetricTile(title: "Plan", value: intermittentWindowLabel)
+                    MetricTile(title: "Target", value: intermittentWindowLabel)
                     MetricTile(title: "Longest", value: intermittentLongestSessionText)
                 }
                 VStack(spacing: 8) {
                     HStack {
                         MetricTile(title: "Sessions", value: "\(intermittentTracker.sessions.count)")
-                        MetricTile(title: "Plan", value: intermittentWindowLabel)
+                        MetricTile(title: "Target", value: intermittentWindowLabel)
                     }
                     MetricTile(title: "Longest", value: intermittentLongestSessionText)
                 }
@@ -118,7 +109,7 @@ extension ContentView {
     }
 
     var intermittentControlsSection: some View {
-        Section("Controls") {
+        Section("Target and Controls") {
             Picker("Quick Plan", selection: intermittentPresetBinding) {
                 ForEach([12, 14, 16, 18, 20, 24, 36], id: \.self) { hours in
                     Text(intermittentPlanDescription(hours)).tag(hours)
@@ -148,7 +139,7 @@ extension ContentView {
                 .accessibilityIdentifier("intermittent.unlock_custom_targets")
             }
 
-            Text("Plan: \(intermittentWindowLabel)")
+            Text("Current target: \(intermittentWindowLabel)")
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
@@ -183,7 +174,7 @@ extension ContentView {
     }
 
     var intermittentAdvancedToolsSection: some View {
-        Section("Advanced Tools") {
+        Section("Advanced") {
             DisclosureGroup(
                 isExpanded: $intermittentShowAdvanced,
                 content: {
@@ -196,9 +187,9 @@ extension ContentView {
                 },
                 label: {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Show schedules, milestones, recovery, and history")
+                        Text("Schedules, milestones, recovery, and history")
                             .font(.subheadline.weight(.semibold))
-                        Text("Keep the tracker focused until you need more detail.")
+                        Text("Open these only when you need the deeper tools.")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
