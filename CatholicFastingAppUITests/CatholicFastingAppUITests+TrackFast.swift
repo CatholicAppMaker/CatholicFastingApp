@@ -64,6 +64,7 @@ extension CatholicFastingAppUITests {
 
         let targetPicker = elementByIdentifier("intermittent.target_picker", in: app)
         XCTAssertTrue(scrollToElement(targetPicker, in: app))
+        XCTAssertTrue(scrollToElement(app.datePickers["intermittent.start_date"].firstMatch, in: app))
     }
 
     func testIntermittentDefaultViewPrioritizesLiveStateAndKeepsAdvancedCollapsed() {
@@ -124,6 +125,7 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(app.otherElements["ipad.intermittent.planning"].waitForExistence(timeout: 4))
         XCTAssertTrue(app.otherElements["ipad.intermittent.advanced"].waitForExistence(timeout: 4))
         XCTAssertTrue(app.otherElements["ipad.intermittent.history"].waitForExistence(timeout: 4))
+        XCTAssertTrue(scrollToElement(app.datePickers["ipad.intermittent.start_date"].firstMatch, in: app))
     }
 
     func testIPadTrackFastDefaultsToLiveControlsAndCollapsedAdvancedTools() {

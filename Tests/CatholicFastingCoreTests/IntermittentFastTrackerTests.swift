@@ -113,4 +113,18 @@ final class IntermittentFastTrackerTests: XCTestCase {
         let reloaded = IntermittentFastTracker()
         XCTAssertEqual(reloaded.sessions.count, 500)
     }
+
+    func testStartFastClampsFutureStartToCurrentTime() {
+        let tracker = IntermittentFastTracker()
+        let before = Date()
+        let future = before.addingTimeInterval(3600)
+
+        tracker.startFast(now: future)
+
+        let after = Date()
+        let actualStart = tracker.activeStart
+        XCTAssertNotNil(actualStart)
+        XCTAssertLessThanOrEqual(actualStart ?? .distantFuture, after)
+        XCTAssertGreaterThanOrEqual(actualStart ?? .distantPast, before.addingTimeInterval(-1))
+    }
 }

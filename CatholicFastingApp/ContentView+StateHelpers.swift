@@ -508,6 +508,21 @@ extension ContentView {
             set: { intermittentTracker.setPresetHours($0) })
     }
 
+    var intermittentManualStartRange: ClosedRange<Date> {
+        let latest = Date()
+        let earliest = liturgicalCalendar.date(byAdding: .day, value: -14, to: latest) ?? latest
+        return earliest ... latest
+    }
+
+    func startIntermittentFastFromSelectedTime() {
+        intermittentTracker.startFast(now: intermittentManualStart)
+        intermittentManualStart = Date()
+    }
+
+    func resetIntermittentManualStartToNow() {
+        intermittentManualStart = Date()
+    }
+
     func durationText(_ duration: TimeInterval) -> String {
         let totalMinutes = max(0, Int(duration / 60))
         let hours = totalMinutes / 60

@@ -135,18 +135,38 @@ extension ContentView {
                     .appSupportingTextStyle()
             }
 
+            if intermittentTracker.activeStart == nil {
+                DatePicker(
+                    "Started",
+                    selection: $intermittentManualStart,
+                    in: intermittentManualStartRange,
+                    displayedComponents: [.date, .hourAndMinute])
+                    .datePickerStyle(.compact)
+                    .accessibilityIdentifier("ipad.intermittent.start_date")
+
+                Text("If you already began fasting, backdate the start time here before you start the timer.")
+                    .appSupportingTextStyle()
+            }
+
             HStack(spacing: 10) {
                 if intermittentTracker.activeStart == nil {
-                    Button("Start Fast") { intermittentTracker.startFast() }
+                    Button("Start Fast") { startIntermittentFastFromSelectedTime() }
                         .appPrimaryButtonStyle()
                         .accessibilityIdentifier("ipad.intermittent.start")
                 } else {
-                    Button("End Fast") { intermittentTracker.endFast() }
-                        .appPrimaryButtonStyle(legacyTint: .green)
-                        .accessibilityIdentifier("ipad.intermittent.end")
-                    Button("Cancel") { intermittentTracker.cancelActiveFast() }
-                        .appSecondaryButtonStyle()
-                        .accessibilityIdentifier("ipad.intermittent.cancel")
+                    Button("End Fast") {
+                        intermittentTracker.endFast()
+                        resetIntermittentManualStartToNow()
+                    }
+                    .appPrimaryButtonStyle(legacyTint: .green)
+                    .accessibilityIdentifier("ipad.intermittent.end")
+
+                    Button("Cancel") {
+                        intermittentTracker.cancelActiveFast()
+                        resetIntermittentManualStartToNow()
+                    }
+                    .appSecondaryButtonStyle()
+                    .accessibilityIdentifier("ipad.intermittent.cancel")
                 }
             }
         }

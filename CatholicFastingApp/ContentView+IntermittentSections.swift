@@ -135,8 +135,19 @@ extension ContentView {
                 .appSupportingTextStyle()
 
             if intermittentTracker.activeStart == nil {
+                DatePicker(
+                    "Started",
+                    selection: $intermittentManualStart,
+                    in: intermittentManualStartRange,
+                    displayedComponents: [.date, .hourAndMinute])
+                    .datePickerStyle(.compact)
+                    .accessibilityIdentifier("intermittent.start_date")
+
+                Text("If you already started, set the start time here before beginning the timer.")
+                    .appSupportingTextStyle()
+
                 Button {
-                    intermittentTracker.startFast()
+                    startIntermittentFastFromSelectedTime()
                 } label: {
                     Label("Start Fast Now", systemImage: "play.fill")
                 }
@@ -146,6 +157,7 @@ extension ContentView {
                 HStack {
                     Button {
                         intermittentTracker.endFast()
+                        resetIntermittentManualStartToNow()
                     } label: {
                         Label("End Fast", systemImage: "stop.fill")
                     }
@@ -154,6 +166,7 @@ extension ContentView {
 
                     Button {
                         intermittentTracker.cancelActiveFast()
+                        resetIntermittentManualStartToNow()
                     } label: {
                         Label("Cancel", systemImage: "xmark")
                     }

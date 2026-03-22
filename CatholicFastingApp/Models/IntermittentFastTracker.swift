@@ -41,12 +41,13 @@ final class IntermittentFastTracker: ObservableObject {
 
     func startFast(now: Date = Date()) {
         guard activeStart == nil else { return }
-        activeStart = now
+        let clampedStart = min(now, Date())
+        activeStart = clampedStart
         persistMeta()
         #if canImport(ActivityKit) && os(iOS)
         let targetHours = presetHours
         Task {
-            await IntermittentFastLiveActivityManager.start(start: now, targetHours: targetHours)
+            await IntermittentFastLiveActivityManager.start(start: clampedStart, targetHours: targetHours)
         }
         #endif
     }
