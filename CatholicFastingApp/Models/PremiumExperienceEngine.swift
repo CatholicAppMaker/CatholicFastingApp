@@ -1,87 +1,5 @@
 @preconcurrency import Foundation
 
-struct PremiumSeasonPlan: Hashable {
-    let titleLine: String
-    let focusLine: String
-    let practices: [String]
-    let fastingIntensity: String
-}
-
-enum PremiumSeasonPlanEngine {
-    static func plan(for season: LiturgicalSeason, settings: RuleSettings) -> PremiumSeasonPlan {
-        if settings.hasMedicalDispensation {
-            return PremiumSeasonPlan(
-                titleLine: "Medical/Pastoral Plan",
-                focusLine: "Use a moderated discipline with your pastor's guidance.",
-                practices: [
-                    "Keep a fixed morning and evening prayer rhythm.",
-                    "Choose one charitable act each week.",
-                    "Use food discipline only as health allows.",
-                ],
-                fastingIntensity: "Gentle"
-            )
-        }
-
-        switch season {
-        case .advent:
-            return PremiumSeasonPlan(
-                titleLine: "Advent Preparation Plan",
-                focusLine: "Watchfulness, restraint, and expectation of the Lord.",
-                practices: [
-                    "Fast lightly on Wednesdays and Fridays.",
-                    "Add one weekday Mass when possible.",
-                    "Set one concrete almsgiving commitment.",
-                ],
-                fastingIntensity: "Moderate"
-            )
-        case .christmas:
-            return PremiumSeasonPlan(
-                titleLine: "Christmas Joy Plan",
-                focusLine: "Celebrate with gratitude while keeping sobriety.",
-                practices: [
-                    "Keep Friday penance with deliberate charity.",
-                    "Pray a brief thanksgiving after each meal.",
-                    "Avoid unnecessary excess for one chosen category.",
-                ],
-                fastingIntensity: "Light"
-            )
-        case .lent:
-            return PremiumSeasonPlan(
-                titleLine: "Lenten Discipline Plan",
-                focusLine: "Repentance, conversion, and generous self-denial.",
-                practices: [
-                    "Observe all required fast/abstinence days with planning.",
-                    "Keep one additional personal fast each week.",
-                    "Pair every fast with prayer and almsgiving.",
-                ],
-                fastingIntensity: "Strong"
-            )
-        case .easter:
-            return PremiumSeasonPlan(
-                titleLine: "Easter Fidelity Plan",
-                focusLine: "Sustain the fruits of Lent with steady habits.",
-                practices: [
-                    "Maintain Friday penance without interruption.",
-                    "Offer one act of encouragement or mercy weekly.",
-                    "Review your rule of life every Sunday evening.",
-                ],
-                fastingIntensity: "Light"
-            )
-        case .ordinary:
-            return PremiumSeasonPlan(
-                titleLine: "Ordinary Time Rule of Life",
-                focusLine: "Consistency in ordinary days forms long-term holiness.",
-                practices: [
-                    "Choose a fixed weekly fasting day.",
-                    "Keep Friday penance intentionally.",
-                    "Track completion and review each weekend.",
-                ],
-                fastingIntensity: "Moderate"
-            )
-        }
-    }
-}
-
 struct PremiumReminderRecommendation: Hashable {
     let shouldEnableDailySupport: Bool
     let shouldEnableMorning: Bool
@@ -94,8 +12,8 @@ enum PremiumReminderPlanner {
         observances: [Observance],
         statusesByID: [String: CompletionStatus],
         now: Date = Date(),
-        calendar: Calendar = .current
-    ) -> PremiumReminderRecommendation {
+        calendar: Calendar = .current) -> PremiumReminderRecommendation
+    {
         let startOfToday = calendar.startOfDay(for: now)
         let recentWindowStart = calendar.date(byAdding: .day, value: -30, to: startOfToday) ?? startOfToday
         let upcomingWindowEnd = calendar.date(byAdding: .day, value: 14, to: startOfToday) ?? startOfToday
@@ -109,8 +27,8 @@ enum PremiumReminderPlanner {
             return day >= startOfToday && day <= upcomingWindowEnd && item.obligation == .mandatory
         }
 
-        let completedRecent = recent.filter { statusesByID[$0.id]?.countsTowardProgress == true }.count
-        let missedRecent = recent.filter { statusesByID[$0.id] == .missed }.count
+        let completedRecent = recent.count(where: { statusesByID[$0.id]?.countsTowardProgress == true })
+        let missedRecent = recent.count(where: { statusesByID[$0.id] == .missed })
         let completionRate =
             recent.isEmpty ? 1.0 : Double(completedRecent) / Double(recent.count)
 
@@ -120,8 +38,7 @@ enum PremiumReminderPlanner {
                 shouldEnableMorning: true,
                 shouldEnableEvening: true,
                 summaryLine:
-                "Recovery mode: enable both morning and evening reminders for the next 2 weeks."
-            )
+                "Recovery mode: enable both morning and evening reminders for the next 2 weeks.")
         }
 
         if !upcomingRequired.isEmpty {
@@ -130,16 +47,14 @@ enum PremiumReminderPlanner {
                 shouldEnableMorning: true,
                 shouldEnableEvening: false,
                 summaryLine:
-                "Preparation mode: keep morning reminders on for upcoming required observances."
-            )
+                "Preparation mode: keep morning reminders on for upcoming required observances.")
         }
 
         return PremiumReminderRecommendation(
             shouldEnableDailySupport: true,
             shouldEnableMorning: false,
             shouldEnableEvening: true,
-            summaryLine: "Maintenance mode: evening examen reminders are enough for your current rhythm."
-        )
+            summaryLine: "Maintenance mode: evening examen reminders are enough for your current rhythm.")
     }
 }
 
@@ -169,15 +84,15 @@ enum PremiumAnalyticsEngine {
     static func summary(
         observances: [Observance],
         statusesByID: [String: CompletionStatus],
-        sessions: [IntermittentFastSession]
-    ) -> PremiumAnalyticsSummary {
+        sessions: [IntermittentFastSession]) -> PremiumAnalyticsSummary
+    {
         let required = observances.filter { $0.obligation == .mandatory }
         let actionable = observances.filter { $0.obligation != .notApplicable }
 
-        let requiredCompleted = required.filter { statusesByID[$0.id]?.countsTowardProgress == true }.count
-        let actionableCompleted = actionable.filter { statusesByID[$0.id]?.countsTowardProgress == true }.count
-        let missedCount = statusesByID.values.filter { $0 == .missed }.count
-        let substitutedCount = statusesByID.values.filter { $0 == .substituted }.count
+        let requiredCompleted = required.count(where: { statusesByID[$0.id]?.countsTowardProgress == true })
+        let actionableCompleted = actionable.count(where: { statusesByID[$0.id]?.countsTowardProgress == true })
+        let missedCount = statusesByID.values.count(where: { $0 == .missed })
+        let substitutedCount = statusesByID.values.count(where: { $0 == .substituted })
 
         let recentSessions = sessions.prefix(30)
         let hitTarget = recentSessions.filter(\.completedTarget).count
@@ -202,8 +117,7 @@ enum PremiumAnalyticsEngine {
                 id: season.rawValue,
                 season: season,
                 completedCount: data.done,
-                totalCount: data.total
-            )
+                totalCount: data.total)
         }
 
         return PremiumAnalyticsSummary(
@@ -212,8 +126,7 @@ enum PremiumAnalyticsEngine {
             missedCount: missedCount,
             substitutedCount: substitutedCount,
             intermittentTargetHitPercent: intermittentHitPercent,
-            seasonRows: rows
-        )
+            seasonRows: rows)
     }
 
     private static func percent(done: Int, total: Int) -> Int {
@@ -228,170 +141,11 @@ struct PremiumReflection: Hashable {
     let action: String
 }
 
-enum GuidedSeasonalJourneyCategory: String, Hashable {
-    case fasting
-    case prayer
-    case charity
-    case review
-
-    var label: String {
-        switch self {
-        case .fasting: "Fasting focus"
-        case .prayer: "Prayer focus"
-        case .charity: "Penance / charity"
-        case .review: "Weekly checkpoint"
-        }
-    }
-}
-
-struct GuidedSeasonalJourneyAction: Hashable, Identifiable {
-    let id: String
-    let category: GuidedSeasonalJourneyCategory
-    let title: String
-    let detail: String
-}
-
-struct GuidedSeasonalJourneyWeek: Hashable {
-    let season: LiturgicalSeason
-    let program: PremiumSeasonProgram
-    let weekNumber: Int
-    let title: String
-    let summary: String
-    let actions: [GuidedSeasonalJourneyAction]
-
-    var reviewAction: GuidedSeasonalJourneyAction? {
-        actions.first(where: { $0.category == .review })
-    }
-}
-
-enum GuidedSeasonalJourneyEngine {
-    static func week(
-        for season: LiturgicalSeason,
-        program: PremiumSeasonProgram,
-        week: Int
-    ) -> GuidedSeasonalJourneyWeek {
-        let normalizedWeek = max(1, week)
-
-        switch season {
-        case .lent:
-            return GuidedSeasonalJourneyWeek(
-                season: season,
-                program: program,
-                weekNumber: normalizedWeek,
-                title: "Lenten Week \(normalizedWeek)",
-                summary: "Keep one sacrificial rhythm, one concrete prayer, and one act of mercy in the same week.",
-                actions: [
-                    GuidedSeasonalJourneyAction(
-                        id: "fasting",
-                        category: .fasting,
-                        title: "Protect the next required observance",
-                        detail: "Plan Ash Wednesday, Friday abstinence, or your next required day before the week gets noisy."
-                    ),
-                    GuidedSeasonalJourneyAction(
-                        id: "prayer",
-                        category: .prayer,
-                        title: "Pair hunger with repentance prayer",
-                        detail: "Use one hunger moment each day for a short prayer of repentance or Psalm 51."
-                    ),
-                    GuidedSeasonalJourneyAction(
-                        id: "charity",
-                        category: .charity,
-                        title: "Add one hidden act of mercy",
-                        detail: "Choose one charitable or penitential act that costs you something but stays sustainable."
-                    ),
-                    GuidedSeasonalJourneyAction(
-                        id: "review",
-                        category: .review,
-                        title: "Review the week honestly",
-                        detail: "Ask what actually helped conversion, not just what looked strict on paper."
-                    ),
-                ]
-            )
-        case .advent:
-            return GuidedSeasonalJourneyWeek(
-                season: season,
-                program: program,
-                weekNumber: normalizedWeek,
-                title: "Advent Week \(normalizedWeek)",
-                summary: "Build watchfulness through simplicity, quiet prayer, and one restrained work of charity.",
-                actions: [
-                    GuidedSeasonalJourneyAction(
-                        id: "fasting",
-                        category: .fasting,
-                        title: "Simplify one meal pattern this week",
-                        detail: "Choose one modest food sacrifice that creates room for recollection rather than performance."
-                    ),
-                    GuidedSeasonalJourneyAction(
-                        id: "prayer",
-                        category: .prayer,
-                        title: "Keep a short evening watch",
-                        detail: "Add a brief Scripture reading or silent prayer before your final meal or before bed."
-                    ),
-                    GuidedSeasonalJourneyAction(
-                        id: "charity",
-                        category: .charity,
-                        title: "Practice hidden generosity",
-                        detail: "Choose one concrete act of generosity that prepares your heart for Christ’s coming."
-                    ),
-                    GuidedSeasonalJourneyAction(
-                        id: "review",
-                        category: .review,
-                        title: "Check for noise versus attention",
-                        detail: "Review whether your week made you more attentive, more grateful, and less scattered."
-                    ),
-                ]
-            )
-        case .ordinary, .christmas, .easter:
-            return GuidedSeasonalJourneyWeek(
-                season: season,
-                program: program,
-                weekNumber: normalizedWeek,
-                title: "\(season.label) Week \(normalizedWeek)",
-                summary: "Use one steady rhythm for fasting, prayer, mercy, and review so the season forms habit instead of good intentions only.",
-                actions: [
-                    GuidedSeasonalJourneyAction(
-                        id: "fasting",
-                        category: .fasting,
-                        title: "Keep one fixed discipline day",
-                        detail: "Protect one weekly fasting or penitential day that fits your actual state in life."
-                    ),
-                    GuidedSeasonalJourneyAction(
-                        id: "prayer",
-                        category: .prayer,
-                        title: "Add one anchored prayer cue",
-                        detail: "Tie your discipline to a stable cue such as breakfast prayer, the Angelus, or evening examen."
-                    ),
-                    GuidedSeasonalJourneyAction(
-                        id: "charity",
-                        category: .charity,
-                        title: "Choose one practical mercy step",
-                        detail: "Make the week concrete with one act of mercy, generosity, or patient self-denial."
-                    ),
-                    GuidedSeasonalJourneyAction(
-                        id: "review",
-                        category: .review,
-                        title: "Close the week with review",
-                        detail: "Review what stayed faithful, what slipped, and what one next adjustment should be."
-                    ),
-                ]
-            )
-        }
-    }
-
-    static func actionKey(
-        program: PremiumSeasonProgram,
-        week: Int,
-        actionID: String
-    ) -> String {
-        "\(program.rawValue)-w\(max(1, week))-\(actionID)"
-    }
-}
-
 enum PremiumReflectionEngine {
     static func reflection(
         for date: Date = Date(),
-        season: LiturgicalSeason
-    ) -> PremiumReflection {
+        season: LiturgicalSeason) -> PremiumReflection
+    {
         let dayIndex = Calendar.current.ordinality(of: .day, in: .year, for: date) ?? 1
         let options = reflections(for: season)
         return options[(dayIndex - 1) % options.count]
@@ -404,65 +158,55 @@ enum PremiumReflectionEngine {
                 PremiumReflection(
                     title: "Watch in Hope",
                     body: "Advent fasting prepares the heart by making room for Christ's coming.",
-                    action: "Keep one hidden act of restraint today."
-                ),
+                    action: "Keep one hidden act of restraint today."),
                 PremiumReflection(
                     title: "Quiet Expectation",
                     body: "Silence and simplicity sharpen spiritual attention.",
-                    action: "Add 10 minutes of silent prayer before your next meal."
-                ),
+                    action: "Add 10 minutes of silent prayer before your next meal."),
             ]
         case .christmas:
             [
                 PremiumReflection(
                     title: "Receive with Gratitude",
                     body: "Feasting and fasting both become holy through thanksgiving.",
-                    action: "Pray a short thanksgiving after each meal today."
-                ),
+                    action: "Pray a short thanksgiving after each meal today."),
                 PremiumReflection(
                     title: "Joy with Sobriety",
                     body: "Christian joy does not require excess.",
-                    action: "Choose one concrete moderation in food or drink today."
-                ),
+                    action: "Choose one concrete moderation in food or drink today."),
             ]
         case .lent:
             [
                 PremiumReflection(
                     title: "Return to the Lord",
                     body: "Fasting without prayer becomes technique; with prayer it becomes conversion.",
-                    action: "Pair your next hunger moment with a brief prayer of repentance."
-                ),
+                    action: "Pair your next hunger moment with a brief prayer of repentance."),
                 PremiumReflection(
                     title: "Offer the Sacrifice",
                     body: "A faithful small sacrifice is better than a dramatic one you cannot sustain.",
-                    action: "Select one realistic discipline to keep through this week."
-                ),
+                    action: "Select one realistic discipline to keep through this week."),
             ]
         case .easter:
             [
                 PremiumReflection(
                     title: "Persevere in New Life",
                     body: "Easter discipline protects the grace you received in Lent.",
-                    action: "Renew your Friday penance plan for this week."
-                ),
+                    action: "Renew your Friday penance plan for this week."),
                 PremiumReflection(
                     title: "Witness in Charity",
                     body: "Resurrection joy bears fruit through mercy toward others.",
-                    action: "Choose one specific act of mercy today."
-                ),
+                    action: "Choose one specific act of mercy today."),
             ]
         case .ordinary:
             [
                 PremiumReflection(
                     title: "Sanctify the Ordinary",
                     body: "Ordinary Time is where fidelity becomes character.",
-                    action: "Keep your chosen discipline exactly as planned today."
-                ),
+                    action: "Keep your chosen discipline exactly as planned today."),
                 PremiumReflection(
                     title: "Small Daily Yes",
                     body: "Steady obedience in little things forms long-term freedom.",
-                    action: "End today with a two-minute examen on your fasting intention."
-                ),
+                    action: "End today with a two-minute examen on your fasting intention."),
             ]
         }
     }
@@ -475,8 +219,8 @@ enum PremiumDirectionSummaryEngine {
         analytics: PremiumAnalyticsSummary,
         reminder: PremiumReminderRecommendation,
         plan: PremiumSeasonPlan,
-        latestReflection: PremiumReflection
-    ) -> String {
+        latestReflection: PremiumReflection) -> String
+    {
         let formatter = DateFormatter()
         formatter.dateStyle = .long
         formatter.timeStyle = .short
@@ -527,8 +271,8 @@ enum PremiumAdaptiveRulePlanner {
         template: PremiumRuleTemplate,
         optionalDisciplinesPerWeek: Int,
         fixedFastWeekday: Int,
-        protectFeastDays: Bool
-    ) -> PremiumAdaptiveRulePlan {
+        protectFeastDays: Bool) -> PremiumAdaptiveRulePlan
+    {
         let weekday = weekdayName(for: fixedFastWeekday)
         let baseSeasonLine =
             switch season {
@@ -553,8 +297,7 @@ enum PremiumAdaptiveRulePlanner {
                     "Choose one practical charity act each week.",
                     "Use non-food substitute penance when needed.",
                 ],
-                caution: "Health and pastoral guidance take priority over rigor."
-            )
+                caution: "Health and pastoral guidance take priority over rigor.")
         }
 
         let intensity = max(0, min(optionalDisciplinesPerWeek, 7))
@@ -572,8 +315,7 @@ enum PremiumAdaptiveRulePlanner {
                 "Optional disciplines this week: \(intensity).",
                 "Review completion each Sunday evening and adjust the next week.",
             ],
-            caution: feastLine
-        )
+            caution: feastLine)
     }
 
     private static func weekdayName(for value: Int) -> String {
@@ -589,30 +331,27 @@ enum PremiumAdaptiveRulePlanner {
 enum PremiumConditionReminderAdvisor {
     static func applyRules(
         _ rules: PremiumConditionRules,
-        hasUpcomingRequiredDays: Bool
-    ) -> PremiumReminderRecommendation {
+        hasUpcomingRequiredDays: Bool) -> PremiumReminderRecommendation
+    {
         if rules.requiredDaysDoubleReminder, hasUpcomingRequiredDays {
             return PremiumReminderRecommendation(
                 shouldEnableDailySupport: true,
                 shouldEnableMorning: true,
                 shouldEnableEvening: true,
-                summaryLine: "Condition rules enabled: required-day double reminders are active."
-            )
+                summaryLine: "Condition rules enabled: required-day double reminders are active.")
         }
         if rules.remindIfUnloggedByNoon {
             return PremiumReminderRecommendation(
                 shouldEnableDailySupport: true,
                 shouldEnableMorning: true,
                 shouldEnableEvening: false,
-                summaryLine: "Condition rules enabled: noon check-in recovery reminders are active."
-            )
+                summaryLine: "Condition rules enabled: noon check-in recovery reminders are active.")
         }
         return PremiumReminderRecommendation(
             shouldEnableDailySupport: true,
             shouldEnableMorning: false,
             shouldEnableEvening: true,
-            summaryLine: "Condition rules enabled: evening examen support is active."
-        )
+            summaryLine: "Condition rules enabled: evening examen support is active.")
     }
 }
 
@@ -625,8 +364,8 @@ struct PremiumRecoveryCoachPlan: Hashable {
 enum PremiumRecoveryCoachEngine {
     static func plan(
         missedPlan: MissedDayRecoveryPlan?,
-        season: LiturgicalSeason
-    ) -> PremiumRecoveryCoachPlan {
+        season: LiturgicalSeason) -> PremiumRecoveryCoachPlan
+    {
         guard let missedPlan else {
             return PremiumRecoveryCoachPlan(
                 title: "Recovery Stable",
@@ -635,8 +374,7 @@ enum PremiumRecoveryCoachEngine {
                     "Review the next required observance date.",
                     "Keep your fixed personal fast day.",
                     "Close today with a one-minute examen.",
-                ]
-            )
+                ])
         }
 
         let seasonalAction =
@@ -651,51 +389,15 @@ enum PremiumRecoveryCoachEngine {
         return PremiumRecoveryCoachPlan(
             title: missedPlan.titleLine,
             summary: "\(missedPlan.summaryLine) \(seasonalAction)",
-            steps: missedPlan.steps + [missedPlan.nextRequiredLine]
-        )
-    }
-}
-
-enum PremiumSeasonProgramEngine {
-    static func actions(
-        for program: PremiumSeasonProgram,
-        week: Int
-    ) -> [String] {
-        let normalizedWeek = max(1, week)
-        switch program {
-        case .liturgicalRhythm:
-            return [
-                "Pray before first meal each day.",
-                "Keep one fixed weekday discipline.",
-                "Weekly review checkpoint #\(normalizedWeek).",
-            ]
-        case .lentDeepen:
-            return [
-                "Keep all required observances with planning.",
-                "Add one hidden sacrifice this week.",
-                "Link fasting to almsgiving checkpoint #\(normalizedWeek).",
-            ]
-        case .adventWatch:
-            return [
-                "Reduce one comfort item for watchfulness.",
-                "Add a short Scripture reading before dinner.",
-                "Keep a quiet-night prayer checkpoint #\(normalizedWeek).",
-            ]
-        case .fridayFidelity:
-            return [
-                "Plan Friday penance by Thursday evening.",
-                "Record one charity action on Friday.",
-                "End Friday with a gratitude examen checkpoint #\(normalizedWeek).",
-            ]
-        }
+            steps: missedPlan.steps + [missedPlan.nextRequiredLine])
     }
 }
 
 enum PremiumFastPrepGuidanceEngine {
     static func prepAndRefeed(
         targetHours: Int,
-        hasMedicalDispensation: Bool
-    ) -> [String] {
+        hasMedicalDispensation: Bool) -> [String]
+    {
         if hasMedicalDispensation {
             return [
                 "Prep: choose medically safe meals and hydration.",
@@ -732,8 +434,8 @@ enum PremiumMotivationEngine {
     static func line(
         season: LiturgicalSeason,
         streak: Int,
-        template: PremiumRuleTemplate
-    ) -> String {
+        template: PremiumRuleTemplate) -> String
+    {
         let seasonPhrase =
             switch season {
             case .advent: "Watch with hope"
@@ -757,8 +459,8 @@ enum PremiumSubscriptionState: String, CaseIterable, Hashable {
 enum PremiumSubscriptionHealthEvaluator {
     static func message(
         states: [PremiumSubscriptionState],
-        premiumUnlocked: Bool
-    ) -> String {
+        premiumUnlocked: Bool) -> String
+    {
         if states.contains(.revoked) {
             return "Subscription was revoked. Restore or update your account."
         }

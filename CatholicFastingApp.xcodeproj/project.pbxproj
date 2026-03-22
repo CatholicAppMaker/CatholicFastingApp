@@ -57,6 +57,15 @@
 		A000000000000000000000AF /* ContentView+iPadTodayCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000B0 /* ContentView+iPadTodayCards.swift */; };
 		A000000000000000000000B1 /* ContentView+iPadFastingDaysPanels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000B2 /* ContentView+iPadFastingDaysPanels.swift */; };
 		A000000000000000000000B3 /* ContentView+iPadTrackFastPanels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000B4 /* ContentView+iPadTrackFastPanels.swift */; };
+		A000000000000000000000C1 /* AppDesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D1 /* AppDesignSystem.swift */; };
+		A000000000000000000000C2 /* PremiumJourneyEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D2 /* PremiumJourneyEngine.swift */; };
+		A000000000000000000000C3 /* ContentView+PremiumCompanionWorkflows.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D3 /* ContentView+PremiumCompanionWorkflows.swift */; };
+		A000000000000000000000C4 /* ContentView+PremiumCompanionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D4 /* ContentView+PremiumCompanionState.swift */; };
+		A000000000000000000000C5 /* CatholicFastingAppUITests+OnboardingSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D5 /* CatholicFastingAppUITests+OnboardingSetup.swift */; };
+		A000000000000000000000C6 /* CatholicFastingAppUITests+TodayCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D6 /* CatholicFastingAppUITests+TodayCalendar.swift */; };
+		A000000000000000000000C7 /* CatholicFastingAppUITests+Premium.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D7 /* CatholicFastingAppUITests+Premium.swift */; };
+		A000000000000000000000C8 /* CatholicFastingAppUITests+TrackFast.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D8 /* CatholicFastingAppUITests+TrackFast.swift */; };
+		A000000000000000000000C9 /* CatholicFastingAppUITests+IPadNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D9 /* CatholicFastingAppUITests+IPadNavigation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -148,6 +157,15 @@
 		A000000000000000000000B0 /* ContentView+iPadTodayCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+iPadTodayCards.swift"; sourceTree = "<group>"; };
 		A000000000000000000000B2 /* ContentView+iPadFastingDaysPanels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+iPadFastingDaysPanels.swift"; sourceTree = "<group>"; };
 		A000000000000000000000B4 /* ContentView+iPadTrackFastPanels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+iPadTrackFastPanels.swift"; sourceTree = "<group>"; };
+		A000000000000000000000D1 /* AppDesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDesignSystem.swift; sourceTree = "<group>"; };
+		A000000000000000000000D2 /* PremiumJourneyEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumJourneyEngine.swift; sourceTree = "<group>"; };
+		A000000000000000000000D3 /* ContentView+PremiumCompanionWorkflows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+PremiumCompanionWorkflows.swift"; sourceTree = "<group>"; };
+		A000000000000000000000D4 /* ContentView+PremiumCompanionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+PremiumCompanionState.swift"; sourceTree = "<group>"; };
+		A000000000000000000000D5 /* CatholicFastingAppUITests+OnboardingSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CatholicFastingAppUITests+OnboardingSetup.swift"; sourceTree = "<group>"; };
+		A000000000000000000000D6 /* CatholicFastingAppUITests+TodayCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CatholicFastingAppUITests+TodayCalendar.swift"; sourceTree = "<group>"; };
+		A000000000000000000000D7 /* CatholicFastingAppUITests+Premium.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CatholicFastingAppUITests+Premium.swift"; sourceTree = "<group>"; };
+		A000000000000000000000D8 /* CatholicFastingAppUITests+TrackFast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CatholicFastingAppUITests+TrackFast.swift"; sourceTree = "<group>"; };
+		A000000000000000000000D9 /* CatholicFastingAppUITests+IPadNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CatholicFastingAppUITests+IPadNavigation.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -219,8 +237,11 @@
 				A000000000000000000000AA /* ContentView+iPadMoreDestinations.swift */,
 				A000000000000000000000AC /* ContentView+iPadPremiumWorkspace.swift */,
 				A0000000000000000000009A /* ContentView+PremiumCompanionSections.swift */,
+				A000000000000000000000D3 /* ContentView+PremiumCompanionWorkflows.swift */,
+				A000000000000000000000D4 /* ContentView+PremiumCompanionState.swift */,
 				A0000000000000000000003D /* ContentView+GuidanceSections.swift */,
 				A0000000000000000000003F /* ContentView+SettingsSections.swift */,
+				A000000000000000000000D1 /* AppDesignSystem.swift */,
 				A00000000000000000000092 /* AppShellTypes.swift */,
 				A00000000000000000000093 /* ReminderScheduler.swift */,
 				A00000000000000000000039 /* ContentSupportViews.swift */,
@@ -253,6 +274,7 @@
 				A00000000000000000000057 /* SyncStore.swift */,
 				A00000000000000000000059 /* FoundationDateExtensions.swift */,
 				A00000000000000000000064 /* PremiumExperienceEngine.swift */,
+				A000000000000000000000D2 /* PremiumJourneyEngine.swift */,
 				A0000000000000000000009B /* GrowthContracts.swift */,
 				A000000000000000000000A4 /* RegionalGuidanceContext.swift */,
 			);
@@ -263,6 +285,11 @@
 			isa = PBXGroup;
 			children = (
 				A00000000000000000000021 /* CatholicFastingAppUITests.swift */,
+				A000000000000000000000D5 /* CatholicFastingAppUITests+OnboardingSetup.swift */,
+				A000000000000000000000D6 /* CatholicFastingAppUITests+TodayCalendar.swift */,
+				A000000000000000000000D7 /* CatholicFastingAppUITests+Premium.swift */,
+				A000000000000000000000D8 /* CatholicFastingAppUITests+TrackFast.swift */,
+				A000000000000000000000D9 /* CatholicFastingAppUITests+IPadNavigation.swift */,
 				A00000000000000000000023 /* Info.plist */,
 			);
 			path = CatholicFastingAppUITests;
@@ -425,6 +452,7 @@
 				A00000000000000000000056 /* SyncStore.swift in Sources */,
 				A00000000000000000000058 /* FoundationDateExtensions.swift in Sources */,
 				A00000000000000000000063 /* PremiumExperienceEngine.swift in Sources */,
+				A000000000000000000000C2 /* PremiumJourneyEngine.swift in Sources */,
 				A0000000000000000000009C /* GrowthContracts.swift in Sources */,
 				A0000000000000000000009F /* RegionalGuidanceContext.swift in Sources */,
 				A00000000000000000000038 /* ContentSupportViews.swift in Sources */,
@@ -445,8 +473,11 @@
 				A000000000000000000000A9 /* ContentView+iPadMoreDestinations.swift in Sources */,
 				A000000000000000000000AB /* ContentView+iPadPremiumWorkspace.swift in Sources */,
 				A00000000000000000000099 /* ContentView+PremiumCompanionSections.swift in Sources */,
+				A000000000000000000000C3 /* ContentView+PremiumCompanionWorkflows.swift in Sources */,
+				A000000000000000000000C4 /* ContentView+PremiumCompanionState.swift in Sources */,
 				A0000000000000000000003C /* ContentView+GuidanceSections.swift in Sources */,
 				A0000000000000000000003E /* ContentView+SettingsSections.swift in Sources */,
+				A000000000000000000000C1 /* AppDesignSystem.swift in Sources */,
 				A00000000000000000000095 /* AppShellTypes.swift in Sources */,
 				A00000000000000000000096 /* ReminderScheduler.swift in Sources */,
 			);
@@ -457,6 +488,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				A00000000000000000000020 /* CatholicFastingAppUITests.swift in Sources */,
+				A000000000000000000000C5 /* CatholicFastingAppUITests+OnboardingSetup.swift in Sources */,
+				A000000000000000000000C6 /* CatholicFastingAppUITests+TodayCalendar.swift in Sources */,
+				A000000000000000000000C7 /* CatholicFastingAppUITests+Premium.swift in Sources */,
+				A000000000000000000000C8 /* CatholicFastingAppUITests+TrackFast.swift in Sources */,
+				A000000000000000000000C9 /* CatholicFastingAppUITests+IPadNavigation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

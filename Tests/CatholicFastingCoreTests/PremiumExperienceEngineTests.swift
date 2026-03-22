@@ -14,20 +14,6 @@ final class PremiumExperienceEngineTests: XCTestCase {
         super.tearDown()
     }
 
-    func testSeasonPlanLentWithoutDispensationIsStrong() {
-        let settings = RuleSettings(
-            birthYear: 1991,
-            hasMedicalDispensation: false,
-            ascensionObservance: .sunday,
-            fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
-
-        let plan = PremiumSeasonPlanEngine.plan(for: .lent, settings: settings)
-        XCTAssertEqual(plan.fastingIntensity, "Strong")
-        XCTAssertTrue(plan.titleLine.localizedCaseInsensitiveContains("lenten"))
-    }
-
     func testReminderPlannerUsesRecoveryModeForMultipleMisses() {
         let now = makeDate(year: 2026, month: 3, day: 10)
         let observances = [
@@ -45,8 +31,7 @@ final class PremiumExperienceEngineTests: XCTestCase {
             observances: observances,
             statusesByID: statuses,
             now: now,
-            calendar: fixedCalendar
-        )
+            calendar: fixedCalendar)
 
         XCTAssertTrue(recommendation.shouldEnableDailySupport)
         XCTAssertTrue(recommendation.shouldEnableMorning)
@@ -69,8 +54,7 @@ final class PremiumExperienceEngineTests: XCTestCase {
             observances: observances,
             statusesByID: statuses,
             now: now,
-            calendar: fixedCalendar
-        )
+            calendar: fixedCalendar)
 
         XCTAssertTrue(recommendation.shouldEnableDailySupport)
         XCTAssertFalse(recommendation.shouldEnableMorning)
@@ -94,21 +78,18 @@ final class PremiumExperienceEngineTests: XCTestCase {
                 id: "s1",
                 start: makeDate(year: 2026, month: 1, day: 1),
                 end: makeDate(year: 2026, month: 1, day: 2),
-                targetHours: 16
-            ),
+                targetHours: 16),
             IntermittentFastSession(
                 id: "s2",
                 start: makeDate(year: 2026, month: 1, day: 3),
                 end: makeDate(year: 2026, month: 1, day: 3, hour: 10),
-                targetHours: 16
-            ),
+                targetHours: 16),
         ]
 
         let summary = PremiumAnalyticsEngine.summary(
             observances: observances,
             statusesByID: statuses,
-            sessions: sessions
-        )
+            sessions: sessions)
 
         XCTAssertEqual(summary.requiredCompletionPercent, 50)
         XCTAssertEqual(summary.overallCompletionPercent, 67)
@@ -132,25 +113,21 @@ final class PremiumExperienceEngineTests: XCTestCase {
             missedCount: 1,
             substitutedCount: 2,
             intermittentTargetHitPercent: 60,
-            seasonRows: []
-        )
+            seasonRows: [])
         let reminder = PremiumReminderRecommendation(
             shouldEnableDailySupport: true,
             shouldEnableMorning: true,
             shouldEnableEvening: false,
-            summaryLine: "Preparation mode"
-        )
+            summaryLine: "Preparation mode")
         let plan = PremiumSeasonPlan(
             titleLine: "Lenten Discipline Plan",
             focusLine: "Repentance focus",
             practices: ["Practice 1"],
-            fastingIntensity: "Strong"
-        )
+            fastingIntensity: "Strong")
         let reflection = PremiumReflection(
             title: "Return to the Lord",
             body: "Fasting with prayer.",
-            action: "Pray now."
-        )
+            action: "Pray now.")
 
         let summary = PremiumDirectionSummaryEngine.summaryText(
             date: makeDate(year: 2026, month: 3, day: 1),
@@ -158,8 +135,7 @@ final class PremiumExperienceEngineTests: XCTestCase {
             analytics: analytics,
             reminder: reminder,
             plan: plan,
-            latestReflection: reflection
-        )
+            latestReflection: reflection)
 
         XCTAssertTrue(summary.contains("Catholic Fasting Premium Summary"))
         XCTAssertTrue(summary.contains("Discipline Metrics"))
@@ -167,97 +143,40 @@ final class PremiumExperienceEngineTests: XCTestCase {
         XCTAssertTrue(summary.contains("Reflection"))
     }
 
-    func testGuidedJourneyUsesSeasonSpecificWeeklyStructure() {
-        let lentWeek = GuidedSeasonalJourneyEngine.week(
-            for: .lent,
-            program: .lentDeepen,
-            week: 2
-        )
-
-        XCTAssertEqual(lentWeek.weekNumber, 2)
-        XCTAssertEqual(lentWeek.actions.count, 4)
-        XCTAssertTrue(lentWeek.title.localizedCaseInsensitiveContains("lenten"))
-        XCTAssertEqual(lentWeek.actions.map(\.category), [.fasting, .prayer, .charity, .review])
-    }
-
-    func testGuidedJourneyActionKeyIsStableAndProgressPersists() {
-        let key = GuidedSeasonalJourneyEngine.actionKey(
-            program: .adventWatch,
-            week: 3,
-            actionID: "prayer"
-        )
-
-        var state = PremiumCompanionState.default
-        state.seasonProgramRawValue = PremiumSeasonProgram.adventWatch.rawValue
-        state.completedProgramActions = [key]
-        LocalFeatureStore.savePremiumCompanionState(state)
-
-        let loaded = LocalFeatureStore.loadPremiumCompanionState()
-        XCTAssertEqual(loaded.completedProgramActions, [key])
-        XCTAssertTrue(loaded.completedProgramActions.contains("adventWatch-w3-prayer"))
-    }
-
     func testSubscriptionHealthMatrixPrioritizesCriticalStates() {
         XCTAssertEqual(
             PremiumSubscriptionHealthEvaluator.message(states: [.revoked], premiumUnlocked: true),
-            "Subscription was revoked. Restore or update your account."
-        )
+            "Subscription was revoked. Restore or update your account.")
         XCTAssertEqual(
             PremiumSubscriptionHealthEvaluator.message(states: [.inBillingRetry], premiumUnlocked: true),
-            "Billing issue detected. Update your payment method to keep Premium."
-        )
+            "Billing issue detected. Update your payment method to keep Premium.")
         XCTAssertEqual(
             PremiumSubscriptionHealthEvaluator.message(states: [.inGracePeriod], premiumUnlocked: true),
-            "You are in billing grace period. Premium remains active for now."
-        )
+            "You are in billing grace period. Premium remains active for now.")
         XCTAssertEqual(
             PremiumSubscriptionHealthEvaluator.message(states: [.expired], premiumUnlocked: false),
-            "Premium subscription expired."
-        )
+            "Premium subscription expired.")
         XCTAssertEqual(
             PremiumSubscriptionHealthEvaluator.message(states: [.subscribed], premiumUnlocked: false),
-            "Premium subscription is active."
-        )
+            "Premium subscription is active.")
         XCTAssertEqual(
             PremiumSubscriptionHealthEvaluator.message(states: [], premiumUnlocked: true),
-            "Premium subscription is active."
-        )
+            "Premium subscription is active.")
         XCTAssertEqual(
             PremiumSubscriptionHealthEvaluator.message(states: [], premiumUnlocked: false),
-            ""
-        )
+            "")
     }
 
     func testSubscriptionHealthMatrixUsesPriorityOrderWhenMultipleStatesExist() {
         let message = PremiumSubscriptionHealthEvaluator.message(
             states: [.subscribed, .expired, .inBillingRetry, .revoked],
-            premiumUnlocked: true
-        )
+            premiumUnlocked: true)
         XCTAssertEqual(message, "Subscription was revoked. Restore or update your account.")
 
         let gracePriority = PremiumSubscriptionHealthEvaluator.message(
             states: [.expired, .inGracePeriod, .subscribed],
-            premiumUnlocked: true
-        )
+            premiumUnlocked: true)
         XCTAssertEqual(gracePriority, "You are in billing grace period. Premium remains active for now.")
-    }
-
-    func testSeasonPlanWithMedicalDispensationUsesGentlePlanForAnySeason() {
-        let settings = RuleSettings(
-            birthYear: 1986,
-            hasMedicalDispensation: true,
-            ascensionObservance: .sunday,
-            fridayOutsideLentMode: .substitutePenance,
-            calendarMode: .usccb
-        )
-
-        let adventPlan = PremiumSeasonPlanEngine.plan(for: .advent, settings: settings)
-        let lentPlan = PremiumSeasonPlanEngine.plan(for: .lent, settings: settings)
-
-        XCTAssertEqual(adventPlan.fastingIntensity, "Gentle")
-        XCTAssertEqual(lentPlan.fastingIntensity, "Gentle")
-        XCTAssertEqual(adventPlan.titleLine, "Medical/Pastoral Plan")
-        XCTAssertEqual(lentPlan.titleLine, "Medical/Pastoral Plan")
     }
 
     private var fixedCalendar: Calendar {
@@ -268,16 +187,15 @@ final class PremiumExperienceEngineTests: XCTestCase {
 
     private func makeDate(year: Int, month: Int, day: Int, hour: Int = 0, minute: Int = 0) -> Date {
         fixedCalendar.date(
-            from: DateComponents(year: year, month: month, day: day, hour: hour, minute: minute)
-        ) ?? .distantPast
+            from: DateComponents(year: year, month: month, day: day, hour: hour, minute: minute)) ?? .distantPast
     }
 
     private func makeObservance(
         id: String,
         title: String,
         date: Date,
-        obligation: Observance.Obligation
-    ) -> Observance {
+        obligation: Observance.Obligation) -> Observance
+    {
         Observance(
             id: id,
             title: title,
@@ -287,7 +205,6 @@ final class PremiumExperienceEngineTests: XCTestCase {
             detail: nil,
             rationale: "Test rationale",
             citations: [],
-            ruleVersion: "test"
-        )
+            ruleVersion: "test")
     }
 }
