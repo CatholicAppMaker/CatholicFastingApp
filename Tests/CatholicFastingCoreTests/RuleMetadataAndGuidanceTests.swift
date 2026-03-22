@@ -207,7 +207,8 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
         let snapshot = FoodGuidanceEngine.snapshot(for: .normalDay, settings: settings)
 
         XCTAssertTrue(snapshot.sourceLine.localizedCaseInsensitiveContains("cccb"))
-        XCTAssertTrue(snapshot.sourceLine.localizedCaseInsensitiveContains("u.s.-first abstinence examples"))
+        XCTAssertTrue(snapshot.sourceLine.localizedCaseInsensitiveContains("universal law"))
+        XCTAssertFalse(snapshot.sourceLine.localizedCaseInsensitiveContains("u.s.-first"))
     }
 
     func testMissedDayRecoveryPlanIsNilWithoutMissedStatus() {
@@ -402,7 +403,7 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
         XCTAssertTrue(context.authorityLabel.localizedCaseInsensitiveContains("cccb"))
     }
 
-    func testRegionalGuidanceContextFactoryMarksCanadaHolyDaysAsPartial() throws {
+    func testRegionalGuidanceContextFactoryUsesCanadaBaselineForHolyDays() throws {
         let settings = RuleSettings(
             birthYear: 1990,
             hasMedicalDispensation: false,
@@ -414,14 +415,33 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
 
         let holyDay = try XCTUnwrap(
             ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
-                .first(where: { $0.title == "Ascension" })
+                .first(where: { $0.title == "Christmas" && $0.kind == .holyDay })
         )
 
         let context = RegionalGuidanceContextFactory.context(for: holyDay, settings: settings)
 
-        XCTAssertEqual(context.supportLevel, .partial)
-        XCTAssertEqual(context.classificationLabel, "Informational")
-        XCTAssertTrue(context.disclosureText.localizedCaseInsensitiveContains("does not claim full conference-level holy day obligation parity"))
+        XCTAssertEqual(context.supportLevel, .full)
+        XCTAssertEqual(context.classificationLabel, "Canada baseline")
+        XCTAssertTrue(context.authorityLabel.localizedCaseInsensitiveContains("canada national baseline"))
+        XCTAssertTrue(context.disclosureText.localizedCaseInsensitiveContains("canada-wide obligations"))
+    }
+
+    func testRegionalGuidanceGeneralContextTreatsCanadaAsModeledBaseline() {
+        let settings = RuleSettings(
+            birthYear: 1990,
+            hasMedicalDispensation: false,
+            ascensionObservance: .sunday,
+            fridayOutsideLentMode: .substitutePenance,
+            calendarMode: .usccb,
+            regionProfile: .canada
+        )
+
+        let context = RegionalGuidanceContextFactory.generalContext(for: settings)
+
+        XCTAssertEqual(context.supportLevel, .full)
+        XCTAssertEqual(context.classificationLabel, "Canada baseline")
+        XCTAssertTrue(context.disclosureText.localizedCaseInsensitiveContains("national baseline"))
+        XCTAssertTrue(context.citations.contains { $0.authority == .cccb })
     }
 
     private var fixedCalendar: Calendar {

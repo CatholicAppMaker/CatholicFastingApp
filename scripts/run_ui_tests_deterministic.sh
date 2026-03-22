@@ -43,7 +43,7 @@ IPAD_TESTS=(
   "CatholicFastingAppUITests/testIPadOnboardingShowsRegionSelector"
   "CatholicFastingAppUITests/testIPadOnboardingLanguageSelectionUpdatesVisibleCopy"
   "CatholicFastingAppUITests/testIPadMoreProfileDestinationShowsRegionPicker"
-  "CatholicFastingAppUITests/testIPadCanadaModeShowsPartialSupportContext"
+  "CatholicFastingAppUITests/testIPadCanadaModeShowsModeledBaselineContext"
   "CatholicFastingAppUITests/testIPadPremiumWorkspaceShowsLegalLinks"
   "CatholicFastingAppUITests/testIPadPremiumWorkspaceShowsJourneyOrPlanContext"
   "CatholicFastingAppUITests/testIPadMoreAllDestinationsOpenWithoutBreakingWorkspace"
@@ -113,8 +113,10 @@ run_one_test() {
       fi
     done
 
+    set +e
     wait "${pid}"
     rc=$?
+    set -e
     if [[ "${rc}" -eq 0 ]]; then
       end=$(date +%s)
       duration=$((end - start))

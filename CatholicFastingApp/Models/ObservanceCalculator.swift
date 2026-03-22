@@ -132,6 +132,22 @@ enum ObservanceCalculator {
     ) -> [(title: String, date: Date, detail: String?)] {
         var holyDays: [(String, Date, String?)] = []
 
+        if settings.regionProfile == .canada {
+            let canadaFixed: [(String, Int, Int)] = [
+                ("Mary, Mother of God", 1, 1),
+                ("Christmas", 12, 25),
+            ]
+
+            for item in canadaFixed {
+                if let date = canonicalDate(year: year, month: item.1, day: item.2) {
+                    let detail = holyDayDetail(title: item.0, date: date, transferred: false, settings: settings)
+                    holyDays.append((item.0, date, detail))
+                }
+            }
+
+            return holyDays
+        }
+
         let fixed: [(String, Int, Int)] = [
             ("Mary, Mother of God", 1, 1),
             ("Assumption of the Blessed Virgin Mary", 8, 15),
@@ -174,7 +190,12 @@ enum ObservanceCalculator {
         let goodFriday = dateByAdding(days: -2, to: easter)
         let easterVigil = dateByAdding(days: -1, to: easter)
         let pentecost = dateByAdding(days: 49, to: easter)
-        let ascension = settings.ascensionObservance == .sunday ? dateByAdding(days: 42, to: easter) : dateByAdding(days: 39, to: easter)
+        let ascension = switch settings.regionProfile {
+        case .canada:
+            dateByAdding(days: 42, to: easter)
+        case .us, .other:
+            settings.ascensionObservance == .sunday ? dateByAdding(days: 42, to: easter) : dateByAdding(days: 39, to: easter)
+        }
         return LiturgicalDates(
             easter: easter,
             ashWednesday: ashWednesday,
@@ -223,10 +244,12 @@ enum ObservanceCalculator {
 
     private static func holyDayDetail(title: String, date: Date, transferred: Bool, settings: RuleSettings) -> String {
         if settings.regionProfile == .canada {
-            if transferred {
-                return "Listed for Canada planning context. Local Mass obligation handling may differ; verify with diocesan guidance if you need certainty."
+            return switch title {
+            case "Mary, Mother of God", "Christmas":
+                "Holy Day of Obligation in the Canada national baseline. The app models the Canada-wide obligation and keeps diocesan proper calendars separate."
+            default:
+                "Celebration included for Canada-wide planning in the national baseline. It is not treated as a separate weekday holy day obligation here."
             }
-            return "Listed for Canada planning context. This release does not claim full conference-level holy day obligation parity."
         }
 
         if settings.regionProfile == .other {
@@ -256,8 +279,10 @@ enum ObservanceCalculator {
 
     private static func holyDayObligation(title: String, date: Date, settings: RuleSettings) -> Observance.Obligation {
         switch settings.regionProfile {
-        case .canada, .other:
+        case .other:
             return .optional
+        case .canada:
+            break
         case .us:
             break
         }
@@ -269,6 +294,13 @@ enum ObservanceCalculator {
             return .optional
         case .sevenOrOlder:
             break
+        }
+
+        if settings.regionProfile == .canada {
+            if title == "Mary, Mother of God" || title == "Christmas" {
+                return .mandatory
+            }
+            return .optional
         }
 
         let weekday = Calendar.gregorian.component(.weekday, from: date)
@@ -301,7 +333,7 @@ enum ObservanceCalculator {
             case .us:
                 "Included from the liturgical calendar used for U.S. devotional planning."
             case .canada:
-                "Shown for Catholic devotional planning in the Canada profile. Regional proper calendars may add or vary celebrations."
+                "Included for Canada-wide devotional planning in the national baseline. Diocesan proper calendars may add local celebrations."
             case .other:
                 "Shown for Catholic devotional planning. Local calendars may add or vary celebrations."
             }
@@ -327,6 +359,14 @@ enum ObservanceCalculator {
         append("Holy Thursday (Evening Mass of the Lord's Supper)", dateByAdding(days: -3, to: dates.easter))
         append("Easter Sunday", dates.easter)
         append("Pentecost", dates.pentecost)
+
+        if settings.regionProfile == .canada {
+            append(
+                "Ascension",
+                dates.ascension,
+                detail: "Observed on Sunday in the Canada national baseline and shown here as a celebration rather than a separate weekday holy day obligation."
+            )
+        }
 
         let trinity = dateByAdding(days: 56, to: dates.easter)
         append("The Most Holy Trinity", trinity)
@@ -428,7 +468,7 @@ enum ObservanceCalculator {
             case .us:
                 return "Holy day obligation may vary by universal, national, and local norms."
             case .canada:
-                return "Holy day listing is shown for planning context. Canada support is partial, so local obligation should be confirmed when it matters."
+                return "Holy day obligation is modeled for the Canada national baseline. Diocesan proper calendars are not included in this release."
             case .other:
                 return "Holy day listing is informational outside the U.S. profile unless local law is known."
             }
@@ -482,7 +522,7 @@ enum ObservanceCalculator {
             case .us:
                 citations.append(RuleCitation(authority: .usccb, title: "U.S. Holy Days", shortReference: "USCCB Liturgical Norms"))
             case .canada:
-                citations.append(RuleCitation(authority: .pastoral, title: "Canada Support Scope", shortReference: "Holy day handling is partial"))
+                break
             case .other:
                 citations.append(RuleCitation(authority: .pastoral, title: "Conference and Local Law", shortReference: "Review local obligation law"))
             }
@@ -515,7 +555,7 @@ enum ObservanceCalculator {
         case .us:
             "Memorial included for liturgical awareness in the U.S. calendar profile."
         case .canada:
-            "Memorial included for liturgical awareness in the Canada profile. Regional proper calendars may differ."
+            "Memorial included for Canada-wide liturgical awareness in the national baseline. Diocesan proper calendars may differ."
         case .other:
             "Memorial included for liturgical awareness. Local calendars may differ."
         }

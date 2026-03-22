@@ -36,7 +36,7 @@ enum FoodGuidanceEngine {
         case .us:
             "Sources: USCCB fast/abstinence guidance and universal law."
         case .canada:
-            "Sources: CCCB Friday guidance, universal law, and U.S.-first abstinence examples."
+            "Sources: CCCB Friday guidance and universal law."
         case .other:
             "Sources: universal law and local pastoral guidance."
         }
@@ -278,7 +278,7 @@ enum DailyFoodDecisionEngine {
         case .us:
             "Source: USCCB liturgical norms."
         case .canada:
-            "Source: local Canadian liturgical guidance."
+            "Source: universal law and the Canada national baseline."
         case .other:
             "Source: local liturgical guidance."
         }

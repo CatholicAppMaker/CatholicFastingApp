@@ -499,7 +499,7 @@ extension ContentView {
                 "United States profile: Ash Wednesday and Good Friday are fast and abstinence days, Fridays of Lent are abstinence, and Fridays outside Lent are penitential."
         case .canada:
             return
-                "Canada profile: Fridays remain penitential; abstinence is common practice, and local bishop guidance should be followed for particulars."
+                "Canada profile: the app models the national baseline, including Canada-wide holy day obligations and CCCB Friday guidance. Diocesan proper calendars are not included yet."
         case .other:
             return
                 "Outside U.S./Canada: follow your local bishop conference, parish guidance, and your pastor for binding norms."

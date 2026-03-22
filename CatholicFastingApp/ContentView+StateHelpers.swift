@@ -76,7 +76,7 @@ extension ContentView {
         case .us:
             "U.S. profile: Fridays in Lent are abstinence days; Fridays outside Lent remain penitential."
         case .canada:
-            "Canada profile: Fridays remain penitential all year; choose abstinence or another charitable or pious practice."
+            "Canada profile: the national baseline keeps Fridays penitential all year and models Canada-wide holy day obligations."
         case .other:
             "Regional guidance varies outside U.S./Canada; always follow local Church authority."
         }

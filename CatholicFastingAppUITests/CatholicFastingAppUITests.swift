@@ -692,16 +692,16 @@ final class CatholicFastingAppUITests: XCTestCase {
         XCTAssertTrue(scrollToElement(regionPicker, in: app))
     }
 
-    func testIPadCanadaModeShowsPartialSupportContext() {
+    func testIPadCanadaModeShowsModeledBaselineContext() {
         let app = makeApp(regionProfile: "canada")
         app.launch()
         ensureOnHomeScreen(app)
 
         openIPadSurface("today", in: app)
-        XCTAssertTrue(scrollToElement(app.staticTexts["Canada guidance"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Canada baseline"].firstMatch, in: app))
 
         openIPadSurface("fasting_days", in: app)
-        XCTAssertTrue(scrollToElement(app.staticTexts["Partial support"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Modeled"].firstMatch, in: app))
     }
 
     func testIPadPremiumWorkspaceShowsLegalLinks() {

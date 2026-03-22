@@ -587,7 +587,7 @@ extension ContentView {
             )
             .foregroundStyle(.secondary)
             if regionProfile == .canada {
-                Text("Canada profile selected: use this as reference content and follow your local bishop conference norms.")
+                Text("Canada profile selected: the app models the Canada national baseline and CCCB Friday guidance. Diocesan proper calendars are not included yet.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

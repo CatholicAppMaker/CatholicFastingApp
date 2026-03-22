@@ -99,10 +99,10 @@ enum RegionalGuidanceContextFactory {
         case .canada:
             RegionalRuleContext(
                 regionProfile: .canada,
-                supportLevel: .partial,
-                classificationLabel: "Canada guidance",
-                authorityLabel: "Universal law + CCCB Friday guidance",
-                disclosureText: "Canada support is explicit partial support in 3.0. Universal fasting rules and CCCB Friday penitential guidance are modeled directly; holy day obligation handling remains informational unless fully modeled.",
+                supportLevel: .full,
+                classificationLabel: "Canada baseline",
+                authorityLabel: "Universal law + CCCB guidance",
+                disclosureText: "The Canada profile models the national baseline directly: universal fasting law, CCCB Friday penitential guidance, and Canada-wide holy day obligations. Diocesan proper calendars are not included in this release.",
                 citations: [
                     RuleCitation(authority: .universalLaw, title: "Code of Canon Law", shortReference: "Can. 1249-1253"),
                     RuleCitation(authority: .cccb, title: "Keeping Friday", shortReference: "CCCB Friday guidance"),
@@ -187,12 +187,12 @@ enum RegionalGuidanceContextFactory {
             case .canada:
                 RegionalRuleContext(
                     regionProfile: .canada,
-                    supportLevel: .partial,
-                    classificationLabel: "Informational",
-                    authorityLabel: "Planning context only",
-                    disclosureText: "Canada holy day listings are shown for planning and liturgical awareness. This release does not claim full conference-level holy day obligation parity.",
+                    supportLevel: .full,
+                    classificationLabel: "Canada baseline",
+                    authorityLabel: "Universal law + Canada national baseline",
+                    disclosureText: "Canada holy day handling is modeled for the national baseline only. The app includes Canada-wide obligations and planning context, but not diocesan proper calendars.",
                     citations: observance.citations,
-                    sourceURL: RegionalGuidanceLinks.cccbKeepingFriday
+                    sourceURL: nil
                 )
             case .other:
                 RegionalRuleContext(
@@ -220,12 +220,12 @@ enum RegionalGuidanceContextFactory {
             case .canada:
                 RegionalRuleContext(
                     regionProfile: .canada,
-                    supportLevel: .partial,
-                    classificationLabel: "Calendar context",
+                    supportLevel: .full,
+                    classificationLabel: "Canada baseline",
                     authorityLabel: "Liturgical planning",
-                    disclosureText: "These celebration days support planning and devotion in the Canada profile. Local proper calendars may differ.",
+                    disclosureText: "These celebration days are included for Canada-wide planning and devotion in the national baseline. Diocesan proper calendars are not included yet.",
                     citations: observance.citations,
-                    sourceURL: RegionalGuidanceLinks.cccbKeepingFriday
+                    sourceURL: nil
                 )
             case .other:
                 RegionalRuleContext(

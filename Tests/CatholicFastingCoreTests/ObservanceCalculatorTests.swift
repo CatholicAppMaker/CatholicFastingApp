@@ -240,7 +240,7 @@ final class ObservanceCalculatorTests: XCTestCase {
         XCTAssertEqual(allSaints?.obligation, .optional) // 2025-11-01 is Saturday
     }
 
-    func testCanadaHolyDaysStayInformationalInPartialSupportMode() {
+    func testCanadaHolyDaysUseNationalBaselineObligations() {
         let settings = RuleSettings(
             birthYear: 1990,
             hasMedicalDispensation: false,
@@ -251,12 +251,21 @@ final class ObservanceCalculatorTests: XCTestCase {
         )
 
         let observances = ObservanceCalculator.makeCalendar(for: 2026, settings: settings)
-        let christmas = observances.first(where: { $0.title == "Christmas" })
+        let maryMotherOfGod = observances.first(where: { $0.title == "Mary, Mother of God" && $0.kind == .holyDay })
+        let christmas = observances.first(where: { $0.title == "Christmas" && $0.kind == .holyDay })
         let ascension = observances.first(where: { $0.title == "Ascension" })
+        let assumption = observances.first(where: { $0.title == "Assumption of the Blessed Virgin Mary" && $0.kind == .holyDay })
+        let allSaints = observances.first(where: { $0.title == "All Saints" && $0.kind == .holyDay })
+        let immaculate = observances.first(where: { $0.title.contains("Immaculate Conception") && $0.kind == .holyDay })
 
-        XCTAssertEqual(christmas?.obligation, .optional)
-        XCTAssertEqual(ascension?.obligation, .optional)
-        XCTAssertTrue((christmas?.detail ?? "").localizedCaseInsensitiveContains("planning context"))
+        XCTAssertEqual(maryMotherOfGod?.obligation, .mandatory)
+        XCTAssertEqual(christmas?.obligation, .mandatory)
+        XCTAssertEqual(ascension?.kind, .feastDay)
+        XCTAssertEqual(ascension?.obligation, .notApplicable)
+        XCTAssertNil(assumption)
+        XCTAssertNil(allSaints)
+        XCTAssertNil(immaculate)
+        XCTAssertTrue((christmas?.detail ?? "").localizedCaseInsensitiveContains("canada national baseline"))
     }
 
     func testCanadaFridayPenanceUsesCCCBGuidanceAndCitations() {
