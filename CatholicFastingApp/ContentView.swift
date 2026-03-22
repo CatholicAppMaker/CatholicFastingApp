@@ -150,9 +150,9 @@ struct ContentView: View {
         AppLocalizer.localized(key, default: defaultValue, languageCode: languageModeRaw)
     }
 
-    func localizedFormat(_ key: String, default defaultFormat: String, _ value: CVarArg) -> String {
+    func localizedFormat(_ key: String, default defaultFormat: String, _ values: CVarArg...) -> String {
         let format = localized(key, default: defaultFormat)
-        return String(format: format, locale: Locale.current, value)
+        return String(format: format, locale: Locale.current, arguments: values)
     }
 
     var appLayoutProfile: AppLayoutProfile {

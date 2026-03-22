@@ -822,6 +822,7 @@ enum StorageKeys {
 enum LanguageMode: String, CaseIterable, Identifiable {
     case english
     case spanish
+    case frenchCanadian
 
     var id: String {
         rawValue
@@ -833,6 +834,30 @@ enum LanguageMode: String, CaseIterable, Identifiable {
             "English"
         case .spanish:
             "Español"
+        case .frenchCanadian:
+            "Français (Canada)"
+        }
+    }
+
+    var localizationCode: String {
+        switch self {
+        case .english:
+            "en"
+        case .spanish:
+            "es"
+        case .frenchCanadian:
+            "fr-CA"
+        }
+    }
+
+    var contentLocale: ContentLocale {
+        switch self {
+        case .english:
+            .english
+        case .spanish:
+            .spanish
+        case .frenchCanadian:
+            .frenchCanadian
         }
     }
 }
@@ -1019,7 +1044,7 @@ enum PremiumToolDestination: String, CaseIterable, Identifiable {
 
 enum AppLocalizer {
     static func localized(_ key: String, default defaultValue: String, languageCode: String) -> String {
-        let resolvedCode = languageCode == LanguageMode.spanish.rawValue ? "es" : "en"
+        let resolvedCode = (LanguageMode(rawValue: languageCode) ?? .english).localizationCode
         guard
             let path = Bundle.main.path(forResource: resolvedCode, ofType: "lproj"),
             let bundle = Bundle(path: path)

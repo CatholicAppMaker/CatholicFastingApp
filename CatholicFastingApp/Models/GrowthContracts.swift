@@ -244,11 +244,20 @@ struct SeasonalContentPack: Hashable {
 enum ContentLocale: String, Codable {
     case english
     case spanish
+    case frenchCanadian
 }
 
 enum SeasonalContentPackCatalog {
     static func pack(for season: LiturgicalSeason, locale: ContentLocale) -> SeasonalContentPack {
-        let packs = locale == .spanish ? spanishPacks : englishPacks
+        let packs: [LiturgicalSeason: SeasonalContentPack]
+        switch locale {
+        case .english:
+            packs = englishPacks
+        case .spanish:
+            packs = spanishPacks
+        case .frenchCanadian:
+            packs = frenchCanadianPacks
+        }
         return packs[season] ?? packs[.ordinary]!
     }
 
@@ -393,6 +402,111 @@ enum SeasonalContentPackCatalog {
                     author: "San Bernardo",
                     source: "Sermones",
                     tradition: "Doctor de la Iglesia"
+                ),
+            ]
+        ),
+    ]
+
+    private static let frenchCanadianPacks: [LiturgicalSeason: SeasonalContentPack] = [
+        .lent: SeasonalContentPack(
+            season: .lent,
+            locale: .frenchCanadian,
+            heroAssetNames: ["SacredAshWednesday", "SacredMonstrance", "SacredPalmSunday", "SacredDesertPilgrimage"],
+            campaignTitle: "Discipline du Carême",
+            campaignSubtitle: "Priez, jeûnez et donnez l’aumône avec constance.",
+            formationLines: [
+                "Gardez les jours obligatoires bien visibles et planifiez la pénitence du vendredi avant le début de la semaine.",
+                "Associez chaque jeûne à une œuvre concrète de miséricorde.",
+                "Laissez la faim vous rappeler la prière plutôt que la frustration.",
+            ],
+            quotes: [
+                SeasonalContentPack.RotatingQuote(
+                    text: "La prière unie au sacrifice constitue la force la plus puissante de l’histoire humaine.",
+                    author: "Saint Jean-Paul II",
+                    source: "Discours sur la prière et le sacrifice",
+                    tradition: "Pape"
+                ),
+                SeasonalContentPack.RotatingQuote(
+                    text: "Le jeûne est l’âme de la prière, et la miséricorde est le sang même du jeûne.",
+                    author: "Saint Pierre Chrysologue",
+                    source: "Sermon 43",
+                    tradition: "Père de l’Église"
+                ),
+            ]
+        ),
+        .advent: SeasonalContentPack(
+            season: .advent,
+            locale: .frenchCanadian,
+            heroAssetNames: ["SacredScriptureCandle", "SacredMarianMonogram", "SacredCathedralLight"],
+            campaignTitle: "Veille de l’Avent",
+            campaignSubtitle: "Pratiquez une discipline pleine d’espérance dans l’attente du Christ.",
+            formationLines: [
+                "Gardez vos disciplines modestes et durables.",
+                "Que le jeûne crée de l’espace pour la prière et le silence.",
+            ],
+            quotes: [
+                SeasonalContentPack.RotatingQuote(
+                    text: "Le renoncement à la nourriture matérielle nous aide à écouter le Christ et à être nourris par sa parole de salut.",
+                    author: "Benoît XVI",
+                    source: "Message de Carême",
+                    tradition: "Pape"
+                ),
+            ]
+        ),
+        .christmas: SeasonalContentPack(
+            season: .christmas,
+            locale: .frenchCanadian,
+            heroAssetNames: ["SacredChaliceVine", "SacredCathedralLight", "HeroSacred"],
+            campaignTitle: "Sobriété et joie de Noël",
+            campaignSubtitle: "Célébrez fidèlement tout en gardant la discipline du vendredi.",
+            formationLines: [
+                "Pratiquez la gratitude à table.",
+                "Gardez la pénitence avec douceur et charité.",
+            ],
+            quotes: [
+                SeasonalContentPack.RotatingQuote(
+                    text: "La pénitence sans amour est lourde, mais avec l’amour elle devient joie.",
+                    author: "Saint Bernard de Clairvaux",
+                    source: "Sermons",
+                    tradition: "Docteur de l’Église"
+                ),
+            ]
+        ),
+        .easter: SeasonalContentPack(
+            season: .easter,
+            locale: .frenchCanadian,
+            heroAssetNames: ["SacredChaliceVine", "SacredJerusalemCross", "HeroSacred"],
+            campaignTitle: "Fidélité pascale",
+            campaignSubtitle: "Portez la discipline du Carême dans la vie ordinaire.",
+            formationLines: [
+                "Gardez la pénitence du vendredi avec intention.",
+                "Faites de la gratitude et de la miséricorde vos premiers gestes.",
+            ],
+            quotes: [
+                SeasonalContentPack.RotatingQuote(
+                    text: "L’abstinence de l’un devrait devenir le réconfort de l’autre.",
+                    author: "Saint Grégoire le Grand",
+                    source: "Homélies sur les Évangiles",
+                    tradition: "Pape et docteur"
+                ),
+            ]
+        ),
+        .ordinary: SeasonalContentPack(
+            season: .ordinary,
+            locale: .frenchCanadian,
+            heroAssetNames: ["SacredChiRho", "SacredRosaryCross", "SacredConceptHeart", "HeroSacred"],
+            campaignTitle: "Constance du temps ordinaire",
+            campaignSubtitle: "Les petites habitudes fidèles forment une discipline durable.",
+            formationLines: [
+                "Planifiez votre jour de jeûne hebdomadaire d’avance.",
+                "Passez en revue chaque semaine les jours accomplis et manqués.",
+            ],
+            quotes: [
+                SeasonalContentPack.RotatingQuote(
+                    text: "Un petit sacrifice fidèle vaut mieux qu’un grand geste impossible à soutenir.",
+                    author: "Catholic Fasting",
+                    source: "Formation intégrée",
+                    tradition: "Pastorale"
                 ),
             ]
         ),

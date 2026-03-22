@@ -148,6 +148,10 @@ private enum UITestBootstrap {
             defaults.set(regionOverride, forKey: "region_profile")
         }
 
+        if let languageOverride = environment["UITEST_LANGUAGE_MODE"], !languageOverride.isEmpty {
+            defaults.set(languageOverride, forKey: "language_mode")
+        }
+
         if arguments.contains("-uitest-seed-missed") {
             let settings = RuleSettings(
                 birthYear: 0,

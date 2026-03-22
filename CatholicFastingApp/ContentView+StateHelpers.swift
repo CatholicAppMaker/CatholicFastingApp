@@ -13,8 +13,7 @@ extension ContentView {
     }
 
     var activeSeasonalContentPack: SeasonalContentPack {
-        let locale: ContentLocale = languageMode == .spanish ? .spanish : .english
-        return SeasonalContentPackCatalog.pack(for: currentLiturgicalSeason, locale: locale)
+        SeasonalContentPackCatalog.pack(for: currentLiturgicalSeason, locale: languageMode.contentLocale)
     }
 
     var dailySeasonalFormationLine: String {

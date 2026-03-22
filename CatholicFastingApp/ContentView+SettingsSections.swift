@@ -2,24 +2,24 @@ import SwiftUI
 
 extension ContentView {
     var quickSetupSection: some View {
-        Section("Quick Setup") {
-            Text("Set these once, then mostly use Today and Fasting Days.")
+        Section(localized("settings.quick.title", default: "Quick Setup")) {
+            Text(localized("settings.quick.intro", default: "Set these once, then mostly use Today and Fasting Days."))
                 .appLeadTextStyle()
 
-            Toggle("I am 14 or older (abstinence age)", isOn: $age14OrOlderForAbstinence)
+            Toggle(localized("settings.quick.age14", default: "I am 14 or older (abstinence age)"), isOn: $age14OrOlderForAbstinence)
                 .accessibilityIdentifier("settings.quick.age14_toggle")
-            Toggle("I am 18 or older (fasting age)", isOn: $age18OrOlderForFasting)
+            Toggle(localized("settings.quick.age18", default: "I am 18 or older (fasting age)"), isOn: $age18OrOlderForFasting)
                 .accessibilityIdentifier("settings.quick.age18_toggle")
 
-            Picker("Region profile", selection: $regionProfileRaw) {
+            Picker(localized("settings.quick.region", default: "Region profile"), selection: $regionProfileRaw) {
                 ForEach(RuleSettings.RegionProfile.allCases) { option in
-                    Text(option.label).tag(option.rawValue)
+                    Text(localizedRegionLabel(option)).tag(option.rawValue)
                 }
             }
             .pickerStyle(.menu)
             .accessibilityIdentifier("settings.quick.region")
 
-            Picker("Language", selection: $languageModeRaw) {
+            Picker(localized("settings.quick.language", default: "Language"), selection: $languageModeRaw) {
                 ForEach(LanguageMode.allCases) { option in
                     Text(option.label).tag(option.rawValue)
                 }
@@ -28,17 +28,20 @@ extension ContentView {
             .accessibilityIdentifier("settings.quick.language")
 
             Toggle(
-                "I understand this is an independent app, not an official Church authority app",
+                localized(
+                    "settings.quick.consent_label",
+                    default: "I understand this is an independent app, not an official Church authority app"
+                ),
                 isOn: $acceptedLegalNotice
             )
             .accessibilityIdentifier("settings.quick.consent")
 
-            Toggle("Enable reminder support", isOn: $dailyReminderSupportEnabled)
+            Toggle(localized("settings.quick.reminder_support", default: "Enable reminder support"), isOn: $dailyReminderSupportEnabled)
                 .accessibilityIdentifier("settings.quick.reminder_support")
             if dailyReminderSupportEnabled {
-                Picker("Reminder strategy", selection: $reminderTierRaw) {
+                Picker(localized("settings.quick.reminder_strategy", default: "Reminder strategy"), selection: $reminderTierRaw) {
                     ForEach(ReminderTier.allCases) { tier in
-                        Text("\(tier.label) - \(tier.summary)").tag(tier.rawValue)
+                        Text("\(localizedReminderTierLabel(tier)) - \(localizedReminderTierSummary(tier))").tag(tier.rawValue)
                     }
                 }
                 .pickerStyle(.menu)
@@ -47,26 +50,26 @@ extension ContentView {
                     applyReminderTier(ReminderTier(rawValue: newValue) ?? .balanced)
                 }
             } else {
-                Text("Turn on reminder support to choose a strategy.")
+                Text(localized("settings.quick.reminder_support_hint", default: "Turn on reminder support to choose a strategy."))
                     .appSupportingTextStyle()
             }
 
-            Text("Setup progress: \(setupChecklistCompleted)/\(setupChecklistTotal)")
+            Text(localizedFormat("settings.quick.progress_format", default: "Setup progress: %d/%d", setupChecklistCompleted, setupChecklistTotal))
                 .appEyebrowStyle()
                 .foregroundStyle(CatholicTheme.primary)
                 .accessibilityIdentifier("settings.quick.progress")
 
             if dailyReminderSupportEnabled {
-                DisclosureGroup("Reminder Actions") {
+                DisclosureGroup(localized("settings.quick.reminder_actions", default: "Reminder Actions")) {
                     if monetizationStore.premiumUnlocked {
-                        Toggle("Morning check-in (7:00 AM)", isOn: $morningReminderEnabled)
+                        Toggle(localized("settings.quick.reminder_morning", default: "Morning check-in (7:00 AM)"), isOn: $morningReminderEnabled)
                             .accessibilityIdentifier("settings.quick.reminder_morning")
-                        Toggle("Evening examen (8:00 PM)", isOn: $eveningReminderEnabled)
+                        Toggle(localized("settings.quick.reminder_evening", default: "Evening examen (8:00 PM)"), isOn: $eveningReminderEnabled)
                             .accessibilityIdentifier("settings.quick.reminder_evening")
                     } else {
-                        Text("Advanced support reminders require Premium.")
+                        Text(localized("settings.quick.reminder_premium_required", default: "Advanced support reminders require Premium."))
                             .appSupportingTextStyle()
-                        Button("Unlock Support Reminders") {
+                        Button(localized("settings.quick.unlock_support", default: "Unlock Support Reminders")) {
                             openPremiumUpgrade(focusingOn: .accountability)
                         }
                         .appSecondaryButtonStyle()
@@ -77,7 +80,7 @@ extension ContentView {
                         .appSupportingTextStyle()
                         .accessibilityIdentifier("settings.quick.reminder_status")
 
-                    Button("Request Notification Permission") {
+                    Button(localized("settings.quick.request_permission", default: "Request Notification Permission")) {
                         Task {
                             notificationStatus = await ReminderScheduler.requestPermission()
                         }
@@ -85,9 +88,9 @@ extension ContentView {
                     .appSecondaryButtonStyle()
                     .disabled(!acceptedLegalNotice)
                     .accessibilityIdentifier("settings.quick.request_permission")
-                    .accessibilityHint("Requires consent acknowledgment before reminders are enabled.")
+                    .accessibilityHint(localized("settings.quick.permission_hint", default: "Requires consent acknowledgment before reminders are enabled."))
 
-                    Button("Schedule Required-Day Reminders") {
+                    Button(localized("settings.quick.schedule_required", default: "Schedule Required-Day Reminders")) {
                         Task {
                             notificationStatus = await ReminderScheduler.schedule(observances: rollingUpcomingObservances)
                         }
@@ -95,9 +98,9 @@ extension ContentView {
                     .appSecondaryButtonStyle()
                     .disabled(!acceptedLegalNotice)
                     .accessibilityIdentifier("settings.quick.schedule_required")
-                    .accessibilityHint("Requires consent acknowledgment before scheduling.")
+                    .accessibilityHint(localized("settings.quick.schedule_required_hint", default: "Requires consent acknowledgment before scheduling."))
 
-                    Button("Schedule Daily Support Reminders") {
+                    Button(localized("settings.quick.schedule_support", default: "Schedule Daily Support Reminders")) {
                         Task {
                             notificationStatus = await ReminderScheduler.scheduleHabitSupport(
                                 morning: dailyReminderSupportEnabled && morningReminderEnabled,
@@ -112,11 +115,16 @@ extension ContentView {
                     .accessibilityIdentifier("settings.quick.schedule_support")
 
                     if !monetizationStore.premiumUnlocked {
-                        Text("Premium is required for daily support reminders beyond required-day alerts.")
+                        Text(
+                            localized(
+                                "settings.quick.support_premium_hint",
+                                default: "Premium is required for daily support reminders beyond required-day alerts."
+                            )
+                        )
                             .appEyebrowStyle()
                     }
 
-                    Button("Refresh Reminder Status") {
+                    Button(localized("settings.quick.refresh_status", default: "Refresh Reminder Status")) {
                         Task {
                             notificationStatus = await ReminderScheduler.notificationSummary()
                         }
@@ -128,7 +136,7 @@ extension ContentView {
             }
 
             if !acceptedLegalNotice {
-                Text("Enable consent above to request and schedule reminders.")
+                Text(localized("settings.quick.enable_consent_hint", default: "Enable consent above to request and schedule reminders."))
                     .appEyebrowStyle()
                     .foregroundStyle(.orange)
             }
@@ -159,16 +167,16 @@ extension ContentView {
                 }
             }
 
-            Text("Age eligibility is managed in Setup & Reminders so it stays easy to review.")
+            Text(localized("settings.personal_profile.age_eligibility_hint", default: "Age eligibility is managed in Setup & Reminders so it stays easy to review."))
                 .appSupportingTextStyle()
         }
     }
 
     var regionalNormsSection: some View {
         Section(localized("settings.regional_norms.title", default: "Church Norms")) {
-            Picker("Region Profile", selection: $regionProfileRaw) {
+            Picker(localized("settings.regional_norms.region_profile", default: "Region Profile"), selection: $regionProfileRaw) {
                 ForEach(RuleSettings.RegionProfile.allCases) { option in
-                    Text(option.label).tag(option.rawValue)
+                    Text(localizedRegionLabel(option)).tag(option.rawValue)
                 }
             }
             .pickerStyle(.menu)
@@ -194,7 +202,7 @@ extension ContentView {
                 selection: $fridayModeRaw
             ) {
                 ForEach(RuleSettings.FridayOutsideLentMode.allCases) { option in
-                    Text(option.label).tag(option.rawValue)
+                    Text(localizedFridayModeLabel(option)).tag(option.rawValue)
                 }
             }
             .accessibilityHint(
@@ -664,6 +672,48 @@ extension ContentView {
             return fallback
         }
         return text
+    }
+
+    func localizedRegionLabel(_ option: RuleSettings.RegionProfile) -> String {
+        switch option {
+        case .us:
+            localized("onboarding.region.us", default: option.label)
+        case .canada:
+            localized("onboarding.region.canada", default: option.label)
+        case .other:
+            localized("onboarding.region.other", default: option.label)
+        }
+    }
+
+    func localizedFridayModeLabel(_ option: RuleSettings.FridayOutsideLentMode) -> String {
+        switch option {
+        case .abstainFromMeat:
+            localized("onboarding.friday.abstain", default: option.label)
+        case .substitutePenance:
+            localized("onboarding.friday.substitute", default: option.label)
+        }
+    }
+
+    func localizedReminderTierLabel(_ tier: ReminderTier) -> String {
+        switch tier {
+        case .minimal:
+            localized("onboarding.reminder.minimal.label", default: tier.label)
+        case .balanced:
+            localized("onboarding.reminder.balanced.label", default: tier.label)
+        case .guided:
+            localized("onboarding.reminder.guided.label", default: tier.label)
+        }
+    }
+
+    func localizedReminderTierSummary(_ tier: ReminderTier) -> String {
+        switch tier {
+        case .minimal:
+            localized("onboarding.reminder.minimal.summary", default: tier.summary)
+        case .balanced:
+            localized("onboarding.reminder.balanced.summary", default: tier.summary)
+        case .guided:
+            localized("onboarding.reminder.guided.summary", default: tier.summary)
+        }
     }
 }
 

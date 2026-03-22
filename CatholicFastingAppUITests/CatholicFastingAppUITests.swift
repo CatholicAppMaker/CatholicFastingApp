@@ -681,6 +681,22 @@ final class CatholicFastingAppUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Paso 2 de 4: Idioma y región"].firstMatch.waitForExistence(timeout: 4))
     }
 
+    func testIPadOnboardingFrenchCanadianSelectionUpdatesVisibleCopy() {
+        let app = makeApp(skipOnboarding: false)
+        app.launch()
+
+        let languagePicker = app.pickers["onboarding.language"].firstMatch
+        XCTAssertTrue(scrollToElement(languagePicker, in: app))
+        selectMenuPicker(languagePicker, option: "Français (Canada)", in: app)
+
+        XCTAssertTrue(app.navigationBars["Bienvenue"].waitForExistence(timeout: 4))
+
+        let continueButton = app.buttons["onboarding.continue"].firstMatch
+        XCTAssertTrue(continueButton.waitForExistence(timeout: 4))
+        XCTAssertEqual(continueButton.label, "Terminer la configuration")
+        XCTAssertTrue(app.staticTexts["Étape 2 sur 4 : Langue et région"].firstMatch.waitForExistence(timeout: 4))
+    }
+
     func testIPadMoreProfileDestinationShowsRegionPicker() {
         let app = makeApp()
         app.launch()
@@ -761,6 +777,29 @@ final class CatholicFastingAppUITests: XCTestCase {
         let regionPicker = app.pickers["settings.region_picker"].firstMatch
         XCTAssertTrue(scrollToElement(regionPicker, in: app))
         XCTAssertTrue(scrollToElement(app.otherElements["settings.quick.reminder_actions"].firstMatch, in: app))
+    }
+
+    func testIPhoneQuickSetupFrenchCanadianShowsLocalizedSetupCopy() {
+        let app = makeApp(languageMode: "frenchCanadian")
+        app.launch()
+        ensureOnHomeScreen(app)
+        openMoreDestination("Setup & Reminders", in: app)
+
+        XCTAssertTrue(scrollToElement(app.staticTexts["Configuration rapide"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Réglez ceci une fois, puis utilisez surtout Aujourd’hui et Jours de jeûne."].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.pickers["settings.quick.language"].firstMatch, in: app))
+    }
+
+    func testIPadGuidanceFrenchCanadianShowsLocalizedSectionTitles() {
+        let app = makeApp(languageMode: "frenchCanadian")
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadMoreDestination("guidanceAndRules", in: app)
+
+        XCTAssertTrue(scrollToElement(app.otherElements["guidance.food.section"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Guide alimentaire"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Orientation pastorale"].firstMatch, in: app))
     }
 
     func testIPadMoreGuidanceDestinationShowsFoodSection() {
@@ -1037,7 +1076,12 @@ final class CatholicFastingAppUITests: XCTestCase {
         XCTAssertTrue(scrollToElement(app.otherElements["ipad.intermittent.history"].firstMatch, in: app))
     }
 
-    private func makeApp(skipOnboarding: Bool = true, seedMissed: Bool = false, regionProfile: String? = nil) -> XCUIApplication {
+    private func makeApp(
+        skipOnboarding: Bool = true,
+        seedMissed: Bool = false,
+        regionProfile: String? = nil,
+        languageMode: String? = nil
+    ) -> XCUIApplication {
         let app = XCUIApplication()
         var args = ["-uitest-reset", "-uitest-seed-deterministic", "-uitest-disable-animations"]
         if skipOnboarding {
@@ -1050,6 +1094,9 @@ final class CatholicFastingAppUITests: XCTestCase {
         app.launchEnvironment["UITEST_MODE"] = "1"
         if let regionProfile {
             app.launchEnvironment["UITEST_REGION_PROFILE"] = regionProfile
+        }
+        if let languageMode {
+            app.launchEnvironment["UITEST_LANGUAGE_MODE"] = languageMode
         }
         return app
     }
