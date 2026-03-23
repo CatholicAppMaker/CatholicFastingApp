@@ -127,4 +127,30 @@ final class IntermittentFastTrackerTests: XCTestCase {
         XCTAssertLessThanOrEqual(actualStart ?? .distantFuture, after)
         XCTAssertGreaterThanOrEqual(actualStart ?? .distantPast, before.addingTimeInterval(-1))
     }
+
+    func testUpdateActiveStartPersistsWhileFastIsRunning() {
+        let tracker = IntermittentFastTracker()
+        let originalStart = Date(timeIntervalSince1970: 1_700_500_000)
+        let editedStart = originalStart.addingTimeInterval(-1800)
+
+        tracker.startFast(now: originalStart)
+        tracker.updateActiveStart(to: editedStart, now: originalStart)
+
+        XCTAssertEqual(tracker.activeStart, editedStart)
+
+        let reloaded = IntermittentFastTracker()
+        XCTAssertEqual(reloaded.activeStart, editedStart)
+    }
+
+    func testUpdateActiveStartClampsFutureValues() {
+        let tracker = IntermittentFastTracker()
+        let originalStart = Date(timeIntervalSince1970: 1_700_600_000)
+        let now = originalStart.addingTimeInterval(300)
+        let future = now.addingTimeInterval(3600)
+
+        tracker.startFast(now: originalStart)
+        tracker.updateActiveStart(to: future, now: now)
+
+        XCTAssertEqual(tracker.activeStart, now)
+    }
 }

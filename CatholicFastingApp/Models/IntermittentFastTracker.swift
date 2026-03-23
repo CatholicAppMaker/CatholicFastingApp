@@ -52,6 +52,19 @@ final class IntermittentFastTracker: ObservableObject {
         #endif
     }
 
+    func updateActiveStart(to start: Date, now: Date = Date()) {
+        guard activeStart != nil else { return }
+        let clampedStart = min(start, now)
+        activeStart = clampedStart
+        persistMeta()
+        #if canImport(ActivityKit) && os(iOS)
+        let targetHours = presetHours
+        Task {
+            await IntermittentFastLiveActivityManager.update(start: clampedStart, targetHours: targetHours)
+        }
+        #endif
+    }
+
     func endFast(now: Date = Date()) {
         guard let start = activeStart, now > start else { return }
         let session = IntermittentFastSession(

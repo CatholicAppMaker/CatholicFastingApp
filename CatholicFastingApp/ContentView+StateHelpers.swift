@@ -514,9 +514,24 @@ extension ContentView {
         return earliest ... latest
     }
 
+    var intermittentActiveStartBinding: Binding<Date> {
+        Binding(
+            get: { intermittentTracker.activeStart ?? intermittentManualStart },
+            set: { newValue in
+                intermittentManualStart = newValue
+                intermittentTracker.updateActiveStart(to: newValue)
+                intermittentManualStart = intermittentTracker.activeStart ?? newValue
+            })
+    }
+
     func startIntermittentFastFromSelectedTime() {
         intermittentTracker.startFast(now: intermittentManualStart)
-        intermittentManualStart = Date()
+        intermittentManualStart = intermittentTracker.activeStart ?? Date()
+    }
+
+    func applyIntermittentManualStartEdit() {
+        intermittentTracker.updateActiveStart(to: intermittentManualStart)
+        intermittentManualStart = intermittentTracker.activeStart ?? Date()
     }
 
     func resetIntermittentManualStartToNow() {

@@ -14,6 +14,7 @@ extension CatholicFastingAppUITests {
 
         let elapsed = app.staticTexts["intermittent.active_elapsed"].firstMatch
         XCTAssertTrue(elapsed.waitForExistence(timeout: 4))
+        XCTAssertTrue(scrollToElement(app.datePickers["intermittent.start_date"].firstMatch, in: app))
 
         let cancelButton = app.buttons["intermittent.cancel_fast"].firstMatch
         XCTAssertTrue(scrollToElement(cancelButton, in: app))
@@ -125,6 +126,20 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(app.otherElements["ipad.intermittent.planning"].waitForExistence(timeout: 4))
         XCTAssertTrue(app.otherElements["ipad.intermittent.advanced"].waitForExistence(timeout: 4))
         XCTAssertTrue(app.otherElements["ipad.intermittent.history"].waitForExistence(timeout: 4))
+        XCTAssertTrue(scrollToElement(app.datePickers["ipad.intermittent.start_date"].firstMatch, in: app))
+    }
+
+    func testIPadTrackFastKeepsStartedTimeEditableAfterStart() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadSurface("intermittent", in: app)
+
+        let startButton = app.buttons["ipad.intermittent.start"].firstMatch
+        XCTAssertTrue(scrollToElement(startButton, in: app))
+        startButton.tap()
+
         XCTAssertTrue(scrollToElement(app.datePickers["ipad.intermittent.start_date"].firstMatch, in: app))
     }
 

@@ -129,8 +129,6 @@ extension ContentView {
 
                 CatholicFastingQuoteCard(quote: dashboardFastingQuote, compact: true)
                     .accessibilityIdentifier("dashboard.fasting_quote")
-                Text(dailySeasonalFormationLine)
-                    .appSupportingTextStyle()
             }
         }
     }
@@ -138,12 +136,9 @@ extension ContentView {
     var todayTenSecondSection: some View {
         Section {
             VStack(alignment: .leading, spacing: 12) {
-                SacredHeroCard(
-                    assetName: dashboardHeroArtwork.assetName,
-                    title: localized("today.glance.title", default: "Today at a Glance"),
-                    subtitle: heroSummaryText,
-                    height: 182,
-                    accessibilityIdentifier: "dashboard.today_glance.hero")
+                Text(localized("today.glance.title", default: "Today at a Glance"))
+                    .appEyebrowStyle()
+                    .foregroundStyle(CatholicTheme.primary)
 
                 HStack(spacing: 8) {
                     MetricTile(title: localized("today.metric.next", default: "Next"), value: todayAtAGlanceNextLabel)
@@ -156,7 +151,7 @@ extension ContentView {
                     Text("\(currentStreak) day\(currentStreak == 1 ? "" : "s")")
                         .appSectionTitleStyle()
                     Text(streakResilienceMessage)
-                        .appSupportingTextStyle()
+                        .appLeadTextStyle()
                     Text(monetizationStore.premiumUnlocked ? weeklyFormationRecapPremium : weeklyFormationRecapFree)
                         .appSupportingTextStyle()
                 }
@@ -165,7 +160,7 @@ extension ContentView {
                 .appSurfaceCard(.utility, cornerRadius: 16)
             }
             .padding(14)
-            .appSurfaceCard(.standard, cornerRadius: 22)
+            .appSurfaceCard(.utility, cornerRadius: 22)
             .accessibilityIdentifier("dashboard.today_glance")
         }
     }
@@ -289,7 +284,7 @@ extension ContentView {
 
     var todayDecisionCardSection: some View {
         let decision = todayFoodDecision
-        return Section(localized("today.food.title", default: "Food guidance")) {
+        return Section {
             VStack(alignment: .leading, spacing: 14) {
                 Text(decision.obligationLine)
                     .font(.system(.title3, design: .serif).weight(.bold))
@@ -297,7 +292,7 @@ extension ContentView {
                     .accessibilityIdentifier("today.decision.obligation")
 
                 Text(decision.rationale)
-                    .appLeadTextStyle()
+                    .appSupportingTextStyle()
 
                 if !decision.avoid.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {

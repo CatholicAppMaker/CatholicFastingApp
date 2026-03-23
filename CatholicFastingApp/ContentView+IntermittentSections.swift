@@ -62,11 +62,8 @@ extension ContentView {
                     height: 152,
                     accessibilityIdentifier: "intermittent.hero.card")
 
-                Text(
-                    intermittentTracker.activeStart == nil
-                        ? "Use the controls below to pick a target, adjust the start time if needed, and begin."
-                        : "Use the live tracker first, then open advanced tools only when you need history or schedules.")
-                    .appSupportingTextStyle()
+                CatholicFastingQuoteCard(quote: intermittentFastingQuote, compact: true)
+                    .accessibilityIdentifier("intermittent.hero.quote")
             }
             .accessibilityIdentifier("intermittent.hero")
         }
@@ -160,6 +157,17 @@ extension ContentView {
                 .appPrimaryButtonStyle()
                 .accessibilityIdentifier("intermittent.start_fast")
             } else {
+                DatePicker(
+                    "Started",
+                    selection: intermittentActiveStartBinding,
+                    in: intermittentManualStartRange,
+                    displayedComponents: [.date, .hourAndMinute])
+                    .datePickerStyle(.compact)
+                    .accessibilityIdentifier("intermittent.start_date")
+
+                Text("Adjust the start time here if you began fasting earlier. The live tracker updates right away.")
+                    .appSupportingTextStyle()
+
                 HStack {
                     Button {
                         intermittentTracker.endFast()
@@ -346,11 +354,11 @@ extension ContentView {
 
     var intermittentActiveSection: some View {
         Section("Live Tracker") {
-            TimelineView(.periodic(from: .now, by: 1)) { context in
-                let now = context.date
-                let accessibilityLayout = dynamicTypeSize.isAccessibilitySize
-
-                if let start = intermittentTracker.activeStart {
+            if let activeStart = intermittentTracker.activeStart {
+                TimelineView(.periodic(from: .now, by: 1)) { context in
+                    let now = context.date
+                    let accessibilityLayout = dynamicTypeSize.isAccessibilitySize
+                    let start = intermittentTracker.activeStart ?? activeStart
                     let targetSeconds = TimeInterval(intermittentTracker.presetHours * 3600)
                     let elapsed = max(0, now.timeIntervalSince(start))
                     let remaining = max(0, targetSeconds - elapsed)
@@ -398,7 +406,12 @@ extension ContentView {
                             fireIntermittentTargetReachedHapticIfNeeded(start: start)
                         }
                     }
-                } else if let latestSession = intermittentTracker.sessions.first {
+                }
+                .id(activeStart)
+            } else if let latestSession = intermittentTracker.sessions.first {
+                TimelineView(.periodic(from: .now, by: 1)) { context in
+                    let now = context.date
+                    let accessibilityLayout = dynamicTypeSize.isAccessibilitySize
                     let lastEnded = latestSession.end
                     let elapsedSinceEnd = max(0, now.timeIntervalSince(lastEnded))
                     let eatingSeconds =
@@ -459,7 +472,10 @@ extension ContentView {
                             fireIntermittentEatingWindowClosedHapticIfNeeded(sessionID: latestSession.id)
                         }
                     }
-                } else {
+                }
+                .id(latestSession.id)
+            } else {
+                TimelineView(.periodic(from: .now, by: 1)) { _ in
                     VStack(alignment: .leading, spacing: 8) {
                         Text("No active fast")
                             .appSectionTitleStyle()

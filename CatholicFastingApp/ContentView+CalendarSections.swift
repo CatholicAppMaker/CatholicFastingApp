@@ -309,8 +309,8 @@ extension ContentView {
                     height: 132,
                     cornerRadius: 16)
 
-                Text(localized("fasting_days.section.intro", default: "Start with required days, then add optional or celebration days when you need more context."))
-                    .appLeadTextStyle()
+                CatholicFastingQuoteCard(quote: fastingDaysFastingQuote, compact: true)
+                    .accessibilityIdentifier("fasting_days.quote")
             }
             .accessibilityElement(children: .combine)
             .accessibilityLabel("\(fastingDaysHeroArtwork.title). \(fastingDaysHeroArtwork.subtitle)")
@@ -319,7 +319,7 @@ extension ContentView {
     }
 
     var fastingDaysOverviewSection: some View {
-        Section(localized("fasting_days.section.title", default: "Fasting Days")) {
+        Section {
             if let nextRequired = upcomingMandatoryObservance {
                 VStack(alignment: .leading, spacing: 10) {
                     Label(localized("fasting_days.next_required", default: "Next required"), systemImage: "calendar.badge.exclamationmark")

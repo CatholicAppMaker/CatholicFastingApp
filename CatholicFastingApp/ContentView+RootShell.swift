@@ -272,6 +272,7 @@ extension ContentView {
         case .today:
             AnyView(
                 Group {
+                    dashboardSacredImageSection
                     todayDecisionCardSection
                     dashboardQuickActionsSection
                     todayTenSecondSection
@@ -299,48 +300,62 @@ extension ContentView {
         case .fastingDays:
             AnyView(
                 Group {
-                    fastingDaysOverviewSection
                     fastingDaysHeroSection
+                    fastingDaysOverviewSection
                     fastingDaysDisplayOptionsSection
                     fastingDaysListSection
                 })
         case .intermittent:
             AnyView(
                 Group {
+                    intermittentHeroSection
                     intermittentActiveSection
                     intermittentControlsSection
                     intermittentOverviewSection
-                    intermittentHeroSection
                     intermittentAdvancedToolsSection
                 })
         case .more:
             AnyView(
                 Group {
-                    unofficialAppNoticeSection
                     moreHubSection
+                    unofficialAppNoticeSection
                 })
         }
     }
 
     var moreHubSection: some View {
-        Section("More Tools") {
-            Text("Open one focused page instead of digging through one long settings screen.")
-                .appLeadTextStyle()
+        let hero = moreDestinationHeroItem(for: .supportAndPremium)
+        return Section {
+            VStack(alignment: .leading, spacing: 14) {
+                SacredHeroCard(
+                    assetName: hero.assetName,
+                    title: "More",
+                    subtitle: "One calm place for setup, guidance, privacy, and premium support.",
+                    height: 152,
+                    cornerRadius: 16,
+                    accessibilityIdentifier: "more.hub.hero")
 
-            ForEach(MoreHubDestination.allCases) { destination in
-                NavigationLink {
-                    moreDestinationList(for: destination)
-                } label: {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Label(destination.title, systemImage: destination.iconName)
-                            .font(.headline.weight(.semibold))
-                            .foregroundStyle(CatholicTheme.primary)
-                        Text(destination.subtitle)
-                            .appSupportingTextStyle()
+                CatholicFastingQuoteCard(quote: guidanceFastingQuote, compact: true)
+                    .accessibilityIdentifier("more.hub.quote")
+
+                Text("Open one focused page instead of digging through one long settings screen.")
+                    .appSupportingTextStyle()
+
+                ForEach(MoreHubDestination.allCases) { destination in
+                    NavigationLink {
+                        moreDestinationList(for: destination)
+                    } label: {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Label(destination.title, systemImage: destination.iconName)
+                                .font(.headline.weight(.semibold))
+                                .foregroundStyle(CatholicTheme.primary)
+                            Text(destination.subtitle)
+                                .appSupportingTextStyle()
+                        }
+                        .padding(.vertical, 4)
                     }
-                    .padding(.vertical, 4)
+                    .accessibilityIdentifier("more.hub.\(destination.rawValue)")
                 }
-                .accessibilityIdentifier("more.hub.\(destination.rawValue)")
             }
         }
     }

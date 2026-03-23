@@ -24,63 +24,69 @@ extension ContentView {
                     ? "Set a target and start when ready."
                     : "Elapsed time, target, and next action stay together.")
 
-            TimelineView(.periodic(from: .now, by: 1)) { context in
-                Group {
+            if let activeStart = intermittentTracker.activeStart {
+                TimelineView(.periodic(from: .now, by: 1)) { context in
                     let now = context.date
-                    if let start = intermittentTracker.activeStart {
-                        let targetSeconds = TimeInterval(intermittentTracker.presetHours * 3600)
-                        let elapsed = max(0, now.timeIntervalSince(start))
-                        let remaining = max(0, targetSeconds - elapsed)
-                        let progress = min(1.0, elapsed / max(1, targetSeconds))
-                        let targetDate = start.addingTimeInterval(targetSeconds)
+                    let start = intermittentTracker.activeStart ?? activeStart
+                    let targetSeconds = TimeInterval(intermittentTracker.presetHours * 3600)
+                    let elapsed = max(0, now.timeIntervalSince(start))
+                    let remaining = max(0, targetSeconds - elapsed)
+                    let progress = min(1.0, elapsed / max(1, targetSeconds))
+                    let targetDate = start.addingTimeInterval(targetSeconds)
 
-                        HStack(alignment: .center, spacing: 18) {
-                            liveFastRing(progress: progress, reached: progress >= 1, countdown: countdownText(progress >= 1 ? 0 : remaining))
-                            VStack(alignment: .leading, spacing: 10) {
-                                Text(progress >= 1 ? "Target reached" : "Fasting in progress")
-                                    .font(.title3.weight(.semibold))
-                                    .foregroundStyle(CatholicTheme.primary)
-                                Text("Started \(start.formatted(date: .abbreviated, time: .shortened))")
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
-                                Text("Target ends \(targetDate.formatted(date: .abbreviated, time: .shortened))")
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
-                                Text(progress >= 1 ? "You can end the fast now." : "Keep going to complete this target.")
-                                    .appSupportingTextStyle()
-                                    .foregroundStyle(progress >= 1 ? .green : .secondary)
-                            }
-                            Spacer(minLength: 0)
-                        }
-                    } else if let latestSession = intermittentTracker.sessions.first {
-                        let elapsedSinceEnd = max(0, now.timeIntervalSince(latestSession.end))
-                        let eatingSeconds = latestSession.targetHours <= 24 ? TimeInterval(max(0, 24 - latestSession.targetHours) * 3600) : 0
-                        let remaining = max(0, eatingSeconds - elapsedSinceEnd)
-                        let progress = eatingSeconds > 0 ? min(1.0, elapsedSinceEnd / eatingSeconds) : 1
-
-                        HStack(alignment: .center, spacing: 18) {
-                            liveEatingRing(progress: progress, hasEatingWindow: eatingSeconds > 0, countdown: eatingSeconds > 0 ? countdownText(remaining) : "Ready")
-                            VStack(alignment: .leading, spacing: 10) {
-                                Text("Between fasts")
-                                    .font(.title3.weight(.semibold))
-                                    .foregroundStyle(CatholicTheme.primary)
-                                Text("Last fast ended \(latestSession.end.formatted(date: .abbreviated, time: .shortened))")
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
-                                Text(eatingSeconds > 0 ? "Eating window closes in \(countdownText(remaining))." : "This plan does not use a standard eating window.")
-                                    .appSupportingTextStyle()
-                            }
-                            Spacer(minLength: 0)
-                        }
-                    } else {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("No fasting session yet")
+                    HStack(alignment: .center, spacing: 18) {
+                        liveFastRing(progress: progress, reached: progress >= 1, countdown: countdownText(progress >= 1 ? 0 : remaining))
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text(progress >= 1 ? "Target reached" : "Fasting in progress")
                                 .font(.title3.weight(.semibold))
                                 .foregroundStyle(CatholicTheme.primary)
-                            Text("Choose a quick plan below, then start when ready.")
+                            Text("Started \(start.formatted(date: .abbreviated, time: .shortened))")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
+                            Text("Target ends \(targetDate.formatted(date: .abbreviated, time: .shortened))")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                            Text(progress >= 1 ? "You can end the fast now." : "Keep going to complete this target.")
+                                .appSupportingTextStyle()
+                                .foregroundStyle(progress >= 1 ? .green : .secondary)
                         }
+                        Spacer(minLength: 0)
+                    }
+                }
+                .id(activeStart)
+            } else if let latestSession = intermittentTracker.sessions.first {
+                TimelineView(.periodic(from: .now, by: 1)) { context in
+                    let now = context.date
+                    let elapsedSinceEnd = max(0, now.timeIntervalSince(latestSession.end))
+                    let eatingSeconds = latestSession.targetHours <= 24 ? TimeInterval(max(0, 24 - latestSession.targetHours) * 3600) : 0
+                    let remaining = max(0, eatingSeconds - elapsedSinceEnd)
+                    let progress = eatingSeconds > 0 ? min(1.0, elapsedSinceEnd / eatingSeconds) : 1
+
+                    HStack(alignment: .center, spacing: 18) {
+                        liveEatingRing(progress: progress, hasEatingWindow: eatingSeconds > 0, countdown: eatingSeconds > 0 ? countdownText(remaining) : "Ready")
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("Between fasts")
+                                .font(.title3.weight(.semibold))
+                                .foregroundStyle(CatholicTheme.primary)
+                            Text("Last fast ended \(latestSession.end.formatted(date: .abbreviated, time: .shortened))")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                            Text(eatingSeconds > 0 ? "Eating window closes in \(countdownText(remaining))." : "This plan does not use a standard eating window.")
+                                .appSupportingTextStyle()
+                        }
+                        Spacer(minLength: 0)
+                    }
+                }
+                .id(latestSession.id)
+            } else {
+                TimelineView(.periodic(from: .now, by: 1)) { _ in
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("No fasting session yet")
+                            .font(.title3.weight(.semibold))
+                            .foregroundStyle(CatholicTheme.primary)
+                        Text("Choose a quick plan below, then start when ready.")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
                     }
                 }
             }
@@ -144,6 +150,17 @@ extension ContentView {
                     .accessibilityIdentifier("ipad.intermittent.start_date")
 
                 Text("If you already began fasting, backdate the start time here before you start the timer.")
+                    .appSupportingTextStyle()
+            } else {
+                DatePicker(
+                    "Started",
+                    selection: intermittentActiveStartBinding,
+                    in: intermittentManualStartRange,
+                    displayedComponents: [.date, .hourAndMinute])
+                    .datePickerStyle(.compact)
+                    .accessibilityIdentifier("ipad.intermittent.start_date")
+
+                Text("If you started earlier than the timer, adjust the start time here and the live tracker updates immediately.")
                     .appSupportingTextStyle()
             }
 
