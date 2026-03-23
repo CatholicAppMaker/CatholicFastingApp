@@ -145,25 +145,24 @@ extension ContentView {
                     height: 182,
                     accessibilityIdentifier: "dashboard.today_glance.hero")
 
-                ViewThatFits(in: .horizontal) {
-                    HStack(spacing: 8) {
-                        MetricTile(title: localized("today.metric.next", default: "Next"), value: todayAtAGlanceNextLabel)
-                        MetricTile(title: localized("today.metric.week", default: "Week"), value: todayAtAGlanceWeekLabel)
-                        MetricTile(title: localized("today.metric.streak", default: "Streak"), value: "\(currentStreak)d")
-                    }
-                    VStack(spacing: 8) {
-                        HStack(spacing: 8) {
-                            MetricTile(title: localized("today.metric.next", default: "Next"), value: todayAtAGlanceNextLabel)
-                            MetricTile(title: localized("today.metric.week", default: "Week"), value: todayAtAGlanceWeekLabel)
-                        }
-                        MetricTile(title: localized("today.metric.streak", default: "Streak"), value: "\(currentStreak)d")
-                    }
+                HStack(spacing: 8) {
+                    MetricTile(title: localized("today.metric.next", default: "Next"), value: todayAtAGlanceNextLabel)
+                    MetricTile(title: localized("today.metric.week", default: "Week"), value: todayAtAGlanceWeekLabel)
                 }
 
-                Text(monetizationStore.premiumUnlocked ? weeklyFormationRecapPremium : weeklyFormationRecapFree)
-                    .appSupportingTextStyle()
-                Text(streakResilienceMessage)
-                    .appSupportingTextStyle()
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(localized("today.metric.streak", default: "Streak"))
+                        .appEyebrowStyle()
+                    Text("\(currentStreak) day\(currentStreak == 1 ? "" : "s")")
+                        .appSectionTitleStyle()
+                    Text(streakResilienceMessage)
+                        .appSupportingTextStyle()
+                    Text(monetizationStore.premiumUnlocked ? weeklyFormationRecapPremium : weeklyFormationRecapFree)
+                        .appSupportingTextStyle()
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(12)
+                .appSurfaceCard(.utility, cornerRadius: 16)
             }
             .padding(14)
             .appSurfaceCard(.primary, cornerRadius: 22)
@@ -227,7 +226,7 @@ extension ContentView {
                     .appLeadTextStyle()
                 Text(localized("today.hero.subtitle", default: "Offer each observance with prayer, fasting, and charity."))
                     .appSupportingTextStyle()
-                    .foregroundStyle(CatholicTheme.primary.opacity(0.85))
+                    .foregroundStyle(.secondary)
                 ProgressView(value: completionRateValue)
                     .tint(CatholicTheme.accent)
                 ViewThatFits(in: .horizontal) {
@@ -246,13 +245,8 @@ extension ContentView {
                 }
             }
             .accessibilityIdentifier("dashboard.hero")
-            .padding(.vertical, 4)
-            .padding(.horizontal, 6)
-            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-            .overlay(
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(CatholicTheme.accent.opacity(0.10)))
-            .appRoundedGlass(cornerRadius: 12)
+            .padding(14)
+            .appSurfaceCard(.standard, cornerRadius: 18)
         }
     }
 
@@ -327,13 +321,11 @@ extension ContentView {
                 }
 
                 Text(decision.rationale)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .appSupportingTextStyle()
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text(localized("today.food.common_questions", default: "Common food questions"))
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(.secondary)
+                        .appEyebrowStyle()
                         .textCase(.uppercase)
                     Label(localized("today.food.common.chicken", default: "Chicken and turkey count as meat."), systemImage: "xmark.circle")
                     Label(localized("today.food.common.dairy", default: "Eggs, milk, butter, and cheese are generally permitted."), systemImage: "checkmark.circle")
@@ -343,6 +335,8 @@ extension ContentView {
                         systemImage: "questionmark.circle")
                         .foregroundStyle(.secondary)
                 }
+                .padding(12)
+                .appSurfaceCard(.utility, cornerRadius: 16)
                 .accessibilityIdentifier("today.decision.common_food_questions")
 
                 NavigationLink {
@@ -353,8 +347,7 @@ extension ContentView {
                 .accessibilityIdentifier("today.decision.open_full_food_guidance")
 
                 Text(decision.sourceLine)
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
+                    .appSupportingTextStyle()
 
                 Link(
                     regionProfile == .canada

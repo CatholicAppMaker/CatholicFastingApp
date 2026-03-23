@@ -146,6 +146,7 @@
 "settings.quick.reminder_strategy" = "Reminder strategy";
 "settings.quick.reminder_support_hint" = "Turn on reminder support to choose a strategy.";
 "settings.quick.progress_format" = "Setup progress: %d/%d";
+"settings.quick.progress_hint" = "Language, region, consent, and reminders should stay easy to review here.";
 "settings.quick.reminder_actions" = "Reminder Actions";
 "settings.quick.reminder_morning" = "Morning check-in (7:00 AM)";
 "settings.quick.reminder_evening" = "Evening examen (8:00 PM)";
@@ -227,6 +228,7 @@
 "fasting_days.filters.optional" = "Include optional observances";
 "fasting_days.filters.celebrations" = "Show celebrations and memorials";
 "fasting_days.filters.celebrations_hint" = "Celebrations help with planning, but they do not add obligation by themselves.";
+"fasting_days.filters.helper" = "Keep these as utility controls: use them to narrow the list, not to replace the day detail.";
 "fasting_days.list.title.full_year_all" = "Full year with optional observances";
 "fasting_days.list.title.full_year_required" = "Full year required days";
 "fasting_days.list.title.upcoming_all" = "Upcoming days with optional observances";

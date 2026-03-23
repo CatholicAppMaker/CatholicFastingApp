@@ -272,10 +272,10 @@ extension ContentView {
         case .today:
             AnyView(
                 Group {
-                    todayTenSecondSection
                     todayDecisionCardSection
-                    todaySection
+                    todayTenSecondSection
                     dashboardQuickActionsSection
+                    todaySection
                     setupProgressSection
                     todayRecoverySection
                     if !acceptedLegalNotice {
@@ -307,10 +307,10 @@ extension ContentView {
         case .intermittent:
             AnyView(
                 Group {
-                    intermittentHeroSection
                     intermittentActiveSection
                     intermittentControlsSection
                     intermittentOverviewSection
+                    intermittentHeroSection
                     intermittentAdvancedToolsSection
                 })
         case .more:
@@ -325,8 +325,7 @@ extension ContentView {
     var moreHubSection: some View {
         Section("More Tools") {
             Text("Open one focused page instead of digging through one long settings screen.")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .appLeadTextStyle()
 
             ForEach(MoreHubDestination.allCases) { destination in
                 NavigationLink {
@@ -334,13 +333,12 @@ extension ContentView {
                 } label: {
                     VStack(alignment: .leading, spacing: 4) {
                         Label(destination.title, systemImage: destination.iconName)
-                            .font(.headline)
+                            .font(.headline.weight(.semibold))
                             .foregroundStyle(CatholicTheme.primary)
                         Text(destination.subtitle)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .appSupportingTextStyle()
                     }
-                    .padding(.vertical, 2)
+                    .padding(.vertical, 4)
                 }
                 .accessibilityIdentifier("more.hub.\(destination.rawValue)")
             }

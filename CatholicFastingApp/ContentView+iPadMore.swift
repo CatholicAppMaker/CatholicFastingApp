@@ -45,8 +45,12 @@ extension ContentView {
     var ipadSimplePremiumWorkspace: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Text("Support & Premium")
-                    .appDisplayTitleStyle(serif: true)
+                IPadWorkspaceHeader(
+                    eyebrow: "Support & Premium",
+                    title: "Choose a plan, then keep the journey visible",
+                    detail: "Yearly stays primary. Tips, billing, and legal tools remain below the plan choice.")
+
+                premiumJourneyCard(sample: !monetizationStore.premiumUnlocked)
 
                 #if canImport(StoreKit)
                 VStack(alignment: .leading, spacing: 12) {
@@ -144,7 +148,7 @@ extension ContentView {
             Text("Restore / Manage / Legal")
                 .appEyebrowStyle()
 
-            Text("Use these after choosing a plan if you need billing or legal help.")
+            Text("Keep these below the plan choice. Use them only if you need billing or legal help.")
                 .appSupportingTextStyle()
 
             Button("Restore Purchases") {

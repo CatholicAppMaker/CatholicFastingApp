@@ -146,6 +146,7 @@
 "settings.quick.reminder_strategy" = "Estrategia de recordatorios";
 "settings.quick.reminder_support_hint" = "Active el apoyo de recordatorios para elegir una estrategia.";
 "settings.quick.progress_format" = "Progreso de configuración: %d/%d";
+"settings.quick.progress_hint" = "El idioma, la región, el consentimiento y los recordatorios deben seguir siendo fáciles de revisar aquí.";
 "settings.quick.reminder_actions" = "Acciones de recordatorios";
 "settings.quick.reminder_morning" = "Revisión matutina (7:00 a. m.)";
 "settings.quick.reminder_evening" = "Examen vespertino (8:00 p. m.)";
@@ -227,6 +228,7 @@
 "fasting_days.filters.optional" = "Incluir observancias opcionales";
 "fasting_days.filters.celebrations" = "Mostrar celebraciones y memorias";
 "fasting_days.filters.celebrations_hint" = "Las celebraciones ayudan a planificar, pero no añaden obligación por sí solas.";
+"fasting_days.filters.helper" = "Mantenga estos controles como utilidades: úselos para acotar la lista, no para sustituir el detalle del día.";
 "fasting_days.list.title.full_year_all" = "Año completo con observancias opcionales";
 "fasting_days.list.title.full_year_required" = "Días obligatorios del año completo";
 "fasting_days.list.title.upcoming_all" = "Próximos días con observancias opcionales";

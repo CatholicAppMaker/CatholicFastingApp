@@ -57,6 +57,9 @@ extension ContentView {
                 .foregroundStyle(CatholicTheme.primary)
                 .accessibilityIdentifier("settings.quick.progress")
 
+            Text(localized("settings.quick.progress_hint", default: "Language, region, consent, and reminders should stay easy to review here."))
+                .appSupportingTextStyle()
+
             if dailyReminderSupportEnabled {
                 DisclosureGroup(localized("settings.quick.reminder_actions", default: "Reminder Actions")) {
                     if monetizationStore.premiumUnlocked {
@@ -245,7 +248,10 @@ extension ContentView {
 
                 if let active = activeHouseholdProfile {
                     Text(
-                        "Active: \(active.name) • Abstinence: \(active.isAge14OrOlderForAbstinence ? "14+" : "Under 14") • Fasting: \(active.isAge18OrOlderForFasting ? "18-59" : "Not fasting age")")
+                        """
+                        Active: \(active.name) • Abstinence: \(active.isAge14OrOlderForAbstinence ? "14+" : "Under 14") • \
+                        Fasting: \(active.isAge18OrOlderForFasting ? "18-59" : "Not fasting age")
+                        """)
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -461,7 +467,10 @@ extension ContentView {
                 "United States profile: Ash Wednesday and Good Friday are fast and abstinence days, Fridays of Lent are abstinence, and Fridays outside Lent are penitential."
         case .canada:
             return
-                "Canada profile: the app models the national baseline, including Canada-wide holy day obligations and CCCB Friday guidance. Diocesan proper calendars are not included yet."
+                """
+                Canada profile: the app models the national baseline, including Canada-wide holy day obligations \
+                and CCCB Friday guidance. Diocesan proper calendars are not included yet.
+                """
         case .other:
             return
                 "Outside U.S./Canada: follow your local bishop conference, parish guidance, and your pastor for binding norms."

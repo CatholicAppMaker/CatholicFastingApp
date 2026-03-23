@@ -695,8 +695,7 @@ struct OnboardingView: View {
                         localized(
                             "onboarding.step1.intro",
                             default: "Use simple eligibility toggles to keep guidance accurate without sharing your birthday."))
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .appLeadTextStyle()
 
                     Toggle(
                         localized(
@@ -754,8 +753,7 @@ struct OnboardingView: View {
                         localized(
                             "onboarding.step2.helper",
                             default: "You can change all of this later in Profile & Norms."))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .appSupportingTextStyle()
                 }
 
                 Section(localized("onboarding.step3.title", default: "Step 3 of 4: Reminder Strategy")) {
@@ -777,8 +775,7 @@ struct OnboardingView: View {
                         localized(
                             "onboarding.step3.helper",
                             default: "Reminders can be changed any time in Setup & Reminders."))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .appSupportingTextStyle()
                 }
 
                 Section(localized("onboarding.step4.title", default: "Step 4 of 4: Premium Preview")) {
@@ -786,20 +783,17 @@ struct OnboardingView: View {
                         localized(
                             "onboarding.step4.intro",
                             default: "Free core gives required fasting guidance. Premium adds a focused Formation Toolkit."))
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .appLeadTextStyle()
 
                     ForEach(SubscriptionOfferCatalog.catholicFasting.pillars) { pillar in
                         VStack(alignment: .leading, spacing: 6) {
                             Text(pillar.title)
                                 .font(.headline)
                             Text(pillar.subtitle)
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .appSupportingTextStyle()
                             ForEach(pillar.outcomes, id: \.self) { outcome in
                                 Text("• \(outcome)")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
+                                    .appSupportingTextStyle()
                             }
                         }
                         .padding(.vertical, 2)
@@ -811,26 +805,22 @@ struct OnboardingView: View {
                         localized(
                             "onboarding.trust.independent",
                             default: "This is an independent Catholic devotional app with cited guidance references."))
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .appLeadTextStyle()
                     Text(
                         localized(
                             "onboarding.trust.sources",
                             default: "Sources: USCCB liturgical calendar and fast/abstinence guidance, with in-app citation links."))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .appSupportingTextStyle()
                     Text(
                         localized(
                             "onboarding.trust.unofficial",
                             default: "This is an independent devotional app and not an official app of the Catholic Church, USCCB, Vatican, or any diocese/parish."))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .appSupportingTextStyle()
                     Text(
                         localized(
                             "onboarding.trust.follow_guidance",
                             default: "Always follow your pastor, local Church norms, and medical guidance."))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .appSupportingTextStyle()
                 }
             }
             .navigationTitle(localized("onboarding.title", default: "Welcome"))

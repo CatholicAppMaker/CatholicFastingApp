@@ -37,8 +37,8 @@ extension ContentView {
                 VStack(alignment: .leading, spacing: 14) {
                     IPadWorkspaceHeader(
                         eyebrow: "Filters",
-                        title: "Fasting day scope",
-                        detail: "Keep scope, optional days, and celebrations in view.")
+                        title: "View options",
+                        detail: "Use these to narrow the list without competing with the selected day.")
 
                     Picker(
                         "Scope",
@@ -178,7 +178,7 @@ extension ContentView {
                                 .appSupportingTextStyle()
                         }
                         Text(context.nextActionText)
-                            .font(.subheadline.weight(.semibold))
+                            .appLeadTextStyle()
                             .foregroundStyle(CatholicTheme.primary)
 
                         if [.fastAndAbstinence, .abstinence, .fridayPenance].contains(selected.kind) {
@@ -202,7 +202,7 @@ extension ContentView {
                     IPadWorkspaceHeader(
                         eyebrow: "Log",
                         title: "Mark today clearly",
-                        detail: "Keep status and notes together.")
+                        detail: "Keep status and notes together without leaving this detail pane.")
                     if compact {
                         VStack(alignment: .leading, spacing: 10) {
                             HStack(spacing: 10) {
@@ -259,8 +259,7 @@ extension ContentView {
             } else {
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Choose an observance")
-                        .font(.system(.title3, design: .serif).weight(.bold))
-                        .foregroundStyle(CatholicTheme.primary)
+                        .appSectionTitleStyle(serif: true)
                     Text("Pick a day to review its obligation and log it.")
                         .appLeadTextStyle()
                 }

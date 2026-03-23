@@ -309,8 +309,8 @@ extension ContentView {
                     height: 132,
                     cornerRadius: 16)
 
-                CatholicFastingQuoteCard(quote: fastingDaysFastingQuote, compact: true)
-                    .accessibilityIdentifier("fasting_days.fasting_quote")
+                Text(localized("fasting_days.section.intro", default: "Start with required days, then add optional or celebration days when you need more context."))
+                    .appLeadTextStyle()
             }
             .accessibilityElement(children: .combine)
             .accessibilityLabel("\(fastingDaysHeroArtwork.title). \(fastingDaysHeroArtwork.subtitle)")
@@ -320,8 +320,6 @@ extension ContentView {
 
     var fastingDaysOverviewSection: some View {
         Section(localized("fasting_days.section.title", default: "Fasting Days")) {
-            Text(localized("fasting_days.section.intro", default: "Start with required days, then add optional or celebration days when you need more context."))
-                .appLeadTextStyle()
             Text(regionalNormSummaryLine)
                 .appSupportingTextStyle()
 
@@ -337,8 +335,7 @@ extension ContentView {
             if let nextRequired = upcomingMandatoryObservance {
                 VStack(alignment: .leading, spacing: 10) {
                     Label(localized("fasting_days.next_required", default: "Next required"), systemImage: "calendar.badge.exclamationmark")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(.secondary)
+                        .appEyebrowStyle()
                         .textCase(.uppercase)
 
                     Text(nextRequired.title)
@@ -353,8 +350,7 @@ extension ContentView {
             } else if let nextPotential = upcomingPotentialFastingObservance {
                 VStack(alignment: .leading, spacing: 10) {
                     Label(localized("fasting_days.next_possible", default: "Next possible observance"), systemImage: "calendar")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(.secondary)
+                        .appEyebrowStyle()
                         .textCase(.uppercase)
 
                     Text(nextPotential.title)
@@ -384,13 +380,20 @@ extension ContentView {
             DisclosureGroup(localized("fasting_days.filters.customize", default: "Customize List")) {
                 Toggle(localized("fasting_days.filters.full_year", default: "Show all fasting days in this Catholic calendar year"), isOn: $fastingDaysShowAllYearDays)
                     .accessibilityIdentifier("fasting_days.toggle.full_year")
-                Toggle(localized("fasting_days.filters.optional", default: "Include optional fasting days (Ember days, optional Friday penance)"), isOn: $fastingDaysIncludeOptionalDays)
+                Toggle(
+                    localized(
+                        "fasting_days.filters.optional",
+                        default: "Include optional fasting days (Ember days, optional Friday penance)"),
+                    isOn: $fastingDaysIncludeOptionalDays)
                     .accessibilityIdentifier("fasting_days.toggle.optional")
                 Toggle(localized("fasting_days.filters.celebrations", default: "Include feast, holy, and memorial celebration days"), isOn: $fastingDaysIncludeFeastAndHolyDays)
                     .accessibilityIdentifier("fasting_days.toggle.celebrations")
                 Text(localized("fasting_days.filters.celebrations_hint", default: "Celebration days are shown for planning, not obligation."))
                     .appSupportingTextStyle()
             }
+
+            Text(localized("fasting_days.filters.helper", default: "Keep these as utility controls: use them to narrow the list, not to replace the day detail."))
+                .appSupportingTextStyle()
         }
     }
 
@@ -480,7 +483,11 @@ extension ContentView {
                 }
 
                 if !fastingDaysShowAllYearDays, filteredByObligation.count > displayItems.count {
-                    Text(localizedFormat("fasting_days.list.more_format", default: "Showing next %d observance days. Turn on \"Show full-year observance list\" for the full list.", displayItems.count))
+                    Text(
+                        localizedFormat(
+                            "fasting_days.list.more_format",
+                            default: "Showing next %d observance days. Turn on \"Show full-year observance list\" for the full list.",
+                            displayItems.count))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -604,7 +611,10 @@ extension ContentView {
                 .accessibilityHint(localized("fasting_days.reminders.schedule_support_hint", default: "Schedules daily habit reminders when support is enabled."))
 
                 if dailyReminderSupportEnabled, !monetizationStore.premiumUnlocked {
-                    Text(localized("settings.quick.support_premium_hint", default: "Premium is required to schedule daily support reminders and apply morning/evening habit support."))
+                    Text(
+                        localized(
+                            "settings.quick.support_premium_hint",
+                            default: "Premium is required to schedule daily support reminders and apply morning/evening habit support."))
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
@@ -663,8 +673,12 @@ extension ContentView {
 
     private var fastingDaysDisplaySummaryText: String {
         var parts: [String] = [
-            fastingDaysShowAllYearDays ? localized("fasting_days.summary.full_year", default: "Full-year list") : localized("fasting_days.summary.upcoming", default: "Upcoming list"),
-            fastingDaysIncludeOptionalDays ? localized("fasting_days.summary.optional", default: "optional days included") : localized("fasting_days.summary.required_only", default: "required days only"),
+            fastingDaysShowAllYearDays
+                ? localized("fasting_days.summary.full_year", default: "Full-year list")
+                : localized("fasting_days.summary.upcoming", default: "Upcoming list"),
+            fastingDaysIncludeOptionalDays
+                ? localized("fasting_days.summary.optional", default: "optional days included")
+                : localized("fasting_days.summary.required_only", default: "required days only"),
         ]
         if fastingDaysIncludeFeastAndHolyDays {
             parts.append(localized("fasting_days.summary.celebrations", default: "celebration days included"))

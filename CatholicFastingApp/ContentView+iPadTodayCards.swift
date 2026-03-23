@@ -38,8 +38,7 @@ extension ContentView {
                         .font(.subheadline)
                 }
                 Text(decision.rationale)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .appLeadTextStyle()
             }
 
             VStack(alignment: .leading, spacing: 8) {
@@ -51,10 +50,12 @@ extension ContentView {
                 Label("Eggs, milk, butter, and cheese are generally permitted.", systemImage: "checkmark.circle")
                 Label("Fish and shellfish are generally permitted.", systemImage: "checkmark.circle")
                 Label(
-                    "Broths and gravies may be technically permitted, but many Catholics still avoid them in stricter practice.",
-                    systemImage: "questionmark.circle")
+                    "Open the full guidance page if you need stricter-practice details or region-specific notes.",
+                    systemImage: "book.closed")
                     .foregroundStyle(.secondary)
             }
+            .padding(12)
+            .appSurfaceCard(.utility, cornerRadius: 16)
             .accessibilityIdentifier("ipad.today.food_guidance_preview")
 
             VStack(alignment: .leading, spacing: 6) {
@@ -64,6 +65,8 @@ extension ContentView {
                 Text(todayContext?.nextActionText ?? "Keep the next required day visible and review your region profile before planning optional disciplines.")
                     .appLeadTextStyle()
             }
+            .padding(12)
+            .appSurfaceCard(.utility, cornerRadius: 16)
 
             Button {
                 selectedMoreDestination = .guidanceAndRules
@@ -165,7 +168,11 @@ extension ContentView {
 
             HStack(spacing: 10) {
                 IPadSummaryMetricCard(title: "Required goal", value: "\(yearlyRequiredCompletions)/\(planningData.requiredGoal)", subtitle: "required days logged")
-                IPadSummaryMetricCard(title: "Optional goal", value: "\(yearlyOptionalCompletions)/\(planningData.optionalGoal)", subtitle: "optional disciplines logged", tint: CatholicTheme.accent)
+                IPadSummaryMetricCard(
+                    title: "Optional goal",
+                    value: "\(yearlyOptionalCompletions)/\(planningData.optionalGoal)",
+                    subtitle: "optional disciplines logged",
+                    tint: CatholicTheme.accent)
             }
 
             ProgressView(value: requirementGoalProgress)

@@ -57,8 +57,8 @@ extension ContentView {
 
             Text(
                 selectedSupportPremiumSurface == .upgrade
-                    ? localized("premium.section.upgrade_hint", default: "Choose a plan first, then use tips or billing tools if needed.")
-                    : localized("premium.section.tools_hint", default: "Open premium planning, journaling, and exports."))
+                    ? localized("premium.section.upgrade_hint", default: "Choose a plan first. Tips plus billing and legal tools stay below.")
+                    : localized("premium.section.tools_hint", default: "Open premium planning, journaling, and exports once the journey is set."))
                 .appSupportingTextStyle()
         }
     }
@@ -127,7 +127,10 @@ extension ContentView {
                         premiumOfferCard(product: product, offer: offer)
                     }
                 } else {
-                    Text(localized("premium.upgrade.unavailable", default: "Premium plans are temporarily unavailable. Try again in a moment, then use Restore Purchases if needed."))
+                    Text(
+                        localized(
+                            "premium.upgrade.unavailable",
+                            default: "Premium plans are temporarily unavailable. Try again in a moment, then use Restore Purchases if needed."))
                         .appSupportingTextStyle()
                 }
 
@@ -288,7 +291,10 @@ extension ContentView {
         let previewActions = sample ? Array(journey.actions.prefix(3)) : journey.actions
 
         return VStack(alignment: .leading, spacing: 10) {
-            Text(sample ? localized("premium.journey.preview_title", default: "See the Guided Seasonal Journey") : localized("premium.journey.current_title", default: "Your Guided Seasonal Journey"))
+            Text(
+                sample
+                    ? localized("premium.journey.preview_title", default: "See the Guided Seasonal Journey")
+                    : localized("premium.journey.current_title", default: "Your Guided Seasonal Journey"))
                 .appSectionTitleStyle(serif: true)
 
             Text(
@@ -303,7 +309,10 @@ extension ContentView {
                         ? localizedFormat("premium.journey.preview_week_format", default: "Preview journey week: %@", journey.title)
                         : localizedFormat("premium.journey.current_week_format", default: "Current journey week: %@", journey.title))
                     .font(.subheadline.weight(.semibold))
-                Text(sample ? localized("premium.journey.preview_eyebrow", default: "Seasonal rhythm") : localized("premium.journey.current_eyebrow", default: "Current weekly rhythm"))
+                Text(
+                    sample
+                        ? localized("premium.journey.preview_eyebrow", default: "Seasonal rhythm")
+                        : localized("premium.journey.current_eyebrow", default: "Current weekly rhythm"))
                     .appEyebrowStyle()
                 Text(journey.summary)
                     .appSupportingTextStyle()
@@ -326,7 +335,10 @@ extension ContentView {
             }
 
             if sample {
-                Text(localized("premium.journey.preview_hint", default: "Preview only. Unlock premium below to track progress, keep the current week, and carry the journey through the season."))
+                Text(
+                    localized(
+                        "premium.journey.preview_hint",
+                        default: "Preview only. Unlock premium below to track progress, keep the current week, and carry the journey through the season."))
                     .appSupportingTextStyle()
             } else {
                 Text(premiumJourneyCompletionSummary)
@@ -464,6 +476,7 @@ extension ContentView {
 
             Text(localized("premium.legal.summary", default: "Use these after choosing a plan if you need to restore billing or open legal links."))
                 .appSupportingTextStyle()
+                .foregroundStyle(.secondary)
 
             Button(localized("premium.legal.restore", default: "Restore Purchases")) {
                 Task {

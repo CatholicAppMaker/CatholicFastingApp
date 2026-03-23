@@ -7,8 +7,8 @@ extension ContentView {
             seasonLabel: currentLiturgicalSeason.label,
             title: "Track Fast",
             subtitle: intermittentTracker.activeStart == nil
-                ? "Choose a target, then start when ready."
-                : "Your live fast and next action stay here.",
+                ? "Choose a target, set the start time if needed, then begin."
+                : "Your live fast and next action stay here first.",
             quote: intermittentFastingQuote,
             regionContext: RegionalGuidanceContextFactory.generalContext(for: settings),
             compact: compact,
@@ -47,7 +47,7 @@ extension ContentView {
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                                 Text(progress >= 1 ? "You can end the fast now." : "Keep going to complete this target.")
-                                    .font(.caption)
+                                    .appSupportingTextStyle()
                                     .foregroundStyle(progress >= 1 ? .green : .secondary)
                             }
                             Spacer(minLength: 0)
@@ -68,8 +68,7 @@ extension ContentView {
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                                 Text(eatingSeconds > 0 ? "Eating window closes in \(countdownText(remaining))." : "This plan does not use a standard eating window.")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
+                                    .appSupportingTextStyle()
                             }
                             Spacer(minLength: 0)
                         }
@@ -190,6 +189,9 @@ extension ContentView {
 
             Text(notificationStatus.isEmpty ? "Reminder status will appear after scheduling." : notificationStatus)
                 .appSupportingTextStyle()
+                .padding(12)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .appSurfaceCard(.utility, cornerRadius: 14)
         }
         .padding(18)
         .iPadPaneCard()

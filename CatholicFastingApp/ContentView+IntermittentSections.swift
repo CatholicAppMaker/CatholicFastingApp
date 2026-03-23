@@ -59,8 +59,14 @@ extension ContentView {
                     subtitle: intermittentTracker.activeStart == nil
                         ? "Choose a target, then start when ready."
                         : "Your live fast and next action are below.",
-                    height: 168,
+                    height: 152,
                     accessibilityIdentifier: "intermittent.hero.card")
+
+                Text(
+                    intermittentTracker.activeStart == nil
+                        ? "Use the controls below to pick a target, adjust the start time if needed, and begin."
+                        : "Use the live tracker first, then open advanced tools only when you need history or schedules.")
+                    .appSupportingTextStyle()
             }
             .accessibilityIdentifier("intermittent.hero")
         }
@@ -96,7 +102,7 @@ extension ContentView {
                         : "Choose a lighter target or re-enter with a simpler plan.")
                     .appSupportingTextStyle()
             } else {
-                Text("Plan first. Start when ready.")
+                Text("Your target and recent session summary will show here after the first fast.")
                     .appSupportingTextStyle()
             }
         }
@@ -178,7 +184,7 @@ extension ContentView {
     }
 
     var intermittentAdvancedToolsSection: some View {
-        Section("Advanced") {
+        Section("Advanced Tools") {
             DisclosureGroup(
                 isExpanded: $intermittentShowAdvanced,
                 content: {
@@ -193,14 +199,14 @@ extension ContentView {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Schedules, milestones, recovery, and history")
                             .font(.subheadline.weight(.semibold))
-                        Text("Open these only when you need the deeper tools.")
+                        Text("Keep the live tracker first and open these only when you need deeper tools.")
                             .appSupportingTextStyle()
                     }
                 })
                 .accessibilityIdentifier("intermittent.advanced.disclosure")
 
             if !intermittentShowAdvanced {
-                Text("Saved schedules, milestone stats, recovery guidance, and recent history stay here.")
+                Text("Saved schedules, milestone stats, recovery guidance, and recent history stay tucked away here.")
                     .appSupportingTextStyle()
             }
         }
@@ -455,12 +461,10 @@ extension ContentView {
                     }
                 } else {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("No fasting session yet.")
-                            .font(.headline)
-                            .foregroundStyle(CatholicTheme.primary)
-                        Text("Pick a target below and start when ready.")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
+                        Text("No active fast")
+                            .appSectionTitleStyle()
+                        Text("Pick a target below, adjust the start time if you already began, and start when ready.")
+                            .appLeadTextStyle()
                             .accessibilityIdentifier("intermittent.no_active")
                     }
                 }

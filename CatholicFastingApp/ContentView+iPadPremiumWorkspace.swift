@@ -12,7 +12,7 @@ extension ContentView {
                         assetName: moreDestinationHeroItem(for: .supportAndPremium).assetName,
                         seasonLabel: currentLiturgicalSeason.label,
                         title: "Premium Formation Toolkit",
-                        subtitle: "Keep plans, reminders, reflection, and review together in one clear premium workspace.",
+                        subtitle: "Choose a plan, keep the Guided Seasonal Journey visible, and use the rest of premium as supporting tools.",
                         quote: dailySeasonalQuote,
                         regionContext: RegionalGuidanceContextFactory.generalContext(for: settings),
                         compact: compact,
@@ -54,7 +54,7 @@ extension ContentView {
             IPadWorkspaceHeader(
                 eyebrow: "Access",
                 title: monetizationStore.premiumUnlocked ? "Premium active" : "Unlock Premium",
-                detail: "Choose yearly or monthly first. Billing and legal tools stay below.")
+                detail: "Choose yearly or monthly first. Tips, billing, and legal tools stay secondary.")
             premiumSurfacePickerSection
             if selectedSupportPremiumSurface == .upgrade {
                 premiumAndSupportSection
@@ -112,8 +112,8 @@ extension ContentView {
         return VStack(alignment: .leading, spacing: 16) {
             IPadWorkspaceHeader(
                 eyebrow: "Dashboard",
-                title: "Formation Toolkit overview",
-                detail: "Keep premium in one coherent workspace.")
+                title: "Guided journey first",
+                detail: "Keep the current week visible, then use the surrounding tools to support it.")
 
             HStack(spacing: 10) {
                 IPadSummaryMetricCard(title: "Required", value: "\(analytics.requiredCompletionPercent)%", subtitle: "required days completed")
@@ -223,7 +223,7 @@ extension ContentView {
             IPadWorkspaceHeader(
                 eyebrow: "Restore / Manage / Legal",
                 title: "Billing and legal tools",
-                detail: "Use these after choosing a plan if you need to restore billing or open legal links.")
+                detail: "Use these only after plan choice or if you need billing and legal help.")
 
             HStack(spacing: 10) {
                 Button("Restore Purchases") {
