@@ -9,6 +9,7 @@ TIMEOUT_SECONDS=180
 SUITE="${SUITE:-iphone}"
 
 IPHONE_TESTS=(
+  "CatholicFastingAppUITests/testFreshLaunchIPhoneCanCompleteOnboardingAndReachToday"
   "CatholicFastingAppUITests/testSmokeOnboardingCanBeCompleted"
   "CatholicFastingAppUITests/testIPhoneOnboardingSpanishSelectionUpdatesVisibleCopy"
   "CatholicFastingAppUITests/testIPhoneOnboardingFrenchCanadianSelectionUpdatesVisibleCopy"
@@ -43,6 +44,7 @@ IPHONE_TESTS=(
 )
 
 IPAD_TESTS=(
+  "CatholicFastingAppUITests/testFreshLaunchIPadCanCompleteOnboardingAndRenderTodayWorkspace"
   "CatholicFastingAppUITests/testIPadSidebarSwitchesPrimaryWorkspaces"
   "CatholicFastingAppUITests/testIPadSidebarLoopsAcrossAllWorkspacesAfterCanadaFrenchSelection"
   "CatholicFastingAppUITests/testIPadTodayDashboardShowsHeroAndCoreCards"

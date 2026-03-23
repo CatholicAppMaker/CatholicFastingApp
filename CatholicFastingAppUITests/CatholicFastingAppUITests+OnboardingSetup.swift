@@ -2,6 +2,31 @@ import Foundation
 import XCTest
 
 extension CatholicFastingAppUITests {
+    func testFreshLaunchIPhoneCanCompleteOnboardingAndReachToday() {
+        let app = makeFreshLaunchApp()
+        app.launch()
+
+        let continueButton = app.buttons["onboarding.continue"].firstMatch
+        XCTAssertTrue(continueButton.waitForExistence(timeout: 6))
+        continueButton.tap()
+
+        XCTAssertTrue(app.navigationBars["Catholic Fasting"].waitForExistence(timeout: 6))
+        XCTAssertTrue(app.otherElements["surface.today.ready"].waitForExistence(timeout: 6))
+    }
+
+    func testFreshLaunchIPadCanCompleteOnboardingAndRenderTodayWorkspace() {
+        let app = makeFreshLaunchApp()
+        app.launch()
+
+        let continueButton = app.buttons["onboarding.continue"].firstMatch
+        XCTAssertTrue(continueButton.waitForExistence(timeout: 6))
+        continueButton.tap()
+
+        XCTAssertTrue(app.otherElements["ipad.today.workspace"].waitForExistence(timeout: 6))
+        XCTAssertTrue(app.otherElements["ipad.today.hero"].waitForExistence(timeout: 6))
+        XCTAssertTrue(app.otherElements["ipad.today.primary_card"].waitForExistence(timeout: 6))
+    }
+
     func testSmokeOnboardingCanBeCompleted() {
         let app = makeApp(skipOnboarding: false)
         app.launch()

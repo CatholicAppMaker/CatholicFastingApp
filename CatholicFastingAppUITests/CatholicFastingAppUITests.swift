@@ -9,12 +9,21 @@ final class CatholicFastingAppUITests: XCTestCase {
     func makeApp(
         skipOnboarding: Bool = true,
         seedMissed: Bool = false,
+        seedDeterministic: Bool = true,
+        disableAnimations: Bool = true,
+        includeUITestEnvironment: Bool = true,
         regionProfile: String? = nil,
         languageMode: String? = nil,
         premiumUnlocked: Bool = false) -> XCUIApplication
     {
         let app = XCUIApplication()
-        var args = ["-uitest-reset", "-uitest-seed-deterministic", "-uitest-disable-animations"]
+        var args = ["-uitest-reset"]
+        if seedDeterministic {
+            args.append("-uitest-seed-deterministic")
+        }
+        if disableAnimations {
+            args.append("-uitest-disable-animations")
+        }
         if skipOnboarding {
             args.append("-uitest-skip-onboarding")
         }
@@ -22,7 +31,9 @@ final class CatholicFastingAppUITests: XCTestCase {
             args.append("-uitest-seed-missed")
         }
         app.launchArguments = args
-        app.launchEnvironment["UITEST_MODE"] = "1"
+        if includeUITestEnvironment {
+            app.launchEnvironment["UITEST_MODE"] = "1"
+        }
         if let regionProfile {
             app.launchEnvironment["UITEST_REGION_PROFILE"] = regionProfile
         }
@@ -33,6 +44,14 @@ final class CatholicFastingAppUITests: XCTestCase {
             app.launchEnvironment["UITEST_PREMIUM_UNLOCKED"] = "1"
         }
         return app
+    }
+
+    func makeFreshLaunchApp() -> XCUIApplication {
+        makeApp(
+            skipOnboarding: false,
+            seedDeterministic: false,
+            disableAnimations: true,
+            includeUITestEnvironment: false)
     }
 
     func ensureOnHomeScreen(_ app: XCUIApplication) {
