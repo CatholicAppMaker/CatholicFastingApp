@@ -96,8 +96,8 @@ extension ContentView {
         return VStack(alignment: .leading, spacing: 16) {
             IPadWorkspaceHeader(
                 eyebrow: "Controls",
-                title: "Choose a target and act",
-                detail: "Quick presets first. Custom longer fasts stay premium.")
+                title: "Set the target and start",
+                detail: "Quick presets first. Adjust the start time if you already began fasting.")
 
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
                 ForEach(quickPlans, id: \.self) { hours in
@@ -178,7 +178,7 @@ extension ContentView {
         VStack(alignment: .leading, spacing: 14) {
             IPadWorkspaceHeader(
                 eyebrow: "Planning",
-                title: "Plan snapshot",
+                title: "Current plan",
                 detail: "Keep the current rhythm visible without crowding the live tracker.")
 
             HStack(spacing: 10) {

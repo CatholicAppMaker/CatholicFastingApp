@@ -42,23 +42,6 @@ extension ContentView {
             }
 
             VStack(alignment: .leading, spacing: 8) {
-                Text("Food guidance")
-                    .appEyebrowStyle()
-                    .foregroundStyle(CatholicTheme.primary)
-                    .textCase(.uppercase)
-                Label("Chicken and turkey count as meat.", systemImage: "xmark.circle")
-                Label("Eggs, milk, butter, and cheese are generally permitted.", systemImage: "checkmark.circle")
-                Label("Fish and shellfish are generally permitted.", systemImage: "checkmark.circle")
-                Label(
-                    "Open the full guidance page if you need stricter-practice details or region-specific notes.",
-                    systemImage: "book.closed")
-                    .foregroundStyle(.secondary)
-            }
-            .padding(12)
-            .appSurfaceCard(.utility, cornerRadius: 16)
-            .accessibilityIdentifier("ipad.today.food_guidance_preview")
-
-            VStack(alignment: .leading, spacing: 6) {
                 Text("Next step")
                     .appEyebrowStyle()
                     .textCase(.uppercase)
@@ -76,6 +59,23 @@ extension ContentView {
             }
             .appSecondaryButtonStyle()
             .accessibilityIdentifier("ipad.today.open_food_guidance")
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Common food questions")
+                    .appEyebrowStyle()
+                    .foregroundStyle(CatholicTheme.primary)
+                    .textCase(.uppercase)
+                Label("Chicken and turkey count as meat.", systemImage: "xmark.circle")
+                Label("Eggs, milk, butter, and cheese are generally permitted.", systemImage: "checkmark.circle")
+                Label("Fish and shellfish are generally permitted.", systemImage: "checkmark.circle")
+                Label(
+                    "Open the full guidance page if you need stricter-practice details or region-specific notes.",
+                    systemImage: "book.closed")
+                    .foregroundStyle(.secondary)
+            }
+            .padding(12)
+            .appSurfaceCard(.utility, cornerRadius: 16)
+            .accessibilityIdentifier("ipad.today.food_guidance_preview")
         }
         .padding(18)
         .iPadPaneCard()

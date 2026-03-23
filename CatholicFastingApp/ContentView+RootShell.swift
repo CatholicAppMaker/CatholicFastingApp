@@ -53,7 +53,7 @@ extension ContentView {
                 .overlay(alignment: .topLeading) {
                     readinessMarkers
                 }
-                .navigationTitle("Catholic Fasting")
+                .navigationTitle(homeSurface.label)
                 .navigationBarTitleDisplayMode(.large)
                 .toolbar {
                     if #available(iOS 26.0, *) {
@@ -232,7 +232,7 @@ extension ContentView {
                 .foregroundStyle(CatholicTheme.primary)
                 .accessibilityHidden(true)
             if liturgicalSeasonColorsEnabled, !dynamicTypeSize.isAccessibilitySize {
-                Text("Liturgical Season: \(CatholicTheme.seasonToolbarLabel)")
+                Text(CatholicTheme.seasonToolbarLabel)
                     .font(.caption2.weight(.bold))
                     .foregroundStyle(CatholicTheme.primary)
                     .lineLimit(1)
@@ -273,8 +273,8 @@ extension ContentView {
             AnyView(
                 Group {
                     todayDecisionCardSection
-                    todayTenSecondSection
                     dashboardQuickActionsSection
+                    todayTenSecondSection
                     todaySection
                     setupProgressSection
                     todayRecoverySection
@@ -299,8 +299,8 @@ extension ContentView {
         case .fastingDays:
             AnyView(
                 Group {
-                    fastingDaysHeroSection
                     fastingDaysOverviewSection
+                    fastingDaysHeroSection
                     fastingDaysDisplayOptionsSection
                     fastingDaysListSection
                 })

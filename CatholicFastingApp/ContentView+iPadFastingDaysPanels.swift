@@ -37,8 +37,8 @@ extension ContentView {
                 VStack(alignment: .leading, spacing: 14) {
                     IPadWorkspaceHeader(
                         eyebrow: "Filters",
-                        title: "View options",
-                        detail: "Use these to narrow the list without competing with the selected day.")
+                        title: "Refine the list",
+                        detail: "Keep these utility controls secondary to the selected day and next required observance.")
 
                     Picker(
                         "Scope",

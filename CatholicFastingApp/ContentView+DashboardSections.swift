@@ -165,7 +165,7 @@ extension ContentView {
                 .appSurfaceCard(.utility, cornerRadius: 16)
             }
             .padding(14)
-            .appSurfaceCard(.primary, cornerRadius: 22)
+            .appSurfaceCard(.standard, cornerRadius: 22)
             .accessibilityIdentifier("dashboard.today_glance")
         }
     }
@@ -289,24 +289,15 @@ extension ContentView {
 
     var todayDecisionCardSection: some View {
         let decision = todayFoodDecision
-        return Section(localized("today.food.title", default: "What Can I Eat Today?")) {
+        return Section(localized("today.food.title", default: "Food guidance")) {
             VStack(alignment: .leading, spacing: 14) {
                 Text(decision.obligationLine)
                     .font(.system(.title3, design: .serif).weight(.bold))
                     .foregroundStyle(CatholicTheme.primary)
                     .accessibilityIdentifier("today.decision.obligation")
 
-                if !decision.allowed.isEmpty {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(localized("today.food.okay", default: "Okay today"))
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(.secondary)
-                            .textCase(.uppercase)
-                        ForEach(decision.allowed, id: \.self) { item in
-                            Label(item, systemImage: "checkmark.circle.fill")
-                        }
-                    }
-                }
+                Text(decision.rationale)
+                    .appLeadTextStyle()
 
                 if !decision.avoid.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
@@ -320,8 +311,24 @@ extension ContentView {
                     }
                 }
 
-                Text(decision.rationale)
-                    .appSupportingTextStyle()
+                if !decision.allowed.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(localized("today.food.okay", default: "Okay today"))
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                            .textCase(.uppercase)
+                        ForEach(decision.allowed, id: \.self) { item in
+                            Label(item, systemImage: "checkmark.circle.fill")
+                        }
+                    }
+                }
+
+                NavigationLink {
+                    moreDestinationList(for: .guidanceAndRules)
+                } label: {
+                    Label(localized("today.food.open_guidance", default: "Open full food guidance"), systemImage: "book.closed")
+                }
+                .accessibilityIdentifier("today.decision.open_full_food_guidance")
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text(localized("today.food.common_questions", default: "Common food questions"))
@@ -339,21 +346,19 @@ extension ContentView {
                 .appSurfaceCard(.utility, cornerRadius: 16)
                 .accessibilityIdentifier("today.decision.common_food_questions")
 
-                NavigationLink {
-                    moreDestinationList(for: .guidanceAndRules)
-                } label: {
-                    Label(localized("today.food.open_guidance", default: "Open full food guidance"), systemImage: "book.closed")
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(decision.sourceLine)
+                        .appSupportingTextStyle()
+
+                    Link(
+                        regionProfile == .canada
+                            ? localized("today.food.link.cccb", default: "Read CCCB Friday guidance")
+                            : localized("today.food.link.usccb", default: "Read official USCCB fast/abstinence guidance"),
+                        destination: regionProfile == .canada ? UIConstants.cccbKeepingFridayURL : UIConstants.usccbFastAbstinenceURL)
+                        .font(.footnote.weight(.semibold))
                 }
-                .accessibilityIdentifier("today.decision.open_full_food_guidance")
-
-                Text(decision.sourceLine)
-                    .appSupportingTextStyle()
-
-                Link(
-                    regionProfile == .canada
-                        ? localized("today.food.link.cccb", default: "Read CCCB Friday guidance")
-                        : localized("today.food.link.usccb", default: "Read official USCCB fast/abstinence guidance"),
-                    destination: regionProfile == .canada ? UIConstants.cccbKeepingFridayURL : UIConstants.usccbFastAbstinenceURL)
+                .padding(12)
+                .appSurfaceCard(.utility, cornerRadius: 16)
             }
             .padding(14)
             .appSurfaceCard(.standard, cornerRadius: 20)

@@ -99,13 +99,13 @@ extension ContentView {
 
     var premiumAndSupportSection: some View {
         Section(localized("premium.upgrade.section", default: "Premium Upgrade")) {
-            premiumStatusSummaryCard
-
             if monetizationStore.premiumUnlocked {
                 premiumJourneyCard(sample: false)
             } else {
                 premiumJourneyCard(sample: true)
             }
+
+            premiumStatusSummaryCard
 
             if monetizationStore.premiumUnlocked {
                 premiumActiveStateCard

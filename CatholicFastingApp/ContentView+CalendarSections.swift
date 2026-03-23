@@ -320,18 +320,6 @@ extension ContentView {
 
     var fastingDaysOverviewSection: some View {
         Section(localized("fasting_days.section.title", default: "Fasting Days")) {
-            Text(regionalNormSummaryLine)
-                .appSupportingTextStyle()
-
-            fastingDaysFilterTags
-
-            Picker(localized("fasting_days.scope.title", default: "Scope"), selection: fastingDaysScopeSelection) {
-                Text(localized("fasting_days.scope.upcoming", default: "Upcoming")).tag(0)
-                Text(localized("fasting_days.scope.full_year", default: "Full Year")).tag(1)
-            }
-            .pickerStyle(.segmented)
-            .accessibilityIdentifier("fasting_days.scope_picker")
-
             if let nextRequired = upcomingMandatoryObservance {
                 VStack(alignment: .leading, spacing: 10) {
                     Label(localized("fasting_days.next_required", default: "Next required"), systemImage: "calendar.badge.exclamationmark")
@@ -369,6 +357,18 @@ extension ContentView {
                 Text(localized("fasting_days.none_upcoming", default: "No upcoming required observance day found in the loaded date range."))
                     .appSupportingTextStyle()
             }
+
+            Text(regionalNormSummaryLine)
+                .appSupportingTextStyle()
+
+            fastingDaysFilterTags
+
+            Picker(localized("fasting_days.scope.title", default: "Scope"), selection: fastingDaysScopeSelection) {
+                Text(localized("fasting_days.scope.upcoming", default: "Upcoming")).tag(0)
+                Text(localized("fasting_days.scope.full_year", default: "Full Year")).tag(1)
+            }
+            .pickerStyle(.segmented)
+            .accessibilityIdentifier("fasting_days.scope_picker")
 
             Text(fastingDaysDisplaySummaryText)
                 .appSupportingTextStyle()
