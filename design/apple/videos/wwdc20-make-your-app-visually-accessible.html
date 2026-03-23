@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html xmlns="https://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+	<meta charset="utf-8" />
+<meta name="Author" content="Apple Inc." />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="icon" href="/favicon.ico" />
+<link rel="mask-icon" href="/apple-logo.svg" color="#333333">
+
+<link rel="stylesheet" href="/assets/styles/global.dist.css?40222613076" type="text/css" />
+<link rel="stylesheet" href="/assets/styles/dark-mode.css?54232608030" type="text/css" media="(prefers-color-scheme: dark)" data-color-scheme="dark" />
+<link rel="stylesheet" href="/assets/styles/localization.css?54232608030" type="text/css" />
+
+<script src="/assets/scripts/lib/jquery/jquery-3.6.0.min.js?45232608030"></script>
+<script src="/assets/scripts/settings.js?45232608030"></script>
+<script src="/assets/scripts/language-locales.js?45232608030"></script>
+<script src="/assets/scripts/DeveloperBreadcrumbs.js?45232608030"></script>
+<script src="/assets/metrics/scripts/analytics-module.js?45232608030"></script>
+
+<script async src="/assets/scripts/retinate.js?45232608030"></script>
+<script src="/assets/scripts/global-logout.js?45232608030"></script>
+
+<script async crossorigin src="https://sfss.cdn-apple.com/2.0.0-beta.2/sf-symbol.js?03002602082"></script>
+<link rel="stylesheet" href="https://sf-saas.cdn-apple.com/2.4.0-beta.0/animations/all.css" type="text/css" />
+
+
+
+
+
+	<link rel="stylesheet" href="https://www.apple.com/wss/fonts?families=SF+Pro,v3|SF+Pro+Icons,v3">
+<link rel="stylesheet" href="https://www.apple.com/wss/fonts?family=SF+Mono&v=2" type="text/css" />
+<link rel="stylesheet" href="https://www.apple.com/wss/fonts?family=Apple+Icons&v=1" type="text/css" />
+
+	<title>Make your app visually accessible - WWDC20 - Videos - Apple Developer</title>
+	<meta name="omni_page" content="Make your app visually accessible - WWDC20 - Videos" />
+
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<link type="text/css" rel="stylesheet" href="/videos/styles/videos.css?3">
+	<link type="text/css" rel="stylesheet" href="/videos/styles/video-overlay.css?3">
+	<meta name="description" content="When you design with accessibility in mind, you empower everyone to use your app. Discover how to create an adaptive interface for your...">
+
+	<meta property="og:url" content="https://developer.apple.com/videos/play/wwdc2020/10020/" />
+	<meta property="og:title" content="Make your app visually accessible - WWDC20 - Videos - Apple Developer" />
+	<meta property="og:description" content="When you design with accessibility in mind, you empower everyone to use your app. Discover how to create an adaptive interface for your..." />
+	<meta property="og:site_name" content="Apple Developer" />
+	<meta property="og:type" content="website" />
+	<meta property="og:video" content="https://devstreaming-cdn.apple.com/videos/wwdc/2020/10020/6/E082026F-7D80-4814-9A23-5A52E4CBF628/master.m3u8" /> 
+	<meta property="og:video_secure_url" content="https://devstreaming-cdn.apple.com/videos/wwdc/2020/10020/6/E082026F-7D80-4814-9A23-5A52E4CBF628/master.m3u8" /> 
+	<meta property="og:video:type" content="vnd.apple.mpegURL" /> 
+	<meta property="og:video:width" content="1280" />
+	<meta property="og:video:height" content="720" />
+		<meta property="og:image" content="https://devimages-cdn.apple.com/wwdc-services/images/49/3565/3565_wide_250x141_2x.jpg" />
+		<meta property="og:locale" content="en_US" />
+	<meta itemprop="datePublished" content="2020-06-23">
+	<meta itemprop="uploadDate" content="2020-06-23">	
+
+	<link rel="alternate" href="https://developer.apple.com/videos/play/wwdc2020/10020/" hreflang="en">
+	<link rel="alternate" href="https://developer.apple.com/kr/videos/play/wwdc2020/10020/" hreflang="ko-KR">
+	<link rel="alternate" href="https://developer.apple.com/cn/videos/play/wwdc2020/10020/" hreflang="zh-CN">
+    <link rel="alternate" href="https://developer.apple.com/jp/videos/play/wwdc2020/10020/" hreflang="ja-JP">
+	<link rel="alternate" href="https://developer.apple.com/la/videos/play/wwdc2020/10020/" hreflang="es-lamr">
+	<link rel="alternate" href="https://developer.apple.com/fr/videos/play/wwdc2020/10020/" hreflang="fr-FR">
+	<link rel="alternate" href="https://developer.apple.com/br/videos/play/wwdc2020/10020/" hreflang="pt-BR">		
+    <link rel="canonical" href="https://developer.apple.com/videos/play/wwdc2020/10020/" />
+
+</head>
+<body class="view-play " >
+	
+	<script>
+	// Execute immediately to avoid UI flash
+	(function () {
+		// Prevent React dev mode from running this multiple times
+		if (window.__didRunColorThemeScript) {
+			return;
+		}
+		window.__didRunColorThemeScript = true;
+
+		const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+		const body = document.body;
+
+		// If theme-dark or theme-light is already applied, do nothing and lock it
+		if (body.classList.contains("theme-dark") || body.classList.contains("theme-light")) {
+
+			// Set the data-color-scheme attribute based on the existing theme
+			body.setAttribute('data-color-scheme', body.classList.contains("theme-dark") ? "dark" : "light");
+
+			// Prevent future modifications
+			window.__disableColorScheme = true;
+
+			// Hide the color picker immediately
+			const style = document.createElement('style');
+			style.textContent = '.color-scheme-toggle { display: none !important; }';
+			document.head.appendChild(style);
+
+			return;
+		}
+
+		// Otherwise, set theme normally based on user settings or system preference
+		if (window.Settings && window.Settings.preferredColorScheme) {
+			const colorTheme = (window.Settings.preferredColorScheme === 'auto') && !prefersDark ? 'light'
+				: (window.Settings.preferredColorScheme === 'light') ? 'light' : 'dark';
+			body.setAttribute('data-color-scheme', colorTheme);
+			colorTheme === "dark" ? body.classList.add("theme-dark") : body.classList.add("theme-light");
+		} else {
+			const colorTheme = prefersDark ? 'dark' : 'light';
+			body.setAttribute('data-color-scheme', colorTheme);
+			prefersDark ? body.classList.add("theme-dark") : body.classList.add("theme-light");
+		}
+	})();
+</script>
+
+
+<link rel="stylesheet" href="/assets/styles/suggest-lang.css?54232608030" type="text/css" />
+<div id="suggest-lang" class="ribbon hide" lang="en">
+	<div class="ribbon-content-wrapper">
+		<div class="ribbon-content row">
+			<div class="column large-12 large-centered">
+				<p><a href="#" id="suggest-link" class="ribbon-link more">View in English</a></p>
+				<button id="suggest-closer" class="icon icon-after icon-reset" aria-label="Dismiss language suggestion" tabindex="0"></button>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="/assets/scripts/suggest-lang.js?03162626057"></script>
+<link rel="stylesheet" href="/assets/styles/globalnav.css?48212635068" type="text/css" />
+<nav id="globalnav" lang="en-US" dir="ltr" aria-label="Global" class="globalnav js" style="--r-globalnav-text-zoom-scale: 1;">
+	<div class="globalnav-content">
+		<div class="globalnav-item globalnav-menuback"><button aria-label="Main menu" class="globalnav-menuback-button"><span class="globalnav-chevron-icon"><svg height="48" viewBox="0 0 9 48" width="9" xmlns="http://www.w3.org/2000/svg">
+						<path d="m1.5618 24.0621 6.5581-6.4238c.2368-.2319.2407-.6118.0088-.8486-.2324-.2373-.6123-.2407-.8486-.0088l-7 6.8569c-.1157.1138-.1807.2695-.1802.4316.001.1621.0674.3174.1846.4297l7 6.7241c.1162.1118.2661.1675.4155.1675.1577 0 .3149-.062.4326-.1846.2295-.2388.2222-.6187-.0171-.8481z"></path>
+					</svg></span></button></div>
+		<ul id="globalnav-list" class="globalnav-list">
+			<li class="
+	globalnav-item
+	globalnav-item-apple
+	ac-gn-item
+	ac-gn-apple
+">
+				<a href="/" aria-label="Apple Developer" class="globalnav-link globalnav-link-apple ac-gn-link ac-gn-link-apple-developer" id="ac-gn-firstfocus-small">
+					<span class="ac-gn-link-text globalnav-link-text">Apple Developer</span>
+				</a>
+			</li>
+			<li class="globalnav-item globalnav-menu">
+				<div class="globalnav-flyout" style="--r-globalnav-flyout-item-total: 0; --r-globalnav-flyout-group-number: 0;">
+					<div class="globalnav-menu-list" style="--r-globalnav-flyout-item-total: 7;">
+						<div class="
+    globalnav-item
+    globalnav-item-getting-started
+    globalnav-item-menu
+    globalnav-item-submenu
+" style="--r-globalnav-flyout-item-number: 0;">
+							<ul class="globalnav-submenu-trigger-group">
+								<li class="globalnav-submenu-trigger-item">
+									<a href="/get-started/" data-topnav-flyout-trigger-compact="true" aria-label="Get Started" class="globalnav-link globalnav-submenu-trigger-link globalnav-link-getting-started">
+										<span class="globalnav-link-text-container">
+											<span class="globalnav-link-text">Get Started</span>
+										</span>
+										<span class="globalnav-link-chevron">
+											<svg height="48" viewBox="0 0 9 48" width="9" xmlns="http://www.w3.org/2000/svg">
+												<path d="m8.1155 30.358a.6.6 0 1 1 -.831.8653l-7-6.7242a.6.6 0 0 1 -.0045-.8613l7-6.8569a.6.6 0 1 1 .84.8574l-6.5582 6.4238z"></path>
+											</svg>
+										</span>
+									</a>
+								</li>
+								<li class="globalnav-submenu-trigger-item">
+									<button id="globalnav-menubutton-link-getting-started" class="globalnav-submenu-trigger-button" aria-expanded="false" aria-controls="globalnav-submenu-link-getting-started" aria-label="Get Started menu" data-topnav-flyout-trigger-regular="true">
+										<span class="globalnav-image-regular globalnav-submenu-button-icon">
+											<svg height="10" viewBox="0 0 10 10" width="10" xmlns="http://www.w3.org/2000/svg">
+												<path d="m4.6725 6.635-2.655-2.667a.445.445 0 0 1 -.123-.304.4331.4331 0 0 1 .427-.439h.006a.447.447 0 0 1 .316.135l2.357 2.365 2.356-2.365a.458.458 0 0 1 .316-.135.433.433 0 0 1 .433.433v.006a.4189.4189 0 0 1 -.123.3l-2.655 2.671a.4451.4451 0 0 1 -.327.14.464.464 0 0 1 -.328-.14z"></path>
+											</svg>
+										</span>
+										<span class="globalnav-image-compact globalnav-submenu-button-icon">
+											<svg height="48" viewBox="0 0 9 48" width="9" xmlns="http://www.w3.org/2000/svg">
+												<path d="m7.4382 24.0621-6.5581-6.4238c-.2368-.2319-.2407-.6118-.0088-.8486.2324-.2373.6123-.2407.8486-.0088l7 6.8569c.1157.1138.1807.2695.1802.4316-.001.1621-.0674.3174-.1846.4297l-7 6.7242c-.1162.1118-.2661.1675-.4155.1675-.1577 0-.3149-.062-.4326-.1846-.2295-.2388-.2222-.6187.0171-.8481l6.5537-6.2959z"></path>
+											</svg>
+										</span>
+									</button>
+								</li>
+							</ul>
+							<div id="globalnav-submenu-link-getting-started" class="globalnav-flyout globalnav-submenu" aria-labelledby="globalnav-menubutton-link-getting-started" style="--r-globalnav-flyout-item-total: 0; --r-globalnav-flyout-group-number: 0; --r-globalnav-flyout-height: auto; --r-globalnav-flyout-rate: 240ms;">
+								<div class="globalnav-flyout-scroll-container">
+									<div class="globalnav-flyout-content globalnav-submenu-content" style="--r-globalnav-flyout-elevated-group-count: 1; --r-globalnav-flyout-group-total: 2; --r-globalnav-flyout-item-total: 4;">
+										<div class="globalnav-submenu-group globalnav-submenu-group-elevated" style="--r-globalnav-flyout-group-number: 0;">
+
+											<h2 class="globalnav-submenu-header" id="apple-getting-started-heading" style="--r-globalnav-flyout-item-number: 1;">Explore Get Started</h2>
+											<ul class="globalnav-submenu-list" aria-labelledby="apple-getting-started-heading">
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 2;"><a href="/get-started/" class="globalnav-submenu-link">Overview</a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 3;"><a href="/learn/" class="globalnav-submenu-link">Learn</a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 4;"><a href="/programs/" class="globalnav-submenu-link">Apple Developer Program</a></li>
+											</ul>
+										</div>
+										<div class="globalnav-submenu-group" style="--r-globalnav-flyout-group-number: 1;">
+
+											<h2 class="globalnav-submenu-header" id="apple-learn-heading" style="--r-globalnav-flyout-item-number: 1;">Stay Updated</h2>
+											<ul class="globalnav-submenu-list" aria-labelledby="apple-learn-heading">
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 2;"><a href="/news/" class="globalnav-submenu-link">Latest News</a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 3;"><a href="/hello/" class="globalnav-submenu-link">Hello Developer</a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="
+  globalnav-item
+  globalnav-item-platforms
+  globalnav-item-menu
+  globalnav-item-submenu
+" style="--r-globalnav-flyout-item-number: 1;">
+							<ul class="globalnav-submenu-trigger-group">
+								<li class="globalnav-submenu-trigger-item">
+									<a href="/platforms/" aria-label="Platforms" class="globalnav-link globalnav-submenu-trigger-link globalnav-link-platforms">
+										<span class="globalnav-link-text-container">
+											<span class="globalnav-link-text">Platforms</span>
+										</span>
+										<span class="globalnav-link-chevron">
+											<svg height="48" viewBox="0 0 9 48" width="9" xmlns="http://www.w3.org/2000/svg">
+												<path d="m8.1155 30.358a.6.6 0 1 1 -.831.8653l-7-6.7242a.6.6 0 0 1 -.0045-.8613l7-6.8569a.6.6 0 1 1 .84.8574l-6.5582 6.4238z"></path>
+											</svg>
+										</span>
+									</a>
+								</li>
+								<li class="globalnav-submenu-trigger-item">
+									<button id="globalnav-menubutton-link-platforms" class="globalnav-submenu-trigger-button" aria-expanded="false" aria-controls="globalnav-submenu-link-platforms" aria-label="Platforms menu">
+										<span class="globalnav-image-regular globalnav-submenu-button-icon">
+											<svg height="10" viewBox="0 0 10 10" width="10" xmlns="http://www.w3.org/2000/svg">
+												<path d="m4.6725 6.635-2.655-2.667a.445.445 0 0 1 -.123-.304.4331.4331 0 0 1 .427-.439h.006a.447.447 0 0 1 .316.135l2.357 2.365 2.356-2.365a.458.458 0 0 1 .316-.135.433.433 0 0 1 .433.433v.006a.4189.4189 0 0 1 -.123.3l-2.655 2.671a.4451.4451 0 0 1 -.327.14.464.464 0 0 1 -.328-.14z"></path>
+											</svg>
+										</span>
+										<span class="globalnav-image-compact globalnav-submenu-button-icon">
+											<svg height="48" viewBox="0 0 9 48" width="9" xmlns="http://www.w3.org/2000/svg">
+												<path d="m7.4382 24.0621-6.5581-6.4238c-.2368-.2319-.2407-.6118-.0088-.8486.2324-.2373.6123-.2407.8486-.0088l7 6.8569c.1157.1138.1807.2695.1802.4316-.001.1621-.0674.3174-.1846.4297l-7 6.7242c-.1162.1118-.2661.1675-.4155.1675-.1577 0-.3149-.062-.4326-.1846-.2295-.2388-.2222-.6187.0171-.8481l6.5537-6.2959z"></path>
+											</svg>
+										</span>
+									</button>
+								</li>
+							</ul>
+							<div id="globalnav-submenu-link-platforms" class="globalnav-flyout globalnav-submenu" aria-labelledby="globalnav-menubutton-link-platforms" style="--r-globalnav-flyout-item-total: 0; --r-globalnav-flyout-group-number: 0; --r-globalnav-flyout-height: auto; --r-globalnav-flyout-rate: 240ms;">
+								<div class="globalnav-flyout-scroll-container">
+									<div class="globalnav-flyout-content globalnav-submenu-content" style="--r-globalnav-flyout-elevated-group-count: 1; --r-globalnav-flyout-group-total: 2; --r-globalnav-flyout-item-total: 9;">
+										<!-- Explore -->
+										<div class="globalnav-submenu-group globalnav-submenu-group-elevated" style="--r-globalnav-flyout-group-number: 0;">
+
+											<h2 class="globalnav-submenu-header" id="platforms-apple-heading" style="--r-globalnav-flyout-item-number: 1;">Explore Platforms</h2>
+											<ul class="globalnav-submenu-list" aria-labelledby="platforms-apple-heading">
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 2;"><a href="/platforms/" class="globalnav-submenu-link">Apple Platforms</a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 3;"><a href="/ios/" class="globalnav-submenu-link">iOS</a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 4;"><a href="/ipados/" class="globalnav-submenu-link">iPadOS</a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 5;"><a href="/macos/" class="globalnav-submenu-link">macOS</a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 6;"><a href="/tvos/" class="globalnav-submenu-link">tvOS</a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 7;"><a href="/visionos/" class="globalnav-submenu-link">visionOS</a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 8;"><a href="/watchos/" class="globalnav-submenu-link">watchOS</a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 9;"><a href="/app-store/" class="globalnav-submenu-link">App Store</a></li>
+											</ul>
+										</div>
+										<!-- Featured -->
+										<div class="globalnav-submenu-group" style="--r-globalnav-flyout-group-number: 1;">
+
+											<h2 class="globalnav-submenu-header" id="platforms-learn-heading" style="--r-globalnav-flyout-item-number: 1;">Featured</h2>
+											<ul class="globalnav-submenu-list" aria-labelledby="platforms-learn-heading">
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 2;"><a href="/design/" class="globalnav-submenu-link">Design</a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 3;"><a href="/distribute/" class="globalnav-submenu-link">Distribution</a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 4;"><a href="/games/" class="globalnav-submenu-link">Games</a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 5;"><a href="/accessories/" class="globalnav-submenu-link">Accessories</a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 6;"><a href="/safari/" class="globalnav-submenu-link">Web<span class="loc-en-only"></span></a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 7;"><a href="/apple-home/" class="globalnav-submenu-link">Home</a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 8;"><a href="/carplay/" class="globalnav-submenu-link">CarPlay</a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="
+  globalnav-item
+  globalnav-item-technologies
+  globalnav-item-menu
+  globalnav-item-submenu
+" style="--r-globalnav-flyout-item-number: 2;">
+							<ul class="globalnav-submenu-trigger-group">
+								<li class="globalnav-submenu-trigger-item">
+									<a href="/technologies/" aria-label="Technologies" class="globalnav-link globalnav-submenu-trigger-link globalnav-link-technologies">
+										<span class="globalnav-link-text-container">
+											<span class="globalnav-link-text">Technologies</span>
+										</span>
+										<span class="globalnav-link-chevron">
+											<svg height="48" viewBox="0 0 9 48" width="9" xmlns="http://www.w3.org/2000/svg">
+												<path d="m8.1155 30.358a.6.6 0 1 1 -.831.8653l-7-6.7242a.6.6 0 0 1 -.0045-.8613l7-6.8569a.6.6 0 1 1 .84.8574l-6.5582 6.4238z"></path>
+											</svg>
+										</span>
+									</a>
+								</li>
+								<li class="globalnav-submenu-trigger-item">
+									<button id="globalnav-menubutton-link-technologies" class="globalnav-submenu-trigger-button" aria-expanded="false" aria-controls="globalnav-submenu-link-technologies" aria-label="Technologies menu">
+										<span class="globalnav-image-regular globalnav-submenu-button-icon">
+											<svg height="10" viewBox="0 0 10 10" width="10" xmlns="http://www.w3.org/2000/svg">
+												<path d="m4.6725 6.635-2.655-2.667a.445.445 0 0 1 -.123-.304.4331.4331 0 0 1 .427-.439h.006a.447.447 0 0 1 .316.135l2.357 2.365 2.356-2.365a.458.458 0 0 1 .316-.135.433.433 0 0 1 .433.433v.006a.4189.4189 0 0 1 -.123.3l-2.655 2.671a.4451.4451 0 0 1 -.327.14.464.464 0 0 1 -.328-.14z"></path>
+											</svg>
+										</span>
+										<span class="globalnav-image-compact globalnav-submenu-button-icon">
+											<svg height="48" viewBox="0 0 9 48" width="9" xmlns="http://www.w3.org/2000/svg">
+												<path d="m7.4382 24.0621-6.5581-6.4238c-.2368-.2319-.2407-.6118-.0088-.8486.2324-.2373.6123-.2407.8486-.0088l7 6.8569c.1157.1138.1807.2695.1802.4316-.001.1621-.0674.3174-.1846.4297l-7 6.7242c-.1162.1118-.2661.1675-.4155.1675-.1577 0-.3149-.062-.4326-.1846-.2295-.2388-.2222-.6187.0171-.8481l6.5537-6.2959z"></path>
+											</svg>
+										</span>
+									</button>
+								</li>
+							</ul>
+							<div id="globalnav-submenu-link-technologies" class="globalnav-flyout globalnav-submenu" aria-labelledby="globalnav-menubutton-link-technologies" style="--r-globalnav-flyout-item-total: 0; --r-globalnav-flyout-group-number: 0; --r-globalnav-flyout-height: auto; --r-globalnav-flyout-rate: 254ms;">
+								<div class="globalnav-flyout-scroll-container">
+									<div class="globalnav-flyout-content globalnav-submenu-content" style="--r-globalnav-flyout-elevated-group-count: 1; --r-globalnav-flyout-group-total: 2; --r-globalnav-flyout-item-total: 8;">
+										<!-- Explore -->
+										<div class="globalnav-submenu-group globalnav-submenu-group-elevated" style="--r-globalnav-flyout-group-number: 0;">
+
+											<h2 class="globalnav-submenu-header" id="technologies-learn-heading" style="--r-globalnav-flyout-item-number: 1;">Explore Technologies</h2>
+											<ul class="globalnav-submenu-list" aria-labelledby="technologies-learn-heading">
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 2;"><a href="/technologies/" class="globalnav-submenu-link">Overview</a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 3;"><a href="/xcode/" class="globalnav-submenu-link">Xcode</a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 4;"><a href="/swift/" class="globalnav-submenu-link">Swift</a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 5;"><a href="/swiftui/" class="globalnav-submenu-link">SwiftUI</a></li>
+											</ul>
+										</div>
+										<!-- Featured -->
+										<div class="globalnav-submenu-group" style="--r-globalnav-flyout-group-number: 1;">
+
+											<h2 class="globalnav-submenu-header" id="technologies-featured-heading" style="--r-globalnav-flyout-item-number: 1;">Featured</h2>
+											<ul class="globalnav-submenu-list" aria-labelledby="technologies-featured-heading">
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 2;"><a href="/documentation/accessibility" class="globalnav-submenu-link">Accessibility<span class="loc-en-only"></span></a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 3;"><a href="/documentation/appintents" class="globalnav-submenu-link">App Intents<span class="loc-en-only"></span></a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 4;"><a href="/apple-intelligence/" class="globalnav-submenu-link">Apple Intelligence</a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 5;"><a href="/games/" class="globalnav-submenu-link">Games</a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 6;"><a href="/machine-learning/" class="globalnav-submenu-link">Machine Learning &amp; AI</a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 7;"><a href="/security/" class="globalnav-submenu-link">Security</a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 8;"><a href="/xcode-cloud/" class="globalnav-submenu-link">Xcode Cloud</a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="
+  globalnav-item
+  globalnav-item-community
+  globalnav-item-menu
+  globalnav-item-submenu
+" style="--r-globalnav-flyout-item-number: 3;">
+							<ul class="globalnav-submenu-trigger-group">
+								<li class="globalnav-submenu-trigger-item">
+									<a href="/community/" aria-label="Community" class="globalnav-link globalnav-submenu-trigger-link globalnav-link-community">
+										<span class="globalnav-link-text-container">
+											<span class="globalnav-link-text">Community</span>
+										</span>
+										<span class="globalnav-link-chevron">
+											<svg height="48" viewBox="0 0 9 48" width="9" xmlns="http://www.w3.org/2000/svg">
+												<path d="m8.1155 30.358a.6.6 0 1 1 -.831.8653l-7-6.7242a.6.6 0 0 1 -.0045-.8613l7-6.8569a.6.6 0 1 1 .84.8574l-6.5582 6.4238z"></path>
+											</svg>
+										</span>
+									</a>
+								</li>
+								<li class="globalnav-submenu-trigger-item">
+									<button id="globalnav-menubutton-link-community" class="globalnav-submenu-trigger-button" aria-expanded="false" aria-controls="globalnav-submenu-link-community" aria-label="Community menu">
+										<span class="globalnav-image-regular globalnav-submenu-button-icon">
+											<svg height="10" viewBox="0 0 10 10" width="10" xmlns="http://www.w3.org/2000/svg">
+												<path d="m4.6725 6.635-2.655-2.667a.445.445 0 0 1 -.123-.304.4331.4331 0 0 1 .427-.439h.006a.447.447 0 0 1 .316.135l2.357 2.365 2.356-2.365a.458.458 0 0 1 .316-.135.433.433 0 0 1 .433.433v.006a.4189.4189 0 0 1 -.123.3l-2.655 2.671a.4451.4451 0 0 1 -.327.14.464.464 0 0 1 -.328-.14z"></path>
+											</svg>
+										</span>
+										<span class="globalnav-image-compact globalnav-submenu-button-icon">
+											<svg height="48" viewBox="0 0 9 48" width="9" xmlns="http://www.w3.org/2000/svg">
+												<path d="m7.4382 24.0621-6.5581-6.4238c-.2368-.2319-.2407-.6118-.0088-.8486.2324-.2373.6123-.2407.8486-.0088l7 6.8569c.1157.1138.1807.2695.1802.4316-.001.1621-.0674.3174-.1846.4297l-7 6.7242c-.1162.1118-.2661.1675-.4155.1675-.1577 0-.3149-.062-.4326-.1846-.2295-.2388-.2222-.6187.0171-.8481l6.5537-6.2959z"></path>
+											</svg>
+										</span>
+									</button>
+								</li>
+							</ul>
+							<div id="globalnav-submenu-link-community" class="globalnav-flyout globalnav-submenu" aria-labelledby="globalnav-menubutton-link-community" style="--r-globalnav-flyout-item-total: 0; --r-globalnav-flyout-group-number: 0; --r-globalnav-flyout-height: auto; --r-globalnav-flyout-rate: 240ms;">
+								<div class="globalnav-flyout-scroll-container">
+									<div class="globalnav-flyout-content globalnav-submenu-content" style="--r-globalnav-flyout-elevated-group-count: 1; --r-globalnav-flyout-group-total: 2; --r-globalnav-flyout-item-total: 7;">
+										<!-- Explore -->
+										<div class="globalnav-submenu-group globalnav-submenu-group-elevated" style="--r-globalnav-flyout-group-number: 0;">
+
+											<h2 class="globalnav-submenu-header" id="community-engage-heading" style="--r-globalnav-flyout-item-number: 1;">Explore Community</h2>
+											<ul class="globalnav-submenu-list" aria-labelledby="community-engage-heading">
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 2;"><a href="/community/" class="globalnav-submenu-link">Overview</a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 3;"><a href="/events/" class="globalnav-submenu-link">Meet with Apple events</a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 4;"><a href="/community/events/" class="globalnav-submenu-link">Community-driven events</a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 5;"><a href="/forums/" class="globalnav-submenu-link">Developer Forums<span class="loc-en-only"></span></a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 6;"><a href="https://opensource.apple.com" class="globalnav-submenu-link">Open Source<span class="loc-en-only"></span></a></li>
+											</ul>
+										</div>
+										<!-- Featured -->
+										<div class="globalnav-submenu-group" style="--r-globalnav-flyout-group-number: 1;">
+
+											<h2 class="globalnav-submenu-header" id="community-contribute-heading" style="--r-globalnav-flyout-item-number: 1;">Featured</h2>
+											<ul class="globalnav-submenu-list" aria-labelledby="community-contribute-heading">
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 2;"><a href="/wwdc/" class="globalnav-submenu-link">WWDC</a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 3;"><a href="/swift-student-challenge/" class="globalnav-submenu-link">Swift Student Challenge</a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 4;"><a href="/developer-stories/" class="globalnav-submenu-link">Developer Stories</a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 5;"><a href="/app-store/app-store-awards/" class="globalnav-submenu-link">App Store Awards<span class="loc-en-only"></span></a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 6;"><a href="/design/awards/" class="globalnav-submenu-link">Apple Design Awards</a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 7;"><a href="/events/developer-centers/" class="globalnav-submenu-link">Apple Developer Centers</a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="
+							    globalnav-item
+							    globalnav-item-documentation
+							    globalnav-item-menu
+							    globalnav-item-submenu
+							" style="--r-globalnav-flyout-item-number: 4;">
+							<ul class="globalnav-submenu-trigger-group">
+								<li class="globalnav-submenu-trigger-item">
+									<a href="/documentation/" aria-label="Documentation" class="globalnav-link globalnav-submenu-trigger-link globalnav-link-documentation">
+										<span class="globalnav-link-text-container">
+											<span class="globalnav-link-text">Documentation<span class="loc-en-only"></span></span>
+										</span>
+										<span class="globalnav-link-chevron">
+											<svg height="48" viewBox="0 0 9 48" width="9" xmlns="http://www.w3.org/2000/svg">
+												<path d="m8.1155 30.358a.6.6 0 1 1 -.831.8653l-7-6.7242a.6.6 0 0 1 -.0045-.8613l7-6.8569a.6.6 0 1 1 .84.8574l-6.5582 6.4238z"></path>
+											</svg>
+										</span>
+									</a>
+								</li>
+								<li class="globalnav-submenu-trigger-item">
+									<button id="globalnav-menubutton-link-documentation" class="globalnav-submenu-trigger-button" aria-expanded="false" aria-controls="globalnav-submenu-link-documentation" aria-label="Documentation menu">
+										<span class="globalnav-image-regular globalnav-submenu-button-icon">
+											<svg height="10" viewBox="0 0 10 10" width="10" xmlns="http://www.w3.org/2000/svg">
+												<path d="m4.6725 6.635-2.655-2.667a.445.445 0 0 1 -.123-.304.4331.4331 0 0 1 .427-.439h.006a.447.447 0 0 1 .316.135l2.357 2.365 2.356-2.365a.458.458 0 0 1 .316-.135.433.433 0 0 1 .433.433v.006a.4189.4189 0 0 1 -.123.3l-2.655 2.671a.4451.4451 0 0 1 -.327.14.464.464 0 0 1 -.328-.14z"></path>
+											</svg>
+										</span>
+										<span class="globalnav-image-compact globalnav-submenu-button-icon">
+											<svg height="48" viewBox="0 0 9 48" width="9" xmlns="http://www.w3.org/2000/svg">
+												<path d="m7.4382 24.0621-6.5581-6.4238c-.2368-.2319-.2407-.6118-.0088-.8486.2324-.2373.6123-.2407.8486-.0088l7 6.8569c.1157.1138.1807.2695.1802.4316-.001.1621-.0674.3174-.1846.4297l-7 6.7242c-.1162.1118-.2661.1675-.4155.1675-.1577 0-.3149-.062-.4326-.1846-.2295-.2388-.2222-.6187.0171-.8481l6.5537-6.2959z"></path>
+											</svg>
+										</span>
+									</button>
+								</li>
+							</ul>
+							<div id="globalnav-submenu-link-documentation" class="globalnav-flyout globalnav-submenu" aria-labelledby="globalnav-menubutton-link-documentation" style="--r-globalnav-flyout-item-total: 0; --r-globalnav-flyout-group-number: 0; --r-globalnav-flyout-height: auto; --r-globalnav-flyout-rate: 240ms;">
+								<div class="globalnav-flyout-scroll-container">
+									<div class="globalnav-flyout-content globalnav-submenu-content" style="--r-globalnav-flyout-elevated-group-count: 1; --r-globalnav-flyout-group-total: 2; --r-globalnav-flyout-item-total: 9;">
+										<!-- Explore -->
+										<div class="globalnav-submenu-group globalnav-submenu-group-elevated" style="--r-globalnav-flyout-group-number: 0;">
+
+											<h2 class="globalnav-submenu-header" id="docs-explore" style="--r-globalnav-flyout-item-number: 1;">Explore Documentation</h2>
+											<ul class="globalnav-submenu-list" aria-labelledby="docs-explore">
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 2;"><a href="/documentation/" class="globalnav-submenu-link">Documentation Library<span class="loc-en-only"></span></a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 3;"><a href="/documentation/TechnologyOverviews" class="globalnav-submenu-link">Technology Overviews<span class="loc-en-only"></span></a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 4;"><a href="/documentation/SampleCode" class="globalnav-submenu-link">Sample Code<span class="loc-en-only"></span></a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 5;"><a href="/design/human-interface-guidelines/" class="globalnav-submenu-link">Human Interface Guidelines</a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 6;"><a href="/videos/" class="globalnav-submenu-link">Videos</a></li>
+											</ul>
+										</div>
+										<!-- Release Notes -->
+										<div class="globalnav-submenu-group" style="--r-globalnav-flyout-group-number: 1;">
+
+											<h2 class="globalnav-submenu-header" id="docs-release-notes" style="--r-globalnav-flyout-item-number: 1;">Release Notes</h2>
+											<ul class="globalnav-submenu-list" aria-labelledby="docs-release-notes">
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 2;"><a href="/documentation/Updates" class="globalnav-submenu-link">Featured Updates<span class="loc-en-only"></span></a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 3;"><a href="/documentation/ios-ipados-release-notes" class="globalnav-submenu-link">iOS<span class="loc-en-only"></span></a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 4;"><a href="/documentation/ios-ipados-release-notes" class="globalnav-submenu-link">iPadOS<span class="loc-en-only"></span></a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 5;"><a href="/documentation/macos-release-notes" class="globalnav-submenu-link">macOS<span class="loc-en-only"></span></a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 6;"><a href="/documentation/watchos-release-notes" class="globalnav-submenu-link">watchOS<span class="loc-en-only"></span></a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 7;"><a href="/documentation/visionos-release-notes/" class="globalnav-submenu-link">visionOS<span class="loc-en-only"></span></a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 8;"><a href="/documentation/tvos-release-notes" class="globalnav-submenu-link">tvOS<span class="loc-en-only"></span></a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 9;"><a href="/documentation/Updates/xcode" class="globalnav-submenu-link">Xcode<span class="loc-en-only"></span></a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="
+  globalnav-item
+  globalnav-item-downloads
+  globalnav-item-menu
+  globalnav-item-submenu
+" style="--r-globalnav-flyout-item-number: 5;">
+							<ul class="globalnav-submenu-trigger-group">
+								<li class="globalnav-submenu-trigger-item">
+									<a href="/download/" aria-label="Downloads" class="globalnav-link globalnav-submenu-trigger-link globalnav-link-downloads">
+										<span class="globalnav-link-text-container">
+											<span class="globalnav-link-text">Downloads</span>
+										</span>
+										<span class="globalnav-link-chevron">
+											<svg height="48" viewBox="0 0 9 48" width="9" xmlns="http://www.w3.org/2000/svg">
+												<path d="m8.1155 30.358a.6.6 0 1 1 -.831.8653l-7-6.7242a.6.6 0 0 1 -.0045-.8613l7-6.8569a.6.6 0 1 1 .84.8574l-6.5582 6.4238z"></path>
+											</svg>
+										</span>
+									</a>
+								</li>
+								<li class="globalnav-submenu-trigger-item">
+									<button id="globalnav-menubutton-link-downloads" class="globalnav-submenu-trigger-button" aria-expanded="false" aria-controls="globalnav-submenu-link-downloads" aria-label="Downloads menu">
+										<span class="globalnav-image-regular globalnav-submenu-button-icon">
+											<svg height="10" viewBox="0 0 10 10" width="10" xmlns="http://www.w3.org/2000/svg">
+												<path d="m4.6725 6.635-2.655-2.667a.445.445 0 0 1 -.123-.304.4331.4331 0 0 1 .427-.439h.006a.447.447 0 0 1 .316.135l2.357 2.365 2.356-2.365a.458.458 0 0 1 .316-.135.433.433 0 0 1 .433.433v.006a.4189.4189 0 0 1 -.123.3l-2.655 2.671a.4451.4451 0 0 1 -.327.14.464.464 0 0 1 -.328-.14z"></path>
+											</svg>
+										</span>
+										<span class="globalnav-image-compact globalnav-submenu-button-icon">
+											<svg height="48" viewBox="0 0 9 48" width="9" xmlns="http://www.w3.org/2000/svg">
+												<path d="m7.4382 24.0621-6.5581-6.4238c-.2368-.2319-.2407-.6118-.0088-.8486.2324-.2373.6123-.2407.8486-.0088l7 6.8569c.1157.1138.1807.2695.1802.4316-.001.1621-.0674.3174-.1846.4297l-7 6.7242c-.1162.1118-.2661.1675-.4155.1675-.1577 0-.3149-.062-.4326-.1846-.2295-.2388-.2222-.6187.0171-.8481l6.5537-6.2959z"></path>
+											</svg>
+										</span>
+									</button>
+								</li>
+							</ul>
+							<div id="globalnav-submenu-link-downloads" class="globalnav-flyout globalnav-submenu" aria-labelledby="globalnav-menubutton-link-downloads" style="--r-globalnav-flyout-item-total: 0; --r-globalnav-flyout-group-number: 0; --r-globalnav-flyout-height: auto; --r-globalnav-flyout-rate: 240ms;">
+								<div class="globalnav-flyout-scroll-container">
+									<div class="globalnav-flyout-content globalnav-submenu-content" style="--r-globalnav-flyout-elevated-group-count: 1; --r-globalnav-flyout-group-total: 2; --r-globalnav-flyout-item-total: 6;">
+										<!-- Explore -->
+										<div class="globalnav-submenu-group globalnav-submenu-group-elevated" style="--r-globalnav-flyout-group-number: 0;">
+
+											<h2 class="globalnav-submenu-header" id="downloads-explore-heading" style="--r-globalnav-flyout-item-number: 1;">Explore Downloads</h2>
+											<ul class="globalnav-submenu-list" aria-labelledby="downloads-explore-heading">
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 2;"><a href="/download/" class="globalnav-submenu-link">All Downloads</a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 3;"><a href="/download/os/" class="globalnav-submenu-link">Operating Systems<span class="loc-en-only"></span></a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 4;"><a href="/download/applications/" class="globalnav-submenu-link">Applications<span class="loc-en-only"></span></a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 5;"><a href="/design/resources/" class="globalnav-submenu-link">Design Resources</a></li>
+											</ul>
+										</div>
+										<!-- Featured -->
+										<div class="globalnav-submenu-group" style="--r-globalnav-flyout-group-number: 1;">
+
+											<h2 class="globalnav-submenu-header" id="downloads-featured-heading" style="--r-globalnav-flyout-item-number: 1;">Featured</h2>
+											<ul class="globalnav-submenu-list" aria-labelledby="downloads-featured-heading">
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 2;"><a href="/xcode/" class="globalnav-submenu-link">Xcode</a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 3;"><a href="/testflight/" class="globalnav-submenu-link">TestFlight</a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 4;"><a href="/fonts/" class="globalnav-submenu-link">Fonts</a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 5;"><a href="/sf-symbols/" class="globalnav-submenu-link">SF Symbols</a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 6;"><a href="/icon-composer/" class="globalnav-submenu-link">Icon Composer</a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="
+  globalnav-item
+  globalnav-item-support
+  globalnav-item-menu
+  globalnav-item-submenu
+" style="--r-globalnav-flyout-item-number: 6;">
+							<ul class="globalnav-submenu-trigger-group">
+								<li class="globalnav-submenu-trigger-item">
+									<a href="/support/" aria-label="Support" class="globalnav-link globalnav-submenu-trigger-link globalnav-link-support">
+										<span class="globalnav-link-text-container">
+											<span class="globalnav-link-text">Support</span>
+										</span>
+										<span class="globalnav-link-chevron">
+											<svg height="48" viewBox="0 0 9 48" width="9" xmlns="http://www.w3.org/2000/svg">
+												<path d="m8.1155 30.358a.6.6 0 1 1 -.831.8653l-7-6.7242a.6.6 0 0 1 -.0045-.8613l7-6.8569a.6.6 0 1 1 .84.8574l-6.5582 6.4238z"></path>
+											</svg>
+										</span>
+									</a>
+								</li>
+								<li class="globalnav-submenu-trigger-item">
+									<button id="globalnav-menubutton-link-support" class="globalnav-submenu-trigger-button" aria-expanded="false" aria-controls="globalnav-submenu-link-support" aria-label="Support menu">
+										<span class="globalnav-image-regular globalnav-submenu-button-icon">
+											<svg height="10" viewBox="0 0 10 10" width="10" xmlns="http://www.w3.org/2000/svg">
+												<path d="m4.6725 6.635-2.655-2.667a.445.445 0 0 1 -.123-.304.4331.4331 0 0 1 .427-.439h.006a.447.447 0 0 1 .316.135l2.357 2.365 2.356-2.365a.458.458 0 0 1 .316-.135.433.433 0 0 1 .433.433v.006a.4189.4189 0 0 1 -.123.3l-2.655 2.671a.4451.4451 0 0 1 -.327.14.464.464 0 0 1 -.328-.14z"></path>
+											</svg>
+										</span>
+										<span class="globalnav-image-compact globalnav-submenu-button-icon">
+											<svg height="48" viewBox="0 0 9 48" width="9" xmlns="http://www.w3.org/2000/svg">
+												<path d="m7.4382 24.0621-6.5581-6.4238c-.2368-.2319-.2407-.6118-.0088-.8486.2324-.2373.6123-.2407.8486-.0088l7 6.8569c.1157.1138.1807.2695.1802.4316-.001.1621-.0674.3174-.1846.4297l-7 6.7242c-.1162.1118-.2661.1675-.4155.1675-.1577 0-.3149-.062-.4326-.1846-.2295-.2388-.2222-.6187.0171-.8481l6.5537-6.2959z"></path>
+											</svg>
+										</span>
+									</button>
+								</li>
+							</ul>
+							<div id="globalnav-submenu-link-support" class="globalnav-flyout globalnav-submenu" aria-labelledby="globalnav-menubutton-link-support" style="--r-globalnav-flyout-item-total: 0; --r-globalnav-flyout-group-number: 0; --r-globalnav-flyout-height: auto; --r-globalnav-flyout-rate: 240ms;">
+								<div class="globalnav-flyout-scroll-container">
+									<div class="globalnav-flyout-content globalnav-submenu-content" style="--r-globalnav-flyout-elevated-group-count: 1; --r-globalnav-flyout-group-total: 2; --r-globalnav-flyout-item-total: 7;">
+										<!-- Explore -->
+										<div class="globalnav-submenu-group globalnav-submenu-group-elevated" style="--r-globalnav-flyout-group-number: 0;">
+
+											<h2 class="globalnav-submenu-header" id="explore-support" style="--r-globalnav-flyout-item-number: 1;">Explore Support</h2>
+											<ul class="globalnav-submenu-list" aria-labelledby="explore-support">
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 2;"><a href="/support/" class="globalnav-submenu-link">Overview</a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 3;"><a href="/help/" class="globalnav-submenu-link">Help Guides</a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 4;"><a href="/forums/" class="globalnav-submenu-link">Developer Forums<span class="loc-en-only"></span></a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 5;"><a href="/feedback-assistant/" class="globalnav-submenu-link">Feedback Assistant</a></li>
+												<li class="globalnav-submenu-list-item-elevated" style="--r-globalnav-flyout-item-number: 6;"><a href="/contact/" class="globalnav-submenu-link">Contact Us</a></li>
+											</ul>
+										</div>
+										<!-- Featured -->
+										<div class="globalnav-submenu-group" style="--r-globalnav-flyout-group-number: 1;">
+
+											<h2 class="globalnav-submenu-header" id="support-help" style="--r-globalnav-flyout-item-number: 1;">Featured</h2>
+											<ul class="globalnav-submenu-list" aria-labelledby="support-help">
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 2;"><a href="/help/account/" class="globalnav-submenu-link">Account Help</a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 3;"><a href="/app-store/review/guidelines/" class="globalnav-submenu-link">App Review Guidelines</a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 4;"><a href="/help/app-store-connect/" class="globalnav-submenu-link">App Store Connect Help</a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 5;"><a href="/news/upcoming-requirements/" class="globalnav-submenu-link">Upcoming Requirements</a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 6;"><a href="/support/terms/" class="globalnav-submenu-link">Agreements and Guidelines</a></li>
+												<li class="globalnav-submenu-list-item" style="--r-globalnav-flyout-item-number: 7;"><a href="/system-status/" class="globalnav-submenu-link">System Status<span class="loc-en-only"></span></a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</li>
+			<!-- Search -->
+			<li data-topnav-flyout-label="Search" class="globalnav-item globalnav-search shift-0-1" data-globalnav-iconflyout-enabled="true">
+				<a role="button" id="globalnav-menubutton-link-search" href="/search/" data-topnav-flyout-trigger-regular="true" data-topnav-flyout-trigger-compact="true" aria-label="Search" class="globalnav-link globalnav-link-search">
+					<span class="globalnav-image-regular">
+						<svg xmlns="http://www.w3.org/2000/svg" width="15px" height="44px" viewBox="0 0 15 44">
+							<path d="M14.298,27.202l-3.87-3.87c0.701-0.929,1.122-2.081,1.122-3.332c0-3.06-2.489-5.55-5.55-5.55c-3.06,0-5.55,2.49-5.55,5.55 c0,3.061,2.49,5.55,5.55,5.55c1.251,0,2.403-0.421,3.332-1.122l3.87,3.87c0.151,0.151,0.35,0.228,0.548,0.228 s0.396-0.076,0.548-0.228C14.601,27.995,14.601,27.505,14.298,27.202z M1.55,20c0-2.454,1.997-4.45,4.45-4.45 c2.454,0,4.45,1.997,4.45,4.45S8.454,24.45,6,24.45C3.546,24.45,1.55,22.454,1.55,20z"></path>
+						</svg>
+					</span>
+					<span class="globalnav-image-compact">
+						<svg height="48" viewBox="0 0 17 48" width="17" xmlns="http://www.w3.org/2000/svg">
+							<path d="m16.2294 29.9556-4.1755-4.0821a6.4711 6.4711 0 1 0 -1.2839 1.2625l4.2005 4.1066a.9.9 0 1 0 1.2588-1.287zm-14.5294-8.0017a5.2455 5.2455 0 1 1 5.2455 5.2527 5.2549 5.2549 0 0 1 -5.2455-5.2527z"></path>
+						</svg>
+					</span>
+				</a>
+				<div id="globalnav-submenu-search" aria-labelledby="globalnav-menubutton-link-search" class="globalnav-flyout globalnav-submenu" style="--r-globalnav-flyout-item-total: 0; --r-globalnav-flyout-group-number: 0; --r-globalnav-flyout-height: 388px; --r-globalnav-flyout-rate: 240ms;">
+					<div class="globalnav-flyout-scroll-container">
+						<div class="globalnav-flyout-content globalnav-submenu-content">
+							<form action="/search/" method="get" class="globalnav-searchfield">
+								<div class="globalnav-searchfield-wrapper">
+									<input placeholder="Search" name="q" aria-label="Search" autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false" class="globalnav-searchfield-input">
+									<input id="globalnav-searchfield-src" type="hidden" name="src" value="globalnav">
+									<button aria-label="Clear search" tabindex="-1" type="button" class="globalnav-searchfield-reset" disabled="" aria-hidden="true">
+										<span class="globalnav-image-regular">
+											<svg height="14" viewBox="0 0 14 14" width="14" xmlns="http://www.w3.org/2000/svg">
+												<path d="m7 .0339a6.9661 6.9661 0 1 0 6.9661 6.9661 6.9661 6.9661 0 0 0 -6.9661-6.9661zm2.798 8.9867a.55.55 0 0 1 -.778.7774l-2.02-2.02-2.02 2.02a.55.55 0 0 1 -.7784-.7774l2.0206-2.0206-2.0204-2.02a.55.55 0 0 1 .7782-.7778l2.02 2.02 2.02-2.02a.55.55 0 0 1 .778.7778l-2.0203 2.02z"></path>
+											</svg>
+										</span>
+										<span class="globalnav-image-compact">
+											<svg height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+												<path d="m0 8a8.0474 8.0474 0 0 1 7.9922-8 8.0609 8.0609 0 0 1 8.0078 8 8.0541 8.0541 0 0 1 -8 8 8.0541 8.0541 0 0 1 -8-8zm5.6549 3.2863 2.3373-2.353 2.3451 2.353a.6935.6935 0 0 0 .4627.1961.6662.6662 0 0 0 .6667-.6667.6777.6777 0 0 0 -.1961-.4706l-2.3451-2.3373 2.3529-2.3607a.5943.5943 0 0 0 .1961-.4549.66.66 0 0 0 -.6667-.6589.6142.6142 0 0 0 -.447.1961l-2.3686 2.3606-2.353-2.3527a.6152.6152 0 0 0 -.447-.1883.6529.6529 0 0 0 -.6667.651.6264.6264 0 0 0 .1961.4549l2.3451 2.3529-2.3451 2.353a.61.61 0 0 0 -.1961.4549.6661.6661 0 0 0 .6667.6667.6589.6589 0 0 0 .4627-.1961z"></path>
+											</svg>
+										</span>
+									</button>
+									<button aria-label="Submit search" tabindex="-1" aria-hidden="true" type="submit" class="globalnav-searchfield-submit" disabled="">
+										<span class="globalnav-image-regular">
+											<svg height="32" viewBox="0 0 30 32" width="30" xmlns="http://www.w3.org/2000/svg">
+												<path d="m23.3291 23.3066-4.35-4.35c-.0105-.0105-.0247-.0136-.0355-.0235a6.8714 6.8714 0 1 0 -1.5736 1.4969c.0214.0256.03.0575.0542.0815l4.35 4.35a1.1 1.1 0 1 0 1.5557-1.5547zm-15.4507-8.582a5.6031 5.6031 0 1 1 5.603 5.61 5.613 5.613 0 0 1 -5.603-5.61z"></path>
+											</svg>
+										</span>
+										<span class="globalnav-image-compact">
+											<svg width="38" height="40" viewBox="0 0 38 40" xmlns="http://www.w3.org/2000/svg">
+												<path d="m28.6724 27.8633-5.07-5.07c-.0095-.0095-.0224-.0122-.032-.0213a7.9967 7.9967 0 1 0 -1.8711 1.7625c.0254.03.0357.0681.0642.0967l5.07 5.07a1.3 1.3 0 0 0 1.8389-1.8379zm-18.0035-10.0033a6.5447 6.5447 0 1 1 6.545 6.5449 6.5518 6.5518 0 0 1 -6.545-6.5449z"></path>
+											</svg>
+										</span>
+									</button>
+								</div>
+							</form>
+							<div class="globalnav-searchresults">
+								<div class="globalnav-searchresults-current">
+									<div class="globalnav-searchresults-container" style="--r-globalnav-flyout-group-number: 0;">
+
+										<h2 class="globalnav-searchresults-header" style="--r-globalnav-flyout-item-number: 0;">Quick Links</h2>
+										<ul class="globalnav-searchresults-list" role="list">
+											<li class="globalnav-searchresults-list-item" role="listitem" style="--r-globalnav-flyout-item-number: 1;">
+												<a class="globalnav-searchresults-list-link" href="/events/" data-query="no keyword" data-section="quicklinks" data-items="5" data-index="0" data-label="Events">
+													<span class="globalnav-searchresults-list-icon">
+														<span class="globalnav-image-regular globalnav-link-image">
+															<svg height="16" viewBox="0 0 9 16" width="9" xmlns="http://www.w3.org/2000/svg">
+																<path d="m8.6124 8.1035-2.99 2.99a.5.5 0 0 1 -.7071-.7071l2.1366-2.1364h-6.316a.5.5 0 0 1 0-1h6.316l-2.1368-2.1367a.5.5 0 0 1 .7071-.7071l2.99 2.99a.5.5 0 0 1 .0002.7073z"></path>
+															</svg>
+														</span>
+														<span class="globalnav-image-compact globalnav-link-image">
+															<svg height="25" viewBox="0 0 13 25" width="13" xmlns="http://www.w3.org/2000/svg">
+																<path d="m12.3577 13.4238-4.4444 4.4444a.6.6 0 0 1 -.8486-.8477l3.37-3.37h-9.3231a.65.65 0 0 1 0-1.3008h9.3232l-3.37-3.37a.6.6 0 0 1 .8486-.8477l4.4444 4.4444a.5989.5989 0 0 1 -.0001.8474z"></path>
+															</svg>
+														</span>
+													</span>
+													<span class="globalnav-searchresults-list-text">Events</span>
+												</a>
+											</li>
+											<li class="globalnav-searchresults-list-item" role="listitem" style="--r-globalnav-flyout-item-number: 2;">
+												<a class="globalnav-searchresults-list-link" href="/news/" data-query="no keyword" data-section="quicklinks" data-items="5" data-index="1" data-label="News">
+													<span class="globalnav-searchresults-list-icon">
+														<span class="globalnav-image-regular globalnav-link-image">
+															<svg height="16" viewBox="0 0 9 16" width="9" xmlns="http://www.w3.org/2000/svg">
+																<path d="m8.6124 8.1035-2.99 2.99a.5.5 0 0 1 -.7071-.7071l2.1366-2.1364h-6.316a.5.5 0 0 1 0-1h6.316l-2.1368-2.1367a.5.5 0 0 1 .7071-.7071l2.99 2.99a.5.5 0 0 1 .0002.7073z"></path>
+															</svg>
+														</span>
+														<span class="globalnav-image-compact globalnav-link-image">
+															<svg height="25" viewBox="0 0 13 25" width="13" xmlns="http://www.w3.org/2000/svg">
+																<path d="m12.3577 13.4238-4.4444 4.4444a.6.6 0 0 1 -.8486-.8477l3.37-3.37h-9.3231a.65.65 0 0 1 0-1.3008h9.3232l-3.37-3.37a.6.6 0 0 1 .8486-.8477l4.4444 4.4444a.5989.5989 0 0 1 -.0001.8474z"></path>
+															</svg>
+														</span>
+													</span>
+													<span class="globalnav-searchresults-list-text">News</span>
+												</a>
+											</li>
+											<li class="globalnav-searchresults-list-item" role="listitem" style="--r-globalnav-flyout-item-number: 3;">
+												<a class="globalnav-searchresults-list-link" href="/forums/" data-query="no keyword" data-section="quicklinks" data-items="5" data-index="2" data-label="Forums">
+													<span class="globalnav-searchresults-list-icon">
+														<span class="globalnav-image-regular globalnav-link-image">
+															<svg height="16" viewBox="0 0 9 16" width="9" xmlns="http://www.w3.org/2000/svg">
+																<path d="m8.6124 8.1035-2.99 2.99a.5.5 0 0 1 -.7071-.7071l2.1366-2.1364h-6.316a.5.5 0 0 1 0-1h6.316l-2.1368-2.1367a.5.5 0 0 1 .7071-.7071l2.99 2.99a.5.5 0 0 1 .0002.7073z"></path>
+															</svg>
+														</span>
+														<span class="globalnav-image-compact globalnav-link-image">
+															<svg height="25" viewBox="0 0 13 25" width="13" xmlns="http://www.w3.org/2000/svg">
+																<path d="m12.3577 13.4238-4.4444 4.4444a.6.6 0 0 1 -.8486-.8477l3.37-3.37h-9.3231a.65.65 0 0 1 0-1.3008h9.3232l-3.37-3.37a.6.6 0 0 1 .8486-.8477l4.4444 4.4444a.5989.5989 0 0 1 -.0001.8474z"></path>
+															</svg>
+														</span>
+													</span>
+													<span class="globalnav-searchresults-list-text">Forums<span class="loc-en-only"></span></span>
+												</a>
+											</li>
+											<li class="globalnav-searchresults-list-item" role="listitem" style="--r-globalnav-flyout-item-number: 4;">
+												<a class="globalnav-searchresults-list-link" href="/documentation/samplecode/" data-query="no keyword" data-section="quicklinks" data-items="5" data-index="3" data-label="Sample Code">
+													<span class="globalnav-searchresults-list-icon">
+														<span class="globalnav-image-regular globalnav-link-image">
+															<svg height="16" viewBox="0 0 9 16" width="9" xmlns="http://www.w3.org/2000/svg">
+																<path d="m8.6124 8.1035-2.99 2.99a.5.5 0 0 1 -.7071-.7071l2.1366-2.1364h-6.316a.5.5 0 0 1 0-1h6.316l-2.1368-2.1367a.5.5 0 0 1 .7071-.7071l2.99 2.99a.5.5 0 0 1 .0002.7073z"></path>
+															</svg>
+														</span>
+														<span class="globalnav-image-compact globalnav-link-image">
+															<svg height="25" viewBox="0 0 13 25" width="13" xmlns="http://www.w3.org/2000/svg">
+																<path d="m12.3577 13.4238-4.4444 4.4444a.6.6 0 0 1 -.8486-.8477l3.37-3.37h-9.3231a.65.65 0 0 1 0-1.3008h9.3232l-3.37-3.37a.6.6 0 0 1 .8486-.8477l4.4444 4.4444a.5989.5989 0 0 1 -.0001.8474z"></path>
+															</svg>
+														</span>
+													</span>
+													<span class="globalnav-searchresults-list-text">Sample Code<span class="loc-en-only"></span></span>
+												</a>
+											</li>
+											<li class="globalnav-searchresults-list-item" role="listitem" style="--r-globalnav-flyout-item-number: 5;">
+												<a class="globalnav-searchresults-list-link" href="/videos/" data-query="no keyword" data-section="quicklinks" data-items="5" data-index="4" data-label="Videos">
+													<span class="globalnav-searchresults-list-icon">
+														<span class="globalnav-image-regular globalnav-link-image">
+															<svg height="16" viewBox="0 0 9 16" width="9" xmlns="http://www.w3.org/2000/svg">
+																<path d="m8.6124 8.1035-2.99 2.99a.5.5 0 0 1 -.7071-.7071l2.1366-2.1364h-6.316a.5.5 0 0 1 0-1h6.316l-2.1368-2.1367a.5.5 0 0 1 .7071-.7071l2.99 2.99a.5.5 0 0 1 .0002.7073z"></path>
+															</svg>
+														</span>
+														<span class="globalnav-image-compact globalnav-link-image">
+															<svg height="25" viewBox="0 0 13 25" width="13" xmlns="http://www.w3.org/2000/svg">
+																<path d="m12.3577 13.4238-4.4444 4.4444a.6.6 0 0 1 -.8486-.8477l3.37-3.37h-9.3231a.65.65 0 0 1 0-1.3008h9.3232l-3.37-3.37a.6.6 0 0 1 .8486-.8477l4.4444 4.4444a.5989.5989 0 0 1 -.0001.8474z"></path>
+															</svg>
+														</span>
+													</span>
+													<span class="globalnav-searchresults-list-text">Videos</span>
+												</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</li>
+			<!-- Account -->
+			<li id="globalnav-account" class="globalnav-item globalnav-account">
+				<div class="globalnav-account-wrapper">
+					<a href="/account/" aria-label="Account" class="globalnav-link globalnav-link-account">
+						<span class="globalnav-image-regular globalnav-link-image" aria-hidden="true">
+							<svg width="17" height="47" viewBox="0 0 117.045 120" xmlns="http://www.w3.org/2000/svg" focusable="false" preserveAspectRatio="xMidYMid meet">
+								<path fill="currentColor" d="M58.496,109.742c27.503,0 49.825,-22.271 49.825,-49.774c0,-27.503 -22.322,-49.773 -49.825,-49.773c-27.451,0 -49.773,22.27 -49.773,49.773c0,27.503 22.322,49.774 49.773,49.774zM58.496,101.474c-22.945,0 -41.465,-18.561 -41.465,-41.506c0,-22.944 18.52,-41.506 41.465,-41.506c22.945,0 41.506,18.562 41.506,41.506c0,22.945 -18.561,41.506 -41.506,41.506zM91.931,92.156l-0.156,-0.549c-2.433,-7.174 -15.338,-15.037 -33.279,-15.037c-17.92,0 -30.773,7.852 -33.227,15.005l-0.156,0.581c8.825,8.692 23.891,13.762 33.394,13.762c9.575,0 24.525,-5.028 33.424,-13.762zM58.496,68.304c9.398,0.103 16.759,-7.924 16.759,-18.421c0,-9.875 -7.393,-18.048 -16.759,-18.048c-9.314,0 -16.769,8.173 -16.707,18.048c0.052,10.497 7.31,18.317 16.707,18.421z" />
+							</svg>
+						</span>
+						<span class="globalnav-image-compact globalnav-link-image" aria-hidden="true">
+							<svg width="20" height="51" viewBox="0 0 117.045 120" xmlns="http://www.w3.org/2000/svg" focusable="false" preserveAspectRatio="xMidYMid meet">
+								<path fill="currentColor" d="M58.496,109.742c27.503,0 49.825,-22.271 49.825,-49.774c0,-27.503 -22.322,-49.773 -49.825,-49.773c-27.451,0 -49.773,22.27 -49.773,49.773c0,27.503 22.322,49.774 49.773,49.774zM58.496,101.474c-22.945,0 -41.465,-18.561 -41.465,-41.506c0,-22.944 18.52,-41.506 41.465,-41.506c22.945,0 41.506,18.562 41.506,41.506c0,22.945 -18.561,41.506 -41.506,41.506zM91.931,92.156l-0.156,-0.549c-2.433,-7.174 -15.338,-15.037 -33.279,-15.037c-17.92,0 -30.773,7.852 -33.227,15.005l-0.156,0.581c8.825,8.692 23.891,13.762 33.394,13.762c9.575,0 24.525,-5.028 33.424,-13.762zM58.496,68.304c9.398,0.103 16.759,-7.924 16.759,-18.421c0,-9.875 -7.393,-18.048 -16.759,-18.048c-9.314,0 -16.769,8.173 -16.707,18.048c0.052,10.497 7.31,18.317 16.707,18.421z" />
+							</svg>
+						</span>
+					</a>
+				</div>
+			</li>
+		</ul>
+		<div class="globalnav-menutrigger">
+			<button id="globalnav-menutrigger-button" aria-controls="globalnav-list" aria-label="Menu" class="globalnav-menutrigger-button"><svg width="18" height="18" viewBox="0 0 18 18">
+					<polyline id="globalnav-menutrigger-bread-bottom" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" points="2 12, 16 12" class="globalnav-menutrigger-bread globalnav-menutrigger-bread-bottom">
+						<animate id="globalnav-anim-menutrigger-bread-bottom-open" attributeName="points" keyTimes="0;0.5;1" dur="0.24s" begin="indefinite" fill="freeze" calcMode="spline" keySplines="0.42, 0, 1, 1;0, 0, 0.58, 1" values=" 2 12, 16 12; 2 9, 16 9; 3.5 15, 15 3.5"></animate>
+						<animate id="globalnav-anim-menutrigger-bread-bottom-close" attributeName="points" keyTimes="0;0.5;1" dur="0.24s" begin="indefinite" fill="freeze" calcMode="spline" keySplines="0.42, 0, 1, 1;0, 0, 0.58, 1" values=" 3.5 15, 15 3.5; 2 9, 16 9; 2 12, 16 12"></animate>
+					</polyline>
+					<polyline id="globalnav-menutrigger-bread-top" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" points="2 5, 16 5" class="globalnav-menutrigger-bread globalnav-menutrigger-bread-top">
+						<animate id="globalnav-anim-menutrigger-bread-top-open" attributeName="points" keyTimes="0;0.5;1" dur="0.24s" begin="indefinite" fill="freeze" calcMode="spline" keySplines="0.42, 0, 1, 1;0, 0, 0.58, 1" values=" 2 5, 16 5; 2 9, 16 9; 3.5 3.5, 15 15"></animate>
+						<animate id="globalnav-anim-menutrigger-bread-top-close" attributeName="points" keyTimes="0;0.5;1" dur="0.24s" begin="indefinite" fill="freeze" calcMode="spline" keySplines="0.42, 0, 1, 1;0, 0, 0.58, 1" values=" 3.5 3.5, 15 15; 2 9, 16 9; 2 5, 16 5"></animate>
+					</polyline>
+				</svg>
+			</button>
+		</div>
+	</div>
+	<span style="visibility: hidden; position: absolute; top: 0px; z-index: -1;">&nbsp;</span>
+</nav>
+<!-- <div class="globalnav-placeholder"></div> -->
+<script src="/assets/scripts/ac-globalnav.built.js?01172638057"></script>
+	<!-- metrics -->
+<script>
+	/* RSID: */
+	var s_account="awdappledeveloper"
+</script>	
+<script src="/assets/metrics/scripts/analytics.js"></script>
+<script>
+	s_sections = [
+		{
+			"pattern": "^/documentation",
+			"channel": "www.documentation.developer"
+		},
+		{
+			"pattern": "^/library",
+			"channel": "www.documentation.developer"
+		},
+		{
+			"pattern": "^/tutorials",
+			"channel": "www.documentation.developer"
+		},	
+		{
+			"pattern": "human\\-interface\\-guidelines",
+			"channel": "www.hig.developer"
+		},
+		{
+			"pattern": "/testflight/",
+			"channel": "www.appstoreconnect.developer"
+		},
+		{
+			"pattern": "/app\\-store\\-connect/",
+			"channel": "www.appstoreconnect.developer"
+		},
+		{
+			"pattern": "/support/app\\-store\\-connect/",
+			"channel": "www.appstoreconnect.developer"
+		},
+		{
+			"pattern": "/help/app\\-store\\-connect/",
+			"channel": "www.appstoreconnect.developer"
+		},
+		{
+			"pattern": "/wwdc/",
+			"channel": "www.wwdc.developer"
+		},
+		{
+			"pattern": "/wwdc\\d{2}/",
+			"channel": "www.wwdc.developer"
+		},
+		{
+			"pattern": "/videos/",
+			"channel": "www.videos.developer"
+		},
+		{
+			"pattern": "^/account",
+			"channel": "www.account.developer"
+		},
+		{
+			"pattern": "downloads?",
+			"channel": "www.download.developer"
+		},
+		{
+			"pattern": "/localization/",
+			"channel": "www.appstore.developer"
+		},	
+		{
+			"pattern": "/app\\-store/",
+			"channel": "www.appstore.developer"
+		},
+		{
+			"pattern": "/in\\-app\\-purchase/",
+			"channel": "www.appstore.developer"
+		},
+		{
+			"pattern": "/cn/",
+			"channel": "www.cn.developer"
+		},
+		{
+			"pattern": "/jp/",
+			"channel": "www.jp.developer"
+		},
+		{
+			"pattern": "/kr/",
+			"channel": "www.kr.developer"
+		},
+		{
+			"pattern": "/de/",
+			"channel": "www.de.developer"
+		},
+		{
+			"pattern": "/la/",
+			"channel": "www.la.developer"
+		},
+		{
+			"pattern": "/fr/",
+			"channel": "www.fr.developer"
+		},
+		{
+			"pattern": "/it/",
+			"channel": "www.it.developer"
+		},
+		{
+			"pattern": "/br/",
+			"channel": "www.br.developer"
+		}
+	];
+	
+	s.pageName= AC && AC.Tracking && AC.Tracking.pageName();
+	s.channel="www.en.developer";
+	
+	s_sections.forEach((s_section) => {
+		var regex = new RegExp(s_section.pattern);
+		
+		if(location.pathname.search(regex) !== -1) {
+			s.channel=s_section.channel;
+		}
+	});
+	
+	/************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/
+	var s_code=s.t();if(s_code)document.write(s_code)
+</script>
+<!-- /metrics -->
+
+	<link rel="stylesheet" property="stylesheet" href="/assets/styles/localnav.css" type="text/css" />
+<input type="checkbox" id="localnav-menustate" class="localnav-menustate"/>
+<nav id="localnav" class="localnav localnav-scrim" data-sticky role="navigation">
+	<div class="localnav-wrapper">
+		<div class="localnav-background"></div>
+		<div class="localnav-content">
+			<h2 class="localnav-title">
+				<a href="/videos/">Videos</a>
+			</h2>
+
+			<div class="localnav-menu">
+				<a href="#localnav-menustate" class="localnav-menucta-anchor localnav-menucta-anchor-open" id="localnav-menustate-open">
+					<span class="localnav-menucta-anchor-label">Open Menu</span>
+				</a>
+				<a href="#" class="localnav-menucta-anchor localnav-menucta-anchor-close" id="localnav-menustate-close">
+					<span class="localnav-menucta-anchor-label">Close Menu</span>
+				</a>
+				<div class="localnav-menu-tray">
+					<ul class="localnav-menu-items">
+						<li class="localnav-menu-item">
+							<a href="/videos/" class="localnav-menu-link">Collections</a>
+						</li>
+						<li class="localnav-menu-item">
+							<a href="/videos/topics/" class="localnav-menu-link">Topics</a>
+						</li>
+						<li class="localnav-menu-item">
+							<a href="/videos/all-videos/" class="localnav-menu-link">All Videos</a>
+						</li>
+						<li class="localnav-menu-item">
+							<a href="/videos/about/" class="localnav-menu-link">About</a>
+						</li>
+					</ul>
+				</div>
+				<div class="localnav-actions localnav-actions-center">
+					<div class="localnav-action localnav-action-menucta" aria-hidden="true">
+						<label for="localnav-menustate" class="localnav-menucta">
+							<span class="localnav-menucta-chevron"></span>
+						</label>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</nav>
+<label id="localnav-curtain" for="localnav-menustate"></label>
+<script src="/assets/scripts/ac-localnav.built.js"></script>
+<script type="text/javascript" src="/assets/scripts/localnav.js"></script>
+	<main id="main" class="main " role="main">
+
+		<section >
+
+			<div class="section-content">
+								<section class="row">
+					<section class="column large-12 small-12  padding-top-small large-centered no-padding-bottom">
+						<!-- back link -->
+						<p class="back-link smaller">
+														<a class="icon icon-before icon-chevronleft" href="/videos/">More Videos</a>
+													</p>
+					</section>
+				</section>
+								
+				<!-- video player -->
+				<section class="video-wrapper row">
+					<section class="column large-12 small-12  padding-top-small padding-bottom-small large-centered">
+												<div class="developer-video-player">
+							<div id="video-status-overlay" class="developer-video-overlay" style="display: none">
+								<div class="video-status-content">
+									<div id="video-status-text"></div>
+									<img class="video-status-icon" id="icon-backward" src="/assets/elements/icons/symbols/gobackward5.svg" style="display: none" />
+									<img class="video-status-icon" id="icon-forward" src="/assets/elements/icons/symbols/goforward5.svg" style="display: none" />
+								</div>
+							</div>
+							<video id="video" class="video large-centered" poster="https://devimages-cdn.apple.com/wwdc-services/images/49/3565/3565_wide_900x506_2x.jpg" controls="" preload="none" src="https://devstreaming-cdn.apple.com/videos/wwdc/2020/10020/6/E082026F-7D80-4814-9A23-5A52E4CBF628/master.m3u8" data-id="wwdc2020-10020" data-locale="en" data-hero-source="https://devimages-cdn.apple.com/wwdc-services/images/49/3565/3565_wide_900x506_2x.jpg"></video>
+						</div>
+						<div class="no-video-banner hidden">
+							<div class="no-video-copy">
+								<img src="https://devimages-cdn.apple.com/wwdc-services/images/49/3565/3565_wide_900x506_2x.jpg" style="width:100%">
+							</div>
+							</span>
+						</div>
+
+											</section>
+				</section>
+
+			</section>
+
+		</section>
+
+		<section class="bg-light padding-top-small padding-bottom">
+
+			<div class="section-content">
+		
+			<!-- tab menu -->
+			<section class="tab-menu row divider-bottom">
+
+				<section class="column large-11 small-12  padding-top-small padding-bottom-small large-centered tab-menu-container">
+										 
+																				<ul class="tabs">
+						
+						<li class="tab" data-supplement-id="details" data-language-code="en" data-video-id="wwdc2020-10020" ><a href="#"><span class="smaller">About</span></a></li>
+						
+						
+												<li class="tab" data-supplement-id="transcript" data-language-code="en" data-video-id="wwdc2020-10020"><a href="#"><span class="smaller">Transcript</span></a></li>
+																		<li class="tab" data-supplement-id="sample-code" data-language-code="en" data-video-id="wwdc2020-10020"><a href="#"><span class="smaller">Code</span></a></li>
+												
+					</ul>
+									</section>
+
+			</section>
+
+			<!-- supplements -->
+			<section class="row">
+
+				<section class="column large-11 small-12  large-centered no-padding-top no-padding-bottom">
+
+					<ul class="supplements hidden">
+
+						<!-- details -->
+						<li class="supplement details " data-supplement-id="details">
+							
+							<div class="badge-available-on-wrapper">
+														<h1>Make your app visually accessible</h1>
+							</div>
+
+							<p>When you design with accessibility in mind, you empower everyone to use your app. Discover how to create an adaptive interface for your app that takes a thoughtful approach to color, provides readable text, and accommodates other visual settings to maintain a great experience throughout.<br />
+<br />
+We've designed this session like our user interfaces —&nbsp;to be accessible to all. If you'd like to learn even more about accessibility and design, you may also enjoy “Visual Design and Accessibility,” “Accessibility Inspector,” “Building Apps with Dynamic Type,” and “Introducing SF Symbols.”</p>
+
+							
+														<h2>Resources</h2>
+
+							<ul class="links small">
+																																					<li class="document"><a href="https://developer.apple.com/documentation/UIKit/accessibility-for-uikit" target="_blank">Accessibility for UIKit</a></li>
+																											
+																	<li class="download">
+										<ul class="options">
+																						<li><a href="https://devstreaming-cdn.apple.com/videos/wwdc/2020/10020/6/E082026F-7D80-4814-9A23-5A52E4CBF628/wwdc2020_10020_hd.mp4?dl=1">HD Video</a></li>
+																																	<li><a href="https://devstreaming-cdn.apple.com/videos/wwdc/2020/10020/6/E082026F-7D80-4814-9A23-5A52E4CBF628/wwdc2020_10020_sd.mp4?dl=1">SD Video</a></li>
+																					</ul>
+									</li>
+																
+															</ul>
+							
+														<div class="divider-top margin-top-small padding-bottom-small"></div>
+							<h2>Related Videos</h2>
+														<h4>WWDC23</h4>
+								<ul class="links small">
+																			<li class="video">
+											<a href="/videos/play/wwdc2023/10034">Create accessible spatial experiences</a>
+										</li>
+																	</ul>
+														<h4>WWDC21</h4>
+								<ul class="links small">
+																			<li class="video">
+											<a href="/videos/play/wwdc2021/10223">Create accessible experiences for watchOS</a>
+										</li>
+																	</ul>
+														<h4>WWDC19</h4>
+								<ul class="links small">
+																			<li class="video">
+											<a href="/videos/play/wwdc2019/257">Accessibility Inspector</a>
+										</li>
+																			<li class="video">
+											<a href="/videos/play/wwdc2019/206">Introducing SF Symbols</a>
+										</li>
+																			<li class="video">
+											<a href="/videos/play/wwdc2019/244">Visual Design and Accessibility</a>
+										</li>
+																	</ul>
+														
+						</li>
+
+						<!-- transcript -->
+						<li class="supplement transcript" data-supplement-id="transcript" data-shortcut-base-url="/videos/play/wwdc2020/10020/">
+							<div class="grid grid-gutterless margin-bottom-small">
+								<div class="grid-item large-span-11 medium-span-11 small-span-11">
+									<div class="form-textbox form-textbox-with-lefticon form-textbox-with-righticon">
+										<input type="text" id="transcript-search-box" class="transcript-search searchbar form-textbox-input" aria-labelledby="textbox-label"  />
+										<span class="form-textbox-label" id="textbox-label" aria-hidden="true">Search this video…</span>
+										<div class="form-textbox-lefticon form-icons-focusable">
+											<span class="form-icons form-icons-search15"></span>
+										</div>
+									</div>
+								</div>
+								<div class="grid-item large-span-1 medium-span-1 small-span-1">									
+									<div style="font-size:34px" id="get-transcript">
+										<sf-symbol name="arrow.down.document" weight="light" scale="small" mode="hierarchical"></sf-symbol>
+									</div>
+
+								</div>
+							</div>
+
+							<section id="transcript-content">
+								<p><span class="sentence"><span data-start="3.0">Hello, and welcome to WWDC.</p><p></span></span><span class="sentence"><span data-start="8.0">Hi, everyone. </span></span><span class="sentence"><span data-start="9.0">My name is Drew Haas, and I'm an engineer on the accessibility team. </span></span><span class="sentence"><span data-start="13.0">Today, I'm going to talk about how you can make your app visually accessible.</p><p></span></span><span class="sentence"><span data-start="18.0">When you think about visual accessibility, </span></span><span class="sentence"><span data-start="21.0">you might think about VoiceOver, the built-in screen reader on iOS. </span></span><span class="sentence"><span data-start="25.0">And you'd be right, because VoiceOver speaks the items on-screen.</p><p></span></span><span class="sentence"><span data-start="30.0">It also allows you to navigate and interact with your device </span></span><span class="sentence"><span data-start="33.0">without you needing to look at it. </span></span><span class="sentence"><span data-start="35.0">But there's so much more to visual accessibility.</p><p></span></span><span class="sentence"><span data-start="39.0">Vision loss is best described as a broad continuum. </span></span><span class="sentence"><span data-start="43.0">That's because people experience a wide range of visual impairment. </span></span><span class="sentence"><span data-start="47.0">Some people have full sight, partial sight or low sight, </span></span><span class="sentence"><span data-start="51.0">and some have no sight at all. </span></span><span class="sentence"><span data-start="53.0">And there's a lot in between, like color blindness, </span></span><span class="sentence"><span data-start="56.0">light sensitivity, motion sensitivity and more. </span></span><span class="sentence"><span data-start="60.0">Since each person's experience with vision loss is unique, </span></span><span class="sentence"><span data-start="63.0">iOS offers a range of visual accessibility settings </span></span><span class="sentence"><span data-start="67.0">so that everyone can get the most out of their device </span></span><span class="sentence"><span data-start="69.0">in a way that works best for them. </span></span><span class="sentence"><span data-start="71.0">Today, I'll talk about some of the great ways that your app </span></span><span class="sentence"><span data-start="75.0">can provide a visual experience that is inclusive to everyone.</p><p></span></span><span class="sentence"><span data-start="79.0">First, I'll talk about the use of color and shapes in your app, </span></span><span class="sentence"><span data-start="83.0">which are a great way for you to add a personal touch, like branding.</p><p></span></span><span class="sentence"><span data-start="87.0">Next, I want to break down what it means for text to be readable. </span></span><span class="sentence"><span data-start="91.0">You can leverage different text attributes and layout changes in your app </span></span><span class="sentence"><span data-start="94.0">to make sure everyone has a great reading experience. </span></span><span class="sentence"><span data-start="97.0">And last, in accessibility settings, </span></span><span class="sentence"><span data-start="99.0">users can customize their display preferences, </span></span><span class="sentence"><span data-start="102.0">which may alter the appearance of your app. </span></span><span class="sentence"><span data-start="104.0">I'll make sure you know just what to look out for </span></span><span class="sentence"><span data-start="106.0">as you make your app visually accessible. </span></span><span class="sentence"><span data-start="109.0">When designing an app, sometimes you may ask yourself, </span></span><span class="sentence"><span data-start="112.0">"How can I make this particular UI element stand out?" </span></span><span class="sentence"><span data-start="116.0">Using color is often a great way to create emphasis, </span></span><span class="sentence"><span data-start="119.0">but we don't want to rely on color alone. </span></span><span class="sentence"><span data-start="122.0">That's because for people that are color-blind or have low vision, </span></span><span class="sentence"><span data-start="126.0">using color only to create emphasis can get lost. </span></span><span class="sentence"><span data-start="128.0">There are extra steps you can take to achieve good design, </span></span><span class="sentence"><span data-start="132.0">and I'll give you a hint: </span></span><span class="sentence"><span data-start="133.0">It's shapes. </span></span><span class="sentence"><span data-start="135.0">I'm searching for a new game to play in Apple Arcade.</p><p></span></span><span class="sentence"><span data-start="139.0">Sneaky Sasquatch looks like fun. </span></span><span class="sentence"><span data-start="141.0">In the App Store, buttons use the color system blue, </span></span><span class="sentence"><span data-start="144.0">and some use shapes to help them stand out...</p><p></span></span><span class="sentence"><span data-start="148.0">like the "start playing" button, </span></span><span class="sentence"><span data-start="149.0">which is using color, and it has a shape around it.</p><p></span></span><span class="sentence"><span data-start="153.0">This really helps it stand out, </span></span><span class="sentence"><span data-start="155.0">and lets a viewer know it's not just a standard label. </span></span><span class="sentence"><span data-start="158.0">The extra visualization captures my attention and draws me in, </span></span><span class="sentence"><span data-start="162.0">but I'll have to save this game for later. </span></span><span class="sentence"><span data-start="164.0">Let's talk about another example. </span></span><span class="sentence"><span data-start="167.0">Although tab bars only use color by default to indicate the active tab, </span></span><span class="sentence"><span data-start="172.0">you can enable the Button Shapes accessibility setting </span></span><span class="sentence"><span data-start="175.0">to get additional visualizations. </span></span><span class="sentence"><span data-start="177.0">If you want your buttons to really stand out </span></span><span class="sentence"><span data-start="180.0">while the button shapes setting is enabled, </span></span><span class="sentence"><span data-start="182.0">we're bringing new API to iOS 14 to help you accomplish this.</p><p></span></span><span class="sentence"><span data-start="186.0">If you can't fit button shapes in your default design, </span></span><span class="sentence"><span data-start="189.0">you should provide an alternate appearance for people with this setting enabled.</p><p></span></span><span class="sentence"><span data-start="194.0">To check this setting, you can call button-Shapes-Enabled on UIAccessibility, </span></span><span class="sentence"><span data-start="198.0">or you can observe the button-Shapes- Enabled-Status-Did-Change-Notification </span></span><span class="sentence"><span data-start="202.0">to run some code on the fly when this setting is changed. </span></span><span class="sentence"><span data-start="206.0">Last year in iOS 13, we added new API for Differentiate without Color, </span></span><span class="sentence"><span data-start="210.0">and this is a great way to extend these ideas beyond just buttons. </span></span><span class="sentence"><span data-start="215.0">You should apply this design practice </span></span><span class="sentence"><span data-start="216.0">to things like status icons, text with distinguishing colors, </span></span><span class="sentence"><span data-start="220.0">or anything else that relies on color alone to convey meaning. </span></span><span class="sentence"><span data-start="224.0">If you aren't sure where to start, try using SF Symbols.</p><p></span></span><span class="sentence"><span data-start="229.0">We provide over 1,500 consistent, highly configurable symbols </span></span><span class="sentence"><span data-start="234.0">you can use in your app. </span></span><span class="sentence"><span data-start="235.0">There are so many to choose from, </span></span><span class="sentence"><span data-start="238.0">but if you don't find something that fits perfectly, </span></span><span class="sentence"><span data-start="240.0">you can create your own by expanding on icons provided by SF Symbols. </span></span><span class="sentence"><span data-start="245.0">Fun, right? </span></span><span class="sentence"><span data-start="247.0">SF Symbols are really powerful because they look great at any weight and scale. </span></span><span class="sentence"><span data-start="253.0">This means not only are you getting great symbolism, </span></span><span class="sentence"><span data-start="256.0">but you can configure the symbol to scale with text size and style. </span></span><span class="sentence"><span data-start="260.0">Let's dive in to some of my own UI, where I'm just getting started </span></span><span class="sentence"><span data-start="263.0">designing the visual experience with color and shapes. </span></span><span class="sentence"><span data-start="267.0">I'm working on a constellation tracking app, Starstruck.</p><p></span></span><span class="sentence"><span data-start="271.0">Early stages of development are the best time </span></span><span class="sentence"><span data-start="273.0">to start thinking about visual accessibility accommodations, </span></span><span class="sentence"><span data-start="277.0">but it's really never too late to dig in. </span></span><span class="sentence"><span data-start="279.0">I have a list of zodiac constellations, </span></span><span class="sentence"><span data-start="282.0">and I'm distinguishing between them by choosing a custom color for each.</p><p></span></span><span class="sentence"><span data-start="286.0">If you're color-blind, these might not stand out like I'd intend. </span></span><span class="sentence"><span data-start="290.0">Since I'm already working toward making these stand out, </span></span><span class="sentence"><span data-start="293.0">I don't want to stop at using just color, so I designed symbols to use in my app, </span></span><span class="sentence"><span data-start="298.0">giving each constellation a distinct visual experience </span></span><span class="sentence"><span data-start="302.0">by using color and shapes. </span></span><span class="sentence"><span data-start="305.0">This way, more people get to have a fun viewing experience when they use my app.</p><p></span></span><span class="sentence"><span data-start="311.0">I'm also using bold text optionally to improve readability here, </span></span><span class="sentence"><span data-start="315.0">and I'll touch more on that later.</p><p></span></span><span class="sentence"><span data-start="317.0">When we do use color in our apps, </span></span><span class="sentence"><span data-start="320.0">it's important to keep in mind that color contrast plays a huge role in readability, </span></span><span class="sentence"><span data-start="324.0">and it can be the difference between someone being able to see an element </span></span><span class="sentence"><span data-start="328.0">or having it completely blend in.</p><p></span></span><span class="sentence"><span data-start="331.0">The Increase Contrast accessibility setting makes elements stand out </span></span><span class="sentence"><span data-start="335.0">by updating colors to high-contrast appearances. </span></span><span class="sentence"><span data-start="339.0">iOS offers a range of system colors </span></span><span class="sentence"><span data-start="341.0">that automatically adapt to settings like Increase Contrast.</p><p></span></span><span class="sentence"><span data-start="345.0">If you're not using system colors, you'll need to be aware of this setting </span></span><span class="sentence"><span data-start="349.0">to improve the visual experience in your app. </span></span><span class="sentence"><span data-start="352.0">As a general rule, </span></span><span class="sentence"><span data-start="353.0">colors should get darker in Light Mode and lighter in Dark Mode. </span></span><span class="sentence"><span data-start="357.0">I know that might sound confusing, so here's an example.</p><p></span></span><span class="sentence"><span data-start="361.0">In default contrast, my zodiac symbols are using colors I designed them with, </span></span><span class="sentence"><span data-start="366.0">but when Increase Contrast is turned on, I need something a little bit darker here. </span></span><span class="sentence"><span data-start="371.0">Now, I want you to keep an eye on the symbols in each cell </span></span><span class="sentence"><span data-start="375.0">as I enable Increase Contrast in settings.</p><p></span></span><span class="sentence"><span data-start="378.0">Ready? </span></span><span class="sentence"><span data-start="380.0">Okay. </span></span><span class="sentence"><span data-start="381.0">I know that might have looked subtle, but this is a really big deal. </span></span><span class="sentence"><span data-start="385.0">For some people, having this boost in contrast can make a huge difference. </span></span><span class="sentence"><span data-start="389.0">If you are using custom colors and symbols like this in your app, </span></span><span class="sentence"><span data-start="393.0">you'll need update the tint color </span></span><span class="sentence"><span data-start="395.0">or provide alternate assets for high-contrast appearances.</p><p></span></span><span class="sentence"><span data-start="400.0">In my project's asset catalog, </span></span><span class="sentence"><span data-start="402.0">I can configure the appearance of my symbol </span></span><span class="sentence"><span data-start="404.0">by making changes in the Attributes Inspector. </span></span><span class="sentence"><span data-start="407.0">Under Appearances, you can check the High Contrast box </span></span><span class="sentence"><span data-start="411.0">to provide alternate versions of your symbols.</p><p></span></span><span class="sentence"><span data-start="415.0">The High Contrast appearance will be used when Increase Contrast is on.</p><p></span></span><span class="sentence"><span data-start="419.0">The Accessibility Inspector in Xcode has a super-handy Color Contrast Calculator.</p><p></span></span><span class="sentence"><span data-start="425.0">You can use this tool to calculate the contrast between any two colors. </span></span><span class="sentence"><span data-start="430.0">Here, I'm calculating the contrast between my white symbol, </span></span><span class="sentence"><span data-start="434.0">which is in the foreground, against my custom purple color in the background.</p><p></span></span><span class="sentence"><span data-start="438.0">This gives me a ratio of 4.5-to-1, </span></span><span class="sentence"><span data-start="441.0">which is generally the lowest acceptable ratio for most cases.</p><p></span></span><span class="sentence"><span data-start="445.0">And here's my symbol's high-contrast appearance. </span></span><span class="sentence"><span data-start="448.0">I'm darkening the background color to really make that symbol pop, </span></span><span class="sentence"><span data-start="452.0">and my ratio is way better, at 7.5-to-1.</p><p></span></span><span class="sentence"><span data-start="456.0">All right. Now that I've provided all of these variations, the work is done. </span></span><span class="sentence"><span data-start="461.0">iOS will automatically switch between them based on anyone's display preference.</p><p></span></span><span class="sentence"><span data-start="466.0">And a shout-out to Smart Invert Colors, which, like Dark Mode, </span></span><span class="sentence"><span data-start="470.0">darkens bright white UI elements.</p><p></span></span><span class="sentence"><span data-start="473.0">The difference is that Smart Invert Colors generally has higher contrast, </span></span><span class="sentence"><span data-start="477.0">so people with light sensitivity may prefer to use it. </span></span><span class="sentence"><span data-start="480.0">And whereas Dark Mode support in your apps is recommended, </span></span><span class="sentence"><span data-start="483.0">Smart Invert Colors is a system setting that asserts an inverted UI over any app. </span></span><span class="sentence"><span data-start="488.0">So it's great to keep in mind, </span></span><span class="sentence"><span data-start="490.0">someone using your app might prefer to use Smart Invert Colors.</p><p></span></span><span class="sentence"><span data-start="495.0">You should specially flag certain views in your app so they don't get inverted, </span></span><span class="sentence"><span data-start="498.0">like photos, videos and app icons.</p><p></span></span><span class="sentence"><span data-start="503.0">You can do that by setting accessibility-Ignores-Invert-Colors </span></span><span class="sentence"><span data-start="506.0">on any UIView subclass.</p><p></span></span><span class="sentence"><span data-start="510.0">So when designing with color and shapes, </span></span><span class="sentence"><span data-start="512.0">you should take a variety of approaches to create visual emphasis.</p><p></span></span><span class="sentence"><span data-start="516.0">Doing this adds a lot of character to your app-- Hello, branding-- </span></span><span class="sentence"><span data-start="520.0">while also making sure that the rich visual experience in your app </span></span><span class="sentence"><span data-start="523.0">is inclusive. </span></span><span class="sentence"><span data-start="525.0">And be sure to observe and respect people's preferences </span></span><span class="sentence"><span data-start="528.0">if your default design is not accommodating.</p><p></span></span><span class="sentence"><span data-start="531.0">Next, I want to talk about text readability.</p><p></span></span><span class="sentence"><span data-start="536.0">iOS provides support for changing the size of text on your device.</p><p></span></span><span class="sentence"><span data-start="540.0">Smaller text can provide a higher content density by fitting more words on-screen, </span></span><span class="sentence"><span data-start="545.0">and large text can make things easy on the eyes.</p><p></span></span><span class="sentence"><span data-start="549.0">Some people, however, rely on larger text sizes </span></span><span class="sentence"><span data-start="552.0">in order to read the content on their device.</p><p></span></span><span class="sentence"><span data-start="555.0">When designing your app, keep text size, weight, and layout in mind </span></span><span class="sentence"><span data-start="560.0">for clarity and readability. </span></span><span class="sentence"><span data-start="562.0">My biggest tip is to think about these early on in the design process. </span></span><span class="sentence"><span data-start="567.0">This is a great way to ensure your app looks good, </span></span><span class="sentence"><span data-start="569.0">not only for every content size, </span></span><span class="sentence"><span data-start="571.0">but also across many devices with different display sizes.</p><p></span></span><span class="sentence"><span data-start="576.0">So design with large text in mind. </span></span><span class="sentence"><span data-start="578.0">You should avoid truncating text as the content size increases </span></span><span class="sentence"><span data-start="582.0">so that the user doesn't miss out on anything. </span></span><span class="sentence"><span data-start="585.0">Instead, wrap labels and use all of the available display width.</p><p></span></span><span class="sentence"><span data-start="591.0">Remember those symbols I talked about earlier? </span></span><span class="sentence"><span data-start="593.0">Well, those also should scale with text.</p><p></span></span><span class="sentence"><span data-start="597.0">You can override the function trait-Collection-Did-Change, </span></span><span class="sentence"><span data-start="600.0">which gets called when display traits are adjusted on the device.</p><p></span></span><span class="sentence"><span data-start="605.0">And UITraitCollection lets you get the device's preferred content size category.</p><p></span></span><span class="sentence"><span data-start="610.0">And, yes, you can use a comparison operator </span></span><span class="sentence"><span data-start="613.0">to perform comparisons on this enum. </span></span><span class="sentence"><span data-start="615.0">It's my favorite thing ever. </span></span><span class="sentence"><span data-start="617.0">In Starstruck, when the user changes their text size, </span></span><span class="sentence"><span data-start="620.0">I want to calculate whether it's a default font size </span></span><span class="sentence"><span data-start="623.0">or a large accessibility font size. </span></span><span class="sentence"><span data-start="626.0">For default font sizes, my stack views containing the cell's symbol and label </span></span><span class="sentence"><span data-start="632.0">are set to the horizontal axis with center alignment.</p><p></span></span><span class="sentence"><span data-start="636.0">When an accessibility font size is enabled, </span></span><span class="sentence"><span data-start="638.0">I'm flipping the axis and choosing leading alignment. </span></span><span class="sentence"><span data-start="641.0">This lets my label take advantage of the full width of the display </span></span><span class="sentence"><span data-start="645.0">instead of sharing some of it with the symbol.</p><p></span></span><span class="sentence"><span data-start="648.0">I'm also always setting this label's line count to zero instead of one, </span></span><span class="sentence"><span data-start="652.0">so that if it were longer, it would wrap for as long as it needs.</p><p></span></span><span class="sentence"><span data-start="656.0">Remember how I mentioned that I'm using bold text optionally </span></span><span class="sentence"><span data-start="659.0">to improve readability? </span></span><span class="sentence"><span data-start="661.0">Using Bold Text not only lets labels stand out </span></span><span class="sentence"><span data-start="664.0">when they're up against symbols, </span></span><span class="sentence"><span data-start="666.0">but also lets them stand out when they're with other text as well. </span></span><span class="sentence"><span data-start="670.0">Did I mention Starstruck lets users geek out about star stats? </span></span><span class="sentence"><span data-start="673.0">Here, I'm using bold text optionally </span></span><span class="sentence"><span data-start="676.0">to create visual distinction between the title and detail label.</p><p></span></span><span class="sentence"><span data-start="681.0">Creating emphasis with bold text is awesome. </span></span><span class="sentence"><span data-start="683.0">In fact, system-provided font styles </span></span><span class="sentence"><span data-start="685.0">lets you really change up your text weight, </span></span><span class="sentence"><span data-start="688.0">which means we handle the heavy lifting, and you don't need to lift a finger.</p><p></span></span><span class="sentence"><span data-start="693.0">The Bold Text accessibility setting is for people that need this emphasis </span></span><span class="sentence"><span data-start="696.0">on all text in the system.</p><p></span></span><span class="sentence"><span data-start="699.0">Sometimes thin and even default font styles are hard to read.</p><p></span></span><span class="sentence"><span data-start="703.0">If you aren't using system font styles for text labels in your app, </span></span><span class="sentence"><span data-start="706.0">then it may not respond well to the Bold Text setting. </span></span><span class="sentence"><span data-start="709.0">You can check the setting by calling is-Bold-Text-Enabled </span></span><span class="sentence"><span data-start="713.0">on UIAccessibility and make updates to your text styles manually.</p><p></span></span><span class="sentence"><span data-start="718.0">Last, I want to talk about a few other display preferences </span></span><span class="sentence"><span data-start="721.0">which may alter the appearance of your app.</p><p></span></span><span class="sentence"><span data-start="724.0">In my app, I've set up a parallax effect on my constellation view controller.</p><p></span></span><span class="sentence"><span data-start="729.0">A parallax effect is a UIMotionEffect </span></span><span class="sentence"><span data-start="732.0">that helps me create a perception of depth between stars in the foreground </span></span><span class="sentence"><span data-start="737.0">and the vastness of the universe in the background.</p><p></span></span><span class="sentence"><span data-start="740.0">As I gently move my device, </span></span><span class="sentence"><span data-start="742.0">the stars in the foreground shift against the artwork in the back.</p><p></span></span><span class="sentence"><span data-start="746.0">Another example of parallax you might be familiar with </span></span><span class="sentence"><span data-start="749.0">is on the Home Screen. </span></span><span class="sentence"><span data-start="750.0">These effects are a lot of fun to use and experience, </span></span><span class="sentence"><span data-start="753.0">but for some people, this can be disorienting </span></span><span class="sentence"><span data-start="756.0">and cause motion sickness. </span></span><span class="sentence"><span data-start="758.0">There is a collection of display accommodation settings </span></span><span class="sentence"><span data-start="761.0">that people can enable if they're sensitive to motion.</p><p></span></span><span class="sentence"><span data-start="764.0">While these display settings are on, </span></span><span class="sentence"><span data-start="766.0">the user will expect adjustments to motion on their device, </span></span><span class="sentence"><span data-start="770.0">like suppressing small idle animations, parallax or other motion effects, </span></span><span class="sentence"><span data-start="775.0">auto-playing videos or GIFs, and even slide transitions. </span></span><span class="sentence"><span data-start="779.0">We love using effects like this to bring the software experience to life, </span></span><span class="sentence"><span data-start="783.0">but it's also our duty to listen and respect the setting </span></span><span class="sentence"><span data-start="785.0">for users that have it enabled. </span></span><span class="sentence"><span data-start="788.0">If you are using dramatic or frequent animations in your app, </span></span><span class="sentence"><span data-start="792.0">check is-Reduce-Motion-Enabled on UIAccessibility before performing them.</p><p></span></span><span class="sentence"><span data-start="797.0">And you should observe the reduce-Motion- Status-Did-Change-Notification </span></span><span class="sentence"><span data-start="801.0">to make adjustments if the setting changes while your app is open.</p><p></span></span><span class="sentence"><span data-start="805.0">I want to tell you a little more about the Reduce Motion setting </span></span><span class="sentence"><span data-start="808.0">Prefer Cross-Fade Transitions.</p><p></span></span><span class="sentence"><span data-start="811.0">As I move through these navigation controllers, </span></span><span class="sentence"><span data-start="814.0">push segues are performed with sliding animations.</p><p></span></span><span class="sentence"><span data-start="817.0">The next view controller slides into place to cover the previous one.</p><p></span></span><span class="sentence"><span data-start="822.0">When the Prefer Cross-Fade Transition setting is on, </span></span><span class="sentence"><span data-start="825.0">we replace the sliding transitions for something a little more subtle.</p><p></span></span><span class="sentence"><span data-start="829.0">And now you can too. </span></span><span class="sentence"><span data-start="830.0">In iOS 14, we are introducing new API for the Prefer Cross-Fade Transition setting.</p><p></span></span><span class="sentence"><span data-start="837.0">If you're already using UIKits, UINavigationController, </span></span><span class="sentence"><span data-start="840.0">this work already comes for free.</p><p></span></span><span class="sentence"><span data-start="843.0">But if you've implemented custom slide transitions in your app, </span></span><span class="sentence"><span data-start="846.0">this API is for you.</p><p></span></span><span class="sentence"><span data-start="849.0">You can check if you need to cross-fade your transitions </span></span><span class="sentence"><span data-start="851.0">by calling prefers-Cross-Fade-Transitions on UIAccessibility </span></span><span class="sentence"><span data-start="855.0">or observing the notification. </span></span><span class="sentence"><span data-start="858.0">Last is the Reduced Transparency setting, </span></span><span class="sentence"><span data-start="860.0">which sets blur effects to become completely opaque. </span></span><span class="sentence"><span data-start="864.0">One big benefit of this is text readability, </span></span><span class="sentence"><span data-start="867.0">because a blurry background might have varying levels of contrast, </span></span><span class="sentence"><span data-start="870.0">making things hard to read. </span></span><span class="sentence"><span data-start="872.0">While my users are geeking out about star stats, </span></span><span class="sentence"><span data-start="875.0">I added a visual effect to blur some artwork in the background.</p><p></span></span><span class="sentence"><span data-start="879.0">This helps me create an experience that is immersive and feels unique, </span></span><span class="sentence"><span data-start="883.0">but this isn't suitable for everyone. </span></span><span class="sentence"><span data-start="885.0">Some blur effects can cause the background to have varying levels of contrast. </span></span><span class="sentence"><span data-start="889.0">When up against text, some readers will have a hard time seeing this. </span></span><span class="sentence"><span data-start="893.0">Or it can make them feel dizzy. </span></span><span class="sentence"><span data-start="895.0">So when Reduced Transparency is on, system blur effects and vibrancy effects </span></span><span class="sentence"><span data-start="900.0">are adjusted to become a single solid color. </span></span><span class="sentence"><span data-start="902.0">For some, this makes it much easier to read.</p><p></span></span><span class="sentence"><span data-start="906.0">If you're not using system visual effects for blurs or vibrancy, </span></span><span class="sentence"><span data-start="910.0">UIAccessibility also provides API free to use </span></span><span class="sentence"><span data-start="913.0">to check the display preference for Reduced Transparency.</p><p></span></span><span class="sentence"><span data-start="916.0">By accommodating these display settings, </span></span><span class="sentence"><span data-start="918.0">you can be sure your app looks great on anyone's device.</p><p></span></span><span class="sentence"><span data-start="923.0">All of this is so important </span></span><span class="sentence"><span data-start="924.0">because being able to use an app that is inclusive and accommodating </span></span><span class="sentence"><span data-start="928.0">is, simply put, empowering for our customers.</p><p></span></span><span class="sentence"><span data-start="931.0">Thank you for all of your work </span></span><span class="sentence"><span data-start="933.0">in making your app accessible for everyone. </span></span><span class="sentence"><span data-start="936.0">Now, I'm inviting you to go in accessibility settings, </span></span><span class="sentence"><span data-start="940.0">find some of the settings I talked about today </span></span><span class="sentence"><span data-start="942.0">and turn them on, so you can see what your app looks like. </span></span><span class="sentence"><span data-start="946.0">You'll be surprised by what already looks great, </span></span><span class="sentence"><span data-start="949.0">and this will be the perfect place </span></span><span class="sentence"><span data-start="950.0">to start figuring out what you can work on next.</p><p></span></span><span class="sentence"><span data-start="954.0">Thanks, everyone.</span></span></p>
+							</section>
+						</li>
+
+						<!-- sample code -->
+						<li class="supplement sample-code" data-supplement-id="sample-code">
+							<section>
+								<ul class="no-bullet padding-top-small margin-bottom">
+																													<li class="sample-code-main-container">
+											<button class="btn-copy-code" data-text-copied="Code Copied" data-text-default="Copy Code">Copy Code</button>
+											<p>3:14 - <a class="jump-to-time-sample" href="/videos/play/wwdc2020/10020/?time=194" data-start-time="194">Button Shapes</a></p>
+										<pre class="code-source"><code><span class="syntax-function"><span class="syntax-keyword">func</span> <span class="syntax-title">observeButtonShapesNotification</span>()</span> {
+    <span class="syntax-comment">// Make buttons more visible by using shapes.</span>
+    <span class="syntax-comment">// If your default design does not include button shapes, observe this notification to make visual changes.</span>
+    <span class="syntax-type">NotificationCenter</span>.default.addObserver(<span class="syntax-keyword">self</span>, selector: #selector(updateButtonShapes), name: <span class="syntax-type">UIAccessibility</span>.buttonShapesEnabledStatusDidChangeNotification, object: <span class="syntax-literal">nil</span>)
+}
+
+<span class="syntax-keyword">@objc</span> <span class="syntax-function"><span class="syntax-keyword">func</span> <span class="syntax-title">updateButtonShapes</span>()</span> {
+    <span class="syntax-keyword">if</span> <span class="syntax-type">UIAccessibility</span>.buttonShapesEnabled {
+        <span class="syntax-comment">// Use extra visualizations for buttons.</span>
+    } <span class="syntax-keyword">else</span> {
+        <span class="syntax-comment">// Use default design for buttons.</span>
+    }
+}</code></pre>
+										</li>
+																				<li class="sample-code-main-container">
+											<button class="btn-copy-code" data-text-copied="Code Copied" data-text-default="Copy Code">Copy Code</button>
+											<p>3:31 - <a class="jump-to-time-sample" href="/videos/play/wwdc2020/10020/?time=211" data-start-time="211">Differentiate Without Color</a></p>
+										<pre class="code-source"><code><span class="syntax-function"><span class="syntax-keyword">func</span> <span class="syntax-title">observeDifferentiateWithoutColorNotification</span>()</span> {
+    <span class="syntax-comment">// Use symbols or shapes to convey meaning instead of relying on color alone.</span>
+    <span class="syntax-comment">// If your default design does not differentiate without color, observe this notification to make visual changes.</span>
+    <span class="syntax-type">NotificationCenter</span>.default.addObserver(<span class="syntax-keyword">self</span>, selector: #selector(updateColorAndSymbols), name: <span class="syntax-type">NSNotification</span>.<span class="syntax-type">Name</span>(<span class="syntax-type">UIAccessibility</span>.differentiateWithoutColorDidChangeNotification), object: <span class="syntax-literal">nil</span>)
+}
+
+<span class="syntax-keyword">@objc</span> <span class="syntax-function"><span class="syntax-keyword">func</span> <span class="syntax-title">updateColorAndSymbols</span>()</span> {
+    <span class="syntax-keyword">if</span> <span class="syntax-type">UIAccessibility</span>.shouldDifferentiateWithoutColor {
+        <span class="syntax-comment">// Use symbols or shapes to convey meaning.</span>
+    } <span class="syntax-keyword">else</span> {
+        <span class="syntax-comment">// Use default design.</span>
+    }
+}</code></pre>
+										</li>
+																				<li class="sample-code-main-container">
+											<button class="btn-copy-code" data-text-copied="Code Copied" data-text-default="Copy Code">Copy Code</button>
+											<p>7:47 - <a class="jump-to-time-sample" href="/videos/play/wwdc2020/10020/?time=467" data-start-time="467">Smart Invert Colors</a></p>
+										<pre class="code-source"><code><span class="syntax-class"><span class="syntax-keyword">extension</span> <span class="syntax-title">UIView</span> </span>{
+    <span class="syntax-keyword">@available</span>(<span class="syntax-keyword">iOS</span> <span class="syntax-number">11.0</span>, <span class="syntax-keyword">tvOS</span> <span class="syntax-number">11.0</span>)
+    <span class="syntax-keyword">var</span> accessibilityIgnoresInvertColors: <span class="syntax-type">Bool</span> { <span class="syntax-keyword">get</span> <span class="syntax-keyword">set</span> }
+}</code></pre>
+										</li>
+																				<li class="sample-code-main-container">
+											<button class="btn-copy-code" data-text-copied="Code Copied" data-text-default="Copy Code">Copy Code</button>
+											<p>9:57 - <a class="jump-to-time-sample" href="/videos/play/wwdc2020/10020/?time=597" data-start-time="597">Large Text</a></p>
+										<pre class="code-source"><code><span class="syntax-comment">// ZodiacConstellationCell.swift</span>
+
+
+<span class="syntax-keyword">override</span> <span class="syntax-function"><span class="syntax-keyword">func</span> <span class="syntax-title">traitCollectionDidChange</span> (<span class="syntax-keyword">_</span> <span class="syntax-params">previousTraitCollection</span>: <span class="syntax-type">UITraitCollection</span>?)</span> {
+
+     <span class="syntax-keyword">if</span> (traitCollection.preferredContentSizeCategory       
+         <span class="syntax-operator">&lt;</span> .accessibilityMedium) { <span class="syntax-comment">// Default font sizes</span>
+
+         stackView.axis <span class="syntax-operator">=</span> .horizontal
+         stackView.alignment <span class="syntax-operator">=</span> .center
+
+     } <span class="syntax-keyword">else</span> { <span class="syntax-comment">// Accessibility font sizes</span>
+
+         stackView.axis <span class="syntax-operator">=</span> .vertical
+         stackView.alignment <span class="syntax-operator">=</span> .leading
+
+     }
+}</code></pre>
+										</li>
+																				<li class="sample-code-main-container">
+											<button class="btn-copy-code" data-text-copied="Code Copied" data-text-default="Copy Code">Copy Code</button>
+											<p>11:33 - <a class="jump-to-time-sample" href="/videos/play/wwdc2020/10020/?time=693" data-start-time="693">Bold Text</a></p>
+										<pre class="code-source"><code><span class="syntax-function"><span class="syntax-keyword">func</span> <span class="syntax-title">observeBoldTextNotification</span>()</span> {
+    <span class="syntax-comment">// Update labels to use bold or heavy font styles.</span>
+    <span class="syntax-comment">// If you aren&#x27;t using system font styles, observe this notification to make visual changes.</span>
+    <span class="syntax-type">NotificationCenter</span>.default.addObserver(<span class="syntax-keyword">self</span>, selector: #selector(updateLabelWeight), name: <span class="syntax-type">UIAccessibility</span>.boldTextStatusDidChangeNotification, object: <span class="syntax-literal">nil</span>)
+}
+
+<span class="syntax-keyword">@objc</span> <span class="syntax-function"><span class="syntax-keyword">func</span> <span class="syntax-title">updateLabelWeight</span>()</span> {
+    <span class="syntax-keyword">if</span> <span class="syntax-type">UIAccessibility</span>.isBoldTextEnabled {
+        <span class="syntax-comment">// Use bold or heavy font weight</span>
+    } <span class="syntax-keyword">else</span> {
+        <span class="syntax-comment">// Use font weight that is default to your design.</span>
+    }
+}</code></pre>
+										</li>
+																				<li class="sample-code-main-container">
+											<button class="btn-copy-code" data-text-copied="Code Copied" data-text-default="Copy Code">Copy Code</button>
+											<p>13:08 - <a class="jump-to-time-sample" href="/videos/play/wwdc2020/10020/?time=788" data-start-time="788">Reduce Motion</a></p>
+										<pre class="code-source"><code><span class="syntax-function"><span class="syntax-keyword">func</span> <span class="syntax-title">observeReduceMotionNotification</span>()</span> {
+    <span class="syntax-comment">// Observe this notification to reduce or remove the frequency and intensity of motion effects.</span>
+    <span class="syntax-type">NotificationCenter</span>.default.addObserver(<span class="syntax-keyword">self</span>, selector: #selector(updateMotionEffects), name: <span class="syntax-type">UIAccessibility</span>.reduceMotionStatusDidChangeNotification, object: <span class="syntax-literal">nil</span>)
+}
+
+<span class="syntax-keyword">@objc</span> <span class="syntax-function"><span class="syntax-keyword">func</span> <span class="syntax-title">updateMotionEffects</span>()</span> {
+    <span class="syntax-keyword">if</span> <span class="syntax-type">UIAccessibility</span>.isReduceMotionEnabled {
+        <span class="syntax-comment">// Reduce or remove extraneous motion effects.</span>
+    } <span class="syntax-keyword">else</span> {
+        <span class="syntax-comment">// Use default motion effects.</span>
+    }
+}</code></pre>
+										</li>
+																				<li class="sample-code-main-container">
+											<button class="btn-copy-code" data-text-copied="Code Copied" data-text-default="Copy Code">Copy Code</button>
+											<p>13:51 - <a class="jump-to-time-sample" href="/videos/play/wwdc2020/10020/?time=831" data-start-time="831">Prefers Cross-fade Transitions</a></p>
+										<pre class="code-source"><code><span class="syntax-function"><span class="syntax-keyword">func</span> <span class="syntax-title">observeCrossFadeTransitionsNotification</span>()</span> {
+    <span class="syntax-comment">// Reduce or remove sliding animations for transitioning views.</span>
+    <span class="syntax-comment">// If you aren&#x27;t using system-provided navigation, observe this notification to make visual changes.</span>
+    <span class="syntax-type">NotificationCenter</span>.default.addObserver(<span class="syntax-keyword">self</span>, selector: #selector(updateTransitionEffects), name: <span class="syntax-type">UIAccessibility</span>.prefersCrossFadeTransitionsStatusDidChange, object: <span class="syntax-literal">nil</span>)
+}
+
+<span class="syntax-keyword">@objc</span> <span class="syntax-function"><span class="syntax-keyword">func</span> <span class="syntax-title">updateTransitionEffects</span>()</span> {
+    <span class="syntax-keyword">if</span> <span class="syntax-type">UIAccessibility</span>.prefersCrossFadeTransitions {
+        <span class="syntax-comment">// Replace sliding transitions with cross-fade animations.</span>
+    } <span class="syntax-keyword">else</span> {
+        <span class="syntax-comment">// Use default sliding transitions.</span>
+    }
+}</code></pre>
+										</li>
+																				<li class="sample-code-main-container">
+											<button class="btn-copy-code" data-text-copied="Code Copied" data-text-default="Copy Code">Copy Code</button>
+											<p>15:07 - <a class="jump-to-time-sample" href="/videos/play/wwdc2020/10020/?time=907" data-start-time="907">Reduce Transparency</a></p>
+										<pre class="code-source"><code><span class="syntax-function"><span class="syntax-keyword">func</span> <span class="syntax-title">observeReduceTransparencyNotification</span>()</span> {
+    <span class="syntax-comment">// Reduce or remove transparency by adjusting these effects to be completely opaque.</span>
+    <span class="syntax-comment">// If you aren&#x27;t using system-provided visual effects for blurs or vibrancy, observe this notification to make visual changes.</span>
+    <span class="syntax-type">NotificationCenter</span>.default.addObserver(<span class="syntax-keyword">self</span>, selector: #selector(updateTransparencyEffects), name: <span class="syntax-type">UIAccessibility</span>.reduceTransparencyStatusDidChangeNotification, object: <span class="syntax-literal">nil</span>)
+}
+
+<span class="syntax-keyword">@objc</span> <span class="syntax-function"><span class="syntax-keyword">func</span> <span class="syntax-title">updateTransparencyEffects</span>()</span> {
+    <span class="syntax-keyword">if</span> <span class="syntax-type">UIAccessibility</span>.isReduceTransparencyEnabled {
+        <span class="syntax-comment">// Make transparency effects opaque.</span>
+    } <span class="syntax-keyword">else</span> {
+        <span class="syntax-comment">// Use default transparency.</span>
+    }
+}</code></pre>
+										</li>
+																			
+								</ul>
+							</section>
+						</li>
+
+						
+					</ul>
+
+				</section>
+
+			</section>
+			</div>
+
+		</section>
+
+		<input id="analytics-meta" type="hidden" data-event-name="WWDC20" 
+		data-event-id="wwdc2020-10020" 
+		data-session-id="10020" 
+		data-video-name="Make your app visually accessible" 
+		data-session-response-id="">
+	</main>
+
+	<link rel="stylesheet" href="/assets/styles/footer.dist.css?54232608030">
+<footer id="footer" class="footer" role="contentinfo" aria-labelledby="footer-label">
+    <div class="footer-content">
+        <h2 class="footer-label" id="footer-label">Developer Footer</h2>
+		
+		<developer-breadcrumbs>
+			<li class="footer-breadcrumbs-item"><a href="/videos/">Videos</a></li>
+				<li class="footer-breadcrumbs-item"><a href="/videos/wwdc2020/">WWDC20</a></li>				<li class="footer-breadcrumbs-item">Make your app visually accessible</li>
+			
+		</developer-breadcrumbs>
+	        <nav class="footer-directory" aria-label="Apple Developer Directory" role="navigation">
+	<!--googleoff: all-->
+	<div class="footer-directory-column">
+		<input class="footer-directory-column-section-state" type="checkbox" id="footer-directory-column-section-state-platform" />
+		<div class="footer-directory-column-section">
+			<label class="footer-directory-column-section-label" for="footer-directory-column-section-state-platform">
+				<h3 class="footer-directory-column-section-title">Platforms</h3>
+			</label>
+			<a href="#footer-directory-column-section-state-platform" class="footer-directory-column-section-anchor footer-directory-column-section-anchor-open"> <span class="footer-directory-column-section-anchor-label">Open Menu</span> </a>
+			<a href="#" class="footer-directory-column-section-anchor footer-directory-column-section-anchor-close"> <span class="footer-directory-column-section-anchor-label">Close Menu</span> </a>
+			<ul class="footer-directory-column-section-list">
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/ios/">iOS</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/ipados/">iPadOS</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/macos/">macOS</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/tvos/">tvOS</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/visionos/">visionOS</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/watchos/">watchOS</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/app-store/">App Store</a></li>
+			</ul>
+		</div>
+
+		<input class="footer-directory-column-section-state" type="checkbox" id="footer-directory-column-section-state-tools" />
+		<div class="footer-directory-column-section">
+			<label class="footer-directory-column-section-label" for="footer-directory-column-section-state-tools">
+				<h3 class="footer-directory-column-section-title">Tools</h3>
+			</label>
+			<a href="#footer-directory-column-section-state-tools" class="footer-directory-column-section-anchor footer-directory-column-section-anchor-open"> <span class="footer-directory-column-section-anchor-label">Open Menu</span> </a>
+			<a href="#" class="footer-directory-column-section-anchor footer-directory-column-section-anchor-close"> <span class="footer-directory-column-section-anchor-label">Close Menu</span> </a>
+			<ul class="footer-directory-column-section-list">
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/swift/">Swift</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/swiftui/">SwiftUI</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/swift-playground/">Swift Playground</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/testflight/">TestFlight</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/xcode/">Xcode</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/xcode-cloud/">Xcode Cloud</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/icon-composer/">Icon Composer</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/sf-symbols/">SF Symbols</a></li>
+
+			</ul>
+		</div>
+	</div>
+
+	<div class="footer-directory-column">
+		<input class="footer-directory-column-section-state" type="checkbox" id="footer-directory-column-section-state-topics" />
+		<div class="footer-directory-column-section">
+			<label class="footer-directory-column-section-label" for="footer-directory-column-section-state-topics">
+				<h3 class="footer-directory-column-section-title">Technologies</h3>
+			</label>
+			<a href="#footer-directory-column-section-state-topics" class="footer-directory-column-section-anchor footer-directory-column-section-anchor-open"> <span class="footer-directory-column-section-anchor-label">Open Menu</span> </a>
+			<a href="#" class="footer-directory-column-section-anchor footer-directory-column-section-anchor-close"> <span class="footer-directory-column-section-anchor-label">Close Menu</span> </a>
+			<ul class="footer-directory-column-section-list">
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/accessibility/">Accessibility</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/accessories/">Accessories</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/apple-intelligence/">Apple Intelligence</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/audio/">Audio &amp; Video</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/augmented-reality/">Augmented Reality</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/business/">Business</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/design/">Design</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/distribute/">Distribution</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/education/">Education</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/games/">Games</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/health-fitness/">Health &amp; Fitness</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/in-app-purchase/">In-App Purchase</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/localization/">Localization</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/maps/">Maps &amp; Location</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/machine-learning/">Machine Learning & AI</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/security/">Security</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/safari/">Safari &amp; Web</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="footer-directory-column">
+		<input class="footer-directory-column-section-state" type="checkbox" id="footer-directory-column-section-state-resources" />
+		<div class="footer-directory-column-section">
+			<label class="footer-directory-column-section-label" for="footer-directory-column-section-state-resources">
+				<h3 class="footer-directory-column-section-title">Resources</h3>
+			</label>
+			<a href="#footer-directory-column-section-state-resources" class="footer-directory-column-section-anchor footer-directory-column-section-anchor-open"> <span class="footer-directory-column-section-anchor-label">Open Menu</span> </a>
+			<a href="#" class="footer-directory-column-section-anchor footer-directory-column-section-anchor-close"> <span class="footer-directory-column-section-anchor-label">Close Menu</span> </a>
+			<ul class="footer-directory-column-section-list">
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/documentation/">Documentation</a></li>
+<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/download/">Downloads</a></li>
+		<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/documentation/samplecode">Sample Code</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/videos/">Videos</a></li>
+			</ul>
+		</div>
+
+		<input class="footer-directory-column-section-state" type="checkbox" id="footer-directory-column-section-state-support" />
+		<div class="footer-directory-column-section">
+			<label class="footer-directory-column-section-label" for="footer-directory-column-section-state-support">
+				<h3 class="footer-directory-column-section-title">Support</h3>
+			</label>
+			<a href="#footer-directory-column-section-state-support" class="footer-directory-column-section-anchor footer-directory-column-section-anchor-open"> <span class="footer-directory-column-section-anchor-label">Open Menu</span> </a>
+			<a href="#" class="footer-directory-column-section-anchor footer-directory-column-section-anchor-close"> <span class="footer-directory-column-section-anchor-label">Close Menu</span> </a>
+			<ul class="footer-directory-column-section-list">
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/help/">Help Guides & Articles</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/contact/">Contact Us</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/forums/">Forums</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/bug-reporting/">Feedback & Bug Reporting</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/system-status/">System Status</a></li>
+			</ul>
+		</div>
+
+		<input class="footer-directory-column-section-state" type="checkbox" id="footer-directory-column-section-state-account" />
+		<div class="footer-directory-column-section">
+			<label class="footer-directory-column-section-label" for="footer-directory-column-section-state-account">
+				<h3 class="footer-directory-column-section-title">Account</h3>
+			</label>
+			<a href="#footer-directory-column-section-state-account" class="footer-directory-column-section-anchor footer-directory-column-section-anchor-open"> <span class="footer-directory-column-section-anchor-label">Open Menu</span> </a>
+			<a href="#" class="footer-directory-column-section-anchor footer-directory-column-section-anchor-close"> <span class="footer-directory-column-section-anchor-label">Close Menu</span> </a>
+			<ul class="footer-directory-column-section-list">
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/account/">Apple Developer</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="https://appstoreconnect.apple.com/">App Store Connect</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/account/ios/certificate/">Certificates, IDs, &amp; Profiles</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="https://feedbackassistant.apple.com/">Feedback Assistant</a></li>
+			</ul>
+		</div>
+	</div>
+	
+	<div class="footer-directory-column">
+		<input class="footer-directory-column-section-state" type="checkbox" id="footer-directory-column-section-state-programs" />
+		<div class="footer-directory-column-section">
+			<label class="footer-directory-column-section-label" for="footer-directory-column-section-state-programs">
+				<h3 class="footer-directory-column-section-title">Programs</h3>
+			</label>
+			<a href="#footer-directory-column-section-state-programs" class="footer-directory-column-section-anchor footer-directory-column-section-anchor-open"> <span class="footer-directory-column-section-anchor-label">Open Menu</span> </a>
+			<a href="#" class="footer-directory-column-section-anchor footer-directory-column-section-anchor-close"> <span class="footer-directory-column-section-anchor-label">Close Menu</span> </a>
+			<ul class="footer-directory-column-section-list">
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/programs/">Apple Developer Program</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/programs/enterprise/">Apple Developer Enterprise Program</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/app-store/small-business-program/">App Store Small Business Program</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="https://mfi.apple.com/">MFi Program</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/programs/mini-apps-partner/">Mini Apps Partner Program</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/programs/news-partner/">News Partner Program</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/programs/video-partner/">Video Partner Program</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/security-bounty/">Security Bounty Program</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/programs/security-research-device/">Security Research Device Program</a></li>
+			</ul>
+		</div>
+
+		<input class="footer-directory-column-section-state" type="checkbox" id="footer-directory-column-section-state-events" />
+		<div class="footer-directory-column-section">
+			<label class="footer-directory-column-section-label" for="footer-directory-column-section-state-events">
+				<h3 class="footer-directory-column-section-title">Events</h3>
+			</label>
+			<a href="#footer-directory-column-section-state-events" class="footer-directory-column-section-anchor footer-directory-column-section-anchor-open"> <span class="footer-directory-column-section-anchor-label">Open Menu</span> </a>
+			<a href="#" class="footer-directory-column-section-anchor footer-directory-column-section-anchor-close"> <span class="footer-directory-column-section-anchor-label">Close Menu</span> </a>
+			<ul class="footer-directory-column-section-list">
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/events/">Meet with Apple</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/events/developer-centers/">Apple Developer Centers</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/app-store/app-store-awards/">App Store Awards</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/design/awards/">Apple Design Awards</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/academies/">Apple Developer Academies</a></li>
+				<li class="footer-directory-column-section-item"><a class="footer-directory-column-section-link" href="/wwdc/">WWDC</a></li>
+			</ul>
+		</div>
+	</div>
+	<!--googleon: all-->
+</nav>
+        <section class="footer-mini" vocab="http://schema.org/" typeof="Organization">
+	<div class="footer-mini-news">
+		<div class="copy">
+			Read the <a class="footer-mini-legal-link" href="/news/">latest news</a> Get the <a href="https://apps.apple.com/us/app/apple-developer/id640199958">Apple Developer app</a>.
+		</div>
+		<div class="content">
+			<div class="color-scheme-toggle"
+				role="radiogroup"
+				tabindex="0"
+				aria-label="Select a color scheme preference">
+
+				<label data-color-scheme-option="light">
+
+					<input type="radio" value="light" autocomplete="off"
+						onchange="window.setPreferredColorScheme(event.target.value)" />
+
+					<div class="text">Light</div>
+
+				</label>
+
+				<label data-color-scheme-option="dark">
+
+					<input type="radio" value="dark" autocomplete="off"
+						onchange="window.setPreferredColorScheme(event.target.value)" />
+
+					<div class="text">Dark</div>
+
+				</label>
+
+				<label data-color-scheme-option="auto">
+
+					<input type="radio" value="auto" autocomplete="off"
+						onchange="window.setPreferredColorScheme(event.target.value)" />
+
+					<div class="text">Auto</div>
+
+				</label>
+
+			</div>
+			<script async src="/assets/scripts/color-scheme-toggle.js"></script>
+		</div>
+	</div>
+	<link rel="stylesheet" href="/assets/styles/language-dropdown.css?54232608030">
+	<div class="language-dropdown dropdown-container legacy-form hidden">
+		<select class="dropdown" aria-label="Language Dropdown"></select>
+		<span class="dropdown-icon icon icon-chevrondown" aria-hidden="true"></span>
+	</div>
+	<script src="/assets/scripts/language-dropdown.js?45232608030"></script>
+	<div class="footer-mini-legal">
+		<div class="footer-mini-legal-copyright">Copyright ©  2026 <a href="https://www.apple.com">Apple Inc.</a> All rights reserved.</div>
+		<div class="footer-mini-legal-links">
+			<a class="footer-mini-legal-link" href="https://www.apple.com/legal/internet-services/terms/site.html" class="first">Terms of Use</a>
+			<a class="footer-mini-legal-link" href="https://www.apple.com/legal/privacy/">Privacy Policy</a>
+			<a class="footer-mini-legal-link" href="/support/terms/">Agreements and Guidelines</a>
+		</div>
+	</div>
+</section>
+    </div>
+</footer>
+
+	<script src="/videos/scripts/collection/form-input.js?7"></script>
+	<script src="/assets/scripts/params.js"></script>
+	<script src="/assets/scripts/watchable.js"></script>
+	<script src="/assets/scripts/timeout.js"></script>
+	
+	<script src="/videos/scripts/play/play.js?49002609080"></script>
+	<script src="/videos/scripts/hls/rtc.min.js?17232610030"></script>
+	<script src="/videos/scripts/hls/hls.min.js?17232610030"></script>
+	
+</body>
+</html>
+
