@@ -91,6 +91,16 @@ final class CatholicFastingAppUITests: XCTestCase {
     func openMoreDestination(_ title: String, in app: XCUIApplication) {
         openSurface("More", in: app)
 
+        if let rawValue = moreDestinationRawValue(for: title) {
+            let identifiedDestination = elementByIdentifier("more.hub.\(rawValue)", in: app)
+            if identifiedDestination.exists || identifiedDestination.waitForExistence(timeout: 1) {
+                XCTAssertTrue(scrollToElement(identifiedDestination, in: app), "Unable to find More destination \(title)")
+                identifiedDestination.tap()
+                XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 4))
+                return
+            }
+        }
+
         let destinationButton = app.buttons[title].firstMatch
         if destinationButton.exists || destinationButton.waitForExistence(timeout: 1) {
             XCTAssertTrue(scrollToElement(destinationButton, in: app))
@@ -105,6 +115,23 @@ final class CatholicFastingAppUITests: XCTestCase {
         XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 4))
     }
 
+    func moreDestinationRawValue(for title: String) -> String? {
+        switch title {
+        case "Support & Premium":
+            "supportAndPremium"
+        case "Setup & Reminders":
+            "setupAndReminders"
+        case "Profile & Norms":
+            "profileAndNorms"
+        case "Guidance & Rules":
+            "guidanceAndRules"
+        case "Privacy & Data":
+            "privacyAndData"
+        default:
+            nil
+        }
+    }
+
     func openIPadSurface(_ rawValue: String, in app: XCUIApplication) {
         let button = app.buttons["ipad.sidebar.\(rawValue)"].firstMatch
         XCTAssertTrue(button.waitForExistence(timeout: 4), "Unable to find iPad sidebar surface \(rawValue)")
@@ -113,17 +140,43 @@ final class CatholicFastingAppUITests: XCTestCase {
 
     func openIPadMoreDestination(_ rawValue: String, in app: XCUIApplication) {
         openIPadSurface("more", in: app)
+        XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
 
+        let destination = elementByIdentifier("ipad.more.destination.\(rawValue)", in: app)
+        let compactDestination = elementByIdentifier("ipad.more.compact.\(rawValue)", in: app)
         if rawValue == "supportAndPremium" {
+            if destination.exists || destination.waitForExistence(timeout: 1) {
+                XCTAssertTrue(scrollToElement(destination, in: app))
+                destination.tap()
+                return
+            }
+            if compactDestination.exists || compactDestination.waitForExistence(timeout: 1) {
+                XCTAssertTrue(scrollToElementInApp(compactDestination, in: app))
+                compactDestination.tap()
+                return
+            }
+            XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
             return
         }
 
-        let destination = app.buttons["ipad.more.destination.\(rawValue)"].firstMatch
-        let compactDestination = app.buttons["ipad.more.compact.\(rawValue)"].firstMatch
-        let target = destination.waitForExistence(timeout: 2) ? destination : compactDestination
-        XCTAssertTrue(target.waitForExistence(timeout: 4), "Unable to find iPad More destination \(rawValue)")
-        XCTAssertTrue(scrollToElement(target, in: app))
-        target.tap()
+        let target = destination.waitForExistence(timeout: 1) ? destination : compactDestination
+        if target.exists || target.waitForExistence(timeout: 1) {
+            let found = target == compactDestination
+                ? scrollToElementInApp(target, in: app)
+                : scrollToElement(target, in: app)
+            XCTAssertTrue(found, "Unable to bring iPad More destination \(rawValue) into view")
+            target.tap()
+            return
+        }
+
+        XCTAssertTrue(
+            scrollToElementInApp(compactDestination, in: app, maxSwipes: 10)
+                || scrollToElementInApp(destination, in: app, maxSwipes: 10),
+            "Unable to find iPad More destination \(rawValue)")
+
+        let fallback = compactDestination.exists ? compactDestination : destination
+        XCTAssertTrue(fallback.exists, "Unable to find iPad More destination \(rawValue)")
+        fallback.tap()
     }
 
     func assertIPadMoreDestinationContent(_ rawValue: String, in app: XCUIApplication) {
@@ -194,6 +247,30 @@ final class CatholicFastingAppUITests: XCTestCase {
         return element.exists && element.isHittable
     }
 
+    func scrollToElementInApp(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 12)
+        -> Bool
+    {
+        if element.exists, element.isHittable {
+            return true
+        }
+
+        for _ in 0 ..< maxSwipes {
+            app.swipeUp()
+            if element.exists, element.isHittable {
+                return true
+            }
+        }
+
+        for _ in 0 ..< maxSwipes {
+            app.swipeDown()
+            if element.exists, element.isHittable {
+                return true
+            }
+        }
+
+        return element.exists && element.isHittable
+    }
+
     func elementByIdentifier(_ identifier: String, in app: XCUIApplication) -> XCUIElement {
         app.descendants(matching: .any).matching(identifier: identifier).firstMatch
     }
@@ -223,7 +300,10 @@ final class CatholicFastingAppUITests: XCTestCase {
         let backButton = app.navigationBars.buttons.firstMatch
         XCTAssertTrue(backButton.waitForExistence(timeout: 3))
         backButton.tap()
-        XCTAssertTrue(app.navigationBars["Catholic Fasting"].waitForExistence(timeout: 4))
+        XCTAssertTrue(app.otherElements["surface.more.ready"].waitForExistence(timeout: 4))
+        XCTAssertTrue(
+            app.navigationBars["More"].firstMatch.waitForExistence(timeout: 4)
+                || app.staticTexts["More"].firstMatch.waitForExistence(timeout: 4))
     }
 
     func switchIsOn(_ element: XCUIElement) -> Bool {

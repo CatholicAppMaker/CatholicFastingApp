@@ -22,6 +22,24 @@ extension CatholicFastingAppUITests {
         }
     }
 
+    func testIPhoneMoreSupportDestinationReturnsDirectlyToMoreHome() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openMoreDestination("Support & Premium", in: app)
+        XCTAssertTrue(app.navigationBars["Support & Premium"].waitForExistence(timeout: 4))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Premium Upgrade"].firstMatch, in: app))
+
+        let backButton = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(backButton.waitForExistence(timeout: 3))
+        backButton.tap()
+
+        XCTAssertTrue(app.otherElements["surface.more.ready"].waitForExistence(timeout: 4))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("more.hub.supportAndPremium", in: app), in: app))
+        XCTAssertFalse(app.navigationBars["Privacy & Data"].firstMatch.exists)
+    }
+
     func testIPadSidebarSwitchesPrimaryWorkspaces() {
         let app = makeApp()
         app.launch()

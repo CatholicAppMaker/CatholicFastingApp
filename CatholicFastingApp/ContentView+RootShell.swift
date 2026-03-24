@@ -323,9 +323,10 @@ extension ContentView {
         }
     }
 
+    @ViewBuilder
     var moreHubSection: some View {
         let hero = moreDestinationHeroItem(for: .supportAndPremium)
-        return Section {
+        Section {
             VStack(alignment: .leading, spacing: 14) {
                 SacredHeroCard(
                     assetName: hero.assetName,
@@ -340,22 +341,24 @@ extension ContentView {
 
                 Text("Open one focused page instead of digging through one long settings screen.")
                     .appSupportingTextStyle()
+            }
+        }
 
-                ForEach(MoreHubDestination.allCases) { destination in
-                    NavigationLink {
-                        moreDestinationList(for: destination)
-                    } label: {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Label(destination.title, systemImage: destination.iconName)
-                                .font(.headline.weight(.semibold))
-                                .foregroundStyle(CatholicTheme.primary)
-                            Text(destination.subtitle)
-                                .appSupportingTextStyle()
-                        }
-                        .padding(.vertical, 4)
+        Section {
+            ForEach(MoreHubDestination.allCases) { destination in
+                NavigationLink {
+                    moreDestinationList(for: destination)
+                } label: {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Label(destination.title, systemImage: destination.iconName)
+                            .font(.headline.weight(.semibold))
+                            .foregroundStyle(CatholicTheme.primary)
+                        Text(destination.subtitle)
+                            .appSupportingTextStyle()
                     }
-                    .accessibilityIdentifier("more.hub.\(destination.rawValue)")
+                    .padding(.vertical, 4)
                 }
+                .accessibilityIdentifier("more.hub.\(destination.rawValue)")
             }
         }
     }
