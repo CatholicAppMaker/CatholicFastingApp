@@ -2,7 +2,7 @@
 "guidance.scenario" = "Escenario";
 "guidance.pastoral_guidance" = "Guía pastoral";
 "guidance.pastoral_line_1" = "Si está embarazada, en lactancia, es de edad avanzada, está enfermo, realiza trabajo intenso o tiene una condición crónica, busque orientación pastoral y médica antes de ayunar.";
-"guidance.pastoral_line_2" = "Las dispensas y sustituciones pueden ser legítimas. Esta app es una ayuda, pero no sustituye a su párroco.";
+"guidance.pastoral_line_2" = "Las dispensas y sustituciones pueden ser legítimas. Esta aplicación es una ayuda, pero no sustituye a su párroco.";
 "guidance.pastoral_line_3" = "En caso de duda, prefiera la caridad y la obediencia a la autoridad legítima de la Iglesia sobre el rigor autoimpuesto.";
 "guidance.faq.title" = "Preguntas frecuentes (con fuentes)";
 "guidance.faq.q1" = "P: ¿Cuáles son los días obligatorios de ayuno en la Iglesia latina? R: Miércoles de Ceniza y Viernes Santo.";
@@ -46,14 +46,14 @@
 "settings.theme.disabled_hint" = "Los colores por tiempo están desactivados. Active esta opción para Adviento, Cuaresma, Pascua y Tiempo Ordinario.";
 
 "settings.privacy.title" = "Privacidad y consentimiento";
-"settings.privacy.legal_ack" = "Entiendo que esta app complementa (no reemplaza) la guía pastoral";
+"settings.privacy.legal_ack" = "Entiendo que esta aplicación complementa (no reemplaza) la guía pastoral";
 "settings.privacy.confirm_consent" = "Confirme su consentimiento para activar recordatorios y exportaciones.";
 "settings.privacy.consent_confirmed_format" = "Consentimiento confirmado: %@";
-"settings.privacy.data_storage_summary" = "Esta app almacena solo los datos de seguimiento de ayuno que usted ingresa, localmente en este dispositivo.";
+"settings.privacy.data_storage_summary" = "Esta aplicación almacena solo los datos de seguimiento de ayuno que usted ingresa, localmente en este dispositivo.";
 "settings.privacy.data_details_link" = "Ver detalles de datos y privacidad";
 "settings.privacy.data_details_title" = "Datos y privacidad";
-"settings.privacy.data_details_intro" = "Sus registros de ayuno permanecen en su dispositivo. La app no usa sincronización en la nube ni analítica.";
-"settings.privacy.section_stored_title" = "Datos almacenados en la app";
+"settings.privacy.data_details_intro" = "Sus registros de ayuno permanecen en su dispositivo. La aplicación no usa sincronización en la nube ni análisis de uso.";
+"settings.privacy.section_stored_title" = "Datos almacenados en la aplicación";
 "settings.privacy.stored_item_profile" = "Perfil y configuración (interruptores de elegibilidad por edad, idioma, preferencias de ayuno).";
 "settings.privacy.stored_item_observances" = "Progreso de observancias e historial de estado de cumplimiento.";
 "settings.privacy.stored_item_notes" = "Notas de penitencia de los viernes que usted ingresa manualmente.";
@@ -61,10 +61,10 @@
 "settings.privacy.section_shared_title" = "Datos compartidos o transmitidos";
 "settings.privacy.shared_item_default" = "No hay carga automática de datos al desarrollador.";
 "settings.privacy.shared_item_export" = "La exportación o compartición ocurre solo cuando usted toca una acción de exportar.";
-"settings.privacy.shared_item_feedback" = "El correo de comentarios abre su app de correo y envía solo lo que usted elija.";
+"settings.privacy.shared_item_feedback" = "El correo de comentarios abre su aplicación de correo y envía solo lo que usted elija.";
 "settings.privacy.section_not_collected_title" = "No recopilado";
 "settings.privacy.not_collected_tracking" = "Sin identificadores de seguimiento publicitario.";
-"settings.privacy.not_collected_third_party" = "Sin SDK de analítica de terceros en la app.";
+"settings.privacy.not_collected_third_party" = "Sin SDK de análisis de terceros en la aplicación.";
 "settings.privacy.section_controls_title" = "Sus controles";
 "settings.privacy.control_consent" = "Consentimiento";
 
@@ -117,11 +117,11 @@
 "onboarding.step3.reminder_style" = "Estilo de recordatorios";
 "onboarding.step3.helper" = "Puede cambiar los recordatorios en cualquier momento en Ajustes y recordatorios.";
 "onboarding.step4.title" = "Paso 4 de 4: Vista previa de Premium";
-"onboarding.step4.intro" = "La versión gratuita ofrece la guía obligatoria de ayuno. Premium añade un Toolkit de formación más enfocado.";
+"onboarding.step4.intro" = "La versión gratuita ofrece la guía obligatoria de ayuno. Premium añade un kit de formación más enfocado.";
 "onboarding.trust.title" = "Por qué esto es confiable";
-"onboarding.trust.independent" = "Esta es una app devocional católica independiente con referencias citadas dentro de la app.";
-"onboarding.trust.sources" = "Fuentes: calendario litúrgico y guía de ayuno/abstinencia citados dentro de la app.";
-"onboarding.trust.unofficial" = "Esta es una app devocional independiente y no es una app oficial de la Iglesia Católica, la USCCB, el Vaticano ni de ninguna diócesis o parroquia.";
+"onboarding.trust.independent" = "Esta es una aplicación devocional católica independiente con referencias citadas dentro de la aplicación.";
+"onboarding.trust.sources" = "Fuentes: calendario litúrgico y guía de ayuno/abstinencia citados dentro de la aplicación.";
+"onboarding.trust.unofficial" = "Esta es una aplicación devocional independiente y no es una aplicación oficial de la Iglesia Católica, la USCCB, el Vaticano ni de ninguna diócesis o parroquia.";
 "onboarding.trust.follow_guidance" = "Siga siempre a su pastor, las normas locales de la Iglesia y la orientación médica.";
 "onboarding.region.us" = "Estados Unidos";
 "onboarding.region.canada" = "Canadá";
@@ -141,7 +141,7 @@
 "settings.quick.age18" = "Tengo 18 años o más (edad para el ayuno)";
 "settings.quick.region" = "Perfil regional";
 "settings.quick.language" = "Idioma";
-"settings.quick.consent_label" = "Entiendo que esta es una app independiente, no una app oficial de autoridad eclesial";
+"settings.quick.consent_label" = "Entiendo que esta es una aplicación independiente, no una aplicación oficial de autoridad eclesial";
 "settings.quick.reminder_support" = "Activar apoyo de recordatorios";
 "settings.quick.reminder_strategy" = "Estrategia de recordatorios";
 "settings.quick.reminder_support_hint" = "Active el apoyo de recordatorios para elegir una estrategia.";
@@ -259,12 +259,12 @@
 "fasting_days.summary.celebrations" = "con celebraciones";
 "premium.section.support" = "Apoyo y Premium";
 "premium.section.view" = "Vista";
-"premium.section.upgrade_hint" = "Elija primero un plan y luego use propinas o herramientas de facturación si las necesita.";
+"premium.section.upgrade_hint" = "Elija primero un plan y luego use aportes opcionales o herramientas de facturación si las necesita.";
 "premium.section.tools_hint" = "Abra la planificación premium, el diario y las exportaciones.";
 "premium.tools.section" = "Herramientas Premium";
 "premium.tools.locked_hint" = "Desbloquee Premium para abrir planificación, recordatorios, análisis, diario y exportaciones.";
 "premium.tools.go_to_upgrade" = "Ir a la mejora";
-"premium.tools.formation" = "Toolkit de formación";
+"premium.tools.formation" = "Kit de formación";
 "premium.upgrade.section" = "Mejora Premium";
 "premium.upgrade.choose_plan" = "Elija abajo el plan anual o mensual.";
 "premium.upgrade.loading" = "Cargando compras…";
@@ -293,10 +293,10 @@
 "premium.offer.best_value" = "Mejor valor";
 "premium.offer.best_value_summary" = "La mejor relación para un ritmo constante durante el año de la Iglesia.";
 "premium.offer.unlock_format" = "Desbloquear %@ • %@";
-"premium.tips.title" = "Propinas opcionales de apoyo";
-"premium.tips.summary" = "Las propinas apoyan el desarrollo continuo y no desbloquean funciones.";
-"premium.tips.loading_hint" = "Las propinas opcionales de apoyo pueden tardar un momento en aparecer después de que App Store termine de cargar.";
-"premium.tips.send_tip_format" = "Enviar propina • %@";
+"premium.tips.title" = "Aportes opcionales de apoyo";
+"premium.tips.summary" = "Los aportes apoyan el desarrollo continuo y no desbloquean funciones.";
+"premium.tips.loading_hint" = "Los aportes opcionales de apoyo pueden tardar un momento en aparecer después de que App Store termine de cargar.";
+"premium.tips.send_tip_format" = "Enviar aporte • %@";
 "premium.legal.title" = "Restaurar / Gestionar / Legal";
 "premium.legal.summary" = "Use estas opciones después de elegir un plan si necesita restaurar la facturación o abrir enlaces legales.";
 "premium.legal.restore" = "Restaurar compras";
@@ -304,7 +304,7 @@
 "premium.legal.terms" = "Términos de uso (EULA)";
 "premium.legal.privacy" = "Política de privacidad";
 "premium.legal.support" = "Soporte";
-"premium.hero.title" = "Toolkit de formación";
+"premium.hero.title" = "Kit de formación";
 "premium.hero.subtitle" = "Elija una ruta premium clara para planificación, recordatorios, reflexión y revisión a lo largo del año litúrgico.";
-"premium.hero.active_title" = "Toolkit de formación activo";
+"premium.hero.active_title" = "Kit de formación activo";
 "premium.hero.active_subtitle" = "Mantenga planificación, recuperación, reflexión y revisión en un flujo católico enfocado.";

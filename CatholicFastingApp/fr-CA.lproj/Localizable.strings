@@ -32,7 +32,7 @@
 "settings.personal_profile.language" = "Langue";
 "settings.personal_profile.age_eligibility_hint" = "L’admissibilité selon l’âge est gérée dans Réglages et rappels afin qu’elle reste facile à vérifier.";
 
-"settings.regional_norms.title" = "Normes de l’Église";
+"settings.regional_norms.title" = "Normes régionales";
 "settings.regional_norms.us_province" = "Province des É.-U.";
 "settings.regional_norms.us_province_hint" = "Choisissez votre province afin d’appliquer les réglages locaux.";
 "settings.regional_norms.region_profile" = "Profil régional";
@@ -48,14 +48,14 @@
 "settings.theme.disabled_hint" = "Les couleurs saisonnières sont désactivées. Activez-les pour l’Avent, le Carême, Pâques et le temps ordinaire.";
 
 "settings.privacy.title" = "Confidentialité et consentement";
-"settings.privacy.legal_ack" = "Je comprends que cette app complète l’accompagnement pastoral sans le remplacer";
+"settings.privacy.legal_ack" = "Je comprends que cette application complète l’accompagnement pastoral sans le remplacer";
 "settings.privacy.confirm_consent" = "Veuillez confirmer votre consentement pour activer les rappels et les exportations.";
 "settings.privacy.consent_confirmed_format" = "Consentement confirmé : %@";
-"settings.privacy.data_storage_summary" = "Cette app conserve seulement les données de suivi du jeûne que vous saisissez, localement sur cet appareil.";
+"settings.privacy.data_storage_summary" = "Cette application conserve seulement les données de suivi du jeûne que vous saisissez, localement sur cet appareil.";
 "settings.privacy.data_details_link" = "Voir les détails sur les données et la confidentialité";
 "settings.privacy.data_details_title" = "Données et confidentialité";
-"settings.privacy.data_details_intro" = "Vos dossiers de jeûne demeurent sur votre appareil. L’app n’utilise ni synchronisation infonuagique ni analytique.";
-"settings.privacy.section_stored_title" = "Données stockées dans l’app";
+"settings.privacy.data_details_intro" = "Vos dossiers de jeûne demeurent sur votre appareil. L’application n’utilise ni synchronisation infonuagique ni analyse d’utilisation.";
+"settings.privacy.section_stored_title" = "Données stockées dans l’application";
 "settings.privacy.stored_item_profile" = "Profil et réglages (bascule d’admissibilité selon l’âge, langue, préférences de jeûne).";
 "settings.privacy.stored_item_observances" = "Progression des observances et historique d’état d’achèvement.";
 "settings.privacy.stored_item_notes" = "Notes de pénitence du vendredi que vous saisissez manuellement.";
@@ -67,12 +67,12 @@
 "settings.privacy.shared_item_feedback" = "Le courriel de rétroaction ouvre votre application de courriel et n’envoie que ce que vous choisissez.";
 "settings.privacy.section_not_collected_title" = "Non collecté";
 "settings.privacy.not_collected_tracking" = "Aucun identifiant de suivi publicitaire.";
-"settings.privacy.not_collected_third_party" = "Aucun SDK d’analytique tiers dans l’app.";
+"settings.privacy.not_collected_third_party" = "Aucun SDK d’analyse tiers dans l’application.";
 "settings.privacy.section_controls_title" = "Vos contrôles";
 "settings.privacy.control_consent" = "Consentement";
 
 "settings.backups.title" = "Sauvegardes et exportations";
-"settings.backups.usccb_guidance" = "Guide de l’année liturgique";
+"settings.backups.usccb_guidance" = "Guide de l’année liturgique de l’USCCB";
 "settings.backups.send_feedback" = "Envoyer des commentaires";
 "settings.backups.data_export_subject" = "Exportation des données de Catholic Fasting";
 "settings.backups.data_export_message" = "Données utilisateur exportées pour sauvegarde ou révision";
@@ -110,7 +110,7 @@
 "settings.quick.age18" = "J’ai 18 ans ou plus (âge du jeûne)";
 "settings.quick.region" = "Profil régional";
 "settings.quick.language" = "Langue";
-"settings.quick.consent_label" = "Je comprends qu’il s’agit d’une app indépendante et non d’une app officielle d’autorité ecclésiale";
+"settings.quick.consent_label" = "Je comprends qu’il s’agit d’une application indépendante et non d’une application officielle d’autorité ecclésiale";
 "settings.quick.reminder_support" = "Activer l’aide aux rappels";
 "settings.quick.reminder_strategy" = "Stratégie de rappels";
 "settings.quick.reminder_support_hint" = "Activez l’aide aux rappels pour choisir une stratégie.";
@@ -133,7 +133,7 @@
 "onboarding.title" = "Bienvenue";
 "onboarding.finish" = "Terminer la configuration";
 "onboarding.step1.title" = "Étape 1 sur 4 : Profil d’admissibilité";
-"onboarding.step1.intro" = "Utilisez de simples bascules d’admissibilité pour garder la guidance exacte sans partager votre date de naissance.";
+"onboarding.step1.intro" = "Utilisez de simples bascules d’admissibilité pour garder les indications exactes sans partager votre date de naissance.";
 "onboarding.step1.age14" = "J’ai 14 ans ou plus (âge de l’abstinence)";
 "onboarding.step1.age18" = "J’ai 18 ans ou plus (âge du jeûne)";
 "onboarding.step1.dispensation" = "Dispense de santé ou pastorale (au besoin)";
@@ -146,18 +146,18 @@
 "onboarding.step3.reminder_style" = "Style de rappels";
 "onboarding.step3.helper" = "Les rappels peuvent être modifiés en tout temps dans Réglages et rappels.";
 "onboarding.step4.title" = "Étape 4 sur 4 : Aperçu Premium";
-"onboarding.step4.intro" = "La version gratuite couvre la guidance obligatoire de jeûne. Premium ajoute une Trousse de formation plus ciblée.";
+"onboarding.step4.intro" = "La version gratuite couvre les indications obligatoires sur le jeûne. Premium ajoute une Trousse de formation plus ciblée.";
 "onboarding.trust.title" = "Pourquoi c’est digne de confiance";
-"onboarding.trust.independent" = "Il s’agit d’une app de dévotion catholique indépendante avec des références citées dans l’app.";
-"onboarding.trust.sources" = "Sources : calendrier liturgique et références sur le jeûne et l’abstinence citées directement dans l’app.";
-"onboarding.trust.unofficial" = "Il s’agit d’une app de dévotion indépendante et non d’une app officielle de l’Église catholique, de la CECC, du Vatican, ni d’un diocèse ou d’une paroisse.";
+"onboarding.trust.independent" = "Il s’agit d’une application de dévotion catholique indépendante avec des références citées dans l’application.";
+"onboarding.trust.sources" = "Sources : calendrier liturgique et références sur le jeûne et l’abstinence citées directement dans l’application.";
+"onboarding.trust.unofficial" = "Il s’agit d’une application de dévotion indépendante et non d’une application officielle de l’Église catholique, de la CECC, du Vatican, ni d’un diocèse ou d’une paroisse.";
 "onboarding.trust.follow_guidance" = "Suivez toujours votre pasteur, les normes locales de l’Église et l’avis médical.";
 "onboarding.region.us" = "États-Unis";
 "onboarding.region.canada" = "Canada";
 "onboarding.region.other" = "Autre";
 "onboarding.friday.abstain" = "S’abstenir de viande";
 "onboarding.friday.substitute" = "Autre acte pénitentiel";
-"onboarding.reminder.minimal.label" = "Minimal";
+"onboarding.reminder.minimal.label" = "Essentiel";
 "onboarding.reminder.minimal.summary" = "Seulement les rappels des jours obligatoires.";
 "onboarding.reminder.balanced.label" = "Équilibré";
 "onboarding.reminder.balanced.summary" = "Jours obligatoires plus un rappel quotidien de soutien.";
@@ -181,7 +181,7 @@
 "today.metric.week" = "Cette semaine";
 "today.actions.title" = "Actions rapides";
 "today.actions.fasting_days" = "Ouvrir Jours de jeûne";
-"today.actions.track_fast" = "Ouvrir Suivre le jeûne";
+"today.actions.track_fast" = "Ouvrir le suivi du jeûne";
 "today.actions.more" = "Ouvrir Plus";
 "today.food.title" = "Guide alimentaire";
 "today.food.okay" = "Permis aujourd’hui";
@@ -241,7 +241,7 @@
 "fasting_days.today.section" = "Aujourd’hui";
 "fasting_days.today.empty" = "Aucune discipline spéciale de jeûne n’est prévue aujourd’hui.";
 "fasting_days.today.plan_ahead" = "Planifier";
-"fasting_days.analytics.section" = "Analytique";
+"fasting_days.analytics.section" = "Statistiques";
 "fasting_days.analytics.completion_format" = "Achèvement obligatoire : %d%%";
 "fasting_days.analytics.current_streak_format" = "Série actuelle : %d jours";
 "fasting_days.analytics.best_streak_format" = "Meilleure série : %d jours";
