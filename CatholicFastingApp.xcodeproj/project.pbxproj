@@ -66,6 +66,30 @@
 		A000000000000000000000C7 /* CatholicFastingAppUITests+Premium.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D7 /* CatholicFastingAppUITests+Premium.swift */; };
 		A000000000000000000000C8 /* CatholicFastingAppUITests+TrackFast.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D8 /* CatholicFastingAppUITests+TrackFast.swift */; };
 		A000000000000000000000C9 /* CatholicFastingAppUITests+IPadNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D9 /* CatholicFastingAppUITests+IPadNavigation.swift */; };
+		A000000000000000000000E0 /* AppStorageConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000E1 /* AppStorageConfig.swift */; };
+		A000000000000000000000E2 /* AppLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000E3 /* AppLocalization.swift */; };
+		A000000000000000000000E4 /* AppViewStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000E5 /* AppViewStyles.swift */; };
+		A000000000000000000000E6 /* AppSacredVisuals.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000E7 /* AppSacredVisuals.swift */; };
+		A000000000000000000000E8 /* AppThemeAndLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000E9 /* AppThemeAndLinks.swift */; };
+		A000000000000000000000EA /* RequiredDayReminderPlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000EB /* RequiredDayReminderPlanner.swift */; };
+		A000000000000000000000EC /* DailyFoodDecisionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000ED /* DailyFoodDecisionEngine.swift */; };
+		A000000000000000000000EE /* MissedDayRecoveryEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000EF /* MissedDayRecoveryEngine.swift */; };
+		A000000000000000000000F0 /* ObservanceQueryEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000F1 /* ObservanceQueryEngine.swift */; };
+		A000000000000000000000F2 /* GuidanceTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000F3 /* GuidanceTypes.swift */; };
+		A000000000000000000000F4 /* ObservanceCalculator+CalendarEntries.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000F5 /* ObservanceCalculator+CalendarEntries.swift */; };
+		A000000000000000000000F6 /* ObservanceCalculator+DateMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000F7 /* ObservanceCalculator+DateMath.swift */; };
+		A000000000000000000000F8 /* PremiumReminderPlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000F9 /* PremiumReminderPlanner.swift */; };
+		A000000000000000000000FA /* PremiumAnalyticsEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000FB /* PremiumAnalyticsEngine.swift */; };
+		A000000000000000000000FC /* PremiumReflectionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000FD /* PremiumReflectionEngine.swift */; };
+		A00000000000000000000100 /* PremiumAdaptiveRulePlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000101 /* PremiumAdaptiveRulePlanner.swift */; };
+		A00000000000000000000102 /* PremiumRecoveryCoachEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000103 /* PremiumRecoveryCoachEngine.swift */; };
+		A00000000000000000000104 /* PremiumSubscriptionHealthEvaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000105 /* PremiumSubscriptionHealthEvaluator.swift */; };
+		A00000000000000000000106 /* IntermittentFastSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000107 /* IntermittentFastSession.swift */; };
+		A00000000000000000000108 /* IntermittentFastLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000109 /* IntermittentFastLiveActivity.swift */; };
+		A0000000000000000000010A /* MonetizationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000010B /* MonetizationStore.swift */; };
+		A0000000000000000000010C /* AppTipsAndShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000010D /* AppTipsAndShortcuts.swift */; };
+		A0000000000000000000010E /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000010F /* OnboardingView.swift */; };
+		A00000000000000000000110 /* ContentView+SettingsDataSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000111 /* ContentView+SettingsDataSections.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -166,6 +190,30 @@
 		A000000000000000000000D7 /* CatholicFastingAppUITests+Premium.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CatholicFastingAppUITests+Premium.swift"; sourceTree = "<group>"; };
 		A000000000000000000000D8 /* CatholicFastingAppUITests+TrackFast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CatholicFastingAppUITests+TrackFast.swift"; sourceTree = "<group>"; };
 		A000000000000000000000D9 /* CatholicFastingAppUITests+IPadNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CatholicFastingAppUITests+IPadNavigation.swift"; sourceTree = "<group>"; };
+		A000000000000000000000E1 /* AppStorageConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStorageConfig.swift; sourceTree = "<group>"; };
+		A000000000000000000000E3 /* AppLocalization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLocalization.swift; sourceTree = "<group>"; };
+		A000000000000000000000E5 /* AppViewStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewStyles.swift; sourceTree = "<group>"; };
+		A000000000000000000000E7 /* AppSacredVisuals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSacredVisuals.swift; sourceTree = "<group>"; };
+		A000000000000000000000E9 /* AppThemeAndLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppThemeAndLinks.swift; sourceTree = "<group>"; };
+		A000000000000000000000EB /* RequiredDayReminderPlanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequiredDayReminderPlanner.swift; sourceTree = "<group>"; };
+		A000000000000000000000ED /* DailyFoodDecisionEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyFoodDecisionEngine.swift; sourceTree = "<group>"; };
+		A000000000000000000000EF /* MissedDayRecoveryEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissedDayRecoveryEngine.swift; sourceTree = "<group>"; };
+		A000000000000000000000F1 /* ObservanceQueryEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservanceQueryEngine.swift; sourceTree = "<group>"; };
+		A000000000000000000000F3 /* GuidanceTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuidanceTypes.swift; sourceTree = "<group>"; };
+		A000000000000000000000F5 /* ObservanceCalculator+CalendarEntries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ObservanceCalculator+CalendarEntries.swift"; sourceTree = "<group>"; };
+		A000000000000000000000F7 /* ObservanceCalculator+DateMath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ObservanceCalculator+DateMath.swift"; sourceTree = "<group>"; };
+		A000000000000000000000F9 /* PremiumReminderPlanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumReminderPlanner.swift; sourceTree = "<group>"; };
+		A000000000000000000000FB /* PremiumAnalyticsEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumAnalyticsEngine.swift; sourceTree = "<group>"; };
+		A000000000000000000000FD /* PremiumReflectionEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumReflectionEngine.swift; sourceTree = "<group>"; };
+		A00000000000000000000101 /* PremiumAdaptiveRulePlanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumAdaptiveRulePlanner.swift; sourceTree = "<group>"; };
+		A00000000000000000000103 /* PremiumRecoveryCoachEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumRecoveryCoachEngine.swift; sourceTree = "<group>"; };
+		A00000000000000000000105 /* PremiumSubscriptionHealthEvaluator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumSubscriptionHealthEvaluator.swift; sourceTree = "<group>"; };
+		A00000000000000000000107 /* IntermittentFastSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntermittentFastSession.swift; sourceTree = "<group>"; };
+		A00000000000000000000109 /* IntermittentFastLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntermittentFastLiveActivity.swift; sourceTree = "<group>"; };
+		A0000000000000000000010B /* MonetizationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonetizationStore.swift; sourceTree = "<group>"; };
+		A0000000000000000000010D /* AppTipsAndShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTipsAndShortcuts.swift; sourceTree = "<group>"; };
+		A0000000000000000000010F /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		A00000000000000000000111 /* ContentView+SettingsDataSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+SettingsDataSections.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -241,8 +289,17 @@
 				A000000000000000000000D4 /* ContentView+PremiumCompanionState.swift */,
 				A0000000000000000000003D /* ContentView+GuidanceSections.swift */,
 				A0000000000000000000003F /* ContentView+SettingsSections.swift */,
+				A00000000000000000000111 /* ContentView+SettingsDataSections.swift */,
 				A000000000000000000000D1 /* AppDesignSystem.swift */,
 				A00000000000000000000092 /* AppShellTypes.swift */,
+				A000000000000000000000E1 /* AppStorageConfig.swift */,
+				A000000000000000000000E3 /* AppLocalization.swift */,
+				A000000000000000000000E5 /* AppViewStyles.swift */,
+				A000000000000000000000E7 /* AppSacredVisuals.swift */,
+				A000000000000000000000E9 /* AppThemeAndLinks.swift */,
+				A0000000000000000000010D /* AppTipsAndShortcuts.swift */,
+				A0000000000000000000010F /* OnboardingView.swift */,
+				A0000000000000000000010B /* MonetizationStore.swift */,
 				A00000000000000000000093 /* ReminderScheduler.swift */,
 				A00000000000000000000039 /* ContentSupportViews.swift */,
 				A00000000000000000000043 /* Localizable.strings */,
@@ -263,17 +320,32 @@
 				A00000000000000000000013 /* ObservanceStore.swift */,
 				A00000000000000000000031 /* RuleDomain.swift */,
 				A00000000000000000000033 /* ObservanceCalculator.swift */,
+				A000000000000000000000F5 /* ObservanceCalculator+CalendarEntries.swift */,
+				A000000000000000000000F7 /* ObservanceCalculator+DateMath.swift */,
 				A0000000000000000000005B /* LiturgicalSeasonThemeEngine.swift */,
 				A00000000000000000000035 /* CompletionStatusAndFastTracker.swift */,
 				A0000000000000000000004D /* FridayPenanceNotes.swift */,
 				A0000000000000000000004F /* IntermittentFastTracker.swift */,
+				A00000000000000000000107 /* IntermittentFastSession.swift */,
+				A00000000000000000000109 /* IntermittentFastLiveActivity.swift */,
 				A00000000000000000000051 /* SyncDiagnostics.swift */,
 				A00000000000000000000053 /* GuidanceEngines.swift */,
+				A000000000000000000000F3 /* GuidanceTypes.swift */,
+				A000000000000000000000EB /* RequiredDayReminderPlanner.swift */,
+				A000000000000000000000ED /* DailyFoodDecisionEngine.swift */,
+				A000000000000000000000EF /* MissedDayRecoveryEngine.swift */,
+				A000000000000000000000F1 /* ObservanceQueryEngine.swift */,
 				A00000000000000000000037 /* RuleBundleRepository.swift */,
 				A00000000000000000000055 /* DataProtectionEngine.swift */,
 				A00000000000000000000057 /* SyncStore.swift */,
 				A00000000000000000000059 /* FoundationDateExtensions.swift */,
 				A00000000000000000000064 /* PremiumExperienceEngine.swift */,
+				A000000000000000000000F9 /* PremiumReminderPlanner.swift */,
+				A000000000000000000000FB /* PremiumAnalyticsEngine.swift */,
+				A000000000000000000000FD /* PremiumReflectionEngine.swift */,
+				A00000000000000000000101 /* PremiumAdaptiveRulePlanner.swift */,
+				A00000000000000000000103 /* PremiumRecoveryCoachEngine.swift */,
+				A00000000000000000000105 /* PremiumSubscriptionHealthEvaluator.swift */,
 				A000000000000000000000D2 /* PremiumJourneyEngine.swift */,
 				A0000000000000000000009B /* GrowthContracts.swift */,
 				A000000000000000000000A4 /* RegionalGuidanceContext.swift */,
@@ -441,17 +513,32 @@
 				A00000000000000000000003 /* ObservanceStore.swift in Sources */,
 				A00000000000000000000030 /* RuleDomain.swift in Sources */,
 				A00000000000000000000032 /* ObservanceCalculator.swift in Sources */,
+				A000000000000000000000F4 /* ObservanceCalculator+CalendarEntries.swift in Sources */,
+				A000000000000000000000F6 /* ObservanceCalculator+DateMath.swift in Sources */,
 				A0000000000000000000005A /* LiturgicalSeasonThemeEngine.swift in Sources */,
 				A00000000000000000000034 /* CompletionStatusAndFastTracker.swift in Sources */,
 				A0000000000000000000004C /* FridayPenanceNotes.swift in Sources */,
 				A0000000000000000000004E /* IntermittentFastTracker.swift in Sources */,
+				A00000000000000000000106 /* IntermittentFastSession.swift in Sources */,
+				A00000000000000000000108 /* IntermittentFastLiveActivity.swift in Sources */,
 				A00000000000000000000050 /* SyncDiagnostics.swift in Sources */,
 				A00000000000000000000052 /* GuidanceEngines.swift in Sources */,
+				A000000000000000000000F2 /* GuidanceTypes.swift in Sources */,
+				A000000000000000000000EA /* RequiredDayReminderPlanner.swift in Sources */,
+				A000000000000000000000EC /* DailyFoodDecisionEngine.swift in Sources */,
+				A000000000000000000000EE /* MissedDayRecoveryEngine.swift in Sources */,
+				A000000000000000000000F0 /* ObservanceQueryEngine.swift in Sources */,
 				A00000000000000000000036 /* RuleBundleRepository.swift in Sources */,
 				A00000000000000000000054 /* DataProtectionEngine.swift in Sources */,
 				A00000000000000000000056 /* SyncStore.swift in Sources */,
 				A00000000000000000000058 /* FoundationDateExtensions.swift in Sources */,
 				A00000000000000000000063 /* PremiumExperienceEngine.swift in Sources */,
+				A000000000000000000000F8 /* PremiumReminderPlanner.swift in Sources */,
+				A000000000000000000000FA /* PremiumAnalyticsEngine.swift in Sources */,
+				A000000000000000000000FC /* PremiumReflectionEngine.swift in Sources */,
+				A00000000000000000000100 /* PremiumAdaptiveRulePlanner.swift in Sources */,
+				A00000000000000000000102 /* PremiumRecoveryCoachEngine.swift in Sources */,
+				A00000000000000000000104 /* PremiumSubscriptionHealthEvaluator.swift in Sources */,
 				A000000000000000000000C2 /* PremiumJourneyEngine.swift in Sources */,
 				A0000000000000000000009C /* GrowthContracts.swift in Sources */,
 				A0000000000000000000009F /* RegionalGuidanceContext.swift in Sources */,
@@ -477,8 +564,17 @@
 				A000000000000000000000C4 /* ContentView+PremiumCompanionState.swift in Sources */,
 				A0000000000000000000003C /* ContentView+GuidanceSections.swift in Sources */,
 				A0000000000000000000003E /* ContentView+SettingsSections.swift in Sources */,
+				A00000000000000000000110 /* ContentView+SettingsDataSections.swift in Sources */,
 				A000000000000000000000C1 /* AppDesignSystem.swift in Sources */,
 				A00000000000000000000095 /* AppShellTypes.swift in Sources */,
+				A000000000000000000000E0 /* AppStorageConfig.swift in Sources */,
+				A000000000000000000000E2 /* AppLocalization.swift in Sources */,
+				A000000000000000000000E4 /* AppViewStyles.swift in Sources */,
+				A000000000000000000000E6 /* AppSacredVisuals.swift in Sources */,
+				A000000000000000000000E8 /* AppThemeAndLinks.swift in Sources */,
+				A0000000000000000000010C /* AppTipsAndShortcuts.swift in Sources */,
+				A0000000000000000000010E /* OnboardingView.swift in Sources */,
+				A0000000000000000000010A /* MonetizationStore.swift in Sources */,
 				A00000000000000000000096 /* ReminderScheduler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -582,7 +678,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -635,7 +731,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -666,7 +762,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -703,7 +799,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -727,7 +823,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = CatholicFastingAppUITests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -752,7 +848,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = CatholicFastingAppUITests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -779,7 +875,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = CatholicFastingWidget/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -806,7 +902,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = CatholicFastingWidget/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
