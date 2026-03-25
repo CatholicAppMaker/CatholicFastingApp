@@ -3,10 +3,13 @@ set -euo pipefail
 
 PROJECT="/Users/kevpierce/Desktop/CatholicFastingApp/CatholicFastingApp.xcodeproj"
 SCHEME="CatholicFastingApp"
-SIMULATOR_ID="${SIMULATOR_ID:-04B1BAC6-9C7F-4C37-BE47-46ED42DF2871}"
-DESTINATION="platform=iOS Simulator,id=${SIMULATOR_ID}"
 TIMEOUT_SECONDS=180
 SUITE="${SUITE:-iphone}"
+DEFAULT_IPHONE_SIMULATOR_NAME="${DEFAULT_IPHONE_SIMULATOR_NAME:-iPhone 17 Pro Max}"
+DEFAULT_IPAD_SIMULATOR_NAME="${DEFAULT_IPAD_SIMULATOR_NAME:-iPad Pro 13-inch (M5)}"
+SIMULATOR_NAME="${SIMULATOR_NAME:-}"
+SIMULATOR_ID="${SIMULATOR_ID:-}"
+DESTINATION=""
 
 IPHONE_TESTS=(
   "CatholicFastingAppUITests/testFreshLaunchIPhoneCanCompleteOnboardingAndReachToday"
@@ -78,6 +81,71 @@ IPAD_TESTS=(
   "CatholicFastingAppUITests/testIPadTrackFastDefaultsToLiveControlsAndCollapsedAdvancedTools"
   "CatholicFastingAppUITests/testIPadTrackFastAdvancedToolsCanExpandWithoutHidingHistory"
 )
+
+extract_simulator_id() {
+  local device_line="$1"
+  print -r -- "${device_line}" | sed -n 's/.*(\([A-F0-9-]\{36\}\)).*/\1/p'
+}
+
+resolve_simulator_id() {
+  local simulator_name="$1"
+  local preferred_line=""
+  local fallback_line=""
+  local line=""
+
+  while IFS= read -r line; do
+    [[ "${line}" == *"${simulator_name} ("* ]] || continue
+    [[ "${line}" == *"(unavailable"* ]] && continue
+
+    if [[ -z "${fallback_line}" ]]; then
+      fallback_line="${line}"
+    fi
+    if [[ "${line}" == *"(Booted)"* ]]; then
+      preferred_line="${line}"
+      break
+    fi
+  done < <(xcrun simctl list devices available)
+
+  if [[ -n "${preferred_line}" ]]; then
+    extract_simulator_id "${preferred_line}"
+    return 0
+  fi
+
+  if [[ -n "${fallback_line}" ]]; then
+    extract_simulator_id "${fallback_line}"
+    return 0
+  fi
+
+  return 1
+}
+
+resolve_destination() {
+  local default_name=""
+
+  case "${SUITE}" in
+    iphone) default_name="${DEFAULT_IPHONE_SIMULATOR_NAME}" ;;
+    ipad) default_name="${DEFAULT_IPAD_SIMULATOR_NAME}" ;;
+    *)
+      print "Unknown SUITE=${SUITE}. Use iphone or ipad." >&2
+      return 1
+      ;;
+  esac
+
+  if [[ -z "${SIMULATOR_ID}" ]]; then
+    if [[ -z "${SIMULATOR_NAME}" ]]; then
+      SIMULATOR_NAME="${default_name}"
+    fi
+    SIMULATOR_ID="$(resolve_simulator_id "${SIMULATOR_NAME}")"
+  fi
+
+  if [[ -z "${SIMULATOR_ID}" ]]; then
+    print "Unable to resolve simulator for suite ${SUITE}." >&2
+    return 1
+  fi
+
+  DESTINATION="platform=iOS Simulator,id=${SIMULATOR_ID}"
+  print "simulator,${SUITE},${SIMULATOR_ID}" >&2
+}
 
 boot_simulator() {
   xcrun simctl boot "${SIMULATOR_ID}" >/dev/null 2>&1 || true
@@ -158,7 +226,6 @@ run_one_test() {
 
 main() {
   print "test,status,seconds"
-  boot_simulator
   local tests_var
   case "${SUITE}" in
     iphone) tests_var=IPHONE_TESTS ;;
@@ -168,6 +235,9 @@ main() {
       return 1
       ;;
   esac
+
+  resolve_destination
+  boot_simulator
 
   local -a tests
   tests=("${(@P)tests_var}")
