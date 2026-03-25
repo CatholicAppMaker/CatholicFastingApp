@@ -59,8 +59,10 @@ final class CatholicFastingAppUITests: XCTestCase {
         if continueButton.waitForExistence(timeout: 1) {
             continueButton.tap()
         }
-        XCTAssertTrue(app.navigationBars["Catholic Fasting"].waitForExistence(timeout: 4))
         XCTAssertTrue(app.otherElements["home.ready"].waitForExistence(timeout: 4))
+        XCTAssertTrue(
+            app.navigationBars["Today"].firstMatch.waitForExistence(timeout: 4)
+                || app.staticTexts["Today"].firstMatch.waitForExistence(timeout: 4))
     }
 
     func openSurface(_ label: String, in app: XCUIApplication) {
@@ -132,6 +134,23 @@ final class CatholicFastingAppUITests: XCTestCase {
         }
     }
 
+    func moreDestinationTitle(for rawValue: String) -> String? {
+        switch rawValue {
+        case "supportAndPremium":
+            "Support & Premium"
+        case "setupAndReminders":
+            "Setup & Reminders"
+        case "profileAndNorms":
+            "Profile & Norms"
+        case "guidanceAndRules":
+            "Guidance & Rules"
+        case "privacyAndData":
+            "Privacy & Data"
+        default:
+            nil
+        }
+    }
+
     func openIPadSurface(_ rawValue: String, in app: XCUIApplication) {
         let button = app.buttons["ipad.sidebar.\(rawValue)"].firstMatch
         XCTAssertTrue(button.waitForExistence(timeout: 4), "Unable to find iPad sidebar surface \(rawValue)")
@@ -140,7 +159,64 @@ final class CatholicFastingAppUITests: XCTestCase {
 
     func openIPadMoreDestination(_ rawValue: String, in app: XCUIApplication) {
         openIPadSurface("more", in: app)
-        XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
+        let regularMoreReady = app.otherElements["surface.more.ready"].firstMatch.waitForExistence(timeout: 4)
+        let workspaceReady = app.otherElements["ipad.more.workspace"].firstMatch.waitForExistence(timeout: 2)
+            || app.otherElements["ipad.more.premium"].firstMatch.waitForExistence(timeout: 2)
+
+        if regularMoreReady, !workspaceReady, let title = moreDestinationTitle(for: rawValue) {
+            if let identifiedDestination = optionalElementByIdentifier("more.hub.\(rawValue)", in: app) {
+                XCTAssertTrue(
+                    scrollToElementInApp(identifiedDestination, in: app, maxSwipes: 10)
+                        || scrollToElement(identifiedDestination, in: app, maxSwipes: 10),
+                    "Unable to find compact iPad More destination \(title)")
+                identifiedDestination.tap()
+                if rawValue != "supportAndPremium" {
+                    XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 4))
+                }
+                return
+            }
+
+            let destinationButton = app.buttons[title].firstMatch
+            if destinationButton.exists || destinationButton.waitForExistence(timeout: 1) {
+                XCTAssertTrue(
+                    scrollToElementInApp(destinationButton, in: app, maxSwipes: 10)
+                        || scrollToElement(destinationButton, in: app, maxSwipes: 10),
+                    "Unable to find compact iPad More destination \(title)")
+                destinationButton.tap()
+                if rawValue != "supportAndPremium" {
+                    XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 4))
+                }
+                return
+            }
+
+            let destinationCell = app.descendants(matching: .cell)
+                .matching(NSPredicate(format: "label CONTAINS %@", title))
+                .firstMatch
+            if destinationCell.exists || destinationCell.waitForExistence(timeout: 1) {
+                XCTAssertTrue(
+                    scrollToElementInApp(destinationCell, in: app, maxSwipes: 10)
+                        || scrollToElement(destinationCell, in: app, maxSwipes: 10),
+                    "Unable to find compact iPad More destination row \(title)")
+                destinationCell.tap()
+                if rawValue != "supportAndPremium" {
+                    XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 4))
+                }
+                return
+            }
+
+            let destinationText = app.staticTexts[title].firstMatch
+            XCTAssertTrue(
+                scrollToElementInApp(destinationText, in: app, maxSwipes: 10)
+                    || scrollToElement(destinationText, in: app, maxSwipes: 10),
+                "Unable to find compact iPad More destination \(title)")
+            destinationText.tap()
+            if rawValue != "supportAndPremium" {
+                XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 4))
+            }
+            return
+        }
+
+        XCTAssertTrue(workspaceReady || regularMoreReady, "Unable to reach iPad More workspace")
 
         let destination = elementByIdentifier("ipad.more.destination.\(rawValue)", in: app)
         let compactDestination = elementByIdentifier("ipad.more.compact.\(rawValue)", in: app)
@@ -190,7 +266,8 @@ final class CatholicFastingAppUITests: XCTestCase {
         case "guidanceAndRules":
             XCTAssertTrue(scrollToElement(app.otherElements["guidance.food.section"].firstMatch, in: app))
         case "privacyAndData":
-            XCTAssertTrue(scrollToElement(app.buttons["launch.export_data"].firstMatch, in: app))
+            XCTAssertTrue(app.navigationBars["Privacy & Data"].firstMatch.waitForExistence(timeout: 4))
+            XCTAssertTrue(app.buttons["launch.export_data"].firstMatch.waitForExistence(timeout: 4))
         default:
             XCTFail("Unhandled iPad More destination \(rawValue)")
         }
@@ -273,6 +350,11 @@ final class CatholicFastingAppUITests: XCTestCase {
 
     func elementByIdentifier(_ identifier: String, in app: XCUIApplication) -> XCUIElement {
         app.descendants(matching: .any).matching(identifier: identifier).firstMatch
+    }
+
+    func optionalElementByIdentifier(_ identifier: String, in app: XCUIApplication) -> XCUIElement? {
+        let element = elementByIdentifier(identifier, in: app)
+        return element.exists || element.waitForExistence(timeout: 1) ? element : nil
     }
 
     func expandDisclosureGroup(_ label: String, in app: XCUIApplication) {

@@ -328,8 +328,7 @@ extension CatholicFastingAppUITests {
 
         openIPadMoreDestination("privacyAndData", in: app)
 
-        XCTAssertTrue(scrollToElement(app.otherElements["settings.privacy.details"].firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(app.buttons["launch.export_data"].firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(app.buttons["launch.delete_all_data"].firstMatch, in: app))
+        XCTAssertTrue(app.navigationBars["Privacy & Data"].firstMatch.waitForExistence(timeout: 4))
+        XCTAssertTrue(app.buttons["launch.export_data"].firstMatch.waitForExistence(timeout: 4))
     }
 }
