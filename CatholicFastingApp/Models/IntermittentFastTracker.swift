@@ -1,24 +1,5 @@
 @preconcurrency import Foundation
-import os
 import SwiftUI
-#if canImport(ActivityKit) && os(iOS)
-import ActivityKit
-#endif
-
-struct IntermittentFastSession: Identifiable, Hashable {
-    let id: String
-    let start: Date
-    let end: Date
-    let targetHours: Int
-
-    var duration: TimeInterval {
-        end.timeIntervalSince(start)
-    }
-
-    var completedTarget: Bool {
-        duration >= TimeInterval(targetHours * 3600)
-    }
-}
 
 final class IntermittentFastTracker: ObservableObject {
     @Published private(set) var sessions: [IntermittentFastSession] = []
@@ -228,57 +209,3 @@ final class IntermittentFastTracker: ObservableObject {
 }
 
 extension IntermittentFastTracker: @unchecked Sendable {}
-
-#if canImport(ActivityKit) && os(iOS)
-struct IntermittentFastActivityAttributes: ActivityAttributes {
-    struct ContentState: Codable, Hashable {
-        let start: Date
-        let targetDate: Date
-        let targetHours: Int
-    }
-
-    let title: String
-}
-
-enum IntermittentFastLiveActivityManager {
-    private static let logger = Logger(
-        subsystem: "com.kevpierce.CatholicFastingApp",
-        category: "IntermittentFast")
-
-    static func start(start: Date, targetHours: Int) async {
-        guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
-        await endAll()
-        let attributes = IntermittentFastActivityAttributes(title: "Intermittent Fast")
-        let state = IntermittentFastActivityAttributes.ContentState(
-            start: start,
-            targetDate: start.addingTimeInterval(TimeInterval(targetHours * 3600)),
-            targetHours: targetHours)
-        do {
-            let content = ActivityContent(state: state, staleDate: nil)
-            _ = try Activity<IntermittentFastActivityAttributes>.request(
-                attributes: attributes,
-                content: content,
-                pushType: nil)
-        } catch {
-            logger.error("Live Activity start failed: \(error.localizedDescription)")
-        }
-    }
-
-    static func update(start: Date, targetHours: Int) async {
-        guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
-        let updated = IntermittentFastActivityAttributes.ContentState(
-            start: start,
-            targetDate: start.addingTimeInterval(TimeInterval(targetHours * 3600)),
-            targetHours: targetHours)
-        for activity in Activity<IntermittentFastActivityAttributes>.activities {
-            await activity.update(ActivityContent(state: updated, staleDate: nil))
-        }
-    }
-
-    static func endAll() async {
-        for activity in Activity<IntermittentFastActivityAttributes>.activities {
-            await activity.end(nil, dismissalPolicy: .immediate)
-        }
-    }
-}
-#endif
