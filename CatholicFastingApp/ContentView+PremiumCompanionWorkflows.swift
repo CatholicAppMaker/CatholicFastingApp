@@ -162,7 +162,11 @@ extension ContentView {
                 .font(.caption)
                 .foregroundStyle(.secondary)
             Text(
-                "Daily support: \(premiumReminderRecommendation.shouldEnableDailySupport ? "On" : "Off") • Morning: \(premiumReminderRecommendation.shouldEnableMorning ? "On" : "Off") • Evening: \(premiumReminderRecommendation.shouldEnableEvening ? "On" : "Off")")
+                """
+                Daily support: \(premiumReminderRecommendation.shouldEnableDailySupport ? "On" : "Off") • \
+                Morning: \(premiumReminderRecommendation.shouldEnableMorning ? "On" : "Off") • \
+                Evening: \(premiumReminderRecommendation.shouldEnableEvening ? "On" : "Off")
+                """)
                 .font(.caption)
                 .foregroundStyle(.secondary)
 

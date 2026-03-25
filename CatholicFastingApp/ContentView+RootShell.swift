@@ -56,16 +56,10 @@ extension ContentView {
                 .navigationTitle(homeSurface.label)
                 .navigationBarTitleDisplayMode(.large)
                 .toolbar {
-                    if #available(iOS 26.0, *) {
-                        ToolbarItem(placement: .topBarTrailing) {
-                            seasonBadge
-                        }
-                        .sharedBackgroundVisibility(.hidden)
-                    } else {
-                        ToolbarItem(placement: .topBarTrailing) {
-                            seasonBadge
-                        }
+                    ToolbarItem(placement: .topBarTrailing) {
+                        seasonBadge
                     }
+                    .sharedBackgroundVisibility(.hidden)
                 }
                 .tint(CatholicTheme.primary))
     }
@@ -246,17 +240,7 @@ extension ContentView {
         .accessibilityAddTraits(.isStaticText)
         .accessibilityLabel("Liturgical season \(CatholicTheme.seasonToolbarLabel)")
 
-        if #available(iOS 26.0, *) {
-            content.appCapsuleGlass()
-        } else {
-            content
-                .background(
-                    Capsule()
-                        .fill(CatholicTheme.parchment))
-                .overlay(
-                    Capsule()
-                        .stroke(CatholicTheme.cardBorder.opacity(0.6), lineWidth: 1))
-        }
+        content.appCapsuleGlass()
     }
 
     func surfaceList(for surface: HomeSurface) -> some View {

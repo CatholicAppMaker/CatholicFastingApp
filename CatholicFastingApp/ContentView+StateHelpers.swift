@@ -138,7 +138,10 @@ extension ContentView {
 
     var seasonPlanExportText: String {
         let goalBlock =
-            "Goals: required \(planningData.requiredGoal), optional \(planningData.optionalGoal). Progress required \(yearlyRequiredCompletions), optional \(yearlyOptionalCompletions)."
+            """
+            Goals: required \(planningData.requiredGoal), optional \(planningData.optionalGoal). \
+            Progress required \(yearlyRequiredCompletions), optional \(yearlyOptionalCompletions).
+            """
         let seasonBlock =
             currentSeasonCommitments.isEmpty
                 ? "No current season commitments set."
