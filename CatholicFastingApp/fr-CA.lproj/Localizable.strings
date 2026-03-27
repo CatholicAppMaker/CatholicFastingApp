@@ -125,6 +125,11 @@
 "settings.quick.permission_hint" = "Exige une confirmation du consentement avant d’activer les rappels.";
 "settings.quick.schedule_required" = "Planifier les rappels des jours obligatoires";
 "settings.quick.schedule_required_hint" = "Exige une confirmation du consentement avant la planification.";
+"settings.quick.quote_toggle" = "Rappel quotidien avec citation dévotionnelle";
+"settings.quick.quote_time" = "Heure du rappel avec citation";
+"settings.quick.quote_helper" = "Recevez chaque jour une citation sur le jeûne tirée des saints, des papes et des maîtres catholiques déjà inclus dans l’application.";
+"settings.quick.schedule_quote" = "Planifier le rappel quotidien avec citation";
+"settings.quick.schedule_quote_hint" = "Planifie une citation quotidienne sur le jeûne à l’heure choisie.";
 "settings.quick.schedule_support" = "Planifier les rappels quotidiens de soutien";
 "settings.quick.support_premium_hint" = "Premium est requis pour les rappels quotidiens de soutien au-delà des alertes des jours obligatoires.";
 "settings.quick.refresh_status" = "Actualiser l’état des rappels";
@@ -145,6 +150,9 @@
 "onboarding.step3.title" = "Étape 3 sur 4 : Stratégie de rappels";
 "onboarding.step3.reminder_style" = "Style de rappels";
 "onboarding.step3.helper" = "Les rappels peuvent être modifiés en tout temps dans Réglages et rappels.";
+"onboarding.step3.quote_toggle" = "Ajouter un rappel quotidien avec citation dévotionnelle";
+"onboarding.step3.quote_time" = "Heure du rappel avec citation";
+"onboarding.step3.quote_helper" = "Utilisez une citation quotidienne sur le jeûne tirée des saints, des papes et des maîtres catholiques.";
 "onboarding.step4.title" = "Étape 4 sur 4 : Aperçu Premium";
 "onboarding.step4.intro" = "La version gratuite couvre les indications obligatoires sur le jeûne. Premium ajoute une Trousse de formation plus ciblée.";
 "onboarding.trust.title" = "Pourquoi c’est digne de confiance";
@@ -250,6 +258,7 @@
 "fasting_days.reminders.advanced" = "Options avancées de rappels";
 "fasting_days.reminders.premium_feature" = "Les rappels quotidiens de soutien demeurent une fonction Premium.";
 "fasting_days.reminders.schedule_support_hint" = "Planifiez les rappels de soutien après avoir choisi une stratégie Premium de rappels.";
+"reminder.quote.title" = "Réflexion quotidienne sur le jeûne";
 "fasting_days.notes.section" = "Notes";
 "fasting_days.notes.history" = "Historique des notes du vendredi";
 "fasting_days.summary.full_year" = "année complète";

@@ -53,6 +53,30 @@ final class GrowthContractsTests: XCTestCase {
         XCTAssertNotEqual(englishLent.campaignTitle, spanishLent.campaignTitle)
     }
 
+    func testDailyQuoteReminderProviderUsesLocalizedSeasonalQuotePool() {
+        let date = Date(timeIntervalSince1970: 1_773_100_800) // 2026-03-10 UTC
+
+        let englishQuote = DailyQuoteReminderContentProvider.quote(for: date, locale: .english)
+        let spanishQuote = DailyQuoteReminderContentProvider.quote(for: date, locale: .spanish)
+        let frenchQuote = DailyQuoteReminderContentProvider.quote(for: date, locale: .frenchCanadian)
+
+        XCTAssertFalse(englishQuote.text.isEmpty)
+        XCTAssertFalse(spanishQuote.text.isEmpty)
+        XCTAssertFalse(frenchQuote.text.isEmpty)
+        XCTAssertNotEqual(englishQuote.text, spanishQuote.text)
+    }
+
+    func testDailyQuoteReminderBodyIncludesAttributionAndRespectsLimit() {
+        let date = Date(timeIntervalSince1970: 1_773_100_800) // 2026-03-10 UTC
+        let body = DailyQuoteReminderContentProvider.reminderBody(
+            for: date,
+            locale: .english,
+            characterLimit: 120)
+
+        XCTAssertLessThanOrEqual(body.count, 120)
+        XCTAssertTrue(body.contains("—"))
+    }
+
     func testLaunchFunnelSnapshotPersistsLocally() {
         var snapshot = LaunchFunnelSnapshot.default
         snapshot.selectedRegionRaw = RuleSettings.RegionProfile.canada.rawValue

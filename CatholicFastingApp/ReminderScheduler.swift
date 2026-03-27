@@ -6,8 +6,10 @@ import UserNotifications
 enum ReminderScheduler {
     private static let reminderPrefix = "required-day-"
     private static let supportReminderPrefix = "habit-support-"
+    private static let quoteReminderPrefix = "daily-quote-"
     private static let intermittentSchedulePrefix = "intermittent-schedule-"
     private static let reminderCategory = "habit-reminder"
+    private static let dailyQuoteSchedulingHorizon = 21
 
     static func requestPermission() async -> String {
         #if canImport(UserNotifications)
@@ -240,6 +242,84 @@ enum ReminderScheduler {
         #endif
     }
 
+    static func scheduleDailyQuoteReminder(
+        enabled: Bool,
+        hour: Int,
+        minute: Int,
+        languageMode: LanguageMode,
+        referenceDate: Date = Date()) async -> String
+    {
+        #if canImport(UserNotifications)
+        let center = UNUserNotificationCenter.current()
+        let status = await authorizationStatus(center)
+        guard isAuthorizedStatus(status) else {
+            return "Notifications are not enabled. Request permission first."
+        }
+        configureReminderActions(center)
+
+        let existing = await pendingRequests(center)
+        let toRemove = existing.map(\.identifier).filter { $0.hasPrefix(quoteReminderPrefix) }
+        if !toRemove.isEmpty {
+            center.removePendingNotificationRequests(withIdentifiers: toRemove)
+        }
+
+        guard enabled else {
+            return "Daily quote reminder cleared"
+        }
+
+        let remainingPendingCount = existing.count - toRemove.count
+        let availableSlots = max(0, 64 - remainingPendingCount)
+        let scheduleCount = min(dailyQuoteSchedulingHorizon, availableSlots)
+        guard scheduleCount > 0 else {
+            return "Notification queue is full. Clear other reminders and try again."
+        }
+
+        let calendar = Calendar.gregorian
+        let normalizedHour = min(max(hour, 0), 23)
+        let normalizedMinute = min(max(minute, 0), 59)
+        let title = localizedQuoteReminderTitle(languageMode: languageMode)
+        let scheduledDates = upcomingQuoteDates(
+            from: referenceDate,
+            count: scheduleCount,
+            hour: normalizedHour,
+            minute: normalizedMinute,
+            calendar: calendar)
+
+        var scheduled = 0
+        for reminderDate in scheduledDates {
+            let contentModel = DailyQuoteReminderContentProvider.content(
+                title: title,
+                for: reminderDate,
+                locale: languageMode.contentLocale,
+                calendar: calendar)
+
+            let content = UNMutableNotificationContent()
+            content.title = contentModel.title
+            content.body = contentModel.body
+            content.sound = .default
+            content.categoryIdentifier = reminderCategory
+
+            let dateComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: reminderDate)
+            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+            let identifier = "\(quoteReminderPrefix)\(quoteReminderDateIdentifier(for: reminderDate, calendar: calendar))"
+            let request = UNNotificationRequest(
+                identifier: identifier,
+                content: content,
+                trigger: trigger)
+            do {
+                try await center.add(request)
+                scheduled += 1
+            } catch {
+                return "Scheduling error: \(error.localizedDescription)"
+            }
+        }
+
+        return "Scheduled \(scheduled) daily quote reminder(s)"
+        #else
+        return "Notifications unavailable on this platform"
+        #endif
+    }
+
     static func scheduleIntermittentPlan(_ plan: IntermittentSchedulePlan) async -> String {
         #if canImport(UserNotifications)
         let center = UNUserNotificationCenter.current()
@@ -304,30 +384,30 @@ enum ReminderScheduler {
         let requests = await pendingRequests(center)
         let requiredCount = requests.map(\.identifier).count(where: { $0.hasPrefix(reminderPrefix) })
         let supportCount = requests.map(\.identifier).count(where: { $0.hasPrefix(supportReminderPrefix) })
+        let quoteCount = requests.map(\.identifier).count(where: { $0.hasPrefix(quoteReminderPrefix) })
         let intermittentCount = requests.map(\.identifier).count(where: { $0.hasPrefix(intermittentSchedulePrefix) })
 
-        if requiredCount == 0, supportCount == 0, intermittentCount == 0 {
+        let summaryParts = [
+            summaryPart(count: requiredCount, label: "required-day"),
+            summaryPart(count: supportCount, label: "support"),
+            summaryPart(count: quoteCount, label: "quote"),
+            summaryPart(count: intermittentCount, label: "intermittent"),
+        ].compactMap(\.self)
+
+        if summaryParts.isEmpty {
             return "No reminders queued"
         }
-        if requiredCount > 0, supportCount > 0, intermittentCount > 0 {
-            return "\(requiredCount) required-day, \(supportCount) support, and \(intermittentCount) intermittent reminder(s) queued"
+
+        if summaryParts.count == 1, let only = summaryParts.first {
+            return "\(only) queued"
         }
-        if requiredCount > 0, supportCount > 0 {
-            return "\(requiredCount) required-day and \(supportCount) support reminder(s) queued"
+
+        if summaryParts.count == 2 {
+            return "\(summaryParts[0]) and \(summaryParts[1]) queued"
         }
-        if requiredCount > 0, intermittentCount > 0 {
-            return "\(requiredCount) required-day and \(intermittentCount) intermittent reminder(s) queued"
-        }
-        if supportCount > 0, intermittentCount > 0 {
-            return "\(supportCount) support and \(intermittentCount) intermittent reminder(s) queued"
-        }
-        if requiredCount > 0 {
-            return "\(requiredCount) required-day reminder(s) queued"
-        }
-        if supportCount > 0 {
-            return "\(supportCount) support reminder(s) queued"
-        }
-        return "\(intermittentCount) intermittent reminder(s) queued"
+
+        let leading = summaryParts.dropLast().joined(separator: ", ")
+        return "\(leading), and \(summaryParts[summaryParts.count - 1]) queued"
         #else
         return "Notifications unavailable on this platform"
         #endif
@@ -404,6 +484,56 @@ enum ReminderScheduler {
         default:
             false
         }
+    }
+
+    private static func localizedQuoteReminderTitle(languageMode: LanguageMode) -> String {
+        AppLocalizer.localized(
+            "reminder.quote.title",
+            default: "Daily fasting reflection",
+            languageCode: languageMode.rawValue)
+    }
+
+    private static func summaryPart(count: Int, label: String) -> String? {
+        guard count > 0 else { return nil }
+        return "\(count) \(label) reminder\(count == 1 ? "" : "s")"
+    }
+
+    private static func upcomingQuoteDates(
+        from referenceDate: Date,
+        count: Int,
+        hour: Int,
+        minute: Int,
+        calendar: Calendar) -> [Date]
+    {
+        guard count > 0 else { return [] }
+
+        let startOfDay = calendar.startOfDay(for: referenceDate)
+        var dates: [Date] = []
+
+        for dayOffset in 0 ..< (count + 1) {
+            guard let day = calendar.date(byAdding: .day, value: dayOffset, to: startOfDay) else { continue }
+            let candidate = calendar.date(
+                bySettingHour: hour,
+                minute: minute,
+                second: 0,
+                of: day) ?? day
+            if candidate > referenceDate {
+                dates.append(candidate)
+            }
+            if dates.count == count {
+                break
+            }
+        }
+
+        return dates
+    }
+
+    private static func quoteReminderDateIdentifier(for date: Date, calendar: Calendar) -> String {
+        let components = calendar.dateComponents([.year, .month, .day], from: date)
+        let year = components.year ?? 0
+        let month = components.month ?? 0
+        let day = components.day ?? 0
+        return String(format: "%04d%02d%02d", year, month, day)
     }
     #endif
 }

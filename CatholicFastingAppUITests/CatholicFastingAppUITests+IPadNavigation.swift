@@ -116,6 +116,7 @@ extension CatholicFastingAppUITests {
         let regionPicker = app.pickers["settings.region_picker"].firstMatch
         XCTAssertTrue(scrollToElement(regionPicker, in: app))
         XCTAssertTrue(scrollToElement(app.otherElements["settings.quick.reminder_actions"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.switches["settings.quick.quote_toggle"].firstMatch, in: app))
     }
 
     func testIPadMoreDefaultsToPremiumWorkspace() {

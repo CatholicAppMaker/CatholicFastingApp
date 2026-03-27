@@ -52,6 +52,27 @@ extension ContentView {
                     .appSupportingTextStyle()
             }
 
+            Toggle(
+                localized(
+                    "settings.quick.quote_toggle",
+                    default: "Daily devotional quote reminder"),
+                isOn: $dailyQuoteReminderEnabled)
+                .accessibilityIdentifier("settings.quick.quote_toggle")
+
+            if dailyQuoteReminderEnabled {
+                DatePicker(
+                    localized("settings.quick.quote_time", default: "Quote reminder time"),
+                    selection: dailyQuoteReminderTimeBinding,
+                    displayedComponents: .hourAndMinute)
+                    .accessibilityIdentifier("settings.quick.quote_time")
+
+                Text(
+                    localized(
+                        "settings.quick.quote_helper",
+                        default: "Receive one fasting quote each day from the saints, popes, and Catholic teachers already included in the app."))
+                    .appSupportingTextStyle()
+            }
+
             Text(localizedFormat("settings.quick.progress_format", default: "Setup progress: %d/%d", setupChecklistCompleted, setupChecklistTotal))
                 .appEyebrowStyle()
                 .foregroundStyle(CatholicTheme.primary)
@@ -100,6 +121,16 @@ extension ContentView {
                     .disabled(!acceptedLegalNotice)
                     .accessibilityIdentifier("settings.quick.schedule_required")
                     .accessibilityHint(localized("settings.quick.schedule_required_hint", default: "Requires consent acknowledgment before scheduling."))
+
+                    Button(localized("settings.quick.schedule_quote", default: "Schedule Daily Quote Reminder")) {
+                        Task {
+                            await scheduleDailyQuoteReminderFromCurrentSettings()
+                        }
+                    }
+                    .appSecondaryButtonStyle()
+                    .disabled(!acceptedLegalNotice || !dailyQuoteReminderEnabled)
+                    .accessibilityIdentifier("settings.quick.schedule_quote")
+                    .accessibilityHint(localized("settings.quick.schedule_quote_hint", default: "Schedules one daily fasting quote at the selected time."))
 
                     Button(localized("settings.quick.schedule_support", default: "Schedule Daily Support Reminders")) {
                         Task {

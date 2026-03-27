@@ -116,6 +116,9 @@
 "onboarding.step3.title" = "Paso 3 de 4: Estrategia de recordatorios";
 "onboarding.step3.reminder_style" = "Estilo de recordatorios";
 "onboarding.step3.helper" = "Puede cambiar los recordatorios en cualquier momento en Ajustes y recordatorios.";
+"onboarding.step3.quote_toggle" = "Agregar un recordatorio diario con cita devocional";
+"onboarding.step3.quote_time" = "Hora del recordatorio con cita";
+"onboarding.step3.quote_helper" = "Use una cita diaria sobre el ayuno tomada de santos, papas y maestros católicos.";
 "onboarding.step4.title" = "Paso 4 de 4: Vista previa de Premium";
 "onboarding.step4.intro" = "La versión gratuita ofrece la guía obligatoria de ayuno. Premium añade un kit de formación más enfocado.";
 "onboarding.trust.title" = "Por qué esto es confiable";
@@ -156,6 +159,11 @@
 "settings.quick.permission_hint" = "Requiere confirmar el consentimiento antes de activar recordatorios.";
 "settings.quick.schedule_required" = "Programar recordatorios de días obligatorios";
 "settings.quick.schedule_required_hint" = "Requiere confirmar el consentimiento antes de programar.";
+"settings.quick.quote_toggle" = "Recordatorio diario con cita devocional";
+"settings.quick.quote_time" = "Hora del recordatorio con cita";
+"settings.quick.quote_helper" = "Reciba cada día una cita sobre el ayuno tomada de santos, papas y maestros católicos ya incluidos en la aplicación.";
+"settings.quick.schedule_quote" = "Programar recordatorio diario con cita";
+"settings.quick.schedule_quote_hint" = "Programa una cita diaria sobre el ayuno a la hora seleccionada.";
 "settings.quick.schedule_support" = "Programar recordatorios diarios de apoyo";
 "settings.quick.support_premium_hint" = "Premium es necesario para los recordatorios diarios de apoyo además de las alertas de días obligatorios.";
 "settings.quick.refresh_status" = "Actualizar estado de recordatorios";
@@ -250,6 +258,7 @@
 "fasting_days.reminders.advanced" = "Opciones avanzadas de recordatorios";
 "fasting_days.reminders.premium_feature" = "Los recordatorios diarios de apoyo siguen siendo una función Premium.";
 "fasting_days.reminders.schedule_support_hint" = "Programe los recordatorios de apoyo después de elegir una estrategia Premium de recordatorios.";
+"reminder.quote.title" = "Reflexión diaria sobre el ayuno";
 "fasting_days.notes.section" = "Notas";
 "fasting_days.notes.history" = "Historial de notas de los viernes";
 "fasting_days.summary.full_year" = "año completo";

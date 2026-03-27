@@ -234,6 +234,75 @@ struct SeasonalContentPack: Hashable {
     let quotes: [RotatingQuote]
 }
 
+struct DailyQuoteReminderContent: Equatable {
+    let title: String
+    let body: String
+    let quote: SeasonalContentPack.RotatingQuote
+}
+
+enum DailyQuoteReminderContentProvider {
+    private static let fallbackQuote = SeasonalContentPack.RotatingQuote(
+        text: "Fast with fidelity, pray with humility, and give with charity.",
+        author: "Catholic Fasting",
+        source: "In-app formation",
+        tradition: "Pastoral")
+
+    static func quote(
+        for date: Date,
+        locale: ContentLocale,
+        calendar: Calendar = .gregorian) -> SeasonalContentPack.RotatingQuote
+    {
+        let season = LiturgicalSeasonThemeEngine.season(for: date, calendar: calendar)
+        let pack = SeasonalContentPackCatalog.pack(for: season, locale: locale)
+        let quotes = pack.quotes
+        guard !quotes.isEmpty else { return fallbackQuote }
+
+        let ordinal = max(1, calendar.ordinality(of: .day, in: .year, for: date) ?? 1)
+        return quotes[(ordinal - 1) % quotes.count]
+    }
+
+    static func reminderBody(
+        for date: Date,
+        locale: ContentLocale,
+        calendar: Calendar = .gregorian,
+        characterLimit: Int = 160) -> String
+    {
+        let quote = quote(for: date, locale: locale, calendar: calendar)
+        let attributed = "“\(quote.text)” — \(quote.author)"
+        if attributed.count <= characterLimit {
+            return attributed
+        }
+
+        let compact = "\(quote.text) — \(quote.author)"
+        if compact.count <= characterLimit {
+            return compact
+        }
+
+        let reservedForAuthor = quote.author.count + 4
+        let maxTextCount = max(24, characterLimit - reservedForAuthor)
+        let trimmedText = String(quote.text.prefix(maxTextCount)).trimmingCharacters(in: .whitespacesAndNewlines)
+        return "\(trimmedText)… — \(quote.author)"
+    }
+
+    static func content(
+        title: String,
+        for date: Date,
+        locale: ContentLocale,
+        calendar: Calendar = .gregorian,
+        characterLimit: Int = 160) -> DailyQuoteReminderContent
+    {
+        let quote = quote(for: date, locale: locale, calendar: calendar)
+        return DailyQuoteReminderContent(
+            title: title,
+            body: reminderBody(
+                for: date,
+                locale: locale,
+                calendar: calendar,
+                characterLimit: characterLimit),
+            quote: quote)
+    }
+}
+
 enum ContentLocale: String, Codable {
     case english
     case spanish
@@ -276,6 +345,11 @@ enum SeasonalContentPackCatalog {
                     author: "St. Peter Chrysologus",
                     source: "Sermon 43",
                     tradition: "Church Father"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "Do you wish your prayer to fly toward God? Give it two wings: fasting and almsgiving.",
+                    author: "St. Augustine",
+                    source: "Sermon on Prayer and Fasting",
+                    tradition: "Church Father"),
             ]),
         .advent: SeasonalContentPack(
             season: .advent,
@@ -293,6 +367,11 @@ enum SeasonalContentPackCatalog {
                     author: "Pope Benedict XVI",
                     source: "Lenten Message",
                     tradition: "Pope"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "True fasting is not only abstinence from food, but withdrawal from evil.",
+                    author: "St. Basil the Great",
+                    source: "Homily on Fasting",
+                    tradition: "Church Father"),
             ]),
         .christmas: SeasonalContentPack(
             season: .christmas,
@@ -309,6 +388,11 @@ enum SeasonalContentPackCatalog {
                     text: "Penance without love is heavy, but penance with love becomes joy.",
                     author: "St. Bernard of Clairvaux",
                     source: "Sermons",
+                    tradition: "Doctor of the Church"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "Practice mortification with prudence and perseverance, not with haste.",
+                    author: "St. Francis de Sales",
+                    source: "Introduction to the Devout Life",
                     tradition: "Doctor of the Church"),
             ]),
         .easter: SeasonalContentPack(
@@ -327,6 +411,11 @@ enum SeasonalContentPackCatalog {
                     author: "St. Gregory the Great",
                     source: "Homilies on the Gospels",
                     tradition: "Pope & Doctor"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "When you give up something for love, let someone poorer than you receive what you spared.",
+                    author: "St. Teresa of Calcutta",
+                    source: "Lenten Reflection",
+                    tradition: "Saint"),
             ]),
         .ordinary: SeasonalContentPack(
             season: .ordinary,
@@ -344,6 +433,11 @@ enum SeasonalContentPackCatalog {
                     author: "Catholic Fasting",
                     source: "In-app formation",
                     tradition: "Pastoral"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "By fasting, the body learns obedience and the soul learns freedom.",
+                    author: "St. Ambrose",
+                    source: "On Elijah and Fasting",
+                    tradition: "Church Father"),
             ]),
     ]
 
@@ -364,6 +458,77 @@ enum SeasonalContentPackCatalog {
                     author: "San Pedro Crisologo",
                     source: "Sermon 43",
                     tradition: "Padre de la Iglesia"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "La oracion que vuela hacia Dios necesita dos alas: el ayuno y la limosna.",
+                    author: "San Agustin",
+                    source: "Sermon sobre la oracion y el ayuno",
+                    tradition: "Padre de la Iglesia"),
+            ]),
+        .advent: SeasonalContentPack(
+            season: .advent,
+            locale: .spanish,
+            heroAssetNames: ["SacredScriptureCandle", "SacredMarianMonogram", "SacredCathedralLight"],
+            campaignTitle: "Vigilia de Adviento",
+            campaignSubtitle: "Practique una disciplina esperanzada mientras espera a Cristo.",
+            formationLines: [
+                "Mantenga una disciplina modesta y sostenible.",
+                "Deje que el ayuno abra espacio para la oracion y el silencio.",
+            ],
+            quotes: [
+                SeasonalContentPack.RotatingQuote(
+                    text: "Renunciar al alimento material nos ayuda a escuchar a Cristo y a nutrirnos de su palabra salvadora.",
+                    author: "Papa Benedicto XVI",
+                    source: "Mensaje de Cuaresma",
+                    tradition: "Papa"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "El verdadero ayuno no es solo abstenerse de la comida, sino apartarse del mal.",
+                    author: "San Basilio Magno",
+                    source: "Homilia sobre el ayuno",
+                    tradition: "Padre de la Iglesia"),
+            ]),
+        .christmas: SeasonalContentPack(
+            season: .christmas,
+            locale: .spanish,
+            heroAssetNames: ["SacredChaliceVine", "SacredCathedralLight", "HeroSacred"],
+            campaignTitle: "Sobriedad y alegria en Navidad",
+            campaignSubtitle: "Celebre con fidelidad mientras mantiene la disciplina del viernes.",
+            formationLines: [
+                "Practique la gratitud en la mesa.",
+                "Mantenga la penitencia con suavidad y caridad.",
+            ],
+            quotes: [
+                SeasonalContentPack.RotatingQuote(
+                    text: "La penitencia sin amor es pesada, pero con amor se vuelve alegria.",
+                    author: "San Bernardo de Claraval",
+                    source: "Sermones",
+                    tradition: "Doctor de la Iglesia"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "Practique la mortificacion con prudencia y perseverancia, no con apresuramiento.",
+                    author: "San Francisco de Sales",
+                    source: "Introduccion a la vida devota",
+                    tradition: "Doctor de la Iglesia"),
+            ]),
+        .easter: SeasonalContentPack(
+            season: .easter,
+            locale: .spanish,
+            heroAssetNames: ["SacredChaliceVine", "SacredJerusalemCross", "HeroSacred"],
+            campaignTitle: "Fidelidad pascual",
+            campaignSubtitle: "Lleve la disciplina cuaresmal a la vida ordinaria.",
+            formationLines: [
+                "Mantenga con intencion la penitencia del viernes.",
+                "Haga de la gratitud y la misericordia sus primeros actos.",
+            ],
+            quotes: [
+                SeasonalContentPack.RotatingQuote(
+                    text: "La abstinencia de uno debe convertirse en alivio para otro.",
+                    author: "San Gregorio Magno",
+                    source: "Homilias sobre los Evangelios",
+                    tradition: "Papa y doctor"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "Cuando renuncie a algo por amor, deje que alguien mas necesitado reciba lo que usted ahorro.",
+                    author: "Santa Teresa de Calcuta",
+                    source: "Reflexion cuaresmal",
+                    tradition: "Santa"),
             ]),
         .ordinary: SeasonalContentPack(
             season: .ordinary,
@@ -381,6 +546,11 @@ enum SeasonalContentPackCatalog {
                     author: "San Bernardo",
                     source: "Sermones",
                     tradition: "Doctor de la Iglesia"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "Por el ayuno, el cuerpo aprende obediencia y el alma aprende libertad.",
+                    author: "San Ambrosio",
+                    source: "Sobre Elias y el ayuno",
+                    tradition: "Padre de la Iglesia"),
             ]),
     ]
 
@@ -407,6 +577,11 @@ enum SeasonalContentPackCatalog {
                     author: "Saint Pierre Chrysologue",
                     source: "Sermon 43",
                     tradition: "Père de l’Église"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "La prière qui s’élève vers Dieu a besoin de deux ailes : le jeûne et l’aumône.",
+                    author: "Saint Augustin",
+                    source: "Sermon sur la prière et le jeûne",
+                    tradition: "Père de l’Église"),
             ]),
         .advent: SeasonalContentPack(
             season: .advent,
@@ -424,6 +599,11 @@ enum SeasonalContentPackCatalog {
                     author: "Benoît XVI",
                     source: "Message de Carême",
                     tradition: "Pape"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "Le vrai jeûne n’est pas seulement l’abstinence de nourriture, mais aussi le retrait du mal.",
+                    author: "Saint Basile le Grand",
+                    source: "Homélie sur le jeûne",
+                    tradition: "Père de l’Église"),
             ]),
         .christmas: SeasonalContentPack(
             season: .christmas,
@@ -440,6 +620,11 @@ enum SeasonalContentPackCatalog {
                     text: "La pénitence sans amour est lourde, mais avec l’amour elle devient joie.",
                     author: "Saint Bernard de Clairvaux",
                     source: "Sermons",
+                    tradition: "Docteur de l’Église"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "Pratiquez la mortification avec prudence et persévérance, non dans la précipitation.",
+                    author: "Saint François de Sales",
+                    source: "Introduction à la vie dévote",
                     tradition: "Docteur de l’Église"),
             ]),
         .easter: SeasonalContentPack(
@@ -458,6 +643,11 @@ enum SeasonalContentPackCatalog {
                     author: "Saint Grégoire le Grand",
                     source: "Homélies sur les Évangiles",
                     tradition: "Pape et docteur"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "Lorsque vous renoncez à quelque chose par amour, laissez une personne plus pauvre recevoir ce que vous avez épargné.",
+                    author: "Sainte Teresa de Calcutta",
+                    source: "Réflexion de Carême",
+                    tradition: "Sainte"),
             ]),
         .ordinary: SeasonalContentPack(
             season: .ordinary,
@@ -475,6 +665,11 @@ enum SeasonalContentPackCatalog {
                     author: "Catholic Fasting",
                     source: "Formation intégrée",
                     tradition: "Pastorale"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "Par le jeûne, le corps apprend l’obéissance et l’âme apprend la liberté.",
+                    author: "Saint Ambroise",
+                    source: "Sur Élie et le jeûne",
+                    tradition: "Père de l’Église"),
             ]),
     ]
 }

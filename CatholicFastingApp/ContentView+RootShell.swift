@@ -87,7 +87,10 @@ extension ContentView {
                     reminderTierRaw: $reminderTierRaw,
                     dailyReminderSupportEnabled: $dailyReminderSupportEnabled,
                     morningReminderEnabled: $morningReminderEnabled,
-                    eveningReminderEnabled: $eveningReminderEnabled)
+                    eveningReminderEnabled: $eveningReminderEnabled,
+                    dailyQuoteReminderEnabled: $dailyQuoteReminderEnabled,
+                    dailyQuoteReminderHour: $dailyQuoteReminderHour,
+                    dailyQuoteReminderMinute: $dailyQuoteReminderMinute)
                 {
                     didCompleteOnboarding = true
                     launchFunnelSnapshot.completedOnboardingAt = Date()
@@ -123,6 +126,13 @@ extension ContentView {
                 if newValue == .active {
                     Task {
                         _ = await ReminderScheduler.topUpRequiredReminders(observances: rollingUpcomingObservances)
+                        if acceptedLegalNotice, dailyQuoteReminderEnabled {
+                            _ = await ReminderScheduler.scheduleDailyQuoteReminder(
+                                enabled: true,
+                                hour: dailyQuoteReminderHour,
+                                minute: dailyQuoteReminderMinute,
+                                languageMode: languageMode)
+                        }
                         notificationStatus = await ReminderScheduler.notificationSummary()
                     }
                 } else if newValue == .background {
@@ -132,7 +142,9 @@ extension ContentView {
     }
 
     func applyPersistenceHandlers(to content: some View) -> some View {
-        applyAdvancedPersistenceHandlers(to: applySnapshotPersistenceHandlers(to: content))
+        let snapshotWrapped = applySnapshotPersistenceHandlers(to: content)
+        let launchWrapped = applyLaunchPersistenceHandlers(to: snapshotWrapped)
+        return applyStateSavePersistenceHandlers(to: launchWrapped)
     }
 
     func applySnapshotPersistenceHandlers(to content: some View) -> some View {
@@ -154,7 +166,7 @@ extension ContentView {
             }
     }
 
-    func applyAdvancedPersistenceHandlers(to content: some View) -> some View {
+    func applyLaunchPersistenceHandlers(to content: some View) -> some View {
         content
             .onChange(of: regionProfileRaw) { _, newValue in
                 launchFunnelSnapshot.selectedRegionRaw = newValue
@@ -171,6 +183,17 @@ extension ContentView {
             .onChange(of: eveningReminderEnabled) { _, _ in
                 syncReminderTierFromCurrentToggleState()
             }
+            .onChange(of: dailyQuoteReminderEnabled) { _, isEnabled in
+                if !isEnabled {
+                    Task {
+                        await scheduleDailyQuoteReminderFromCurrentSettings()
+                    }
+                }
+            }
+    }
+
+    func applyStateSavePersistenceHandlers(to content: some View) -> some View {
+        content
             .onChange(of: planningData) { _, _ in
                 saveAdvancedState()
             }

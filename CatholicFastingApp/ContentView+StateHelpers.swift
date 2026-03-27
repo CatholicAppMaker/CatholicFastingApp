@@ -43,6 +43,23 @@ extension ContentView {
             tradition: quote.tradition)
     }
 
+    var dailyQuoteReminderTimeBinding: Binding<Date> {
+        Binding(
+            get: {
+                liturgicalCalendar.date(
+                    from: DateComponents(
+                        hour: dailyQuoteReminderHour,
+                        minute: dailyQuoteReminderMinute))
+                    ?? liturgicalCalendar.date(from: DateComponents(hour: 12, minute: 0))
+                    ?? Date()
+            },
+            set: { newValue in
+                let components = liturgicalCalendar.dateComponents([.hour, .minute], from: newValue)
+                dailyQuoteReminderHour = components.hour ?? DefaultValues.dailyQuoteReminderHour
+                dailyQuoteReminderMinute = components.minute ?? DefaultValues.dailyQuoteReminderMinute
+            })
+    }
+
     var weeklyFormationRecapFree: String {
         if weeklyActionableObservances.isEmpty {
             return "No fasting obligations logged this week yet. Keep your next required day visible."
@@ -288,6 +305,13 @@ extension ContentView {
         persistWidgetSnapshot()
         await monetizationStore.refreshCatalogAndEntitlements()
         _ = await ReminderScheduler.topUpRequiredReminders(observances: rollingUpcomingObservances)
+        if acceptedLegalNotice, dailyQuoteReminderEnabled {
+            _ = await ReminderScheduler.scheduleDailyQuoteReminder(
+                enabled: true,
+                hour: dailyQuoteReminderHour,
+                minute: dailyQuoteReminderMinute,
+                languageMode: languageMode)
+        }
         notificationStatus = await ReminderScheduler.notificationSummary()
         ensureActiveHouseholdProfileSelection()
     }
@@ -298,6 +322,14 @@ extension ContentView {
         morningReminderEnabled = tier.morningEnabled
         eveningReminderEnabled = tier.eveningEnabled
         launchFunnelSnapshot.selectedReminderTierRaw = tier.rawValue
+    }
+
+    func scheduleDailyQuoteReminderFromCurrentSettings() async {
+        notificationStatus = await ReminderScheduler.scheduleDailyQuoteReminder(
+            enabled: dailyQuoteReminderEnabled,
+            hour: dailyQuoteReminderHour,
+            minute: dailyQuoteReminderMinute,
+            languageMode: languageMode)
     }
 
     func syncReminderTierFromCurrentToggleState() {

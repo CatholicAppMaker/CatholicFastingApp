@@ -4,7 +4,8 @@ set -euo pipefail
 PROJECT="/Users/kevpierce/Desktop/CatholicFastingApp/CatholicFastingApp.xcodeproj"
 SCHEME="CatholicFastingApp"
 TIMEOUT_SECONDS=180
-SUITE="${SUITE:-iphone}"
+REQUESTED_SUITE="${1:-}"
+SUITE="${SUITE:-${REQUESTED_SUITE:-iphone}}"
 DEFAULT_IPHONE_SIMULATOR_NAME="${DEFAULT_IPHONE_SIMULATOR_NAME:-iPhone 17 Pro Max}"
 DEFAULT_IPAD_SIMULATOR_NAME="${DEFAULT_IPAD_SIMULATOR_NAME:-iPad Pro 13-inch (M5)}"
 SIMULATOR_NAME="${SIMULATOR_NAME:-}"

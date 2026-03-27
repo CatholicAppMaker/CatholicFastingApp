@@ -11,6 +11,9 @@ struct OnboardingView: View {
     @Binding var dailyReminderSupportEnabled: Bool
     @Binding var morningReminderEnabled: Bool
     @Binding var eveningReminderEnabled: Bool
+    @Binding var dailyQuoteReminderEnabled: Bool
+    @Binding var dailyQuoteReminderHour: Int
+    @Binding var dailyQuoteReminderMinute: Int
     let onComplete: () -> Void
 
     var body: some View {
@@ -102,6 +105,27 @@ struct OnboardingView: View {
                             "onboarding.step3.helper",
                             default: "Reminders can be changed any time in Setup & Reminders."))
                         .appSupportingTextStyle()
+
+                    Toggle(
+                        localized(
+                            "onboarding.step3.quote_toggle",
+                            default: "Add one daily devotional quote reminder"),
+                        isOn: $dailyQuoteReminderEnabled)
+                        .accessibilityIdentifier("onboarding.reminder_quote_toggle")
+
+                    if dailyQuoteReminderEnabled {
+                        DatePicker(
+                            localized("onboarding.step3.quote_time", default: "Quote reminder time"),
+                            selection: dailyQuoteReminderTimeBinding,
+                            displayedComponents: .hourAndMinute)
+                            .accessibilityIdentifier("onboarding.reminder_quote_time")
+
+                        Text(
+                            localized(
+                                "onboarding.step3.quote_helper",
+                                default: "Use one daily fasting quote from saints, popes, and Catholic teachers."))
+                            .appSupportingTextStyle()
+                    }
                 }
 
                 Section(localized("onboarding.step4.title", default: "Step 4 of 4: Premium Preview")) {
@@ -212,5 +236,22 @@ struct OnboardingView: View {
         case .guided:
             localized("onboarding.reminder.guided.summary", default: tier.summary)
         }
+    }
+
+    private var dailyQuoteReminderTimeBinding: Binding<Date> {
+        Binding(
+            get: {
+                Calendar.gregorian.date(
+                    from: DateComponents(
+                        hour: dailyQuoteReminderHour,
+                        minute: dailyQuoteReminderMinute))
+                    ?? Calendar.gregorian.date(from: DateComponents(hour: 12, minute: 0))
+                    ?? Date()
+            },
+            set: { newValue in
+                let components = Calendar.gregorian.dateComponents([.hour, .minute], from: newValue)
+                dailyQuoteReminderHour = components.hour ?? DefaultValues.dailyQuoteReminderHour
+                dailyQuoteReminderMinute = components.minute ?? DefaultValues.dailyQuoteReminderMinute
+            })
     }
 }

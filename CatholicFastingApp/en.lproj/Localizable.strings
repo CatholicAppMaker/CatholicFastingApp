@@ -116,6 +116,9 @@
 "onboarding.step3.title" = "Step 3 of 4: Reminder Strategy";
 "onboarding.step3.reminder_style" = "Reminder style";
 "onboarding.step3.helper" = "Reminders can be changed any time in Setup & Reminders.";
+"onboarding.step3.quote_toggle" = "Add one daily devotional quote reminder";
+"onboarding.step3.quote_time" = "Quote reminder time";
+"onboarding.step3.quote_helper" = "Use one daily fasting quote from saints, popes, and Catholic teachers.";
 "onboarding.step4.title" = "Step 4 of 4: Premium Preview";
 "onboarding.step4.intro" = "Free core gives required fasting guidance. Premium adds a focused Formation Toolkit.";
 "onboarding.trust.title" = "Why This Is Trustworthy";
@@ -156,6 +159,11 @@
 "settings.quick.permission_hint" = "Requires consent acknowledgment before reminders are enabled.";
 "settings.quick.schedule_required" = "Schedule Required-Day Reminders";
 "settings.quick.schedule_required_hint" = "Requires consent acknowledgment before scheduling.";
+"settings.quick.quote_toggle" = "Daily devotional quote reminder";
+"settings.quick.quote_time" = "Quote reminder time";
+"settings.quick.quote_helper" = "Receive one fasting quote each day from the saints, popes, and Catholic teachers already included in the app.";
+"settings.quick.schedule_quote" = "Schedule Daily Quote Reminder";
+"settings.quick.schedule_quote_hint" = "Schedules one daily fasting quote at the selected time.";
 "settings.quick.schedule_support" = "Schedule Daily Support Reminders";
 "settings.quick.support_premium_hint" = "Premium is required for daily support reminders beyond required-day alerts.";
 "settings.quick.refresh_status" = "Refresh Reminder Status";
@@ -250,6 +258,7 @@
 "fasting_days.reminders.advanced" = "Advanced reminder options";
 "fasting_days.reminders.premium_feature" = "Daily support reminders remain a Premium feature.";
 "fasting_days.reminders.schedule_support_hint" = "Schedule support reminders after choosing a Premium reminder strategy.";
+"reminder.quote.title" = "Daily fasting reflection";
 "fasting_days.notes.section" = "Notes";
 "fasting_days.notes.history" = "Friday Notes History";
 "fasting_days.summary.full_year" = "full year";

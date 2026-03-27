@@ -168,8 +168,26 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(permissionButton, in: app))
         let requiredButton = app.buttons["settings.quick.schedule_required"].firstMatch
         XCTAssertTrue(scrollToElement(requiredButton, in: app))
+        let quoteButton = app.buttons["settings.quick.schedule_quote"].firstMatch
+        XCTAssertTrue(scrollToElement(quoteButton, in: app))
         let supportButton = app.buttons["settings.quick.schedule_support"].firstMatch
         XCTAssertTrue(scrollToElement(supportButton, in: app))
+    }
+
+    func testDeepQuickSetupQuoteReminderControlsVisible() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openMoreDestination("Setup & Reminders", in: app)
+
+        let quoteToggle = app.switches["settings.quick.quote_toggle"].firstMatch
+        XCTAssertTrue(scrollToElement(quoteToggle, in: app))
+        if !switchIsOn(quoteToggle) {
+            quoteToggle.tap()
+        }
+
+        let quoteTime = app.datePickers["settings.quick.quote_time"].firstMatch
+        XCTAssertTrue(scrollToElement(quoteTime, in: app))
     }
 
     func testDeepQuickSetupShowsLanguageSelector() {
