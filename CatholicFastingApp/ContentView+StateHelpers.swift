@@ -24,23 +24,10 @@ extension ContentView {
     }
 
     var dailySeasonalQuote: CatholicFastingQuote {
-        let quotes = activeSeasonalContentPack.quotes
-        guard !quotes.isEmpty else {
-            return CatholicFastingQuote(
-                id: "fallback-seasonal-quote",
-                text: "Fast with fidelity, pray with humility, and give with charity.",
-                author: "Catholic Fasting",
-                source: "In-app formation",
-                tradition: "Pastoral")
-        }
-        let day = liturgicalCalendar.ordinality(of: .day, in: .year, for: Date()) ?? 1
-        let quote = quotes[(day - 1) % quotes.count]
-        return CatholicFastingQuote(
-            id: "seasonal-\(currentLiturgicalSeason.rawValue)-\(day)",
-            text: quote.text,
-            author: quote.author,
-            source: quote.source,
-            tradition: quote.tradition)
+        CatholicFastingQuoteSelector.seasonalQuote(
+            locale: languageMode.contentLocale,
+            season: currentLiturgicalSeason,
+            date: Date())
     }
 
     var dailyQuoteReminderTimeBinding: Binding<Date> {

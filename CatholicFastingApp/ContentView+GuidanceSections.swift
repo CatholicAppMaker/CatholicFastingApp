@@ -29,7 +29,7 @@ enum CatholicQuoteContext {
 }
 
 enum CatholicFastingQuoteSelector {
-    private static let quotes: [CatholicFastingQuote] = [
+    private static let generalQuotes: [CatholicFastingQuote] = [
         CatholicFastingQuote(
             id: "augustine-two-wings",
             text: "Do you wish your prayer to fly toward God? Give it two wings: fasting and almsgiving.",
@@ -332,7 +332,34 @@ enum CatholicFastingQuoteSelector {
             tradition: "Doctor of the Church"),
     ]
 
-    static func quote(for context: CatholicQuoteContext, date: Date = Date()) -> CatholicFastingQuote {
+    static func seasonalQuote(
+        locale: ContentLocale,
+        season: LiturgicalSeason,
+        date: Date = Date()) -> CatholicFastingQuote
+    {
+        let quotes = seasonalQuotes(locale: locale, season: season)
+        guard !quotes.isEmpty else {
+            return CatholicFastingQuote(
+                id: "fallback-seasonal",
+                text: "Offer every fast with prayer, mercy, and gratitude.",
+                author: "Catholic Fasting",
+                source: "In-app reflection",
+                tradition: "Devotional")
+        }
+
+        let calendar = Calendar.gregorian
+        let day = max(0, (calendar.ordinality(of: .day, in: .year, for: date) ?? 1) - 1)
+        return quotes[day % quotes.count]
+    }
+
+    static func quote(
+        for context: CatholicQuoteContext,
+        locale: ContentLocale,
+        season: LiturgicalSeason,
+        date: Date = Date()) -> CatholicFastingQuote
+    {
+        let seasonal = seasonalQuotes(locale: locale, season: season)
+        let quotes = seasonal + fallbackQuotes(for: locale)
         guard !quotes.isEmpty else {
             return CatholicFastingQuote(
                 id: "fallback",
@@ -341,12 +368,44 @@ enum CatholicFastingQuoteSelector {
                 source: "In-app reflection",
                 tradition: "Devotional")
         }
+
         let calendar = Calendar.gregorian
         let day = (calendar.ordinality(of: .day, in: .year, for: date) ?? 1) - 1
         let hourBucket = max(0, min(3, calendar.component(.hour, from: date) / 6))
         let rotationSeed = (day * 4) + hourBucket
         let index = (rotationSeed + context.offset) % quotes.count
         return quotes[index]
+    }
+
+    static func quote(for context: CatholicQuoteContext, date: Date = Date()) -> CatholicFastingQuote {
+        quote(
+            for: context,
+            locale: .english,
+            season: LiturgicalSeasonThemeEngine.season(for: date),
+            date: date)
+    }
+
+    private static func seasonalQuotes(
+        locale: ContentLocale,
+        season: LiturgicalSeason) -> [CatholicFastingQuote]
+    {
+        SeasonalContentPackCatalog.pack(for: season, locale: locale).quotes.enumerated().map { index, quote in
+            CatholicFastingQuote(
+                id: "seasonal-\(locale.rawValue)-\(season.rawValue)-\(index)",
+                text: quote.text,
+                author: quote.author,
+                source: quote.source,
+                tradition: quote.tradition)
+        }
+    }
+
+    private static func fallbackQuotes(for locale: ContentLocale) -> [CatholicFastingQuote] {
+        switch locale {
+        case .english:
+            generalQuotes
+        case .spanish, .frenchCanadian:
+            []
+        }
     }
 }
 

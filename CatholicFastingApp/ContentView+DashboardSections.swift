@@ -13,19 +13,34 @@ extension ContentView {
     }
 
     var dashboardFastingQuote: CatholicFastingQuote {
-        dailySeasonalQuote
+        CatholicFastingQuoteSelector.seasonalQuote(
+            locale: languageMode.contentLocale,
+            season: currentLiturgicalSeason,
+            date: Date())
     }
 
     var fastingDaysFastingQuote: CatholicFastingQuote {
-        CatholicFastingQuoteSelector.quote(for: .fastingDays)
+        CatholicFastingQuoteSelector.quote(
+            for: .fastingDays,
+            locale: languageMode.contentLocale,
+            season: currentLiturgicalSeason,
+            date: Date())
     }
 
     var intermittentFastingQuote: CatholicFastingQuote {
-        CatholicFastingQuoteSelector.quote(for: .intermittent)
+        CatholicFastingQuoteSelector.quote(
+            for: .intermittent,
+            locale: languageMode.contentLocale,
+            season: currentLiturgicalSeason,
+            date: Date())
     }
 
     var guidanceFastingQuote: CatholicFastingQuote {
-        CatholicFastingQuoteSelector.quote(for: .guidance)
+        CatholicFastingQuoteSelector.quote(
+            for: .guidance,
+            locale: languageMode.contentLocale,
+            season: currentLiturgicalSeason,
+            date: Date())
     }
 
     var planningProgressSection: some View {

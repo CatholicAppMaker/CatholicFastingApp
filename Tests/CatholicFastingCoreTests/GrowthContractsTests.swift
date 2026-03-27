@@ -62,8 +62,8 @@ final class GrowthContractsTests: XCTestCase {
                 let pack = SeasonalContentPackCatalog.pack(for: season, locale: locale)
                 XCTAssertGreaterThanOrEqual(
                     pack.quotes.count,
-                    3,
-                    "Expected at least 3 quotes for \(locale.rawValue) \(season.rawValue)")
+                    7,
+                    "Expected at least 7 quotes for \(locale.rawValue) \(season.rawValue)")
             }
         }
     }
