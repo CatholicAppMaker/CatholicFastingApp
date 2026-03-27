@@ -53,6 +53,21 @@ final class GrowthContractsTests: XCTestCase {
         XCTAssertNotEqual(englishLent.campaignTitle, spanishLent.campaignTitle)
     }
 
+    func testSeasonalContentPackMaintainsHealthyQuoteDepthAcrossLocales() {
+        let seasons: [LiturgicalSeason] = [.lent, .advent, .christmas, .easter, .ordinary]
+        let locales: [ContentLocale] = [.english, .spanish, .frenchCanadian]
+
+        for locale in locales {
+            for season in seasons {
+                let pack = SeasonalContentPackCatalog.pack(for: season, locale: locale)
+                XCTAssertGreaterThanOrEqual(
+                    pack.quotes.count,
+                    3,
+                    "Expected at least 3 quotes for \(locale.rawValue) \(season.rawValue)")
+            }
+        }
+    }
+
     func testDailyQuoteReminderProviderUsesLocalizedSeasonalQuotePool() {
         let date = Date(timeIntervalSince1970: 1_773_100_800) // 2026-03-10 UTC
 

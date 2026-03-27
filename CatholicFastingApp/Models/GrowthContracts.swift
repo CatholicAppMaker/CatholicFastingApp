@@ -350,6 +350,11 @@ enum SeasonalContentPackCatalog {
                     author: "St. Augustine",
                     source: "Sermon on Prayer and Fasting",
                     tradition: "Church Father"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "True fasting is not only abstinence from food, but withdrawal from evil.",
+                    author: "St. Basil the Great",
+                    source: "Homily on Fasting",
+                    tradition: "Church Father"),
             ]),
         .advent: SeasonalContentPack(
             season: .advent,
@@ -372,6 +377,11 @@ enum SeasonalContentPackCatalog {
                     author: "St. Basil the Great",
                     source: "Homily on Fasting",
                     tradition: "Church Father"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "Choose a modest discipline that keeps your heart awake and ready for the Lord.",
+                    author: "Catholic Fasting",
+                    source: "In-app formation",
+                    tradition: "Pastoral"),
             ]),
         .christmas: SeasonalContentPack(
             season: .christmas,
@@ -394,6 +404,11 @@ enum SeasonalContentPackCatalog {
                     author: "St. Francis de Sales",
                     source: "Introduction to the Devout Life",
                     tradition: "Doctor of the Church"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "Keep your celebration grateful, simple, and attentive to the needs of others.",
+                    author: "Catholic Fasting",
+                    source: "In-app formation",
+                    tradition: "Pastoral"),
             ]),
         .easter: SeasonalContentPack(
             season: .easter,
@@ -416,6 +431,11 @@ enum SeasonalContentPackCatalog {
                     author: "St. Teresa of Calcutta",
                     source: "Lenten Reflection",
                     tradition: "Saint"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "Carry the freedom learned in fasting into ordinary days with gratitude and mercy.",
+                    author: "Catholic Fasting",
+                    source: "In-app formation",
+                    tradition: "Pastoral"),
             ]),
         .ordinary: SeasonalContentPack(
             season: .ordinary,
@@ -438,6 +458,11 @@ enum SeasonalContentPackCatalog {
                     author: "St. Ambrose",
                     source: "On Elijah and Fasting",
                     tradition: "Church Father"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "Measure and steadiness in discipline help sustain a faithful life of prayer.",
+                    author: "St. Benedict",
+                    source: "Rule of St. Benedict",
+                    tradition: "Saint"),
             ]),
     ]
 
@@ -463,6 +488,11 @@ enum SeasonalContentPackCatalog {
                     author: "San Agustin",
                     source: "Sermon sobre la oracion y el ayuno",
                     tradition: "Padre de la Iglesia"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "El verdadero ayuno no es solo abstenerse de la comida, sino apartarse del mal.",
+                    author: "San Basilio Magno",
+                    source: "Homilia sobre el ayuno",
+                    tradition: "Padre de la Iglesia"),
             ]),
         .advent: SeasonalContentPack(
             season: .advent,
@@ -485,6 +515,11 @@ enum SeasonalContentPackCatalog {
                     author: "San Basilio Magno",
                     source: "Homilia sobre el ayuno",
                     tradition: "Padre de la Iglesia"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "Elija una disciplina sobria que mantenga el corazon despierto y atento al Senor.",
+                    author: "Catholic Fasting",
+                    source: "Formacion integrada",
+                    tradition: "Pastoral"),
             ]),
         .christmas: SeasonalContentPack(
             season: .christmas,
@@ -507,6 +542,11 @@ enum SeasonalContentPackCatalog {
                     author: "San Francisco de Sales",
                     source: "Introduccion a la vida devota",
                     tradition: "Doctor de la Iglesia"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "Celebre con gratitud, sencillez y atencion a las necesidades de los demas.",
+                    author: "Catholic Fasting",
+                    source: "Formacion integrada",
+                    tradition: "Pastoral"),
             ]),
         .easter: SeasonalContentPack(
             season: .easter,
@@ -529,6 +569,11 @@ enum SeasonalContentPackCatalog {
                     author: "Santa Teresa de Calcuta",
                     source: "Reflexion cuaresmal",
                     tradition: "Santa"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "Lleve a los dias ordinarios la libertad aprendida en el ayuno, con gratitud y misericordia.",
+                    author: "Catholic Fasting",
+                    source: "Formacion integrada",
+                    tradition: "Pastoral"),
             ]),
         .ordinary: SeasonalContentPack(
             season: .ordinary,
@@ -551,6 +596,11 @@ enum SeasonalContentPackCatalog {
                     author: "San Ambrosio",
                     source: "Sobre Elias y el ayuno",
                     tradition: "Padre de la Iglesia"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "La medida y la constancia en la disciplina ayudan a sostener una vida fiel de oracion.",
+                    author: "San Benito",
+                    source: "Regla de San Benito",
+                    tradition: "Santo"),
             ]),
     ]
 
@@ -582,6 +632,11 @@ enum SeasonalContentPackCatalog {
                     author: "Saint Augustin",
                     source: "Sermon sur la prière et le jeûne",
                     tradition: "Père de l’Église"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "Le vrai jeûne n’est pas seulement l’abstinence de nourriture, mais aussi le retrait du mal.",
+                    author: "Saint Basile le Grand",
+                    source: "Homélie sur le jeûne",
+                    tradition: "Père de l’Église"),
             ]),
         .advent: SeasonalContentPack(
             season: .advent,
@@ -604,6 +659,11 @@ enum SeasonalContentPackCatalog {
                     author: "Saint Basile le Grand",
                     source: "Homélie sur le jeûne",
                     tradition: "Père de l’Église"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "Choisissez une discipline simple qui garde le cœur éveillé dans l’attente du Seigneur.",
+                    author: "Catholic Fasting",
+                    source: "Formation intégrée",
+                    tradition: "Pastorale"),
             ]),
         .christmas: SeasonalContentPack(
             season: .christmas,
@@ -626,6 +686,11 @@ enum SeasonalContentPackCatalog {
                     author: "Saint François de Sales",
                     source: "Introduction à la vie dévote",
                     tradition: "Docteur de l’Église"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "Célébrez avec gratitude, simplicité et attention envers les personnes dans le besoin.",
+                    author: "Catholic Fasting",
+                    source: "Formation intégrée",
+                    tradition: "Pastorale"),
             ]),
         .easter: SeasonalContentPack(
             season: .easter,
@@ -648,6 +713,11 @@ enum SeasonalContentPackCatalog {
                     author: "Sainte Teresa de Calcutta",
                     source: "Réflexion de Carême",
                     tradition: "Sainte"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "Portez dans les jours ordinaires la liberté apprise dans le jeûne, avec gratitude et miséricorde.",
+                    author: "Catholic Fasting",
+                    source: "Formation intégrée",
+                    tradition: "Pastorale"),
             ]),
         .ordinary: SeasonalContentPack(
             season: .ordinary,
@@ -670,6 +740,11 @@ enum SeasonalContentPackCatalog {
                     author: "Saint Ambroise",
                     source: "Sur Élie et le jeûne",
                     tradition: "Père de l’Église"),
+                SeasonalContentPack.RotatingQuote(
+                    text: "La mesure et la constance dans la discipline soutiennent une vie fidèle de prière.",
+                    author: "Saint Benoît",
+                    source: "Règle de saint Benoît",
+                    tradition: "Saint"),
             ]),
     ]
 }
