@@ -1,34 +1,33 @@
 import SwiftUI
 
 extension ContentView {
-    var tabRootView: AnyView {
-        AnyView(
-            TabView(selection: $homeSurface) {
-                surfaceList(for: .today)
-                    .tabItem {
-                        Label(HomeSurface.today.label, systemImage: HomeSurface.today.iconName)
-                    }
-                    .tag(HomeSurface.today)
-                    .accessibilityIdentifier("tab.today")
-                surfaceList(for: .fastingDays)
-                    .tabItem {
-                        Label(HomeSurface.fastingDays.label, systemImage: HomeSurface.fastingDays.iconName)
-                    }
-                    .tag(HomeSurface.fastingDays)
-                    .accessibilityIdentifier("tab.fasting_days")
-                surfaceList(for: .intermittent)
-                    .tabItem {
-                        Label(HomeSurface.intermittent.label, systemImage: HomeSurface.intermittent.iconName)
-                    }
-                    .tag(HomeSurface.intermittent)
-                    .accessibilityIdentifier("tab.intermittent")
-                surfaceList(for: .more)
-                    .tabItem {
-                        Label(HomeSurface.more.label, systemImage: HomeSurface.more.iconName)
-                    }
-                    .tag(HomeSurface.more)
-                    .accessibilityIdentifier("tab.more")
-            })
+    var tabRootView: some View {
+        TabView(selection: $homeSurface) {
+            surfaceList(for: .today)
+                .tabItem {
+                    Label(HomeSurface.today.label, systemImage: HomeSurface.today.iconName)
+                }
+                .tag(HomeSurface.today)
+                .accessibilityIdentifier("tab.today")
+            surfaceList(for: .fastingDays)
+                .tabItem {
+                    Label(HomeSurface.fastingDays.label, systemImage: HomeSurface.fastingDays.iconName)
+                }
+                .tag(HomeSurface.fastingDays)
+                .accessibilityIdentifier("tab.fasting_days")
+            surfaceList(for: .intermittent)
+                .tabItem {
+                    Label(HomeSurface.intermittent.label, systemImage: HomeSurface.intermittent.iconName)
+                }
+                .tag(HomeSurface.intermittent)
+                .accessibilityIdentifier("tab.intermittent")
+            surfaceList(for: .more)
+                .tabItem {
+                    Label(HomeSurface.more.label, systemImage: HomeSurface.more.iconName)
+                }
+                .tag(HomeSurface.more)
+                .accessibilityIdentifier("tab.more")
+        }
     }
 
     var body: some View {
@@ -44,24 +43,23 @@ extension ContentView {
             })
     }
 
-    var tabRootScaffold: AnyView {
-        AnyView(
-            tabRootView
-                .appRootBackground()
-                .toolbarBackground(.visible, for: .tabBar)
-                .toolbarBackground(.ultraThinMaterial, for: .tabBar)
-                .overlay(alignment: .topLeading) {
-                    readinessMarkers
+    var tabRootScaffold: some View {
+        tabRootView
+            .appRootBackground()
+            .toolbarBackground(.visible, for: .tabBar)
+            .toolbarBackground(CatholicTheme.parchment.opacity(0.88), for: .tabBar)
+            .overlay(alignment: .topLeading) {
+                readinessMarkers
+            }
+            .navigationTitle(homeSurface.label)
+            .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    seasonBadge
                 }
-                .navigationTitle(homeSurface.label)
-                .navigationBarTitleDisplayMode(.large)
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        seasonBadge
-                    }
-                    .sharedBackgroundVisibility(.hidden)
-                }
-                .tint(CatholicTheme.primary))
+                .sharedBackgroundVisibility(.hidden)
+            }
+            .tint(CatholicTheme.primary)
     }
 
     func applyRootLifecycleHandlers(to content: some View) -> some View {
@@ -75,6 +73,10 @@ extension ContentView {
             }
             .onChange(of: acceptedLegalNotice) { _, newValue in
                 acceptedLegalNoticeAt = newValue ? UIConstants.exportISO8601.string(from: Date()) : ""
+                Task {
+                    await refreshDailyQuoteReminderIfNeeded()
+                    notificationStatus = await ReminderScheduler.notificationSummary()
+                }
             }
             .sheet(isPresented: onboardingBinding) {
                 OnboardingView(
@@ -126,13 +128,7 @@ extension ContentView {
                 if newValue == .active {
                     Task {
                         _ = await ReminderScheduler.topUpRequiredReminders(observances: rollingUpcomingObservances)
-                        if acceptedLegalNotice, dailyQuoteReminderEnabled {
-                            _ = await ReminderScheduler.scheduleDailyQuoteReminder(
-                                enabled: true,
-                                hour: dailyQuoteReminderHour,
-                                minute: dailyQuoteReminderMinute,
-                                languageMode: languageMode)
-                        }
+                        await refreshDailyQuoteReminderIfNeeded()
                         notificationStatus = await ReminderScheduler.notificationSummary()
                     }
                 } else if newValue == .background {
@@ -183,11 +179,27 @@ extension ContentView {
             .onChange(of: eveningReminderEnabled) { _, _ in
                 syncReminderTierFromCurrentToggleState()
             }
-            .onChange(of: dailyQuoteReminderEnabled) { _, isEnabled in
-                if !isEnabled {
-                    Task {
-                        await scheduleDailyQuoteReminderFromCurrentSettings()
-                    }
+            .onChange(of: dailyQuoteReminderEnabled) { _, _ in
+                Task {
+                    await scheduleDailyQuoteReminderFromCurrentSettings()
+                }
+            }
+            .onChange(of: dailyQuoteReminderHour) { _, _ in
+                guard acceptedLegalNotice, dailyQuoteReminderEnabled else { return }
+                Task {
+                    await scheduleDailyQuoteReminderFromCurrentSettings()
+                }
+            }
+            .onChange(of: dailyQuoteReminderMinute) { _, _ in
+                guard acceptedLegalNotice, dailyQuoteReminderEnabled else { return }
+                Task {
+                    await scheduleDailyQuoteReminderFromCurrentSettings()
+                }
+            }
+            .onChange(of: languageModeRaw) { _, _ in
+                guard acceptedLegalNotice, dailyQuoteReminderEnabled else { return }
+                Task {
+                    await scheduleDailyQuoteReminderFromCurrentSettings()
                 }
             }
     }
@@ -274,59 +286,56 @@ extension ContentView {
         .appListBackground()
     }
 
-    func surfaceSections(for surface: HomeSurface) -> AnyView {
+    @ViewBuilder
+    func surfaceSections(for surface: HomeSurface) -> some View {
         switch surface {
         case .today:
-            AnyView(
-                Group {
-                    dashboardSacredImageSection
-                    todayDecisionCardSection
-                    dashboardQuickActionsSection
-                    todayTenSecondSection
-                    todaySection
-                    setupProgressSection
-                    todayRecoverySection
-                    if !acceptedLegalNotice {
-                        unofficialAppNoticeSection
-                    }
-                    if simplifiedModeEnabled {
-                        todaySimpleSummarySection
-                    } else {
-                        dashboardDevotionalGallerySection
-                        planningProgressSection
-                        dashboardSeasonSection
-                        dashboardHeroSection
-                        progressSection
-                        analyticsSection
-                        milestoneReferralSection
-                        personalInsightsSection
-                        accessibilitySupportSection
-                        dashboardHighlightsSection
-                    }
-                })
-        case .fastingDays:
-            AnyView(
-                Group {
-                    fastingDaysHeroSection
-                    fastingDaysOverviewSection
-                    fastingDaysDisplayOptionsSection
-                    fastingDaysListSection
-                })
-        case .intermittent:
-            AnyView(
-                Group {
-                    intermittentHeroSection
-                    intermittentActiveSection
-                    intermittentControlsSection
-                    intermittentOverviewSection
-                    intermittentAdvancedToolsSection
-                })
-        case .more:
-            AnyView(
-                Group {
-                    moreHubSection
+            Group {
+                dashboardSacredImageSection
+                todayDecisionCardSection
+                dashboardQuickActionsSection
+                todayTenSecondSection
+                todaySection
+                setupProgressSection
+                todayRecoverySection
+                if !acceptedLegalNotice {
                     unofficialAppNoticeSection
-                })
+                }
+                if simplifiedModeEnabled {
+                    todaySimpleSummarySection
+                } else {
+                    dashboardDevotionalGallerySection
+                    planningProgressSection
+                    dashboardSeasonSection
+                    dashboardHeroSection
+                    progressSection
+                    analyticsSection
+                    milestoneReferralSection
+                    personalInsightsSection
+                    accessibilitySupportSection
+                    dashboardHighlightsSection
+                }
+            }
+        case .fastingDays:
+            Group {
+                fastingDaysHeroSection
+                fastingDaysOverviewSection
+                fastingDaysDisplayOptionsSection
+                fastingDaysListSection
+            }
+        case .intermittent:
+            Group {
+                intermittentHeroSection
+                intermittentActiveSection
+                intermittentControlsSection
+                intermittentOverviewSection
+                intermittentAdvancedToolsSection
+            }
+        case .more:
+            Group {
+                moreHubSection
+                unofficialAppNoticeSection
+            }
         }
     }
 

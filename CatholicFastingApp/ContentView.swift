@@ -85,6 +85,8 @@ struct ContentView: View {
         DefaultValues.dailyQuoteReminderHour
     @AppStorage(StorageKeys.dailyQuoteReminderMinute) var dailyQuoteReminderMinute =
         DefaultValues.dailyQuoteReminderMinute
+    @AppStorage(StorageKeys.dailyQuoteReminderSignature) var dailyQuoteReminderSignature =
+        DefaultValues.dailyQuoteReminderSignature
     @AppStorage(StorageKeys.reminderTier) var reminderTierRaw = DefaultValues.reminderTier.rawValue
     @AppStorage(StorageKeys.hapticsEnabled) var hapticsEnabled = DefaultValues.hapticsEnabled
     @AppStorage(StorageKeys.intermittentShowAdvanced) var intermittentShowAdvanced = false

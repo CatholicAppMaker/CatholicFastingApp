@@ -216,3 +216,107 @@ enum ReminderTier: String, CaseIterable, Identifiable {
         return .minimal
     }
 }
+
+struct DailyQuoteReminderRefreshState: Hashable {
+    let isEnabled: Bool
+    let hour: Int
+    let minute: Int
+    let locale: ContentLocale
+    let consentAccepted: Bool
+    let notificationsAuthorized: Bool
+    let pendingReminderCount: Int
+
+    var signature: String {
+        guard isEnabled, consentAccepted else { return "disabled" }
+        return "\(locale.rawValue)-\(normalizedHour)-\(normalizedMinute)"
+    }
+
+    func shouldRefresh(storedSignature: String) -> Bool {
+        guard consentAccepted else { return false }
+        guard notificationsAuthorized else { return false }
+
+        if !isEnabled {
+            return storedSignature != signature || pendingReminderCount > 0
+        }
+
+        return storedSignature != signature || pendingReminderCount == 0
+    }
+
+    private var normalizedHour: Int {
+        min(max(hour, 0), 23)
+    }
+
+    private var normalizedMinute: Int {
+        min(max(minute, 0), 59)
+    }
+}
+
+struct DashboardMetricsSnapshot: Hashable {
+    let monthlyCompletionCount: Int
+    let yearlyRequiredCompletions: Int
+    let yearlyOptionalCompletions: Int
+    let weeklyActionableCount: Int
+    let weeklyCompletedCount: Int
+    let intermittentHitRatePercent: Int
+
+    static func build(
+        observances: [Observance],
+        statusesByID: [String: CompletionStatus],
+        sessions: [IntermittentFastSession],
+        now: Date,
+        calendar: Calendar) -> DashboardMetricsSnapshot
+    {
+        let month = calendar.component(.month, from: now)
+        let year = calendar.component(.year, from: now)
+        let weekStart = calendar.date(byAdding: .day, value: -6, to: now) ?? now
+
+        var monthlyCompletionCount = 0
+        var yearlyRequiredCompletions = 0
+        var yearlyOptionalCompletions = 0
+        var weeklyActionableCount = 0
+        var weeklyCompletedCount = 0
+
+        for observance in observances {
+            let statusCountsTowardProgress = statusesByID[observance.id]?.countsTowardProgress == true
+
+            if observance.obligation == .mandatory, statusCountsTowardProgress {
+                yearlyRequiredCompletions += 1
+            }
+
+            if observance.obligation == .optional, statusCountsTowardProgress {
+                yearlyOptionalCompletions += 1
+            }
+
+            if calendar.component(.month, from: observance.date) == month,
+               calendar.component(.year, from: observance.date) == year,
+               statusCountsTowardProgress
+            {
+                monthlyCompletionCount += 1
+            }
+
+            if observance.date >= weekStart, observance.date <= now, observance.obligation != .notApplicable {
+                weeklyActionableCount += 1
+                if statusCountsTowardProgress {
+                    weeklyCompletedCount += 1
+                }
+            }
+        }
+
+        let recentSessions = Array(sessions.prefix(20))
+        let intermittentHitRatePercent: Int
+        if recentSessions.isEmpty {
+            intermittentHitRatePercent = 0
+        } else {
+            let hits = recentSessions.count(where: \.completedTarget)
+            intermittentHitRatePercent = Int((Double(hits) / Double(recentSessions.count) * 100).rounded())
+        }
+
+        return DashboardMetricsSnapshot(
+            monthlyCompletionCount: monthlyCompletionCount,
+            yearlyRequiredCompletions: yearlyRequiredCompletions,
+            yearlyOptionalCompletions: yearlyOptionalCompletions,
+            weeklyActionableCount: weeklyActionableCount,
+            weeklyCompletedCount: weeklyCompletedCount,
+            intermittentHitRatePercent: intermittentHitRatePercent)
+    }
+}

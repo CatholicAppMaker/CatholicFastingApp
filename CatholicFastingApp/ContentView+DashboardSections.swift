@@ -451,7 +451,7 @@ extension ContentView {
             }
             .padding(.vertical, 6)
             .padding(.horizontal, 8)
-            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .background(CatholicTheme.parchment.opacity(0.92), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .fill(CatholicTheme.accent.opacity(0.10)))
@@ -534,6 +534,6 @@ extension ContentView {
     }
 
     private var weeklyDisciplineGoal: Int {
-        max(1, weeklyActionableObservances.count)
+        max(1, weeklyActionableObservanceCount)
     }
 }

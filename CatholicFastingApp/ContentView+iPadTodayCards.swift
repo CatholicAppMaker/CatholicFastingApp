@@ -90,7 +90,7 @@ extension ContentView {
                 subtitle: upcomingMandatoryObservance?.date.formatted(date: .abbreviated, time: .omitted) ?? "Current year clear")
             IPadSummaryMetricCard(
                 title: "This week",
-                value: "\(weeklyCompletedObservancesCount)/\(weeklyActionableObservances.count)",
+                value: "\(weeklyCompletedObservancesCount)/\(weeklyActionableObservanceCount)",
                 subtitle: "discipline days completed",
                 tint: CatholicTheme.accent)
             IPadSummaryMetricCard(

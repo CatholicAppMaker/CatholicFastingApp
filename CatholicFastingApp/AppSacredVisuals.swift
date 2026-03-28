@@ -149,7 +149,7 @@ struct SacredImageryCard: View {
         VStack(alignment: .leading, spacing: 8) {
             ZStack {
                 RoundedRectangle(cornerRadius: 14)
-                    .fill(.thinMaterial)
+                    .fill(CatholicTheme.parchment.opacity(0.92))
                     .overlay(
                         RoundedRectangle(cornerRadius: 14)
                             .fill(CatholicTheme.parchment.opacity(0.16)))

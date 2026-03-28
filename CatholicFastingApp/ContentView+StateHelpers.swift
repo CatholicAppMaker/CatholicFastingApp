@@ -47,11 +47,31 @@ extension ContentView {
             })
     }
 
+    var dailyQuoteReminderRefreshState: DailyQuoteReminderRefreshState {
+        DailyQuoteReminderRefreshState(
+            isEnabled: dailyQuoteReminderEnabled,
+            hour: dailyQuoteReminderHour,
+            minute: dailyQuoteReminderMinute,
+            locale: languageMode.contentLocale,
+            consentAccepted: acceptedLegalNotice,
+            notificationsAuthorized: true,
+            pendingReminderCount: 0)
+    }
+
+    var dashboardMetricsSnapshot: DashboardMetricsSnapshot {
+        DashboardMetricsSnapshot.build(
+            observances: currentYearObservances,
+            statusesByID: tracker.statusesByID,
+            sessions: intermittentTracker.sessions,
+            now: Date(),
+            calendar: liturgicalCalendar)
+    }
+
     var weeklyFormationRecapFree: String {
-        if weeklyActionableObservances.isEmpty {
+        if weeklyActionableObservanceCount == 0 {
             return "No fasting obligations logged this week yet. Keep your next required day visible."
         }
-        return "This week: \(weeklyCompletedObservancesCount) of \(weeklyActionableObservances.count) discipline days completed."
+        return "This week: \(weeklyCompletedObservancesCount) of \(weeklyActionableObservanceCount) discipline days completed."
     }
 
     var weeklyFormationRecapPremium: String {
@@ -92,26 +112,15 @@ extension ContentView {
     }
 
     var monthlyCompletionCount: Int {
-        let now = Date()
-        let month = liturgicalCalendar.component(.month, from: now)
-        let year = liturgicalCalendar.component(.year, from: now)
-        return currentYearObservances.count(where: {
-            liturgicalCalendar.component(.month, from: $0.date) == month
-                && liturgicalCalendar.component(.year, from: $0.date) == year
-                && tracker.status(for: $0.id).countsTowardProgress
-        })
+        dashboardMetricsSnapshot.monthlyCompletionCount
     }
 
     var yearlyRequiredCompletions: Int {
-        currentYearObservances.count(where: {
-            $0.obligation == .mandatory && tracker.status(for: $0.id).countsTowardProgress
-        })
+        dashboardMetricsSnapshot.yearlyRequiredCompletions
     }
 
     var yearlyOptionalCompletions: Int {
-        currentYearObservances.count(where: {
-            $0.obligation == .optional && tracker.status(for: $0.id).countsTowardProgress
-        })
+        dashboardMetricsSnapshot.yearlyOptionalCompletions
     }
 
     var weeklyActionableObservances: [Observance] {
@@ -119,8 +128,12 @@ extension ContentView {
         return currentYearObservances.filter { $0.date >= weekStart && $0.date <= Date() && $0.obligation != .notApplicable }
     }
 
+    var weeklyActionableObservanceCount: Int {
+        dashboardMetricsSnapshot.weeklyActionableCount
+    }
+
     var weeklyCompletedObservancesCount: Int {
-        weeklyActionableObservances.count(where: { tracker.status(for: $0.id).countsTowardProgress })
+        dashboardMetricsSnapshot.weeklyCompletedCount
     }
 
     var requirementGoalProgress: Double {
@@ -134,10 +147,7 @@ extension ContentView {
     }
 
     var intermittentHitRatePercent: Int {
-        let recent = Array(intermittentTracker.sessions.prefix(20))
-        guard !recent.isEmpty else { return 0 }
-        let hits = recent.filter(\.completedTarget).count
-        return Int((Double(hits) / Double(recent.count) * 100).rounded())
+        dashboardMetricsSnapshot.intermittentHitRatePercent
     }
 
     var seasonPlanExportText: String {
@@ -292,13 +302,7 @@ extension ContentView {
         persistWidgetSnapshot()
         await monetizationStore.refreshCatalogAndEntitlements()
         _ = await ReminderScheduler.topUpRequiredReminders(observances: rollingUpcomingObservances)
-        if acceptedLegalNotice, dailyQuoteReminderEnabled {
-            _ = await ReminderScheduler.scheduleDailyQuoteReminder(
-                enabled: true,
-                hour: dailyQuoteReminderHour,
-                minute: dailyQuoteReminderMinute,
-                languageMode: languageMode)
-        }
+        await refreshDailyQuoteReminderIfNeeded()
         notificationStatus = await ReminderScheduler.notificationSummary()
         ensureActiveHouseholdProfileSelection()
     }
@@ -312,11 +316,37 @@ extension ContentView {
     }
 
     func scheduleDailyQuoteReminderFromCurrentSettings() async {
+        let refreshState = dailyQuoteReminderRefreshState
         notificationStatus = await ReminderScheduler.scheduleDailyQuoteReminder(
             enabled: dailyQuoteReminderEnabled,
             hour: dailyQuoteReminderHour,
             minute: dailyQuoteReminderMinute,
             languageMode: languageMode)
+        dailyQuoteReminderSignature = refreshState.signature
+    }
+
+    func refreshDailyQuoteReminderIfNeeded() async {
+        let pendingReminderCount = await ReminderScheduler.pendingDailyQuoteReminderCount()
+        let notificationsAuthorized = await ReminderScheduler.notificationsAuthorizedForScheduling()
+        let refreshState = DailyQuoteReminderRefreshState(
+            isEnabled: dailyQuoteReminderEnabled,
+            hour: dailyQuoteReminderHour,
+            minute: dailyQuoteReminderMinute,
+            locale: languageMode.contentLocale,
+            consentAccepted: acceptedLegalNotice,
+            notificationsAuthorized: notificationsAuthorized,
+            pendingReminderCount: pendingReminderCount)
+
+        guard refreshState.shouldRefresh(storedSignature: dailyQuoteReminderSignature) else {
+            return
+        }
+
+        notificationStatus = await ReminderScheduler.scheduleDailyQuoteReminder(
+            enabled: dailyQuoteReminderEnabled,
+            hour: dailyQuoteReminderHour,
+            minute: dailyQuoteReminderMinute,
+            languageMode: languageMode)
+        dailyQuoteReminderSignature = refreshState.signature
     }
 
     func syncReminderTierFromCurrentToggleState() {

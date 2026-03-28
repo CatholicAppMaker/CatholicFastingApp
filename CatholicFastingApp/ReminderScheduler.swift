@@ -413,6 +413,26 @@ enum ReminderScheduler {
         #endif
     }
 
+    static func pendingDailyQuoteReminderCount() async -> Int {
+        #if canImport(UserNotifications)
+        let center = UNUserNotificationCenter.current()
+        let requests = await pendingRequests(center)
+        return requests.map(\.identifier).count(where: { $0.hasPrefix(quoteReminderPrefix) })
+        #else
+        return 0
+        #endif
+    }
+
+    static func notificationsAuthorizedForScheduling() async -> Bool {
+        #if canImport(UserNotifications)
+        let center = UNUserNotificationCenter.current()
+        let status = await authorizationStatus(center)
+        return isAuthorizedStatus(status)
+        #else
+        return false
+        #endif
+    }
+
     #if canImport(UserNotifications)
     private static func configureReminderActions(_ center: UNUserNotificationCenter) {
         let reviewAction = UNNotificationAction(

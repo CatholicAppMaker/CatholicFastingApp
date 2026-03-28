@@ -20,6 +20,7 @@ enum DefaultValues {
     static let dailyQuoteReminderEnabled = false
     static let dailyQuoteReminderHour = 12
     static let dailyQuoteReminderMinute = 0
+    static let dailyQuoteReminderSignature = "disabled"
     static let reminderTier = ReminderTier.balanced
     static let hapticsEnabled = true
     static let supportPremiumSurface = SupportPremiumSurface.upgrade
@@ -48,6 +49,7 @@ enum StorageKeys {
     static let dailyQuoteReminderEnabled = "daily_quote_reminder_enabled"
     static let dailyQuoteReminderHour = "daily_quote_reminder_hour"
     static let dailyQuoteReminderMinute = "daily_quote_reminder_minute"
+    static let dailyQuoteReminderSignature = "daily_quote_reminder_signature"
     static let reminderTier = "reminder_tier"
     static let hapticsEnabled = "haptics_enabled"
     static let intermittentShowAdvanced = "intermittent_show_advanced"

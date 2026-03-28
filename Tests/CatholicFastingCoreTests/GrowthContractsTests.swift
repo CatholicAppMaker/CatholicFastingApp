@@ -111,4 +111,113 @@ final class GrowthContractsTests: XCTestCase {
         XCTAssertEqual(loaded.lockedUpgradeTapCount, 2)
         XCTAssertEqual(loaded.premiumPreviewSeenAt, snapshot.premiumPreviewSeenAt)
     }
+
+    func testDailyQuoteReminderRefreshStateRequestsRefreshWhenSettingsChange() {
+        let baseline = DailyQuoteReminderRefreshState(
+            isEnabled: true,
+            hour: 12,
+            minute: 0,
+            locale: .english,
+            consentAccepted: true,
+            notificationsAuthorized: true,
+            pendingReminderCount: 21)
+
+        XCTAssertTrue(baseline.shouldRefresh(storedSignature: "english-7-0"))
+    }
+
+    func testDailyQuoteReminderRefreshStateRequestsRefreshWhenPermissionComesOnlineWithoutPendingReminders() {
+        let state = DailyQuoteReminderRefreshState(
+            isEnabled: true,
+            hour: 12,
+            minute: 0,
+            locale: .english,
+            consentAccepted: true,
+            notificationsAuthorized: true,
+            pendingReminderCount: 0)
+
+        XCTAssertTrue(state.shouldRefresh(storedSignature: state.signature))
+    }
+
+    func testDailyQuoteReminderRefreshStateSkipsRefreshOnForegroundWhenScheduleMatches() {
+        let state = DailyQuoteReminderRefreshState(
+            isEnabled: true,
+            hour: 12,
+            minute: 0,
+            locale: .frenchCanadian,
+            consentAccepted: true,
+            notificationsAuthorized: true,
+            pendingReminderCount: 21)
+
+        XCTAssertFalse(state.shouldRefresh(storedSignature: state.signature))
+    }
+
+    func testDashboardMetricsSnapshotMatchesExpectedCounts() {
+        let calendar = Calendar.gregorian
+        let now = calendar.date(from: DateComponents(year: 2026, month: 3, day: 27, hour: 12)) ?? Date()
+        let monthlyRequired = makeObservance(id: "required-1", date: calendar.date(from: DateComponents(year: 2026, month: 3, day: 26)) ?? now, obligation: .mandatory)
+        let monthlyOptional = makeObservance(id: "optional-1", date: calendar.date(from: DateComponents(year: 2026, month: 3, day: 24)) ?? now, obligation: .optional)
+        let monthlyMissed = makeObservance(id: "missed-1", date: calendar.date(from: DateComponents(year: 2026, month: 3, day: 23)) ?? now, obligation: .mandatory)
+        let olderOptional = makeObservance(id: "optional-older", date: calendar.date(from: DateComponents(year: 2026, month: 2, day: 12)) ?? now, obligation: .optional)
+        let notApplicable = makeObservance(id: "not-applicable", date: calendar.date(from: DateComponents(year: 2026, month: 3, day: 25)) ?? now, obligation: .notApplicable)
+        let twoHours = TimeInterval(2 * 3600)
+        let threeHours = TimeInterval(3 * 3600)
+        let fourHours = TimeInterval(4 * 3600)
+        let fiveHours = TimeInterval(5 * 3600)
+        let sixHours = TimeInterval(6 * 3600)
+        let statuses: [String: CompletionStatus] = [
+            monthlyRequired.id: .completed,
+            monthlyOptional.id: .substituted,
+            monthlyMissed.id: .missed,
+            olderOptional.id: .dispensed,
+        ]
+        let sessions = [
+            IntermittentFastSession(
+                id: "session-1",
+                start: now.addingTimeInterval(-twoHours),
+                end: now.addingTimeInterval(-TimeInterval(3600)),
+                targetHours: 1),
+            IntermittentFastSession(
+                id: "session-2",
+                start: now.addingTimeInterval(-fourHours),
+                end: now.addingTimeInterval(-threeHours),
+                targetHours: 2),
+            IntermittentFastSession(
+                id: "session-3",
+                start: now.addingTimeInterval(-sixHours),
+                end: now.addingTimeInterval(-fiveHours),
+                targetHours: 1),
+        ]
+
+        let snapshot = DashboardMetricsSnapshot.build(
+            observances: [monthlyRequired, monthlyOptional, monthlyMissed, olderOptional, notApplicable],
+            statusesByID: statuses,
+            sessions: sessions,
+            now: now,
+            calendar: calendar)
+
+        XCTAssertEqual(snapshot.monthlyCompletionCount, 2)
+        XCTAssertEqual(snapshot.yearlyRequiredCompletions, 1)
+        XCTAssertEqual(snapshot.yearlyOptionalCompletions, 2)
+        XCTAssertEqual(snapshot.weeklyActionableCount, 3)
+        XCTAssertEqual(snapshot.weeklyCompletedCount, 2)
+        XCTAssertEqual(snapshot.intermittentHitRatePercent, 67)
+    }
+
+    private func makeObservance(
+        id: String,
+        date: Date,
+        obligation: Observance.Obligation,
+        kind: Observance.Kind = .fridayPenance) -> Observance
+    {
+        Observance(
+            id: id,
+            title: id,
+            date: date,
+            kind: kind,
+            obligation: obligation,
+            detail: nil,
+            rationale: "Test rationale",
+            citations: [],
+            ruleVersion: "test")
+    }
 }

@@ -74,7 +74,7 @@ struct ObservanceRowView: View {
         }
         .padding(.vertical, 5)
         .padding(.horizontal, 8)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .background(CatholicTheme.parchment.opacity(0.92), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .fill(rowTint.opacity(0.12)))
@@ -163,7 +163,7 @@ struct StatusTag: View {
             .font(.caption)
             .padding(.horizontal, 8)
             .padding(.vertical, 3)
-            .background(.thinMaterial, in: Capsule())
+            .background(CatholicTheme.parchment.opacity(0.88), in: Capsule())
             .overlay(
                 Capsule()
                     .fill(color.opacity(0.16)))
