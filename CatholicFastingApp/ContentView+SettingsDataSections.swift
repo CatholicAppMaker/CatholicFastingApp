@@ -3,6 +3,12 @@ import SwiftUI
 extension ContentView {
     var privacySection: some View {
         Section(localized("settings.privacy.title", default: "Privacy & Consent")) {
+            AppSectionLeadCard(
+                eyebrow: localized("settings.privacy.title", default: "Privacy & Consent"),
+                title: localized("settings.privacy.data_details_link", default: "View Data & Privacy Details"),
+                detail: localized("settings.privacy.data_storage_summary", default: "This app stores only fasting-tracker data you enter, locally on this device."),
+                style: .utility)
+
             Toggle(
                 localized(
                     "settings.privacy.legal_ack",
@@ -27,13 +33,6 @@ extension ContentView {
                     .foregroundStyle(.secondary)
             }
 
-            Text(
-                localized(
-                    "settings.privacy.data_storage_summary",
-                    default: "This app stores only fasting-tracker data you enter, locally on this device."))
-                .font(.caption)
-                .foregroundStyle(.secondary)
-
             NavigationLink {
                 DataPrivacyDetailsView(
                     languageCode: languageModeRaw,
@@ -49,6 +48,12 @@ extension ContentView {
 
     var backupsSection: some View {
         Section(localized("settings.backups.title", default: "Support & Backup")) {
+            AppSectionLeadCard(
+                eyebrow: localized("settings.backups.title", default: "Support & Backup"),
+                title: localized("settings.backups.export_personal_backup", default: "Export Personal Data Backup"),
+                detail: localized("settings.backups.section_summary", default: "Keep feedback, source guidance, and personal backup tools together in one calm place."),
+                style: .utility)
+
             Link(
                 localized("settings.backups.usccb_guidance", default: "USCCB Liturgical Year Guidance"),
                 destination: UIConstants.legalPolicyURL)

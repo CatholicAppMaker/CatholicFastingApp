@@ -19,6 +19,21 @@ struct OnboardingView: View {
     var body: some View {
         NavigationStack {
             List {
+                Section {
+                    VStack(alignment: .leading, spacing: 12) {
+                        SacredHeroCard(
+                            assetName: "HeroSacred",
+                            title: localized("onboarding.hero.title", default: "Catholic Fasting"),
+                            subtitle: localized("onboarding.hero.subtitle", default: "Set language, region, and reminders once so the app can stay calm and clear each day."),
+                            height: 162,
+                            cornerRadius: 18,
+                            accessibilityIdentifier: "onboarding.hero")
+
+                        CatholicFastingQuoteCard(quote: onboardingQuote, compact: true)
+                            .accessibilityIdentifier("onboarding.quote")
+                    }
+                }
+
                 Section(localized("onboarding.step1.title", default: "Step 1 of 4: Eligibility Profile")) {
                     Text(
                         localized(
@@ -236,6 +251,15 @@ struct OnboardingView: View {
         case .guided:
             localized("onboarding.reminder.guided.summary", default: tier.summary)
         }
+    }
+
+    private var onboardingQuote: CatholicFastingQuote {
+        let language = LanguageMode(rawValue: languageModeRaw) ?? DefaultValues.language
+        let season = LiturgicalSeasonThemeEngine.season(for: Date())
+        return CatholicFastingQuoteSelector.seasonalQuote(
+            locale: language.contentLocale,
+            season: season,
+            date: Date())
     }
 
     private var dailyQuoteReminderTimeBinding: Binding<Date> {

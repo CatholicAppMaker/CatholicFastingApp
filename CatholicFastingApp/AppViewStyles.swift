@@ -25,11 +25,11 @@ extension View {
     }
 
     func appRoundedGlass(cornerRadius: CGFloat) -> some View {
-        glassEffect(.regular.interactive(), in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+        glassEffect(.regular, in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
     }
 
     func appCapsuleGlass() -> some View {
-        glassEffect(in: Capsule())
+        glassEffect(.regular, in: Capsule())
     }
 
     func appSurfaceCard(_ style: AppSurfaceCardStyle = .standard, cornerRadius: CGFloat = 18) -> some View {

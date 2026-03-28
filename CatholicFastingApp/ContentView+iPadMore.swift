@@ -45,10 +45,12 @@ extension ContentView {
     var ipadSimplePremiumWorkspace: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                IPadWorkspaceHeader(
+                AppSectionLeadCard(
                     eyebrow: "Support & Premium",
                     title: "Choose a plan, then keep the journey visible",
-                    detail: "Yearly stays primary. Tips, billing, and legal tools remain below the plan choice.")
+                    detail: "Yearly stays primary. Tips, billing, and legal tools remain below the plan choice.",
+                    serifTitle: true,
+                    style: .utility)
 
                 premiumJourneyCard(sample: !monetizationStore.premiumUnlocked)
 
@@ -130,15 +132,7 @@ extension ContentView {
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(
-                    offer?.isPrimaryAnchor == true
-                        ? CatholicTheme.accent.opacity(0.10)
-                        : CatholicTheme.parchment.opacity(0.92)))
-        .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke((offer?.isPrimaryAnchor == true ? CatholicTheme.primary : CatholicTheme.cardBorder).opacity(0.45), lineWidth: 1))
+        .appSurfaceCard(offer?.isPrimaryAnchor == true ? .primary : .standard, cornerRadius: 16)
         .appRoundedGlass(cornerRadius: 16)
     }
     #endif

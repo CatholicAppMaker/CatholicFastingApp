@@ -355,8 +355,10 @@ extension ContentView {
                 CatholicFastingQuoteCard(quote: guidanceFastingQuote, compact: true)
                     .accessibilityIdentifier("more.hub.quote")
 
-                Text("Open one focused page instead of digging through one long settings screen.")
-                    .appSupportingTextStyle()
+                AppSectionLeadCard(
+                    eyebrow: "More",
+                    title: "Choose one focused page",
+                    detail: "Setup, guidance, privacy, and premium support stay grouped here instead of one long settings screen.")
             }
         }
 
@@ -365,14 +367,11 @@ extension ContentView {
                 NavigationLink {
                     moreDestinationList(for: destination)
                 } label: {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Label(destination.title, systemImage: destination.iconName)
-                            .font(.headline.weight(.semibold))
-                            .foregroundStyle(CatholicTheme.primary)
-                        Text(destination.subtitle)
-                            .appSupportingTextStyle()
-                    }
-                    .padding(.vertical, 4)
+                    AppDestinationRowCard(
+                        title: destination.title,
+                        subtitle: destination.subtitle,
+                        systemImage: destination.iconName,
+                        showsChevron: false)
                 }
                 .accessibilityIdentifier("more.hub.\(destination.rawValue)")
             }

@@ -24,33 +24,11 @@ extension ContentView {
                         Button {
                             selectedMoreDestination = destination
                         } label: {
-                            HStack(spacing: 10) {
-                                Image(systemName: destination.iconName)
-                                    .appSymbolStyle(.standard)
-                                    .frame(width: 18)
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text(destination.title)
-                                        .font(.headline.weight(.semibold))
-                                    Text(destination.subtitle)
-                                        .appSupportingTextStyle()
-                                        .foregroundStyle(selectedMoreDestination == destination ? Color.white.opacity(0.85) : .secondary)
-                                        .lineLimit(1)
-                                }
-                                Spacer(minLength: 0)
-                            }
-                            .foregroundStyle(selectedMoreDestination == destination ? .white : CatholicTheme.primary)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .appInteractiveTileStyle(
-                                isSelected: selectedMoreDestination == destination,
-                                cornerRadius: 18)
-                            .background(
-                                Group {
-                                    if selectedMoreDestination == destination {
-                                        RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                            .fill(CatholicTheme.primary)
-                                            .allowsHitTesting(false)
-                                    }
-                                })
+                            AppDestinationRowCard(
+                                title: destination.title,
+                                subtitle: destination.subtitle,
+                                systemImage: destination.iconName,
+                                isSelected: selectedMoreDestination == destination)
                         }
                         .buttonStyle(.plain)
                         .accessibilityIdentifier("ipad.more.compact.\(destination.rawValue)")
@@ -74,15 +52,11 @@ extension ContentView {
                             Button {
                                 selectedMoreDestination = destination
                             } label: {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Label(destination.title, systemImage: destination.iconName)
-                                        .font(.headline)
-                                        .foregroundStyle(selectedMoreDestination == destination ? CatholicTheme.primary : .primary)
-                                    Text(destination.subtitle)
-                                        .appSupportingTextStyle()
-                                }
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .appInteractiveTileStyle(isSelected: selectedMoreDestination == destination)
+                                AppDestinationRowCard(
+                                    title: destination.title,
+                                    subtitle: destination.subtitle,
+                                    systemImage: destination.iconName,
+                                    isSelected: selectedMoreDestination == destination)
                             }
                             .buttonStyle(.plain)
                             .accessibilityIdentifier("ipad.more.destination.\(destination.rawValue)")

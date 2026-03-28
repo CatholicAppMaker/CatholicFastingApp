@@ -358,6 +358,43 @@ extension ContentView {
                     .appSupportingTextStyle()
             }
 
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 8) {
+                    MetricTile(
+                        title: localized("fasting_days.metric.scope", default: "Scope"),
+                        value: fastingDaysShowAllYearDays
+                            ? localized("fasting_days.scope.full_year", default: "Full Year")
+                            : localized("fasting_days.scope.upcoming", default: "Upcoming"),
+                        detail: localized("fasting_days.metric.scope_detail", default: "current list view"))
+                    MetricTile(
+                        title: localized("fasting_days.metric.showing", default: "Showing"),
+                        value: "\(fastingDaysDisplayObservances.count)",
+                        detail: localized("fasting_days.metric.showing_detail", default: "visible observances"))
+                    MetricTile(
+                        title: localized("fasting_days.metric.season", default: "Season"),
+                        value: currentLiturgicalSeason.label,
+                        detail: localized("fasting_days.metric.season_detail", default: "liturgical context"))
+                }
+                VStack(spacing: 8) {
+                    HStack(spacing: 8) {
+                        MetricTile(
+                            title: localized("fasting_days.metric.scope", default: "Scope"),
+                            value: fastingDaysShowAllYearDays
+                                ? localized("fasting_days.scope.full_year", default: "Full Year")
+                                : localized("fasting_days.scope.upcoming", default: "Upcoming"),
+                            detail: localized("fasting_days.metric.scope_detail", default: "current list view"))
+                        MetricTile(
+                            title: localized("fasting_days.metric.showing", default: "Showing"),
+                            value: "\(fastingDaysDisplayObservances.count)",
+                            detail: localized("fasting_days.metric.showing_detail", default: "visible observances"))
+                    }
+                    MetricTile(
+                        title: localized("fasting_days.metric.season", default: "Season"),
+                        value: currentLiturgicalSeason.label,
+                        detail: localized("fasting_days.metric.season_detail", default: "liturgical context"))
+                }
+            }
+
             Text(regionalNormSummaryLine)
                 .appSupportingTextStyle()
 

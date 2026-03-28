@@ -277,12 +277,7 @@ extension ContentView {
             }
         }
         .padding(14)
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(CatholicTheme.parchment.opacity(0.92)))
-        .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(CatholicTheme.cardBorder.opacity(0.5), lineWidth: 1))
+        .appSurfaceCard(.utility, cornerRadius: 16)
         .appRoundedGlass(cornerRadius: 16)
     }
 
@@ -350,12 +345,7 @@ extension ContentView {
             }
         }
         .padding(14)
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(CatholicTheme.parchment.opacity(0.9)))
-        .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(CatholicTheme.cardBorder.opacity(0.4), lineWidth: 1))
+        .appSurfaceCard(sample ? .standard : .primary, cornerRadius: 16)
         .appRoundedGlass(cornerRadius: 16)
         .accessibilityIdentifier("premium.sample_preview")
         .onAppear {
@@ -387,12 +377,7 @@ extension ContentView {
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(CatholicTheme.parchment.opacity(0.86)))
-        .overlay(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .stroke(CatholicTheme.cardBorder.opacity(0.4), lineWidth: 1))
+        .appSurfaceCard(.utility, cornerRadius: 14)
     }
 
     #if canImport(StoreKit)
@@ -533,9 +518,8 @@ extension ContentView {
         .foregroundStyle(CatholicTheme.primary)
         .padding(.horizontal, 10)
         .padding(.vertical, 7)
-        .background(
-            Capsule(style: .continuous)
-                .fill(CatholicTheme.accent.opacity(0.12)))
+        .background(CatholicTheme.accent.opacity(0.12), in: Capsule(style: .continuous))
+        .appCapsuleGlass()
     }
 
     #if canImport(StoreKit)

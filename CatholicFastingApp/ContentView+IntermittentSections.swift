@@ -73,16 +73,16 @@ extension ContentView {
         Section("Current Plan") {
             ViewThatFits(in: .horizontal) {
                 HStack {
-                    MetricTile(title: "Sessions", value: "\(intermittentTracker.sessions.count)")
-                    MetricTile(title: "Target", value: intermittentWindowLabel)
-                    MetricTile(title: "Longest", value: intermittentLongestSessionText)
+                    MetricTile(title: "Sessions", value: "\(intermittentTracker.sessions.count)", detail: "saved locally")
+                    MetricTile(title: "Target", value: intermittentWindowLabel, detail: "active fasting window")
+                    MetricTile(title: "Longest", value: intermittentLongestSessionText, detail: "best recent duration")
                 }
                 VStack(spacing: 8) {
                     HStack {
-                        MetricTile(title: "Sessions", value: "\(intermittentTracker.sessions.count)")
-                        MetricTile(title: "Target", value: intermittentWindowLabel)
+                        MetricTile(title: "Sessions", value: "\(intermittentTracker.sessions.count)", detail: "saved locally")
+                        MetricTile(title: "Target", value: intermittentWindowLabel, detail: "active fasting window")
                     }
-                    MetricTile(title: "Longest", value: intermittentLongestSessionText)
+                    MetricTile(title: "Longest", value: intermittentLongestSessionText, detail: "best recent duration")
                 }
             }
 

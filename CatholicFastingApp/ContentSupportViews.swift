@@ -177,28 +177,28 @@ struct StatusTag: View {
 struct MetricTile: View {
     let title: String
     let value: String
+    var detail: String?
+    var accent: Color?
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 5) {
             Text(title)
                 .appEyebrowStyle()
                 .textCase(.uppercase)
             Text(value)
-                .appMetricValueStyle()
+                .font(.system(.title3, design: .rounded).weight(.bold))
+                .foregroundStyle(accent ?? tileTint)
+            if let detail {
+                Text(detail)
+                    .appSupportingTextStyle()
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 12)
-        .padding(.vertical, 10)
-        .background(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(CatholicTheme.parchment.opacity(0.92)))
-        .overlay(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(tileTint.opacity(0.08)))
-        .overlay(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .stroke(CatholicTheme.cardBorder.opacity(0.45), lineWidth: 1))
-        .shadow(color: tileTint.opacity(0.08), radius: 10, y: 4)
+        .padding(.vertical, detail == nil ? 10 : 12)
+        .appSurfaceCard(.utility, cornerRadius: 14)
         .appRoundedGlass(cornerRadius: 14)
     }
 
@@ -213,6 +213,82 @@ struct MetricTile: View {
         default:
             CatholicTheme.primary
         }
+    }
+}
+
+struct AppSectionLeadCard: View {
+    let eyebrow: String
+    let title: String
+    let detail: String
+    var serifTitle: Bool = false
+    var style: AppSurfaceCardStyle = .utility
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(eyebrow)
+                .appEyebrowStyle()
+                .textCase(.uppercase)
+            Text(title)
+                .appSectionTitleStyle(serif: serifTitle)
+            Text(detail)
+                .appLeadTextStyle()
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .appSurfaceCard(style, cornerRadius: 16)
+    }
+}
+
+struct AppDestinationRowCard: View {
+    let title: String
+    let subtitle: String
+    let systemImage: String
+    var isSelected: Bool = false
+    var selectedTint: Color = CatholicTheme.primary
+    var showsChevron: Bool = true
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: systemImage)
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundStyle(isSelected ? Color.white : selectedTint)
+                .frame(width: 34, height: 34)
+                .background(
+                    Circle()
+                        .fill(isSelected ? Color.white.opacity(0.18) : selectedTint.opacity(0.10))
+                        .allowsHitTesting(false))
+
+            VStack(alignment: .leading, spacing: 3) {
+                Text(title)
+                    .font(.headline.weight(.semibold))
+                    .foregroundStyle(isSelected ? .white : CatholicTheme.primary)
+                Text(subtitle)
+                    .appSupportingTextStyle()
+                    .foregroundStyle(isSelected ? Color.white.opacity(0.84) : .secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Spacer(minLength: 0)
+
+            if showsChevron {
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.bold))
+                    .foregroundStyle(isSelected ? Color.white.opacity(0.85) : .secondary)
+                    .padding(.top, 4)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 11)
+        .background(
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .fill(isSelected ? selectedTint : CatholicTheme.parchment.opacity(0.90))
+                .allowsHitTesting(false))
+        .overlay(
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .stroke((isSelected ? selectedTint : CatholicTheme.cardBorder).opacity(isSelected ? 0.18 : 0.45), lineWidth: 1)
+                .allowsHitTesting(false))
+        .shadow(color: (isSelected ? selectedTint : CatholicTheme.primary).opacity(isSelected ? 0.16 : 0.05), radius: isSelected ? 16 : 8, y: isSelected ? 8 : 4)
     }
 }
 
