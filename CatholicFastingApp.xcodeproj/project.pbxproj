@@ -45,6 +45,7 @@
 		A00000000000000000000097 /* ContentView+RootShell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000094 /* ContentView+RootShell.swift */; };
 		A00000000000000000000099 /* ContentView+PremiumCompanionSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000009A /* ContentView+PremiumCompanionSections.swift */; };
 		A0000000000000000000009C /* GrowthContracts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000009B /* GrowthContracts.swift */; };
+		A00000000000000000000120 /* SeasonalQuoteCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000121 /* SeasonalQuoteCatalog.swift */; };
 		A0000000000000000000009E /* ContentView+iPadLayouts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000009D /* ContentView+iPadLayouts.swift */; };
 		A0000000000000000000009F /* RegionalGuidanceContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000A4 /* RegionalGuidanceContext.swift */; };
 		A000000000000000000000A0 /* ContentView+iPadToday.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000A5 /* ContentView+iPadToday.swift */; };
@@ -169,6 +170,7 @@
 		A00000000000000000000098 /* Premium.storekit */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Premium.storekit; sourceTree = "<group>"; };
 		A0000000000000000000009A /* ContentView+PremiumCompanionSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+PremiumCompanionSections.swift"; sourceTree = "<group>"; };
 		A0000000000000000000009B /* GrowthContracts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthContracts.swift; sourceTree = "<group>"; };
+		A00000000000000000000121 /* SeasonalQuoteCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonalQuoteCatalog.swift; sourceTree = "<group>"; };
 		A0000000000000000000009D /* ContentView+iPadLayouts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+iPadLayouts.swift"; sourceTree = "<group>"; };
 		A000000000000000000000A4 /* RegionalGuidanceContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionalGuidanceContext.swift; sourceTree = "<group>"; };
 		A000000000000000000000A5 /* ContentView+iPadToday.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+iPadToday.swift"; sourceTree = "<group>"; };
@@ -348,6 +350,7 @@
 				A00000000000000000000105 /* PremiumSubscriptionHealthEvaluator.swift */,
 				A000000000000000000000D2 /* PremiumJourneyEngine.swift */,
 				A0000000000000000000009B /* GrowthContracts.swift */,
+				A00000000000000000000121 /* SeasonalQuoteCatalog.swift */,
 				A000000000000000000000A4 /* RegionalGuidanceContext.swift */,
 			);
 			path = Models;
@@ -541,6 +544,7 @@
 				A00000000000000000000104 /* PremiumSubscriptionHealthEvaluator.swift in Sources */,
 				A000000000000000000000C2 /* PremiumJourneyEngine.swift in Sources */,
 				A0000000000000000000009C /* GrowthContracts.swift in Sources */,
+				A00000000000000000000120 /* SeasonalQuoteCatalog.swift in Sources */,
 				A0000000000000000000009F /* RegionalGuidanceContext.swift in Sources */,
 				A00000000000000000000038 /* ContentSupportViews.swift in Sources */,
 				A0000000000000000000003A /* ContentView+DashboardSections.swift in Sources */,
