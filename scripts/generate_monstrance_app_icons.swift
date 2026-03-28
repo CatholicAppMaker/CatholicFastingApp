@@ -10,6 +10,7 @@ struct Palette {
 
 let projectRoot = URL(fileURLWithPath: "/Users/kevpierce/Desktop/CatholicFastingApp")
 let assetsRoot = projectRoot.appendingPathComponent("CatholicFastingApp/Assets.xcassets", isDirectory: true)
+let fallbackRoot = projectRoot.appendingPathComponent("CatholicFastingApp/IconFallbacks", isDirectory: true)
 
 let iconSets: [(name: String, palette: Palette)] = [
     ("AppIcon.appiconset", Palette(
@@ -28,15 +29,15 @@ let iconSets: [(name: String, palette: Palette)] = [
         ray: NSColor(calibratedRed: 250 / 255, green: 215 / 255, blue: 128 / 255, alpha: 1),
         host: NSColor(calibratedRed: 255 / 255, green: 250 / 255, blue: 232 / 255, alpha: 1))),
     ("AppIconLent.appiconset", Palette(
-        background: NSColor(calibratedRed: 41 / 255, green: 27 / 255, blue: 68 / 255, alpha: 1),
-        glow: NSColor(calibratedRed: 183 / 255, green: 147 / 255, blue: 88 / 255, alpha: 0.22),
-        ray: NSColor(calibratedRed: 206 / 255, green: 166 / 255, blue: 94 / 255, alpha: 1),
-        host: NSColor(calibratedRed: 242 / 255, green: 230 / 255, blue: 201 / 255, alpha: 1))),
+        background: NSColor(calibratedRed: 56 / 255, green: 36 / 255, blue: 82 / 255, alpha: 1),
+        glow: NSColor(calibratedRed: 194 / 255, green: 152 / 255, blue: 87 / 255, alpha: 0.24),
+        ray: NSColor(calibratedRed: 215 / 255, green: 173 / 255, blue: 97 / 255, alpha: 1),
+        host: NSColor(calibratedRed: 247 / 255, green: 236 / 255, blue: 212 / 255, alpha: 1))),
     ("AppIconEaster.appiconset", Palette(
-        background: NSColor(calibratedRed: 244 / 255, green: 247 / 255, blue: 252 / 255, alpha: 1),
-        glow: NSColor(calibratedRed: 252 / 255, green: 220 / 255, blue: 138 / 255, alpha: 0.30),
-        ray: NSColor(calibratedRed: 232 / 255, green: 185 / 255, blue: 92 / 255, alpha: 1),
-        host: NSColor(calibratedRed: 255 / 255, green: 255 / 255, blue: 251 / 255, alpha: 1))),
+        background: NSColor(calibratedRed: 238 / 255, green: 244 / 255, blue: 251 / 255, alpha: 1),
+        glow: NSColor(calibratedRed: 252 / 255, green: 218 / 255, blue: 132 / 255, alpha: 0.34),
+        ray: NSColor(calibratedRed: 220 / 255, green: 174 / 255, blue: 79 / 255, alpha: 1),
+        host: NSColor(calibratedRed: 255 / 255, green: 252 / 255, blue: 244 / 255, alpha: 1))),
 ]
 
 func iconPixels(from filename: String) -> Int? {
@@ -144,4 +145,20 @@ for set in iconSets {
     }
 }
 
-print("Generated Monstrance icons across primary + seasonal app icon sets.")
+let fallbackIcons: [(name: String, setName: String)] = [
+    ("AppIconAdvent", "AppIconAdvent.appiconset"),
+    ("AppIconChristmas", "AppIconChristmas.appiconset"),
+    ("AppIconLent", "AppIconLent.appiconset"),
+    ("AppIconEaster", "AppIconEaster.appiconset"),
+]
+
+for fallback in fallbackIcons {
+    guard let palette = iconSets.first(where: { $0.name == fallback.setName })?.palette else { continue }
+    for px in [120, 152] {
+        let rep = renderMonstrance(size: px, palette: palette)
+        guard let data = rep.representation(using: .png, properties: [:]) else { continue }
+        try data.write(to: fallbackRoot.appendingPathComponent("\(fallback.name)-\(px).png"))
+    }
+}
+
+print("Generated Monstrance icons across primary + seasonal app icon sets and updated fallback alternates.")
