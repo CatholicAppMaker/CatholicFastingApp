@@ -3,14 +3,14 @@ import SwiftUI
 extension ContentView {
     var ipadMoreDestinationGroups: [(String, [MoreHubDestination])] {
         [
-            ("Core", [.supportAndPremium, .setupAndReminders, .profileAndNorms]),
-            ("Guidance", [.guidanceAndRules, .privacyAndData]),
+            (localized("more.workspace.group.core", default: "Core"), [.supportAndPremium, .setupAndReminders, .profileAndNorms]),
+            (localized("more.workspace.group.guidance", default: "Guidance"), [.guidanceAndRules, .privacyAndData]),
         ]
     }
 
     var ipadMoreCompactSelector: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Choose a workspace")
+            Text(localized("more.workspace.choose", default: "Choose a workspace"))
                 .appEyebrowStyle()
                 .textCase(.uppercase)
 
@@ -25,8 +25,8 @@ extension ContentView {
                             selectedMoreDestination = destination
                         } label: {
                             AppDestinationRowCard(
-                                title: destination.title,
-                                subtitle: destination.subtitle,
+                                title: localizedMoreDestinationTitle(destination),
+                                subtitle: localizedMoreDestinationSubtitle(destination),
                                 systemImage: destination.iconName,
                                 isSelected: selectedMoreDestination == destination)
                         }
@@ -53,8 +53,8 @@ extension ContentView {
                                 selectedMoreDestination = destination
                             } label: {
                                 AppDestinationRowCard(
-                                    title: destination.title,
-                                    subtitle: destination.subtitle,
+                                    title: localizedMoreDestinationTitle(destination),
+                                    subtitle: localizedMoreDestinationSubtitle(destination),
                                     systemImage: destination.iconName,
                                     isSelected: selectedMoreDestination == destination)
                             }

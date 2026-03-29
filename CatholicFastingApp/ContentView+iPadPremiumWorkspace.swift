@@ -10,9 +10,10 @@ extension ContentView {
                 VStack(alignment: .leading, spacing: 18) {
                     IPadWorkspaceHeroBand(
                         assetName: moreDestinationHeroItem(for: .supportAndPremium).assetName,
-                        seasonLabel: currentLiturgicalSeason.label,
-                        title: "Premium Formation Toolkit",
-                        subtitle: "Choose a plan, keep the Guided Seasonal Journey visible, and use the rest of premium as supporting tools.",
+                        seasonLabel: localizedSeasonLabel(currentLiturgicalSeason),
+                        seasonContextLabel: localizedFormat("ipad.hero.season_label", default: "Liturgical Season: %@", localizedSeasonLabel(currentLiturgicalSeason)),
+                        title: localized("premium.workspace.hero.title", default: "Premium Formation Toolkit"),
+                        subtitle: localized("premium.workspace.hero.subtitle", default: "Choose a plan, keep the Guided Seasonal Journey visible, and use the rest of premium as supporting tools."),
                         quote: dailySeasonalQuote,
                         regionContext: RegionalGuidanceContextFactory.generalContext(for: settings),
                         compact: compact,
@@ -52,9 +53,11 @@ extension ContentView {
     private var ipadPremiumSubscriptionCard: some View {
         VStack(alignment: .leading, spacing: 14) {
             IPadWorkspaceHeader(
-                eyebrow: "Access",
-                title: monetizationStore.premiumUnlocked ? "Premium active" : "Unlock Premium",
-                detail: "Choose yearly or monthly first. Tips, billing, and legal tools stay secondary.")
+                eyebrow: localized("premium.workspace.access.eyebrow", default: "Access"),
+                title: monetizationStore.premiumUnlocked
+                    ? localized("premium.active.title", default: "Premium active")
+                    : localized("premium.workspace.access.unlock", default: "Unlock Premium"),
+                detail: localized("premium.workspace.access.detail", default: "Choose yearly or monthly first. Tips, billing, and legal tools stay secondary."))
             premiumSurfacePickerSection
             if selectedSupportPremiumSurface == .upgrade {
                 premiumAndSupportSection
@@ -69,9 +72,9 @@ extension ContentView {
     private var ipadPremiumPillarRail: some View {
         VStack(alignment: .leading, spacing: 12) {
             IPadWorkspaceHeader(
-                eyebrow: "Pillars",
-                title: "Choose the workflow",
-                detail: "Planning, accountability, reflection, and exports stay grouped by outcome.")
+                eyebrow: localized("premium.workspace.pillars.eyebrow", default: "Pillars"),
+                title: localized("premium.workspace.pillars.title", default: "Choose the workflow"),
+                detail: localized("premium.workspace.pillars.detail", default: "Planning, accountability, reflection, and exports stay grouped by outcome."))
 
             ForEach(PremiumEntitlementSurface.allCases) { surface in
                 let destination = premiumToolDestination(for: surface)
@@ -111,19 +114,19 @@ extension ContentView {
 
         return VStack(alignment: .leading, spacing: 16) {
             IPadWorkspaceHeader(
-                eyebrow: "Dashboard",
-                title: "Guided journey first",
-                detail: "Keep the current week visible, then use the surrounding tools to support it.")
+                eyebrow: localized("premium.workspace.dashboard.eyebrow", default: "Dashboard"),
+                title: localized("premium.workspace.dashboard.title", default: "Guided journey first"),
+                detail: localized("premium.workspace.dashboard.detail", default: "Keep the current week visible, then use the surrounding tools to support it."))
 
             HStack(spacing: 10) {
-                IPadSummaryMetricCard(title: "Required", value: "\(analytics.requiredCompletionPercent)%", subtitle: "required days completed")
-                IPadSummaryMetricCard(title: "Overall", value: "\(analytics.overallCompletionPercent)%", subtitle: "all logged observances", tint: CatholicTheme.accent)
-                IPadSummaryMetricCard(title: "Intermittent", value: "\(analytics.intermittentTargetHitPercent)%", subtitle: "recent target hit rate", tint: .orange)
+                IPadSummaryMetricCard(title: localized("premium.workspace.metrics.required.title", default: "Required"), value: "\(analytics.requiredCompletionPercent)%", subtitle: localized("premium.workspace.metrics.required.subtitle", default: "required days completed"))
+                IPadSummaryMetricCard(title: localized("premium.workspace.metrics.overall.title", default: "Overall"), value: "\(analytics.overallCompletionPercent)%", subtitle: localized("premium.workspace.metrics.overall.subtitle", default: "all logged observances"), tint: CatholicTheme.accent)
+                IPadSummaryMetricCard(title: localized("premium.workspace.metrics.intermittent.title", default: "Intermittent"), value: "\(analytics.intermittentTargetHitPercent)%", subtitle: localized("premium.workspace.metrics.intermittent.subtitle", default: "recent target hit rate"), tint: .orange)
             }
 
             HStack(alignment: .top, spacing: 14) {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Guided Journey")
+                    Text(localized("premium.workspace.journey.eyebrow", default: "Guided Journey"))
                         .appEyebrowStyle()
                         .textCase(.uppercase)
                     Text(premiumGuidedJourneyWeek.title)
@@ -138,12 +141,12 @@ extension ContentView {
                 .appSurfaceCard(.utility, cornerRadius: 16)
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Reminder readiness")
+                    Text(localized("premium.workspace.readiness.eyebrow", default: "Reminder readiness"))
                         .appEyebrowStyle()
                         .textCase(.uppercase)
                     Text(reminderRecommendation.summaryLine)
                         .appSectionTitleStyle()
-                    Text("Current tier: \(reminderTier.label)")
+                    Text(localizedFormat("premium.workspace.readiness.tier_format", default: "Current tier: %@", localizedReminderTierLabel(reminderTier)))
                         .appSupportingTextStyle()
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -151,12 +154,12 @@ extension ContentView {
                 .appSurfaceCard(.utility, cornerRadius: 16)
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Next step")
+                    Text(localized("premium.workspace.next_step.eyebrow", default: "Next step"))
                         .appEyebrowStyle()
                         .textCase(.uppercase)
-                    Text(premiumGuidedJourneyNextAction?.title ?? "Week complete")
+                    Text(premiumGuidedJourneyNextAction?.title ?? localized("premium.workspace.next_step.complete", default: "Week complete"))
                         .appSectionTitleStyle(serif: true)
-                    Text(premiumGuidedJourneyNextAction?.detail ?? "Use the reflection or accountability tools below to keep the rhythm steady.")
+                    Text(premiumGuidedJourneyNextAction?.detail ?? localized("premium.workspace.next_step.detail", default: "Use the reflection or accountability tools below to keep the rhythm steady."))
                         .appSupportingTextStyle()
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -165,7 +168,7 @@ extension ContentView {
             }
 
             VStack(alignment: .leading, spacing: 10) {
-                Text("Current journey actions")
+                Text(localized("premium.workspace.actions.eyebrow", default: "Current journey actions"))
                     .appEyebrowStyle()
                 ForEach(premiumGuidedJourneyWeek.actions, id: \.id) { action in
                     Button {
@@ -203,9 +206,9 @@ extension ContentView {
     private var ipadPremiumSelectedToolCard: some View {
         VStack(alignment: .leading, spacing: 14) {
             IPadWorkspaceHeader(
-                eyebrow: "Selected tool",
-                title: (selectedPremiumToolDestination ?? .planner).title,
-                detail: (selectedPremiumToolDestination ?? .planner).subtitle)
+                eyebrow: localized("premium.workspace.selected_tool.eyebrow", default: "Selected tool"),
+                title: localizedPremiumToolTitle(selectedPremiumToolDestination ?? .planner),
+                detail: localizedPremiumToolSubtitle(selectedPremiumToolDestination ?? .planner))
             List {
                 premiumToolIntroSection(for: selectedPremiumToolDestination ?? .planner)
                 premiumToolSections(for: selectedPremiumToolDestination ?? .planner)

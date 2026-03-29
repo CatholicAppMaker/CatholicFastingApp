@@ -12,18 +12,24 @@ extension ContentView {
             spacing: 12)
         {
             IPadSummaryMetricCard(
-                title: "Required",
+                title: localized("ipad.fasting_days.summary.required", default: "Required"),
                 value: "\(requiredCount)",
-                subtitle: fastingDaysShowAllYearDays ? "days in view" : "upcoming days")
+                subtitle: fastingDaysShowAllYearDays
+                    ? localized("ipad.fasting_days.summary.required_in_view", default: "days in view")
+                    : localized("ipad.fasting_days.summary.required_upcoming", default: "upcoming days"))
             IPadSummaryMetricCard(
-                title: "Optional",
+                title: localized("ipad.fasting_days.summary.optional", default: "Optional"),
                 value: "\(optionalCount)",
-                subtitle: fastingDaysIncludeOptionalDays ? "included now" : "hidden from list",
+                subtitle: fastingDaysIncludeOptionalDays
+                    ? localized("ipad.fasting_days.summary.optional_included", default: "included now")
+                    : localized("ipad.fasting_days.summary.optional_hidden", default: "hidden from list"),
                 tint: CatholicTheme.accent)
             IPadSummaryMetricCard(
-                title: "Celebrations",
+                title: localized("ipad.fasting_days.summary.celebrations", default: "Celebrations"),
                 value: "\(celebrationCount)",
-                subtitle: fastingDaysIncludeFeastAndHolyDays ? "shown now" : "hidden from list",
+                subtitle: fastingDaysIncludeFeastAndHolyDays
+                    ? localized("ipad.fasting_days.summary.celebrations_shown", default: "shown now")
+                    : localized("ipad.fasting_days.summary.celebrations_hidden", default: "hidden from list"),
                 tint: .orange)
         }
         .accessibilityIdentifier("ipad.fasting_days.summary_cards")
@@ -36,28 +42,28 @@ extension ContentView {
             VStack(alignment: .leading, spacing: 18) {
                 VStack(alignment: .leading, spacing: 14) {
                     IPadWorkspaceHeader(
-                        eyebrow: "Filters",
-                        title: "Refine the list",
-                        detail: "Keep these utility controls secondary to the selected day and next required observance.")
+                        eyebrow: localized("ipad.fasting_days.filters.eyebrow", default: "Filters"),
+                        title: localized("ipad.fasting_days.filters.title", default: "Refine the list"),
+                        detail: localized("ipad.fasting_days.filters.detail", default: "Keep these utility controls secondary to the selected day and next required observance."))
 
                     Picker(
-                        "Scope",
+                        localized("ipad.fasting_days.filters.scope", default: "Scope"),
                         selection: Binding(
                             get: { fastingDaysShowAllYearDays ? 1 : 0 },
                             set: { fastingDaysShowAllYearDays = $0 == 1 }))
                     {
-                        Text("Upcoming").tag(0)
-                        Text("Full Year").tag(1)
+                        Text(localized("ipad.fasting_days.filters.scope_upcoming", default: "Upcoming")).tag(0)
+                        Text(localized("ipad.fasting_days.filters.scope_full_year", default: "Full Year")).tag(1)
                     }
                     .pickerStyle(.segmented)
                     .accessibilityIdentifier("ipad.fasting_days.scope")
 
-                    Toggle("Include optional fasting days", isOn: $fastingDaysIncludeOptionalDays)
+                    Toggle(localized("ipad.fasting_days.filters.include_optional", default: "Include optional fasting days"), isOn: $fastingDaysIncludeOptionalDays)
                         .accessibilityIdentifier("ipad.fasting_days.optional_toggle")
-                    Toggle("Include feast, holy, and memorial days", isOn: $fastingDaysIncludeFeastAndHolyDays)
+                    Toggle(localized("ipad.fasting_days.filters.include_celebrations", default: "Include feast, holy, and memorial days"), isOn: $fastingDaysIncludeFeastAndHolyDays)
                         .accessibilityIdentifier("ipad.fasting_days.feast_toggle")
 
-                    Picker("Calendar year", selection: $year) {
+                    Picker(localized("ipad.fasting_days.filters.year", default: "Calendar year"), selection: $year) {
                         ForEach(Array(UIConstants.yearRange), id: \.self) { yearOption in
                             Text("\(yearOption)").tag(yearOption)
                         }
@@ -70,17 +76,21 @@ extension ContentView {
 
                 VStack(alignment: .leading, spacing: 12) {
                     IPadWorkspaceHeader(
-                        eyebrow: "Region",
+                        eyebrow: localized("ipad.fasting_days.region.eyebrow", default: "Region"),
                         title: regionContext.classificationLabel,
                         detail: regionalNormSummaryLine)
                     IPadContextBadge(text: regionContext.supportLevel.label, supportLevel: regionContext.supportLevel)
-                    DisclosureGroup("Region notes") {
+                    DisclosureGroup(localized("ipad.fasting_days.region.notes", default: "Region notes")) {
                         Text(regionContext.disclosureText)
                             .appSupportingTextStyle()
                             .padding(.top, 4)
                     }
                     if let url = regionContext.sourceURL {
-                        Link(regionContext.regionProfile == .canada ? "Read CCCB Friday guidance" : "Read official guidance", destination: url)
+                        Link(
+                            regionContext.regionProfile == .canada
+                                ? localized("ipad.fasting_days.region.cccb_link", default: "Read CCCB Friday guidance")
+                                : localized("ipad.fasting_days.region.official_link", default: "Read official guidance"),
+                            destination: url)
                             .font(.footnote.weight(.semibold))
                     }
                 }
@@ -95,9 +105,10 @@ extension ContentView {
         let regionContext = RegionalGuidanceContextFactory.generalContext(for: settings)
         return IPadWorkspaceHeroBand(
             assetName: fastingDaysHeroArtwork.assetName,
-            seasonLabel: currentLiturgicalSeason.label,
-            title: "Fasting Day Planner",
-            subtitle: "Browse obligation days, optional practices, and celebrations without leaving the workspace.",
+            seasonLabel: localizedSeasonLabel(currentLiturgicalSeason),
+            seasonContextLabel: localizedFormat("ipad.hero.season_label", default: "Liturgical Season: %@", localizedSeasonLabel(currentLiturgicalSeason)),
+            title: localized("ipad.fasting_days.hero.title", default: "Fasting Day Planner"),
+            subtitle: localized("ipad.fasting_days.hero.subtitle", default: "Browse obligation days, optional practices, and celebrations without leaving the workspace."),
             quote: fastingDaysFastingQuote,
             regionContext: regionContext,
             compact: compact,
@@ -134,9 +145,9 @@ extension ContentView {
             ForEach(groups, id: \.0) { title, observances in
                 VStack(alignment: .leading, spacing: 12) {
                     IPadWorkspaceHeader(
-                        eyebrow: "Period",
+                        eyebrow: localized("ipad.fasting_days.period.eyebrow", default: "Period"),
                         title: title,
-                        detail: "\(observances.count) observance\(observances.count == 1 ? "" : "s")")
+                        detail: localizedFormat("ipad.fasting_days.period.detail", default: "%d observance%@", observances.count, observances.count == 1 ? "" : "s"))
                     ForEach(observances) { observance in
                         let context = RegionalGuidanceContextFactory.presentationContext(for: observance, settings: settings)
                         Button {
@@ -186,7 +197,7 @@ extension ContentView {
                                 selectedMoreDestination = .guidanceAndRules
                                 homeSurface = .more
                             } label: {
-                                Label("Open full food guidance", systemImage: "book.closed")
+                                Label(localized("ipad.fasting_days.detail.open_guidance", default: "Open full food guidance"), systemImage: "book.closed")
                                     .font(.subheadline.weight(.semibold))
                             }
                             .appSecondaryButtonStyle()
@@ -200,38 +211,38 @@ extension ContentView {
 
                 VStack(alignment: .leading, spacing: 12) {
                     IPadWorkspaceHeader(
-                        eyebrow: "Log",
-                        title: "Mark today clearly",
-                        detail: "Keep status and notes together without leaving this detail pane.")
+                        eyebrow: localized("ipad.fasting_days.log.eyebrow", default: "Log"),
+                        title: localized("ipad.fasting_days.log.title", default: "Mark today clearly"),
+                        detail: localized("ipad.fasting_days.log.detail", default: "Keep status and notes together without leaving this detail pane."))
                     if compact {
                         VStack(alignment: .leading, spacing: 10) {
                             HStack(spacing: 10) {
-                                Button("Complete") { tracker.setStatus(.completed, for: selected.id) }
+                                Button(localized("ipad.fasting_days.log.complete", default: "Complete")) { tracker.setStatus(.completed, for: selected.id) }
                                     .appPrimaryButtonStyle()
-                                Button("Substitute") { tracker.setStatus(.substituted, for: selected.id) }
+                                Button(localized("ipad.fasting_days.log.substitute", default: "Substitute")) { tracker.setStatus(.substituted, for: selected.id) }
                                     .appSecondaryButtonStyle()
                             }
                             HStack(spacing: 10) {
-                                Button("Missed") { tracker.setStatus(.missed, for: selected.id) }
+                                Button(localized("ipad.fasting_days.log.missed", default: "Missed")) { tracker.setStatus(.missed, for: selected.id) }
                                     .appSecondaryButtonStyle(legacyTint: .orange)
-                                Button("Reset") { tracker.setStatus(.notStarted, for: selected.id) }
+                                Button(localized("ipad.fasting_days.log.reset", default: "Reset")) { tracker.setStatus(.notStarted, for: selected.id) }
                                     .appSecondaryButtonStyle(legacyTint: .gray)
                             }
                         }
                     } else {
                         HStack(spacing: 10) {
-                            Button("Complete") { tracker.setStatus(.completed, for: selected.id) }
+                            Button(localized("ipad.fasting_days.log.complete", default: "Complete")) { tracker.setStatus(.completed, for: selected.id) }
                                 .appPrimaryButtonStyle()
-                            Button("Substitute") { tracker.setStatus(.substituted, for: selected.id) }
+                            Button(localized("ipad.fasting_days.log.substitute", default: "Substitute")) { tracker.setStatus(.substituted, for: selected.id) }
                                 .appSecondaryButtonStyle()
-                            Button("Missed") { tracker.setStatus(.missed, for: selected.id) }
+                            Button(localized("ipad.fasting_days.log.missed", default: "Missed")) { tracker.setStatus(.missed, for: selected.id) }
                                 .appSecondaryButtonStyle(legacyTint: .orange)
                         }
-                        Button("Reset") { tracker.setStatus(.notStarted, for: selected.id) }
+                        Button(localized("ipad.fasting_days.log.reset", default: "Reset")) { tracker.setStatus(.notStarted, for: selected.id) }
                             .appSecondaryButtonStyle(legacyTint: .gray)
                     }
 
-                    TextField("Add a note for this day", text: noteBinding(for: selected.id), axis: .vertical)
+                    TextField(localized("ipad.fasting_days.log.note", default: "Add a note for this day"), text: noteBinding(for: selected.id), axis: .vertical)
                         .textFieldStyle(.roundedBorder)
                         .lineLimit(3, reservesSpace: true)
                         .accessibilityIdentifier("ipad.fasting_days.note")
@@ -239,7 +250,7 @@ extension ContentView {
                 .padding(18)
                 .iPadPaneCard()
 
-                DisclosureGroup("Sources and transparency") {
+                DisclosureGroup(localized("ipad.fasting_days.sources.title", default: "Sources and transparency")) {
                     VStack(alignment: .leading, spacing: 12) {
                         Text(context.sourceSummary)
                             .appSupportingTextStyle()
@@ -248,7 +259,7 @@ extension ContentView {
                                 .appSupportingTextStyle()
                         }
                         if let url = context.regionalContext.sourceURL {
-                            Link("Open source guidance", destination: url)
+                            Link(localized("ipad.fasting_days.sources.open", default: "Open source guidance"), destination: url)
                                 .font(.footnote.weight(.semibold))
                         }
                     }
@@ -258,9 +269,9 @@ extension ContentView {
                 .iPadPaneCard()
             } else {
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("Choose an observance")
+                    Text(localized("ipad.fasting_days.empty.title", default: "Choose an observance"))
                         .appSectionTitleStyle(serif: true)
-                    Text("Pick a day to review its obligation and log it.")
+                    Text(localized("ipad.fasting_days.empty.detail", default: "Pick a day to review its obligation and log it."))
                         .appLeadTextStyle()
                 }
                 .padding(18)

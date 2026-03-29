@@ -44,15 +44,15 @@ extension ContentView {
     }
 
     var planningProgressSection: some View {
-        Section("Year Plan Snapshot") {
-            Text("Required: \(yearlyRequiredCompletions)/\(planningData.requiredGoal) • Optional: \(yearlyOptionalCompletions)/\(planningData.optionalGoal)")
+        Section(localized("today.plan_snapshot.section", default: "Year Plan Snapshot")) {
+            Text(localizedFormat("today.plan_snapshot.progress_format", default: "Required: %d/%d • Optional: %d/%d", yearlyRequiredCompletions, planningData.requiredGoal, yearlyOptionalCompletions, planningData.optionalGoal))
                 .font(.subheadline)
             ProgressView(value: requirementGoalProgress)
                 .tint(CatholicTheme.primary)
             ProgressView(value: optionalGoalProgress)
                 .tint(CatholicTheme.accent)
             if currentSeasonCommitments.isEmpty {
-                Text("No active commitments for \(currentLiturgicalSeason.label).")
+                Text(localizedFormat("today.plan_snapshot.empty_format", default: "No active commitments for %@.", localizedSeasonLabel(currentLiturgicalSeason)))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             } else {
@@ -65,31 +65,35 @@ extension ContentView {
     }
 
     var personalInsightsSection: some View {
-        Section("Personal Insights (Local)") {
-            Text("This month completions: \(monthlyCompletionCount)")
-            Text("Recent intermittent hit-rate: \(intermittentHitRatePercent)%")
-            Text("Current streak: \(currentStreak) day(s)")
+        Section(localized("today.insights.section", default: "Personal Insights (Local)")) {
+            Text(localizedFormat("today.insights.completions_format", default: "This month completions: %d", monthlyCompletionCount))
+            Text(localizedFormat("today.insights.hit_rate_format", default: "Recent intermittent hit-rate: %d%%", intermittentHitRatePercent))
+            Text(localizedFormat("today.insights.streak_format", default: "Current streak: %d day(s)", currentStreak))
         }
     }
 
     var accessibilitySupportSection: some View {
-        Section("Accessibility Support") {
+        Section(localized("today.accessibility.section", default: "Accessibility Support")) {
             if simplifiedModeEnabled {
-                Text("Simplified mode is enabled.")
+                Text(localized("today.accessibility.simplified_enabled", default: "Simplified mode is enabled."))
                     .foregroundStyle(CatholicTheme.primary)
             }
         }
     }
 
     var unofficialAppNoticeSection: some View {
-        Section("Important Notice") {
+        Section(localized("today.notice.section", default: "Important Notice")) {
             Text(
-                "This is an independent devotional app. It is not an official app of the Catholic Church, USCCB, the Vatican, or any diocese/parish.")
+                localized(
+                    "today.notice.independent",
+                    default: "This is an independent devotional app. It is not an official app of the Catholic Church, USCCB, the Vatican, or any diocese/parish."))
                 .font(.subheadline)
                 .foregroundStyle(CatholicTheme.primary)
 
             Text(
-                "Always follow your pastor, local bishop, and legitimate Church authority when guidance differs.")
+                localized(
+                    "today.notice.follow_authority",
+                    default: "Always follow your pastor, local bishop, and legitimate Church authority when guidance differs."))
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .accessibilityIdentifier("notice.unofficial")
@@ -163,7 +167,7 @@ extension ContentView {
                 VStack(alignment: .leading, spacing: 8) {
                     Text(localized("today.metric.streak", default: "Streak"))
                         .appEyebrowStyle()
-                    Text("\(currentStreak) day\(currentStreak == 1 ? "" : "s")")
+                    Text(localizedFormat("today.glance.streak_value_format", default: "%d day(s)", currentStreak))
                         .appSectionTitleStyle()
                     Text(streakResilienceMessage)
                         .appLeadTextStyle()
@@ -441,7 +445,7 @@ extension ContentView {
                     .padding(.top, 2)
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(CatholicTheme.seasonLabel)
+                    Text(localizedSeasonLabel(currentLiturgicalSeason))
                         .font(.system(.headline, design: .serif))
                         .foregroundStyle(CatholicTheme.primary)
                     Text(localized("today.season.intro", default: "Offer your fasting with the spirit of this season through prayer, sacrifice, and charity."))

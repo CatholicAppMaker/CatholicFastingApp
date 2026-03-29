@@ -49,7 +49,7 @@ extension ContentView {
                     set: { supportPremiumSurfaceRaw = $0.rawValue }))
             {
                 ForEach(SupportPremiumSurface.allCases) { item in
-                    Text(item.label).tag(item)
+                    Text(localizedSupportPremiumSurfaceLabel(item)).tag(item)
                 }
             }
             .pickerStyle(.segmented)

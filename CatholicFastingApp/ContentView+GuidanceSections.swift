@@ -414,26 +414,12 @@ extension ContentView {
         SacredHeroImageSelector.artwork(for: .guidance)
     }
 
-    var guidanceSacredImageSection: some View {
-        Section {
-            VStack(alignment: .leading, spacing: 10) {
-                SacredHeroCard(
-                    assetName: guidanceHeroArtwork.assetName,
-                    title: guidanceHeroArtwork.title,
-                    subtitle: guidanceHeroArtwork.subtitle,
-                    height: 200,
-                    accessibilityIdentifier: "guidance.sacred_image.card")
-
-                CatholicFastingQuoteCard(quote: guidanceFastingQuote, compact: true)
-                    .accessibilityIdentifier("guidance.fasting_quote")
-            }
-            .accessibilityIdentifier("guidance.sacred_image")
-        }
-    }
-
     var guidanceDevotionalGallerySection: some View {
-        Section("Catholic Symbol Gallery") {
-            Text("A visual prayer companion for fasting, abstinence, and penitential Fridays.")
+        Section(localized("guidance.symbol_gallery.title", default: "Catholic Symbol Gallery")) {
+            Text(
+                localized(
+                    "guidance.symbol_gallery.intro",
+                    default: "A visual prayer companion for fasting, abstinence, and penitential Fridays."))
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
@@ -450,8 +436,8 @@ extension ContentView {
     }
 
     var devotionalPackSection: some View {
-        Section("Offline Devotional Pack") {
-            Text("These prayers are bundled in-app and available fully offline.")
+        Section(localized("guidance.devotional_pack.title", default: "Offline Devotional Pack")) {
+            Text(localized("guidance.devotional_pack.intro", default: "These prayers are bundled in-app and available fully offline."))
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
@@ -465,7 +451,11 @@ extension ContentView {
                             Text(entry.title)
                                 .font(.subheadline.weight(.semibold))
                             Spacer()
-                            Button(devotionalFavorites.contains(entry.id) ? "Saved" : "Save") {
+                            Button(
+                                devotionalFavorites.contains(entry.id)
+                                    ? localized("guidance.devotional_pack.saved", default: "Saved")
+                                    : localized("guidance.devotional_pack.save", default: "Save"))
+                            {
                                 if devotionalFavorites.contains(entry.id) {
                                     devotionalFavorites.remove(entry.id)
                                 } else {
@@ -499,7 +489,10 @@ extension ContentView {
                 Text(snapshot.summaryLine)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
-                Text("Use this for common food questions: meat, dairy, eggs, fish, broth, and gravies.")
+                Text(
+                    localized(
+                        "guidance.food.common_questions",
+                        default: "Use this for common food questions: meat, dairy, eggs, fish, broth, and gravies."))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -511,7 +504,7 @@ extension ContentView {
             foodGuidanceGroupView(snapshot.extraGuidance, icon: "questionmark.circle", tint: .orange)
 
             VStack(alignment: .leading, spacing: 8) {
-                Text("Stricter traditional practice")
+                Text(localized("guidance.food.stricter_title", default: "Stricter traditional practice"))
                     .font(.headline)
                     .foregroundStyle(CatholicTheme.primary)
                 ForEach(snapshot.stricterTraditionalPractice, id: \.self) { line in
@@ -522,7 +515,7 @@ extension ContentView {
             .accessibilityIdentifier("guidance.food.stricter")
 
             VStack(alignment: .leading, spacing: 8) {
-                Text("If unsure")
+                Text(localized("guidance.food.if_unsure_title", default: "If unsure"))
                     .font(.headline)
                     .foregroundStyle(CatholicTheme.primary)
                 ForEach(snapshot.ifUnsure, id: \.self) { line in
@@ -540,7 +533,9 @@ extension ContentView {
                 .foregroundStyle(.secondary)
 
             Link(
-                regionProfile == .canada ? "Read CCCB Friday guidance" : "Read Full USCCB Fast & Abstinence Guidelines",
+                regionProfile == .canada
+                    ? localized("guidance.food.cccb_link", default: "Read CCCB Friday guidance")
+                    : localized("guidance.usccb.link_label", default: "Read Full USCCB Fast & Abstinence Guidelines"),
                 destination: regionProfile == .canada ? UIConstants.cccbKeepingFridayURL : UIConstants.usccbFastAbstinenceURL)
                 .accessibilityIdentifier("guidance.food.source_link")
         }
@@ -548,17 +543,20 @@ extension ContentView {
     }
 
     var guidanceSeasonContextSection: some View {
-        Section("Seasonal Intention") {
+        Section(localized("guidance.seasonal.title", default: "Seasonal Intention")) {
             HStack(alignment: .top, spacing: 10) {
                 Image(systemName: "leaf")
                     .font(.headline.weight(.semibold))
                     .foregroundStyle(CatholicTheme.accent)
                     .padding(.top, 2)
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Current season: \(CatholicTheme.seasonLabel)")
+                    Text(localizedFormat("guidance.seasonal.current_format", default: "Current season: %@", localizedSeasonLabel(currentLiturgicalSeason)))
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(CatholicTheme.primary)
-                    Text("Let your food discipline match the Church’s prayer in this season.")
+                    Text(
+                        localized(
+                            "guidance.seasonal.intro",
+                            default: "Let your food discipline match the Church’s prayer in this season."))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -567,28 +565,43 @@ extension ContentView {
     }
 
     var fastDayQuickRulesSection: some View {
-        Section("Fast Day Quick Rules") {
+        Section(localized("guidance.quick_rules.title", default: "Fast Day Quick Rules")) {
             Text(regionalNormSummaryLine)
                 .font(.caption)
                 .foregroundStyle(.secondary)
             Label(
-                "Abstinence means no meat from land animals (beef, pork, chicken, turkey).",
+                localized(
+                    "guidance.quick_rules.abstinence",
+                    default: "Abstinence means no meat from land animals (beef, pork, chicken, turkey)."),
                 systemImage: "xmark.circle")
-            Label("Fish and shellfish are generally permitted.", systemImage: "checkmark.circle")
             Label(
-                "Fasting usually means one full meal plus up to two small meals.", systemImage: "fork.knife")
+                localized("guidance.quick_rules.fish", default: "Fish and shellfish are generally permitted."),
+                systemImage: "checkmark.circle")
             Label(
-                "If health or duty makes fasting unsafe, speak with your pastor.", systemImage: "cross.case")
+                localized(
+                    "guidance.quick_rules.fasting",
+                    default: "Fasting usually means one full meal plus up to two small meals."),
+                systemImage: "fork.knife")
+            Label(
+                localized(
+                    "guidance.quick_rules.health",
+                    default: "If health or duty makes fasting unsafe, speak with your pastor."),
+                systemImage: "cross.case")
         }
     }
 
     var usccbGuidelinesSection: some View {
         Section(localized("guidance.usccb.title", default: "USCCB Fast & Abstinence (Official)")) {
             Text(
-                "This app references USCCB materials but is not affiliated with or published by the USCCB.")
+                localized(
+                    "guidance.usccb.disclaimer",
+                    default: "This app references USCCB materials but is not affiliated with or published by the USCCB."))
                 .foregroundStyle(.secondary)
             if regionProfile == .canada {
-                Text("Canada profile selected: the app models the Canada national baseline and CCCB Friday guidance. Diocesan proper calendars are not included yet.")
+                Text(
+                    localized(
+                        "guidance.usccb.canada_note",
+                        default: "Canada profile selected: the app models the Canada national baseline and CCCB Friday guidance. Diocesan proper calendars are not included yet."))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -674,13 +687,13 @@ extension ContentView {
     }
 
     var sourcesSection: some View {
-        Section("Sources") {
-            Link("USCCB Liturgical Calendar Guidance", destination: UIConstants.legalPolicyURL)
+        Section(localized("guidance.sources.title", default: "Sources")) {
+            Link(localized("guidance.sources.calendar_link", default: "USCCB Liturgical Calendar Guidance"), destination: UIConstants.legalPolicyURL)
             Link(
                 localized(
                     "guidance.usccb.link_label", default: "Read Full USCCB Fast & Abstinence Guidelines"),
                 destination: UIConstants.usccbFastAbstinenceURL)
-            Link("Send Feedback", destination: UIConstants.supportEmail)
+            Link(localized("guidance.sources.feedback_link", default: "Send Feedback"), destination: UIConstants.supportEmail)
             Text(
                 localized(
                     "guidance.sources.local_decrees_note",

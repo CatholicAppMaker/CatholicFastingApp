@@ -253,7 +253,7 @@ extension ContentView {
                         "settings.theme.active_season_format",
                         default:
                         "Active season: %@. Colors update automatically throughout the liturgical year.",
-                        CatholicTheme.seasonLabel)
+                        localizedSeasonLabel(currentLiturgicalSeason))
                     : localized(
                         "settings.theme.disabled_hint",
                         default:
@@ -264,15 +264,15 @@ extension ContentView {
     }
 
     var householdProfilesSection: some View {
-        Section("Household Profiles") {
-            Text("Use profiles only if you manage fasting guidance for more than one person on this device.")
+        Section(localized("settings.household.title", default: "Household Profiles")) {
+            Text(localized("settings.household.intro", default: "Use profiles only if you manage fasting guidance for more than one person on this device."))
                 .font(.caption)
                 .foregroundStyle(.secondary)
             if householdProfiles.isEmpty {
-                Text("No profiles yet. Add one if you manage fasting settings for family members.")
+                Text(localized("settings.household.empty", default: "No profiles yet. Add one if you manage fasting settings for family members."))
                     .foregroundStyle(.secondary)
             } else {
-                Picker("Active Profile", selection: $activeHouseholdProfileID) {
+                Picker(localized("settings.household.active", default: "Active Profile"), selection: $activeHouseholdProfileID) {
                     ForEach(householdProfiles) { profile in
                         Text(profile.name).tag(profile.id)
                     }
@@ -282,83 +282,89 @@ extension ContentView {
 
                 if let active = activeHouseholdProfile {
                     Text(
-                        """
-                        Active: \(active.name) • Abstinence: \(active.isAge14OrOlderForAbstinence ? "14+" : "Under 14") • \
-                        Fasting: \(active.isAge18OrOlderForFasting ? "18-59" : "Not fasting age")
-                        """)
+                        localizedFormat(
+                            "settings.household.active_summary",
+                            default: "Active: %@ • Abstinence: %@ • Fasting: %@",
+                            active.name,
+                            active.isAge14OrOlderForAbstinence
+                                ? localized("settings.household.abstinence_14_plus", default: "14+")
+                                : localized("settings.household.abstinence_under_14", default: "Under 14"),
+                            active.isAge18OrOlderForFasting
+                                ? localized("settings.household.fasting_18_59", default: "18-59")
+                                : localized("settings.household.fasting_not_age", default: "Not fasting age")))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
 
-                Button("Apply Active Profile") {
+                Button(localized("settings.household.apply", default: "Apply Active Profile")) {
                     applyActiveHouseholdProfile()
                 }
                 .appSecondaryButtonStyle()
                 .accessibilityIdentifier("settings.household.apply")
             }
 
-            TextField("Add profile name", text: $newHouseholdProfileName)
+            TextField(localized("settings.household.new_name", default: "Add profile name"), text: $newHouseholdProfileName)
                 .textInputAutocapitalization(.words)
                 .autocorrectionDisabled()
                 .accessibilityIdentifier("settings.household.new_name")
 
-            Button("Add Profile") {
+            Button(localized("settings.household.add", default: "Add Profile")) {
                 addHouseholdProfile()
             }
             .appPrimaryButtonStyle()
             .disabled(!canAddHouseholdProfile)
             .accessibilityIdentifier("settings.household.add")
 
-            Text("Profiles store local age-eligibility and dispensation settings only.")
+            Text(localized("settings.household.footer", default: "Profiles store local age-eligibility and dispensation settings only."))
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
     }
 
     var planningLayerSection: some View {
-        Section("Planning") {
-            Text("Optional planning tools for personal goals and seasonal commitments.")
+        Section(localized("settings.planning.title", default: "Planning")) {
+            Text(localized("settings.planning.intro", default: "Optional planning tools for personal goals and seasonal commitments."))
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            DisclosureGroup("Show planning options") {
+            DisclosureGroup(localized("settings.planning.disclosure", default: "Show planning options")) {
                 Stepper(
-                    "Year required observance goal: \(planningData.requiredGoal)",
+                    localizedFormat("settings.planning.required_goal", default: "Year required observance goal: %d", planningData.requiredGoal),
                     value: $planningData.requiredGoal,
                     in: 1 ... 120)
                     .accessibilityIdentifier("settings.plan.required_goal")
 
                 Stepper(
-                    "Year optional observance goal: \(planningData.optionalGoal)",
+                    localizedFormat("settings.planning.optional_goal", default: "Year optional observance goal: %d", planningData.optionalGoal),
                     value: $planningData.optionalGoal,
                     in: 1 ... 240)
                     .accessibilityIdentifier("settings.plan.optional_goal")
 
                 ProgressView(value: requirementGoalProgress) {
-                    Text("Required progress: \(yearlyRequiredCompletions)/\(planningData.requiredGoal)")
+                    Text(localizedFormat("settings.planning.required_progress", default: "Required progress: %d/%d", yearlyRequiredCompletions, planningData.requiredGoal))
                 }
                 ProgressView(value: optionalGoalProgress) {
-                    Text("Optional progress: \(yearlyOptionalCompletions)/\(planningData.optionalGoal)")
+                    Text(localizedFormat("settings.planning.optional_progress", default: "Optional progress: %d/%d", yearlyOptionalCompletions, planningData.optionalGoal))
                 }
 
                 if !planningData.weeklyIntentions.isEmpty {
                     ForEach(planningData.weeklyIntentions) { intention in
-                        Text("Weekday \(intention.weekday): \(intention.note)")
+                        Text(localizedFormat("settings.planning.weekday_note", default: "Weekday %d: %@", intention.weekday, intention.note))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
                 }
 
                 if currentSeasonCommitments.isEmpty {
-                    Text("No active commitments for this season yet.")
+                    Text(localized("settings.planning.empty", default: "No active commitments for this season yet."))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
 
-                TextField("New commitment for current season", text: $newSeasonCommitmentTitle)
+                TextField(localized("settings.planning.new_commitment", default: "New commitment for current season"), text: $newSeasonCommitmentTitle)
                     .textInputAutocapitalization(.sentences)
                     .accessibilityIdentifier("settings.plan.new_commitment")
 
-                Button("Add Current Season Commitment") {
+                Button(localized("settings.planning.add_commitment", default: "Add Current Season Commitment")) {
                     addSeasonCommitment()
                 }
                 .appSecondaryButtonStyle(legacyTint: CatholicTheme.accent)
@@ -370,18 +376,20 @@ extension ContentView {
     }
 
     var accessibilityModeSection: some View {
-        Section("Accessibility") {
-            Toggle("Simplified Mode", isOn: $simplifiedModeEnabled)
+        Section(localized("settings.accessibility.title", default: "Accessibility")) {
+            Toggle(localized("settings.accessibility.simplified_mode", default: "Simplified Mode"), isOn: $simplifiedModeEnabled)
                 .accessibilityIdentifier("settings.accessibility.simplified_mode")
 
-            DisclosureGroup("Advanced accessibility options") {
-                Toggle("Haptic Alerts", isOn: $hapticsEnabled)
+            DisclosureGroup(localized("settings.accessibility.advanced", default: "Advanced accessibility options")) {
+                Toggle(localized("settings.accessibility.haptics", default: "Haptic Alerts"), isOn: $hapticsEnabled)
                     .accessibilityIdentifier("settings.accessibility.haptics")
             }
             .accessibilityIdentifier("settings.accessibility.advanced")
 
             Text(
-                "Simplified mode reduces visual density on Today. Haptic alerts notify when intermittent fasting milestones are reached.")
+                localized(
+                    "settings.accessibility.footer",
+                    default: "Simplified mode reduces visual density on Today. Haptic alerts notify when intermittent fasting milestones are reached."))
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
@@ -391,17 +399,17 @@ extension ContentView {
         let region = RuleSettings.RegionProfile(rawValue: regionProfileRaw) ?? .us
         switch region {
         case .us:
-            return
-                "United States profile: Ash Wednesday and Good Friday are fast and abstinence days, Fridays of Lent are abstinence, and Fridays outside Lent are penitential."
+            return localized(
+                "settings.region_guidance.us",
+                default: "United States profile: Ash Wednesday and Good Friday are fast and abstinence days, Fridays of Lent are abstinence, and Fridays outside Lent are penitential.")
         case .canada:
-            return
-                """
-                Canada profile: the app models the national baseline, including Canada-wide holy day obligations \
-                and CCCB Friday guidance. Diocesan proper calendars are not included yet.
-                """
+            return localized(
+                "settings.region_guidance.canada",
+                default: "Canada profile: the app models the national baseline, including Canada-wide holy day obligations and CCCB Friday guidance. Diocesan proper calendars are not included yet.")
         case .other:
-            return
-                "Outside U.S./Canada: follow your local bishop conference, parish guidance, and your pastor for binding norms."
+            return localized(
+                "settings.region_guidance.other",
+                default: "Outside U.S./Canada: follow your local bishop conference, parish guidance, and your pastor for binding norms.")
         }
     }
 

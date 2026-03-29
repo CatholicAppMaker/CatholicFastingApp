@@ -1,29 +1,131 @@
 import SwiftUI
 
 extension ContentView {
+    func localizedMoreHubHeroTitle() -> String {
+        localized("more.hub.hero.title", default: "More")
+    }
+
+    func localizedMoreHubHeroSubtitle() -> String {
+        localized(
+            "more.hub.hero.subtitle",
+            default: "One calm place for setup, guidance, privacy, and premium support.")
+    }
+
+    func localizedMoreHubLeadTitle() -> String {
+        localized("more.hub.lead.title", default: "Choose one focused page")
+    }
+
+    func localizedMoreHubLeadDetail() -> String {
+        localized(
+            "more.hub.lead.detail",
+            default: "Setup, guidance, privacy, and premium support stay grouped here instead of one long settings screen.")
+    }
+
+    func localizedHomeSurfaceLabel(_ surface: HomeSurface) -> String {
+        switch surface {
+        case .today:
+            localized("home.surface.today", default: HomeSurface.today.label)
+        case .fastingDays:
+            localized("home.surface.fasting_days", default: HomeSurface.fastingDays.label)
+        case .intermittent:
+            localized("home.surface.intermittent", default: HomeSurface.intermittent.label)
+        case .more:
+            localized("home.surface.more", default: HomeSurface.more.label)
+        }
+    }
+
+    func localizedSupportPremiumSurfaceLabel(_ surface: SupportPremiumSurface) -> String {
+        switch surface {
+        case .upgrade:
+            localized("premium.surface.upgrade", default: surface.label)
+        case .tools:
+            localized("premium.surface.tools", default: surface.label)
+        }
+    }
+
+    func localizedPremiumToolTitle(_ destination: PremiumToolDestination) -> String {
+        switch destination {
+        case .planner:
+            localized("premium.tool.planner.title", default: destination.title)
+        case .reminders:
+            localized("premium.tool.reminders.title", default: destination.title)
+        case .analytics:
+            localized("premium.tool.analytics.title", default: destination.title)
+        case .journal:
+            localized("premium.tool.journal.title", default: destination.title)
+        case .export:
+            localized("premium.tool.export.title", default: destination.title)
+        }
+    }
+
+    func localizedPremiumToolSubtitle(_ destination: PremiumToolDestination) -> String {
+        switch destination {
+        case .planner:
+            localized("premium.tool.planner.subtitle", default: destination.subtitle)
+        case .reminders:
+            localized("premium.tool.reminders.subtitle", default: destination.subtitle)
+        case .analytics:
+            localized("premium.tool.analytics.subtitle", default: destination.subtitle)
+        case .journal:
+            localized("premium.tool.journal.subtitle", default: destination.subtitle)
+        case .export:
+            localized("premium.tool.export.subtitle", default: destination.subtitle)
+        }
+    }
+
+    func localizedMoreDestinationTitle(_ destination: MoreHubDestination) -> String {
+        switch destination {
+        case .supportAndPremium:
+            localized("more.destination.support.title", default: destination.title)
+        case .setupAndReminders:
+            localized("more.destination.setup.title", default: destination.title)
+        case .profileAndNorms:
+            localized("more.destination.profile.title", default: destination.title)
+        case .guidanceAndRules:
+            localized("more.destination.guidance.title", default: destination.title)
+        case .privacyAndData:
+            localized("more.destination.privacy.title", default: destination.title)
+        }
+    }
+
+    func localizedMoreDestinationSubtitle(_ destination: MoreHubDestination) -> String {
+        switch destination {
+        case .supportAndPremium:
+            localized("more.destination.support.subtitle", default: destination.subtitle)
+        case .setupAndReminders:
+            localized("more.destination.setup.subtitle", default: destination.subtitle)
+        case .profileAndNorms:
+            localized("more.destination.profile.subtitle", default: destination.subtitle)
+        case .guidanceAndRules:
+            localized("more.destination.guidance.subtitle", default: destination.subtitle)
+        case .privacyAndData:
+            localized("more.destination.privacy.subtitle", default: destination.subtitle)
+        }
+    }
+
     var tabRootView: some View {
         TabView(selection: $homeSurface) {
             surfaceList(for: .today)
                 .tabItem {
-                    Label(HomeSurface.today.label, systemImage: HomeSurface.today.iconName)
+                    Label(localizedHomeSurfaceLabel(.today), systemImage: HomeSurface.today.iconName)
                 }
                 .tag(HomeSurface.today)
                 .accessibilityIdentifier("tab.today")
             surfaceList(for: .fastingDays)
                 .tabItem {
-                    Label(HomeSurface.fastingDays.label, systemImage: HomeSurface.fastingDays.iconName)
+                    Label(localizedHomeSurfaceLabel(.fastingDays), systemImage: HomeSurface.fastingDays.iconName)
                 }
                 .tag(HomeSurface.fastingDays)
                 .accessibilityIdentifier("tab.fasting_days")
             surfaceList(for: .intermittent)
                 .tabItem {
-                    Label(HomeSurface.intermittent.label, systemImage: HomeSurface.intermittent.iconName)
+                    Label(localizedHomeSurfaceLabel(.intermittent), systemImage: HomeSurface.intermittent.iconName)
                 }
                 .tag(HomeSurface.intermittent)
                 .accessibilityIdentifier("tab.intermittent")
             surfaceList(for: .more)
                 .tabItem {
-                    Label(HomeSurface.more.label, systemImage: HomeSurface.more.iconName)
+                    Label(localizedHomeSurfaceLabel(.more), systemImage: HomeSurface.more.iconName)
                 }
                 .tag(HomeSurface.more)
                 .accessibilityIdentifier("tab.more")
@@ -51,7 +153,7 @@ extension ContentView {
             .overlay(alignment: .topLeading) {
                 readinessMarkers
             }
-            .navigationTitle(homeSurface.label)
+            .navigationTitle(localizedHomeSurfaceLabel(homeSurface))
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -256,12 +358,13 @@ extension ContentView {
 
     @ViewBuilder
     var seasonBadge: some View {
+        let localizedSeason = localizedSeasonLabel(currentLiturgicalSeason)
         let content = HStack(spacing: 6) {
             Image(systemName: "cross.case.fill")
                 .foregroundStyle(CatholicTheme.primary)
                 .accessibilityHidden(true)
             if liturgicalSeasonColorsEnabled, !dynamicTypeSize.isAccessibilitySize {
-                Text(CatholicTheme.seasonToolbarLabel)
+                Text(localizedSeason)
                     .font(.caption2.weight(.bold))
                     .foregroundStyle(CatholicTheme.primary)
                     .lineLimit(1)
@@ -273,7 +376,11 @@ extension ContentView {
         .allowsHitTesting(false)
         .accessibilityIdentifier("home.season_badge")
         .accessibilityAddTraits(.isStaticText)
-        .accessibilityLabel("Liturgical season \(CatholicTheme.seasonToolbarLabel)")
+        .accessibilityLabel(
+            localizedFormat(
+                "home.season_badge.accessibility",
+                default: "Liturgical season %@",
+                localizedSeason))
 
         content.appCapsuleGlass()
     }
@@ -346,8 +453,8 @@ extension ContentView {
             VStack(alignment: .leading, spacing: 14) {
                 SacredHeroCard(
                     assetName: hero.assetName,
-                    title: "More",
-                    subtitle: "One calm place for setup, guidance, privacy, and premium support.",
+                    title: localizedMoreHubHeroTitle(),
+                    subtitle: localizedMoreHubHeroSubtitle(),
                     height: 152,
                     cornerRadius: 16,
                     accessibilityIdentifier: "more.hub.hero")
@@ -356,9 +463,9 @@ extension ContentView {
                     .accessibilityIdentifier("more.hub.quote")
 
                 AppSectionLeadCard(
-                    eyebrow: "More",
-                    title: "Choose one focused page",
-                    detail: "Setup, guidance, privacy, and premium support stay grouped here instead of one long settings screen.")
+                    eyebrow: localizedMoreHubHeroTitle(),
+                    title: localizedMoreHubLeadTitle(),
+                    detail: localizedMoreHubLeadDetail())
             }
         }
 
@@ -368,8 +475,8 @@ extension ContentView {
                     moreDestinationList(for: destination)
                 } label: {
                     AppDestinationRowCard(
-                        title: destination.title,
-                        subtitle: destination.subtitle,
+                        title: localizedMoreDestinationTitle(destination),
+                        subtitle: localizedMoreDestinationSubtitle(destination),
                         systemImage: destination.iconName,
                         showsChevron: false)
                 }
@@ -405,7 +512,6 @@ extension ContentView {
                 accessibilityModeSection
                 planningLayerSection
             case .guidanceAndRules:
-                guidanceSacredImageSection
                 guidanceDevotionalGallerySection
                 devotionalPackSection
                 guidanceSeasonContextSection
@@ -423,7 +529,7 @@ extension ContentView {
         }
         .listStyle(.insetGrouped)
         .appListBackground()
-        .navigationTitle(destination.title)
+        .navigationTitle(localizedMoreDestinationTitle(destination))
         .navigationBarTitleDisplayMode(.inline)
     }
 
@@ -452,10 +558,10 @@ extension ContentView {
     func premiumToolIntroSection(for destination: PremiumToolDestination) -> some View {
         Section {
             VStack(alignment: .leading, spacing: 10) {
-                Label(destination.title, systemImage: destination.iconName)
+                Label(localizedPremiumToolTitle(destination), systemImage: destination.iconName)
                     .font(.system(.headline, design: .serif))
                     .foregroundStyle(CatholicTheme.primary)
-                Text(destination.subtitle)
+                Text(localizedPremiumToolSubtitle(destination))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -470,7 +576,7 @@ extension ContentView {
         }
         .listStyle(.insetGrouped)
         .appListBackground()
-        .navigationTitle(destination.title)
+        .navigationTitle(localizedPremiumToolTitle(destination))
         .navigationBarTitleDisplayMode(.inline)
     }
 
@@ -480,8 +586,8 @@ extension ContentView {
             return SacredImageryItem(
                 id: "fallback-hero",
                 assetName: "HeroSacred",
-                title: destination.title,
-                subtitle: destination.subtitle)
+                title: localizedMoreDestinationTitle(destination),
+                subtitle: localizedMoreDestinationSubtitle(destination))
         }
         let all = MoreHubDestination.allCases
         let idx = all.firstIndex(of: destination) ?? 0
@@ -493,8 +599,8 @@ extension ContentView {
         return Section {
             SacredHeroCard(
                 assetName: hero.assetName,
-                title: destination.title,
-                subtitle: hero.subtitle,
+                title: localizedMoreDestinationTitle(destination),
+                subtitle: localizedMoreDestinationSubtitle(destination),
                 height: 122,
                 cornerRadius: 16,
                 accessibilityIdentifier: "more.\(destination.rawValue).hero")

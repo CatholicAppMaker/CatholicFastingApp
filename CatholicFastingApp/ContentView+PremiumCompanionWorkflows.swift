@@ -1,17 +1,34 @@
 import SwiftUI
 
 extension ContentView {
+    private func localizedVirtueLabel(_ virtue: String) -> String {
+        switch virtue {
+        case "Temperance":
+            localized("premium.virtue.temperance", default: "Temperance")
+        case "Patience":
+            localized("premium.virtue.patience", default: "Patience")
+        case "Charity":
+            localized("premium.virtue.charity", default: "Charity")
+        case "Humility":
+            localized("premium.virtue.humility", default: "Humility")
+        case "Obedience":
+            localized("premium.virtue.obedience", default: "Obedience")
+        default:
+            virtue
+        }
+    }
+
     var premiumChecklistSection: some View {
-        Section("Consistency Checklist") {
-            Text("Keep one clear next step visible instead of carrying the whole season in your head.")
+        Section(localized("premium.checklist.section", default: "Consistency Checklist")) {
+            Text(localized("premium.checklist.intro", default: "Keep one clear next step visible instead of carrying the whole season in your head."))
                 .font(.caption)
                 .foregroundStyle(.secondary)
             if !monetizationStore.premiumUnlocked {
-                Text("Unlock Premium to keep a focused consistency checklist.")
+                Text(localized("premium.checklist.unlock_hint", default: "Unlock Premium to keep a focused consistency checklist."))
                     .foregroundStyle(.secondary)
             } else {
                 if premiumChecklist.isEmpty {
-                    Text("No checklist items yet. Add one to keep your next Catholic fasting step visible.")
+                    Text(localized("premium.checklist.empty", default: "No checklist items yet. Add one to keep your next Catholic fasting step visible."))
                         .foregroundStyle(.secondary)
                 } else {
                     ForEach(premiumChecklist) { item in
@@ -29,11 +46,11 @@ extension ContentView {
                         .accessibilityIdentifier("premium.checklist.\(item.id)")
                     }
                 }
-                Button("Add Suggested Checklist Item") {
+                Button(localized("premium.checklist.add_suggested", default: "Add Suggested Checklist Item")) {
                     premiumChecklist.append(
                         PremiumChecklistItem(
                             id: UUID().uuidString,
-                            title: "Review upcoming required observances for next 30 days",
+                            title: localized("premium.checklist.suggested_item", default: "Review upcoming required observances for next 30 days"),
                             isDone: false))
                 }
                 .appSecondaryButtonStyle()
@@ -42,21 +59,21 @@ extension ContentView {
     }
 
     var reflectionJournalSection: some View {
-        Section("Reflection & Review (Local)") {
+        Section(localized("premium.journal.section", default: "Reflection & Review (Local)")) {
             if !monetizationStore.premiumUnlocked {
-                Text("Premium unlocks local reflection and review tools.")
+                Text(localized("premium.journal.unlock_hint", default: "Premium unlocks local reflection and review tools."))
                     .foregroundStyle(.secondary)
             } else {
-                Text("Keep reflections short. The goal is consistency, not long journaling.")
+                Text(localized("premium.journal.intro", default: "Keep reflections short. The goal is consistency, not long journaling."))
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                TextField("Reflection title", text: $newReflectionTitle)
+                TextField(localized("premium.journal.title_placeholder", default: "Reflection title"), text: $newReflectionTitle)
                     .textInputAutocapitalization(.sentences)
                     .accessibilityIdentifier("premium.journal.title")
-                TextField("Write a short reflection", text: $newReflectionBody, axis: .vertical)
+                TextField(localized("premium.journal.body_placeholder", default: "Write a short reflection"), text: $newReflectionBody, axis: .vertical)
                     .lineLimit(2 ... 5)
                     .accessibilityIdentifier("premium.journal.body")
-                Button("Save Reflection") {
+                Button(localized("premium.journal.save", default: "Save Reflection")) {
                     addReflectionEntry()
                 }
                 .appPrimaryButtonStyle()
@@ -64,10 +81,10 @@ extension ContentView {
                 .accessibilityIdentifier("premium.journal.save")
 
                 if reflectionEntries.isEmpty {
-                    Text("No reflections yet. Capture one short line after your fast to build a faithful habit.")
+                    Text(localized("premium.journal.empty", default: "No reflections yet. Capture one short line after your fast to build a faithful habit."))
                         .foregroundStyle(.secondary)
                 } else {
-                    DisclosureGroup("Recent reflections") {
+                    DisclosureGroup(localized("premium.journal.recent", default: "Recent reflections")) {
                         ForEach(reflectionEntries.prefix(5)) { entry in
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(entry.title)
@@ -84,7 +101,7 @@ extension ContentView {
                     }
                 }
                 ShareLink(item: seasonPlanExportText) {
-                    Label("Export Season Plan (Text)", systemImage: "square.and.arrow.up")
+                    Label(localized("premium.journal.export_plan", default: "Export Season Plan (Text)"), systemImage: "square.and.arrow.up")
                 }
                 .appSecondaryButtonStyle()
                 .disabled(!acceptedLegalNotice)
@@ -93,14 +110,14 @@ extension ContentView {
     }
 
     var premiumPlannerSection: some View {
-        Section("Discipline Planner") {
-            Text("Set a realistic season path, cadence, and guardrails.")
+        Section(localized("premium.planner.section", default: "Discipline Planner")) {
+            Text(localized("premium.planner.intro", default: "Set a realistic season path, cadence, and guardrails."))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
 
-            DisclosureGroup("Planner controls") {
+            DisclosureGroup(localized("premium.planner.controls", default: "Planner controls")) {
                 Picker(
-                    "Rule Template",
+                    localized("premium.planner.rule_template", default: "Rule Template"),
                     selection: Binding(
                         get: { selectedPremiumTemplate },
                         set: { applyPremiumRuleTemplate($0) }))
@@ -111,9 +128,9 @@ extension ContentView {
                 }
                 .pickerStyle(.menu)
 
-                Stepper("Optional disciplines/week: \(premiumCompanion.optionalDisciplinesPerWeek)", value: $premiumCompanion.optionalDisciplinesPerWeek, in: 0 ... 7)
-                Stepper("Fixed personal fast day: \(weekdayLabel(for: premiumCompanion.fixedFastWeekday))", value: $premiumCompanion.fixedFastWeekday, in: 1 ... 7)
-                Toggle("Protect feast/holy days from personal fasts", isOn: $premiumCompanion.protectFeastDays)
+                Stepper(localizedFormat("premium.planner.optional_per_week_format", default: "Optional disciplines/week: %d", premiumCompanion.optionalDisciplinesPerWeek), value: $premiumCompanion.optionalDisciplinesPerWeek, in: 0 ... 7)
+                Stepper(localizedFormat("premium.planner.fixed_fast_day_format", default: "Fixed personal fast day: %@", weekdayLabel(for: premiumCompanion.fixedFastWeekday)), value: $premiumCompanion.fixedFastWeekday, in: 1 ... 7)
+                Toggle(localized("premium.planner.protect_feasts", default: "Protect feast/holy days from personal fasts"), isOn: $premiumCompanion.protectFeastDays)
             }
 
             Text(premiumAdaptivePlan.title)
@@ -132,12 +149,12 @@ extension ContentView {
 
             Divider()
 
-            Text("Season Plan: \(premiumSeasonPlan.titleLine)")
+            Text(localizedFormat("premium.planner.season_plan_format", default: "Season Plan: %@", premiumSeasonPlan.titleLine))
                 .font(.subheadline.weight(.semibold))
             Text(premiumSeasonPlan.focusLine)
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            Text("Intensity: \(premiumSeasonPlan.fastingIntensity)")
+            Text(localizedFormat("premium.planner.intensity_format", default: "Intensity: %@", premiumSeasonPlan.fastingIntensity))
                 .font(.caption)
                 .foregroundStyle(.secondary)
             ForEach(premiumSeasonPlan.practices, id: \.self) { practice in
@@ -150,12 +167,12 @@ extension ContentView {
     }
 
     var premiumRemindersSection: some View {
-        Section("Reminders") {
-            Text("Start with the recommendation first. Use advanced rules only if you need more pressure or structure.")
+        Section(localized("premium.reminders.section", default: "Reminders")) {
+            Text(localized("premium.reminders.intro", default: "Start with the recommendation first. Use advanced rules only if you need more pressure or structure."))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
 
-            Text("Smart Recommendation")
+            Text(localized("premium.reminders.smart", default: "Smart Recommendation"))
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(.secondary)
             Text(premiumReminderRecommendation.summaryLine)
@@ -163,25 +180,25 @@ extension ContentView {
                 .foregroundStyle(.secondary)
             Text(
                 """
-                Daily support: \(premiumReminderRecommendation.shouldEnableDailySupport ? "On" : "Off") • \
-                Morning: \(premiumReminderRecommendation.shouldEnableMorning ? "On" : "Off") • \
-                Evening: \(premiumReminderRecommendation.shouldEnableEvening ? "On" : "Off")
+                \(localized("premium.reminders.daily_support", default: "Daily support")): \(premiumReminderRecommendation.shouldEnableDailySupport ? localized("shared.on", default: "On") : localized("shared.off", default: "Off")) • \
+                \(localized("premium.reminders.morning", default: "Morning")): \(premiumReminderRecommendation.shouldEnableMorning ? localized("shared.on", default: "On") : localized("shared.off", default: "Off")) • \
+                \(localized("premium.reminders.evening", default: "Evening")): \(premiumReminderRecommendation.shouldEnableEvening ? localized("shared.on", default: "On") : localized("shared.off", default: "Off"))
                 """)
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
-            Button("Apply Smart Reminder Plan") {
+            Button(localized("premium.reminders.apply_smart", default: "Apply Smart Reminder Plan")) {
                 applyPremiumReminderRecommendation()
             }
             .appPrimaryButtonStyle(legacyTint: CatholicTheme.accent)
             .accessibilityIdentifier("premium.apply_reminder_plan")
 
-            DisclosureGroup("Advanced reminder rules") {
-                Toggle("Remind if no fasting log by noon", isOn: $premiumCompanion.conditionRules.remindIfUnloggedByNoon)
-                Toggle("Double reminders on required days", isOn: $premiumCompanion.conditionRules.requiredDaysDoubleReminder)
-                Toggle("Milestone nudges during active fast", isOn: $premiumCompanion.conditionRules.milestoneNudgesForActiveFast)
+            DisclosureGroup(localized("premium.reminders.advanced", default: "Advanced reminder rules")) {
+                Toggle(localized("premium.reminders.rule.unlogged_by_noon", default: "Remind if no fasting log by noon"), isOn: $premiumCompanion.conditionRules.remindIfUnloggedByNoon)
+                Toggle(localized("premium.reminders.rule.double_required", default: "Double reminders on required days"), isOn: $premiumCompanion.conditionRules.requiredDaysDoubleReminder)
+                Toggle(localized("premium.reminders.rule.milestones", default: "Milestone nudges during active fast"), isOn: $premiumCompanion.conditionRules.milestoneNudgesForActiveFast)
 
-                Button("Apply Condition Rules") {
+                Button(localized("premium.reminders.apply_rules", default: "Apply Condition Rules")) {
                     applyPremiumConditionRules()
                 }
                 .appSecondaryButtonStyle()
@@ -203,24 +220,24 @@ extension ContentView {
     }
 
     var premiumAnalyticsSection: some View {
-        Section("Analytics") {
-            Text("Review completion, consistency, and seasonal trend lines.")
+        Section(localized("premium.analytics.section", default: "Analytics")) {
+            Text(localized("premium.analytics.intro", default: "Review completion, consistency, and seasonal trend lines."))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
 
-            Text("Required completion: \(premiumAnalyticsSummary.requiredCompletionPercent)%")
+            Text(localizedFormat("premium.analytics.required_format", default: "Required completion: %d%%", premiumAnalyticsSummary.requiredCompletionPercent))
                 .font(.caption)
-            Text("Overall completion: \(premiumAnalyticsSummary.overallCompletionPercent)%")
+            Text(localizedFormat("premium.analytics.overall_format", default: "Overall completion: %d%%", premiumAnalyticsSummary.overallCompletionPercent))
                 .font(.caption)
-            Text("Missed: \(premiumAnalyticsSummary.missedCount) • Substituted: \(premiumAnalyticsSummary.substitutedCount)")
+            Text(localizedFormat("premium.analytics.missed_format", default: "Missed: %d • Substituted: %d", premiumAnalyticsSummary.missedCount, premiumAnalyticsSummary.substitutedCount))
                 .font(.caption)
-            Text("Intermittent target hits: \(premiumAnalyticsSummary.intermittentTargetHitPercent)%")
+            Text(localizedFormat("premium.analytics.intermittent_hits_format", default: "Intermittent target hits: %d%%", premiumAnalyticsSummary.intermittentTargetHitPercent))
                 .font(.caption)
 
             if !premiumAnalyticsSummary.seasonRows.isEmpty {
-                DisclosureGroup("Season-by-season breakdown") {
+                DisclosureGroup(localized("premium.analytics.breakdown", default: "Season-by-season breakdown")) {
                     ForEach(premiumAnalyticsSummary.seasonRows) { row in
-                        Text("\(row.season.label): \(row.completionPercent)% (\(row.completedCount)/\(row.totalCount))")
+                        Text(localizedFormat("premium.analytics.season_row_format", default: "%@: %d%% (%d/%d)", localizedSeasonLabel(row.season), row.completionPercent, row.completedCount, row.totalCount))
                             .font(.caption2)
                             .foregroundStyle(.secondary)
                     }
@@ -231,7 +248,7 @@ extension ContentView {
     }
 
     var premiumRecoveryCoachSection: some View {
-        Section("Recovery Coaching") {
+        Section(localized("premium.recovery.section", default: "Recovery Coaching")) {
             Text(premiumRecoveryCoachPlan.title)
                 .font(.subheadline.weight(.semibold))
             Text(premiumRecoveryCoachPlan.summary)
@@ -247,13 +264,13 @@ extension ContentView {
     }
 
     var premiumReflectionPromptSection: some View {
-        Section("Daily Premium Reflection") {
+        Section(localized("premium.reflection.section", default: "Daily Premium Reflection")) {
             Text(premiumReflection.title)
                 .font(.subheadline.weight(.semibold))
             Text(premiumReflection.body)
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            Text("Action: \(premiumReflection.action)")
+            Text(localizedFormat("premium.reflection.action_format", default: "Action: %@", premiumReflection.action))
                 .font(.caption)
                 .foregroundStyle(CatholicTheme.primary)
         }
@@ -261,34 +278,34 @@ extension ContentView {
     }
 
     var premiumVirtueTrackingSection: some View {
-        Section("Virtue Check-ins") {
-            Text("Use one short note to connect fasting effort with a concrete virtue.")
+        Section(localized("premium.virtue.section", default: "Virtue Check-ins")) {
+            Text(localized("premium.virtue.intro", default: "Use one short note to connect fasting effort with a concrete virtue."))
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            Picker("Virtue", selection: $selectedVirtue) {
+            Picker(localized("premium.virtue.picker", default: "Virtue"), selection: $selectedVirtue) {
                 ForEach(["Temperance", "Patience", "Charity", "Humility", "Obedience"], id: \.self) { virtue in
-                    Text(virtue).tag(virtue)
+                    Text(localizedVirtueLabel(virtue)).tag(virtue)
                 }
             }
             .pickerStyle(.menu)
 
-            TextField("Virtue note", text: $newVirtueNote, axis: .vertical)
+            TextField(localized("premium.virtue.note_placeholder", default: "Virtue note"), text: $newVirtueNote, axis: .vertical)
                 .lineLimit(2 ... 4)
-            Button("Log Virtue Check-in") {
+            Button(localized("premium.virtue.log", default: "Log Virtue Check-in")) {
                 addPremiumVirtueLog()
             }
             .appPrimaryButtonStyle(legacyTint: CatholicTheme.accent)
             .disabled(newVirtueNote.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
 
             if premiumCompanion.virtueLogs.isEmpty {
-                Text("No virtue check-ins yet.")
+                Text(localized("premium.virtue.empty", default: "No virtue check-ins yet."))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             } else {
                 ForEach(premiumCompanion.virtueLogs.prefix(5)) { log in
                     HStack(alignment: .top) {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("\(log.virtue) • \(log.createdAt.formatted(date: .abbreviated, time: .shortened))")
+                            Text("\(localizedVirtueLabel(log.virtue)) • \(log.createdAt.formatted(date: .abbreviated, time: .shortened))")
                                 .font(.caption.weight(.semibold))
                             Text(log.note)
                                 .font(.caption2)
@@ -309,13 +326,13 @@ extension ContentView {
     }
 
     var premiumExportSummarySection: some View {
-        Section("Export Summary") {
+        Section(localized("premium.export.section", default: "Export Summary")) {
             ShareLink(
                 item: premiumDirectionSummaryText,
-                subject: Text("Catholic Fasting Summary"),
-                message: Text("Structured fasting summary for personal review."))
+                subject: Text(localized("premium.export.subject", default: "Catholic Fasting Summary")),
+                message: Text(localized("premium.export.message", default: "Structured fasting summary for personal review.")))
             {
-                Label("Export Fasting Summary", systemImage: "square.and.arrow.up")
+                Label(localized("premium.export.button", default: "Export Fasting Summary"), systemImage: "square.and.arrow.up")
             }
             .appSecondaryButtonStyle()
             .disabled(!acceptedLegalNotice)

@@ -107,6 +107,7 @@ struct IPadKeyDateChip: View {
 struct IPadWorkspaceHeroBand: View {
     let assetName: String
     let seasonLabel: String
+    let seasonContextLabel: String
     let title: String
     let subtitle: String
     let quote: CatholicFastingQuote
@@ -127,7 +128,7 @@ struct IPadWorkspaceHeroBand: View {
                         accessibilityIdentifier: accessibilityIdentifier)
 
                     VStack(alignment: .leading, spacing: 10) {
-                        Label("Liturgical Season: \(seasonLabel)", systemImage: "sparkles")
+                        Label(seasonContextLabel, systemImage: "sparkles")
                             .font(.footnote.weight(.semibold))
                             .foregroundStyle(CatholicTheme.primary)
                         CatholicFastingQuoteCard(quote: quote, compact: true)
@@ -152,7 +153,7 @@ struct IPadWorkspaceHeroBand: View {
                         .frame(maxWidth: .infinity)
 
                     VStack(alignment: .leading, spacing: 12) {
-                        Label("Liturgical Season: \(seasonLabel)", systemImage: "sparkles")
+                        Label(seasonContextLabel, systemImage: "sparkles")
                             .font(.footnote.weight(.semibold))
                             .foregroundStyle(CatholicTheme.primary)
                         CatholicFastingQuoteCard(quote: quote, compact: false)

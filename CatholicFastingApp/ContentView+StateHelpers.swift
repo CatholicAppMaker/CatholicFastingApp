@@ -485,10 +485,11 @@ extension ContentView {
     }
 
     var todayFoodDecision: DailyFoodDecision {
-        DailyFoodDecisionEngine.decision(
+        let rawDecision = DailyFoodDecisionEngine.decision(
             for: currentYearObservances,
             settings: settings,
             calendar: liturgicalCalendar)
+        return localizedFoodDecision(rawDecision)
     }
 
     var hasConfiguredRegionProfile: Bool {
@@ -607,6 +608,146 @@ extension ContentView {
             return String(format: "%dd %02d:%02d:%02d", days, hours, minutes, seconds)
         }
         return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+    }
+
+    private func localizedFoodDecision(_ decision: DailyFoodDecision) -> DailyFoodDecision {
+        DailyFoodDecision(
+            obligationLine: localizedFoodDecisionText(decision.obligationLine),
+            allowed: decision.allowed.map(localizedFoodDecisionText),
+            avoid: decision.avoid.map(localizedFoodDecisionText),
+            rationale: localizedFoodDecisionRationale(decision.rationale),
+            sourceLine: localizedFoodDecisionSource(decision.sourceLine))
+    }
+
+    private func localizedFoodDecisionText(_ text: String) -> String {
+        switch text {
+        case "Medical/pastoral dispensation is enabled in your profile.":
+            localized("decision.dispensation.obligation", default: text)
+        case "Eat what is prudent and medically safe.":
+            localized("decision.dispensation.allowed.safe", default: text)
+        case "Keep prayer/charity as substitute penance.":
+            localized("decision.dispensation.allowed.prayer", default: text)
+        case "Avoid self-imposed rigor that harms health.":
+            localized("decision.dispensation.avoid", default: text)
+        case "Today requires fasting and abstinence.":
+            localized("decision.fast_and_abstinence.obligation", default: text)
+        case "One full meal with up to two smaller meals.":
+            localized("decision.fast_and_abstinence.allowed.meals", default: text)
+        case "Fish, eggs, dairy, grains, fruits, and vegetables are generally permitted.":
+            localized("decision.fast_and_abstinence.allowed.foods", default: text)
+        case "Meat from land animals (beef, pork, poultry).":
+            localized("decision.fast_and_abstinence.avoid.meat", default: text)
+        case "Eating patterns that effectively become a second full meal.":
+            localized("decision.fast_and_abstinence.avoid.second_meal", default: text)
+        case "Today requires abstinence from meat.":
+            localized("decision.abstinence.obligation", default: text)
+        case "Normal meal quantity is generally permitted.":
+            localized("decision.abstinence.allowed.quantity", default: text)
+        case "Today has a required observance but no mandatory food restriction.":
+            localized("decision.required_no_food_restriction.obligation", default: text)
+        case "Normal meals are generally permitted.":
+            localized("decision.required_no_food_restriction.allowed.meals", default: text)
+        case "Keep the day with prayer and Mass obligations.":
+            localized("decision.required_no_food_restriction.allowed.prayer", default: text)
+        case "Today may include fasting/abstinence obligations (profile incomplete).":
+            localized("decision.optional_unknown.obligation", default: text)
+        case "Today includes fasting/abstinence observance in your profile, but not mandatory.":
+            localized("decision.optional_known.obligation", default: text)
+        case "Follow age/health and pastoral guidance for your situation.":
+            localized("decision.optional.allowed.guidance", default: text)
+        case "If unsure, observe abstinence and a simpler meal pattern.":
+            localized("decision.optional.allowed.unsure", default: text)
+        case "Do not assume no obligation without confirming your profile.":
+            localized("decision.optional.avoid", default: text)
+        case "No mandatory food restriction today.":
+            localized("decision.none.obligation", default: text)
+        case "You may choose a voluntary penance.":
+            localized("decision.none.allowed.penance", default: text)
+        case "Today calls for Friday penance through abstinence from meat.":
+            localized("decision.friday_abstinence.obligation", default: text)
+        case "Today calls for Friday penance, not mandatory fasting.":
+            localized("decision.friday_penance.obligation", default: text)
+        case "Choose a penitential act, especially a work of charity or piety.":
+            localized("decision.friday_penance.allowed.act", default: text)
+        case "Do not skip Friday penance entirely.":
+            localized("decision.friday_penance.avoid", default: text)
+        case "Today requires Friday penance through abstinence from meat.":
+            localized("decision.friday_abstinence.required_obligation", default: text)
+        case "Today requires Friday penance, but not mandatory fasting.":
+            localized("decision.friday_penance.required_obligation", default: text)
+        case "Choose a penitential act (for example prayer, almsgiving, or another sacrifice).":
+            localized("decision.friday_penance.required_act", default: text)
+        default:
+            text
+        }
+    }
+
+    private func localizedFoodDecisionRationale(_ rationale: String) -> String {
+        if rationale == "Health and pastoral obedience take priority when obligations do not bind." {
+            return localized("decision.dispensation.rationale", default: rationale)
+        }
+        if rationale == "No mandatory fast/abstinence observance appears for today in your current profile." {
+            return localized("decision.none.rationale", default: rationale)
+        }
+        if rationale == "No specific mandatory observance was detected." {
+            return localized("decision.observance.none", default: rationale)
+        }
+
+        let unknownPrefix = "Review the age eligibility toggles in Settings so the app can determine whether "
+        let knownPrefix = "Based on your current profile, "
+        let unknownSuffix = " binds you."
+        let knownSuffix = " does not strictly bind today."
+
+        if rationale.hasPrefix(unknownPrefix), rationale.hasSuffix(unknownSuffix) {
+            let titles = String(rationale.dropFirst(unknownPrefix.count).dropLast(unknownSuffix.count))
+            return localizedFormat("decision.optional_unknown.rationale_format", default: "Review the age eligibility toggles in Settings so the app can determine whether %@ binds you.", titles)
+        }
+
+        if rationale.hasPrefix(knownPrefix), rationale.hasSuffix(knownSuffix) {
+            let titles = String(rationale.dropFirst(knownPrefix.count).dropLast(knownSuffix.count))
+            return localizedFormat("decision.optional_known.rationale_format", default: "Based on your current profile, %@ does not strictly bind today.", titles)
+        }
+
+        let singlePrefix = "This is based on "
+        let singleSuffix = "."
+        if rationale.hasPrefix(singlePrefix), rationale.hasSuffix(singleSuffix) {
+            let titles = String(rationale.dropFirst(singlePrefix.count).dropLast(singleSuffix.count))
+            let key = titles.contains(", ") ? "decision.observance.multi_format" : "decision.observance.single_format"
+            return localizedFormat(key, default: "This is based on %@.", titles)
+        }
+
+        return rationale
+    }
+
+    private func localizedFoodDecisionSource(_ sourceLine: String) -> String {
+        switch sourceLine {
+        case "Source: USCCB and pastoral guidance.":
+            localized("decision.sources.us.general", default: sourceLine)
+        case "Source: USCCB Fast & Abstinence norms.":
+            localized("decision.sources.us.fasting", default: sourceLine)
+        case "Source: USCCB Friday penance norms.":
+            localized("decision.sources.us.friday", default: sourceLine)
+        case "Source: USCCB liturgical norms.":
+            localized("decision.sources.us.holyday", default: sourceLine)
+        case "Source: CCCB Friday guidance and universal law.":
+            localized("decision.sources.ca.general", default: sourceLine)
+        case "Source: universal fast/abstinence law with Canada Friday guidance.":
+            localized("decision.sources.ca.fasting", default: sourceLine)
+        case "Source: CCCB Friday guidance.":
+            localized("decision.sources.ca.friday", default: sourceLine)
+        case "Source: universal law and the Canada national baseline.":
+            localized("decision.sources.ca.holyday", default: sourceLine)
+        case "Source: universal law and local pastoral guidance.":
+            localized("decision.sources.other.general", default: sourceLine)
+        case "Source: universal fast/abstinence law.":
+            localized("decision.sources.other.fasting", default: sourceLine)
+        case "Source: local Friday penance guidance.":
+            localized("decision.sources.other.friday", default: sourceLine)
+        case "Source: local liturgical guidance.":
+            localized("decision.sources.other.holyday", default: sourceLine)
+        default:
+            sourceLine
+        }
     }
 
     func intermittentPlanDescription(_ hours: Int) -> String {

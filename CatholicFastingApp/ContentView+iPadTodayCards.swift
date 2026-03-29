@@ -11,8 +11,10 @@ extension ContentView {
 
         return VStack(alignment: .leading, spacing: 16) {
             IPadWorkspaceHeader(
-                eyebrow: "Today",
-                title: todayActionableObservances.isEmpty ? "No mandatory observance today" : "Today requires attention",
+                eyebrow: localized("ipad.today.primary.eyebrow", default: "Today"),
+                title: todayActionableObservances.isEmpty
+                    ? localized("ipad.today.primary.title_clear", default: "No mandatory observance today")
+                    : localized("ipad.today.primary.title_attention", default: "Today requires attention"),
                 detail: heroSummaryText)
 
             HStack(spacing: 10) {
@@ -30,11 +32,11 @@ extension ContentView {
                     .font(.system(.title3, design: .serif).weight(.bold))
                     .foregroundStyle(CatholicTheme.primary)
                 if let allowed = decision.allowed.first {
-                    Text("Okay today: \(allowed)")
+                    Text(localizedFormat("ipad.today.primary.allowed_format", default: "Okay today: %@", allowed))
                         .font(.subheadline)
                 }
                 if let avoid = decision.avoid.first {
-                    Text("Avoid today: \(avoid)")
+                    Text(localizedFormat("ipad.today.primary.avoid_format", default: "Avoid today: %@", avoid))
                         .font(.subheadline)
                 }
                 Text(decision.rationale)
@@ -42,10 +44,14 @@ extension ContentView {
             }
 
             VStack(alignment: .leading, spacing: 8) {
-                Text("Next step")
+                Text(localized("ipad.today.primary.next_step", default: "Next step"))
                     .appEyebrowStyle()
                     .textCase(.uppercase)
-                Text(todayContext?.nextActionText ?? "Keep the next required day visible and review your region profile before planning optional disciplines.")
+                Text(
+                    todayContext?.nextActionText
+                        ?? localized(
+                            "ipad.today.primary.next_step_detail",
+                            default: "Keep the next required day visible and review your region profile before planning optional disciplines."))
                     .appLeadTextStyle()
             }
             .padding(12)
@@ -55,21 +61,23 @@ extension ContentView {
                 selectedMoreDestination = .guidanceAndRules
                 homeSurface = .more
             } label: {
-                Label("Open full food guidance", systemImage: "book.closed")
+                Label(localized("ipad.today.primary.open_guidance", default: "Open full food guidance"), systemImage: "book.closed")
             }
             .appSecondaryButtonStyle()
             .accessibilityIdentifier("ipad.today.open_food_guidance")
 
             VStack(alignment: .leading, spacing: 8) {
-                Text("Common food questions")
+                Text(localized("ipad.today.primary.common_questions", default: "Common food questions"))
                     .appEyebrowStyle()
                     .foregroundStyle(CatholicTheme.primary)
                     .textCase(.uppercase)
-                Label("Chicken and turkey count as meat.", systemImage: "xmark.circle")
-                Label("Eggs, milk, butter, and cheese are generally permitted.", systemImage: "checkmark.circle")
-                Label("Fish and shellfish are generally permitted.", systemImage: "checkmark.circle")
+                Label(localized("ipad.today.primary.common.chicken", default: "Chicken and turkey count as meat."), systemImage: "xmark.circle")
+                Label(localized("ipad.today.primary.common.dairy", default: "Eggs, milk, butter, and cheese are generally permitted."), systemImage: "checkmark.circle")
+                Label(localized("ipad.today.primary.common.fish", default: "Fish and shellfish are generally permitted."), systemImage: "checkmark.circle")
                 Label(
-                    "Open the full guidance page if you need stricter-practice details or region-specific notes.",
+                    localized(
+                        "ipad.today.primary.common.open_guidance_hint",
+                        default: "Open the full guidance page if you need stricter-practice details or region-specific notes."),
                     systemImage: "book.closed")
                     .foregroundStyle(.secondary)
             }
@@ -85,22 +93,22 @@ extension ContentView {
     var ipadTodayMetricsCard: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
             IPadSummaryMetricCard(
-                title: "Next required",
-                value: upcomingMandatoryObservance?.title ?? "None ahead",
-                subtitle: upcomingMandatoryObservance?.date.formatted(date: .abbreviated, time: .omitted) ?? "Current year clear")
+                title: localized("ipad.today.metrics.next_required", default: "Next required"),
+                value: upcomingMandatoryObservance?.title ?? localized("ipad.today.metrics.none_ahead", default: "None ahead"),
+                subtitle: upcomingMandatoryObservance?.date.formatted(date: .abbreviated, time: .omitted) ?? localized("ipad.today.metrics.current_year_clear", default: "Current year clear"))
             IPadSummaryMetricCard(
-                title: "This week",
+                title: localized("ipad.today.metrics.this_week", default: "This week"),
                 value: "\(weeklyCompletedObservancesCount)/\(weeklyActionableObservanceCount)",
-                subtitle: "discipline days completed",
+                subtitle: localized("ipad.today.metrics.this_week_detail", default: "discipline days completed"),
                 tint: CatholicTheme.accent)
             IPadSummaryMetricCard(
-                title: "Current streak",
-                value: "\(currentStreak) days",
+                title: localized("ipad.today.metrics.current_streak", default: "Current streak"),
+                value: localizedFormat("ipad.today.metrics.current_streak_value", default: "%d days", currentStreak),
                 subtitle: streakResilienceMessage)
             IPadSummaryMetricCard(
-                title: "This month",
+                title: localized("ipad.today.metrics.this_month", default: "This month"),
                 value: "\(monthlyCompletionCount)",
-                subtitle: "logged observances",
+                subtitle: localized("ipad.today.metrics.this_month_detail", default: "logged observances"),
                 tint: .orange)
         }
         .accessibilityIdentifier("ipad.today.metrics")
@@ -109,13 +117,13 @@ extension ContentView {
     var ipadTodayQuickActionsCard: some View {
         VStack(alignment: .leading, spacing: 14) {
             IPadWorkspaceHeader(
-                eyebrow: "Do next",
-                title: "Quick actions",
-                detail: "Keep the next obligation and planning one tap away.")
+                eyebrow: localized("ipad.today.actions.eyebrow", default: "Do next"),
+                title: localized("ipad.today.actions.title", default: "Quick actions"),
+                detail: localized("ipad.today.actions.detail", default: "Keep the next obligation and planning one tap away."))
 
             HStack(spacing: 10) {
                 IPadWorkspaceActionButton(
-                    title: "Open Fasting Days",
+                    title: localized("ipad.today.actions.open_fasting_days", default: "Open Fasting Days"),
                     systemImage: "calendar",
                     primary: true,
                     accessibilityIdentifier: "ipad.today.action.open_fasting_days")
@@ -123,7 +131,7 @@ extension ContentView {
                     focusFastingDaysOnUpcomingRequired()
                 }
                 IPadWorkspaceActionButton(
-                    title: "Open Planning",
+                    title: localized("ipad.today.actions.open_planning", default: "Open Planning"),
                     systemImage: "slider.horizontal.3",
                     primary: false,
                     accessibilityIdentifier: "ipad.today.action.open_planning")
@@ -135,7 +143,7 @@ extension ContentView {
 
             HStack(spacing: 10) {
                 IPadWorkspaceActionButton(
-                    title: "Support & Premium",
+                    title: localized("ipad.today.actions.support_premium", default: "Support & Premium"),
                     systemImage: "heart.circle",
                     primary: false,
                     accessibilityIdentifier: "ipad.today.action.open_premium")
@@ -144,7 +152,7 @@ extension ContentView {
                     selectedMoreDestination = .supportAndPremium
                 }
                 IPadWorkspaceActionButton(
-                    title: "Open full food guidance",
+                    title: localized("ipad.today.actions.open_guidance", default: "Open full food guidance"),
                     systemImage: "book",
                     primary: false,
                     accessibilityIdentifier: "ipad.today.action.open_food_guidance")
@@ -162,16 +170,16 @@ extension ContentView {
     var ipadTodayPlanningCard: some View {
         VStack(alignment: .leading, spacing: 14) {
             IPadWorkspaceHeader(
-                eyebrow: "Planning",
-                title: "Year and season snapshot",
-                detail: "See progress without leaving the dashboard.")
+                eyebrow: localized("ipad.today.planning.eyebrow", default: "Planning"),
+                title: localized("ipad.today.planning.title", default: "Year and season snapshot"),
+                detail: localized("ipad.today.planning.detail", default: "See progress without leaving the dashboard."))
 
             HStack(spacing: 10) {
-                IPadSummaryMetricCard(title: "Required goal", value: "\(yearlyRequiredCompletions)/\(planningData.requiredGoal)", subtitle: "required days logged")
+                IPadSummaryMetricCard(title: localized("ipad.today.planning.required_goal", default: "Required goal"), value: "\(yearlyRequiredCompletions)/\(planningData.requiredGoal)", subtitle: localized("ipad.today.planning.required_goal_detail", default: "required days logged"))
                 IPadSummaryMetricCard(
-                    title: "Optional goal",
+                    title: localized("ipad.today.planning.optional_goal", default: "Optional goal"),
                     value: "\(yearlyOptionalCompletions)/\(planningData.optionalGoal)",
-                    subtitle: "optional disciplines logged",
+                    subtitle: localized("ipad.today.planning.optional_goal_detail", default: "optional disciplines logged"),
                     tint: CatholicTheme.accent)
             }
 
@@ -181,7 +189,7 @@ extension ContentView {
                 .tint(CatholicTheme.accent)
 
             if currentSeasonCommitments.isEmpty {
-                Text("No active commitments for \(currentLiturgicalSeason.label).")
+                Text(localizedFormat("ipad.today.planning.no_commitments", default: "No active commitments for %@.", localizedSeasonLabel(currentLiturgicalSeason)))
                     .appSupportingTextStyle()
             } else {
                 ForEach(currentSeasonCommitments.prefix(3)) { commitment in
@@ -198,8 +206,10 @@ extension ContentView {
     var ipadTodayRecoveryCard: some View {
         VStack(alignment: .leading, spacing: 14) {
             IPadWorkspaceHeader(
-                eyebrow: "Recovery",
-                title: missedDayRecoveryPlan == nil ? "No urgent recovery" : "Recovery path ready",
+                eyebrow: localized("ipad.today.recovery.eyebrow", default: "Recovery"),
+                title: missedDayRecoveryPlan == nil
+                    ? localized("ipad.today.recovery.title_clear", default: "No urgent recovery")
+                    : localized("ipad.today.recovery.title_ready", default: "Recovery path ready"),
                 detail: monetizationStore.premiumUnlocked ? weeklyFormationRecapPremium : weeklyFormationRecapFree)
 
             if let recovery = missedDayRecoveryPlan {
@@ -215,13 +225,13 @@ extension ContentView {
                 }
                 Text(recovery.nextRequiredLine)
                     .appSupportingTextStyle()
-                Button("Log recovery substitute today") {
+                Button(localized("ipad.today.recovery.log_substitute", default: "Log recovery substitute today")) {
                     logRecoverySubstituteForToday()
                 }
                 .appSecondaryButtonStyle()
                 .disabled(!canLogRecoverySubstituteToday)
             } else {
-                Text("No missed observance currently needs recovery. Protect the next required day now.")
+                Text(localized("ipad.today.recovery.none_detail", default: "No missed observance currently needs recovery. Protect the next required day now."))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -234,7 +244,7 @@ extension ContentView {
     var ipadTodaySeasonCard: some View {
         VStack(alignment: .leading, spacing: 14) {
             IPadWorkspaceHeader(
-                eyebrow: "Season",
+                eyebrow: localized("ipad.today.season.eyebrow", default: "Season"),
                 title: activeSeasonalContentPack.campaignTitle,
                 detail: activeSeasonalContentPack.campaignSubtitle)
 
@@ -259,7 +269,7 @@ extension ContentView {
     func ipadTodayTrustCard(regionContext: RegionalRuleContext) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             IPadWorkspaceHeader(
-                eyebrow: "Transparency",
+                eyebrow: localized("ipad.today.transparency.eyebrow", default: "Transparency"),
                 title: regionContext.authorityLabel,
                 detail: regionContext.disclosureText)
 
@@ -273,7 +283,7 @@ extension ContentView {
             }
 
             if !acceptedLegalNotice {
-                Text("This remains an independent devotional app and not an official Church authority app.")
+                Text(localized("ipad.today.transparency.notice", default: "This remains an independent devotional app and not an official Church authority app."))
                     .appSupportingTextStyle()
             }
         }

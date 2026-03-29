@@ -30,7 +30,8 @@ extension ContentView {
     private func ipadTodayHeroBand(regionContext: RegionalRuleContext, compact: Bool) -> some View {
         IPadWorkspaceHeroBand(
             assetName: activeSeasonalContentPack.heroAssetNames.first ?? dashboardHeroArtwork.assetName,
-            seasonLabel: currentLiturgicalSeason.label,
+            seasonLabel: localizedSeasonLabel(currentLiturgicalSeason),
+            seasonContextLabel: localizedFormat("ipad.hero.season_label", default: "Liturgical Season: %@", localizedSeasonLabel(currentLiturgicalSeason)),
             title: activeSeasonalContentPack.campaignTitle,
             subtitle: dailySeasonalFormationLine,
             quote: dailySeasonalQuote,

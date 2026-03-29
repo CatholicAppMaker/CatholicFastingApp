@@ -55,10 +55,12 @@ extension ContentView {
             VStack(alignment: .leading, spacing: 8) {
                 SacredHeroCard(
                     assetName: intermittentHeroArtwork.assetName,
-                    title: intermittentTracker.activeStart == nil ? "Track Fast" : "Fast in progress",
+                    title: intermittentTracker.activeStart == nil
+                        ? localized("intermittent.hero.title_idle", default: "Track Fast")
+                        : localized("intermittent.hero.title_active", default: "Fast in progress"),
                     subtitle: intermittentTracker.activeStart == nil
-                        ? "Choose a target, then start when ready."
-                        : "Your live fast and next action are below.",
+                        ? localized("intermittent.hero.subtitle_idle", default: "Choose a target, then start when ready.")
+                        : localized("intermittent.hero.subtitle_active", default: "Your live fast and next action are below."),
                     height: 152,
                     accessibilityIdentifier: "intermittent.hero.card")
 
@@ -70,44 +72,44 @@ extension ContentView {
     }
 
     var intermittentOverviewSection: some View {
-        Section("Current Plan") {
+        Section(localized("intermittent.current_plan.title", default: "Current Plan")) {
             ViewThatFits(in: .horizontal) {
                 HStack {
-                    MetricTile(title: "Sessions", value: "\(intermittentTracker.sessions.count)", detail: "saved locally")
-                    MetricTile(title: "Target", value: intermittentWindowLabel, detail: "active fasting window")
-                    MetricTile(title: "Longest", value: intermittentLongestSessionText, detail: "best recent duration")
+                    MetricTile(title: localized("intermittent.metric.sessions", default: "Sessions"), value: "\(intermittentTracker.sessions.count)", detail: localized("intermittent.metric.sessions.detail", default: "saved locally"))
+                    MetricTile(title: localized("intermittent.metric.target", default: "Target"), value: intermittentWindowLabel, detail: localized("intermittent.metric.target.detail", default: "active fasting window"))
+                    MetricTile(title: localized("intermittent.metric.longest", default: "Longest"), value: intermittentLongestSessionText, detail: localized("intermittent.metric.longest.detail", default: "best recent duration"))
                 }
                 VStack(spacing: 8) {
                     HStack {
-                        MetricTile(title: "Sessions", value: "\(intermittentTracker.sessions.count)", detail: "saved locally")
-                        MetricTile(title: "Target", value: intermittentWindowLabel, detail: "active fasting window")
+                        MetricTile(title: localized("intermittent.metric.sessions", default: "Sessions"), value: "\(intermittentTracker.sessions.count)", detail: localized("intermittent.metric.sessions.detail", default: "saved locally"))
+                        MetricTile(title: localized("intermittent.metric.target", default: "Target"), value: intermittentWindowLabel, detail: localized("intermittent.metric.target.detail", default: "active fasting window"))
                     }
-                    MetricTile(title: "Longest", value: intermittentLongestSessionText, detail: "best recent duration")
+                    MetricTile(title: localized("intermittent.metric.longest", default: "Longest"), value: intermittentLongestSessionText, detail: localized("intermittent.metric.longest.detail", default: "best recent duration"))
                 }
             }
 
             if let activeStart = intermittentTracker.activeStart {
-                Text("Started \(activeStart.formatted(date: .abbreviated, time: .shortened)).")
+                Text(localizedFormat("intermittent.current_plan.started_format", default: "Started %@", activeStart.formatted(date: .abbreviated, time: .shortened)))
                     .appSupportingTextStyle()
                     .foregroundStyle(CatholicTheme.primary.opacity(0.9))
             } else if let latestSession = intermittentTracker.sessions.first {
-                Text("Last fast ended \(latestSession.end.formatted(date: .abbreviated, time: .shortened)).")
+                Text(localizedFormat("intermittent.current_plan.last_ended_format", default: "Last fast ended %@", latestSession.end.formatted(date: .abbreviated, time: .shortened)))
                     .appSupportingTextStyle()
                 Text(
                     latestSession.completedTarget
-                        ? "Repeat this rhythm or increase only if it remains prudent."
-                        : "Choose a lighter target or re-enter with a simpler plan.")
+                        ? localized("intermittent.current_plan.completed_hint", default: "Repeat this rhythm or increase only if it remains prudent.")
+                        : localized("intermittent.current_plan.missed_hint", default: "Choose a lighter target or re-enter with a simpler plan."))
                     .appSupportingTextStyle()
             } else {
-                Text("Your target and recent session summary will show here after the first fast.")
+                Text(localized("intermittent.current_plan.empty", default: "Your target and recent session summary will show here after the first fast."))
                     .appSupportingTextStyle()
             }
         }
     }
 
     var intermittentControlsSection: some View {
-        Section("Target and Controls") {
-            Picker("Quick Plan", selection: intermittentPresetBinding) {
+        Section(localized("intermittent.controls.title", default: "Target and Controls")) {
+            Picker(localized("intermittent.controls.quick_plan", default: "Quick Plan"), selection: intermittentPresetBinding) {
                 ForEach([12, 14, 16, 18, 20, 24, 36], id: \.self) { hours in
                     Text(intermittentPlanDescription(hours)).tag(hours)
                 }
@@ -118,54 +120,54 @@ extension ContentView {
             if monetizationStore.premiumUnlocked {
                 Stepper(value: intermittentPresetBinding, in: 12 ... 336, step: 1) {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Custom target: \(intermittentTracker.presetHours)h")
-                        Text("Longer disciplines remain available here (up to 14 days / 336h).")
+                        Text(localizedFormat("intermittent.controls.custom_target_format", default: "Custom target: %dh", intermittentTracker.presetHours))
+                        Text(localized("intermittent.controls.custom_target_hint", default: "Longer disciplines remain available here (up to 14 days / 336h)."))
                             .appEyebrowStyle()
                     }
                 }
                 .accessibilityIdentifier("intermittent.custom_target_stepper")
             } else {
-                Text("Custom targets beyond presets are part of Premium.")
+                Text(localized("intermittent.controls.premium_hint", default: "Custom targets beyond presets are part of Premium."))
                     .appSupportingTextStyle()
-                Button("Unlock Custom Long Fasts") {
+                Button(localized("intermittent.controls.unlock", default: "Unlock Custom Long Fasts")) {
                     openPremiumUpgrade(focusingOn: .planning)
                 }
                 .appSecondaryButtonStyle()
                 .accessibilityIdentifier("intermittent.unlock_custom_targets")
             }
 
-            Text("Current target: \(intermittentWindowLabel)")
+            Text(localizedFormat("intermittent.controls.current_target_format", default: "Current target: %@", intermittentWindowLabel))
                 .appSupportingTextStyle()
 
             if intermittentTracker.activeStart == nil {
                 DatePicker(
-                    "Started",
+                    localized("intermittent.controls.started", default: "Started"),
                     selection: $intermittentManualStart,
                     in: intermittentManualStartRange,
                     displayedComponents: [.date, .hourAndMinute])
                     .datePickerStyle(.compact)
                     .accessibilityIdentifier("intermittent.start_date")
 
-                Text("If you already started, set the start time here before beginning the timer.")
+                Text(localized("intermittent.controls.started_hint", default: "If you already started, set the start time here before beginning the timer."))
                     .appSupportingTextStyle()
 
                 Button {
                     startIntermittentFastFromSelectedTime()
                 } label: {
-                    Label("Start Fast Now", systemImage: "play.fill")
+                    Label(localized("intermittent.controls.start_now", default: "Start Fast Now"), systemImage: "play.fill")
                 }
                 .appPrimaryButtonStyle()
                 .accessibilityIdentifier("intermittent.start_fast")
             } else {
                 DatePicker(
-                    "Started",
+                    localized("intermittent.controls.started", default: "Started"),
                     selection: intermittentActiveStartBinding,
                     in: intermittentManualStartRange,
                     displayedComponents: [.date, .hourAndMinute])
                     .datePickerStyle(.compact)
                     .accessibilityIdentifier("intermittent.start_date")
 
-                Text("Adjust the start time here if you began fasting earlier. The live tracker updates right away.")
+                Text(localized("intermittent.controls.adjust_hint", default: "Adjust the start time here if you began fasting earlier. The live tracker updates right away."))
                     .appSupportingTextStyle()
 
                 HStack {
@@ -173,7 +175,7 @@ extension ContentView {
                         intermittentTracker.endFast()
                         resetIntermittentManualStartToNow()
                     } label: {
-                        Label("End Fast", systemImage: "stop.fill")
+                        Label(localized("intermittent.controls.end", default: "End Fast"), systemImage: "stop.fill")
                     }
                     .appPrimaryButtonStyle(legacyTint: .green)
                     .accessibilityIdentifier("intermittent.end_fast")
@@ -182,7 +184,7 @@ extension ContentView {
                         intermittentTracker.cancelActiveFast()
                         resetIntermittentManualStartToNow()
                     } label: {
-                        Label("Cancel", systemImage: "xmark")
+                        Label(localized("intermittent.controls.cancel", default: "Cancel"), systemImage: "xmark")
                     }
                     .appSecondaryButtonStyle()
                     .accessibilityIdentifier("intermittent.cancel_fast")
@@ -192,7 +194,7 @@ extension ContentView {
     }
 
     var intermittentAdvancedToolsSection: some View {
-        Section("Advanced Tools") {
+        Section(localized("intermittent.advanced.title", default: "Advanced Tools")) {
             DisclosureGroup(
                 isExpanded: $intermittentShowAdvanced,
                 content: {
@@ -205,37 +207,43 @@ extension ContentView {
                 },
                 label: {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Schedules, milestones, recovery, and history")
+                        Text(localized("intermittent.advanced.label_title", default: "Schedules, milestones, recovery, and history"))
                             .font(.subheadline.weight(.semibold))
-                        Text("Keep the live tracker first and open these only when you need deeper tools.")
+                        Text(localized("intermittent.advanced.label_detail", default: "Keep the live tracker first and open these only when you need deeper tools."))
                             .appSupportingTextStyle()
                     }
                 })
                 .accessibilityIdentifier("intermittent.advanced.disclosure")
 
             if !intermittentShowAdvanced {
-                Text("Saved schedules, milestone stats, recovery guidance, and recent history stay tucked away here.")
+                Text(localized("intermittent.advanced.collapsed_hint", default: "Saved schedules, milestone stats, recovery guidance, and recent history stay tucked away here."))
                     .appSupportingTextStyle()
             }
         }
     }
 
     var intermittentScheduleSection: some View {
-        Section("Custom Schedules") {
-            Text("Save reusable plans locally on this device.")
+        Section(localized("intermittent.schedules.section", default: "Custom Schedules")) {
+            Text(localized("intermittent.schedules.intro", default: "Save reusable plans locally on this device."))
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
-            TextField("Schedule name (optional)", text: $newIntermittentScheduleName)
+            TextField(localized("intermittent.schedules.name_placeholder", default: "Schedule name (optional)"), text: $newIntermittentScheduleName)
                 .textInputAutocapitalization(.words)
                 .autocorrectionDisabled()
                 .accessibilityIdentifier("intermittent.schedule.name")
 
-            Stepper("Start hour: \(String(format: "%02d:00", newIntermittentScheduleStartHour))", value: $newIntermittentScheduleStartHour, in: 0 ... 23)
+            Stepper(
+                localizedFormat(
+                    "intermittent.schedules.start_hour_format",
+                    default: "Start hour: %@",
+                    String(format: "%02d:00", newIntermittentScheduleStartHour)),
+                value: $newIntermittentScheduleStartHour,
+                in: 0 ... 23)
                 .accessibilityIdentifier("intermittent.schedule.start_hour")
 
             VStack(alignment: .leading, spacing: 8) {
-                Text("Days")
+                Text(localized("intermittent.schedules.days", default: "Days"))
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.secondary)
                 HStack(spacing: 6) {
@@ -252,7 +260,7 @@ extension ContentView {
             .accessibilityIdentifier("intermittent.schedule.weekdays")
 
             if intermittentSchedules.isEmpty {
-                Text("No saved schedules yet.")
+                Text(localized("intermittent.schedules.empty", default: "No saved schedules yet."))
                     .foregroundStyle(.secondary)
             } else {
                 ForEach(intermittentSchedules) { plan in
@@ -262,7 +270,7 @@ extension ContentView {
                                 Text(plan.name)
                                     .font(.subheadline.weight(.semibold))
                                 if activeIntermittentScheduleID == plan.id {
-                                    Text("Applied")
+                                    Text(localized("intermittent.schedules.applied", default: "Applied"))
                                         .font(.caption2.weight(.semibold))
                                         .foregroundStyle(.white)
                                         .padding(.horizontal, 6)
@@ -270,25 +278,31 @@ extension ContentView {
                                         .background(Capsule().fill(CatholicTheme.primary))
                                 }
                             }
-                            Text("Target \(plan.targetHours)h • Start \(String(format: "%02d:00", plan.startHour)) • Days \(weekdayListText(plan.weekdays))")
+                            Text(
+                                localizedFormat(
+                                    "intermittent.schedules.plan_summary_format",
+                                    default: "Target %dh • Start %@ • Days %@",
+                                    plan.targetHours,
+                                    String(format: "%02d:00", plan.startHour),
+                                    weekdayListText(plan.weekdays)))
                                 .font(.caption2)
                                 .foregroundStyle(.secondary)
                         }
                         Spacer()
                         VStack(alignment: .trailing, spacing: 6) {
-                            Button("Use") {
+                            Button(localized("intermittent.schedules.use", default: "Use")) {
                                 Task {
                                     await applyIntermittentSchedule(plan)
                                 }
                             }
                             .appSecondaryButtonStyle()
 
-                            Button("Edit") {
+                            Button(localized("intermittent.schedules.edit", default: "Edit")) {
                                 startEditingIntermittentSchedule(plan)
                             }
                             .appSecondaryButtonStyle(legacyTint: CatholicTheme.accent)
 
-                            Button("Delete", role: .destructive) {
+                            Button(localized("intermittent.schedules.delete", default: "Delete"), role: .destructive) {
                                 deleteIntermittentSchedule(plan)
                             }
                             .buttonStyle(.bordered)
@@ -305,7 +319,11 @@ extension ContentView {
             }
 
             HStack {
-                Button(isEditingIntermittentSchedule ? "Update Schedule" : "Save Current Plan as Schedule") {
+                Button(
+                    isEditingIntermittentSchedule
+                        ? localized("intermittent.schedules.update", default: "Update Schedule")
+                        : localized("intermittent.schedules.save_current", default: "Save Current Plan as Schedule"))
+                {
                     addOrUpdateIntermittentSchedulePlan()
                 }
                 .appPrimaryButtonStyle()
@@ -313,7 +331,7 @@ extension ContentView {
                 .accessibilityIdentifier("intermittent.schedule.add")
 
                 if isEditingIntermittentSchedule {
-                    Button("Cancel Edit") {
+                    Button(localized("intermittent.schedules.cancel_edit", default: "Cancel Edit")) {
                         cancelEditingIntermittentSchedule()
                     }
                     .appSecondaryButtonStyle()
@@ -324,36 +342,36 @@ extension ContentView {
     }
 
     var intermittentMilestonesSection: some View {
-        Section("Milestones") {
+        Section(localized("intermittent.milestones.section", default: "Milestones")) {
             let total = intermittentTracker.sessions.count
             let completedTargets = intermittentTracker.sessions.filter(\.completedTarget).count
             let longestHours = Int((intermittentTracker.sessions.map(\.duration).max() ?? 0) / 3600)
 
-            Text("Sessions completed: \(total)")
-            Text("Targets achieved: \(completedTargets)")
-            Text("Longest fast: \(longestHours) hour(s)")
-            Text("Recent hit rate: \(intermittentHitRatePercent)%")
+            Text(localizedFormat("intermittent.milestones.sessions_format", default: "Sessions completed: %d", total))
+            Text(localizedFormat("intermittent.milestones.targets_format", default: "Targets achieved: %d", completedTargets))
+            Text(localizedFormat("intermittent.milestones.longest_format", default: "Longest fast: %d hour(s)", longestHours))
+            Text(localizedFormat("intermittent.milestones.hit_rate_format", default: "Recent hit rate: %d%%", intermittentHitRatePercent))
                 .foregroundStyle(.secondary)
         }
     }
 
     var intermittentRecoverySection: some View {
-        Section("Recovery Guidance") {
+        Section(localized("intermittent.recovery.section", default: "Recovery Guidance")) {
             if intermittentTracker.activeStart == nil, let latest = intermittentTracker.sessions.first, !latest.completedTarget {
-                Text("Your latest session ended below target. Consider a lighter target and hydrate well.")
+                Text(localized("intermittent.recovery.below_target", default: "Your latest session ended below target. Consider a lighter target and hydrate well."))
                     .foregroundStyle(.orange)
             } else {
-                Text("No immediate recovery actions needed.")
+                Text(localized("intermittent.recovery.none", default: "No immediate recovery actions needed."))
                     .foregroundStyle(.secondary)
             }
-            Text("Adjust fast length when health, duty, or pastoral guidance requires.")
+            Text(localized("intermittent.recovery.guidance", default: "Adjust fast length when health, duty, or pastoral guidance requires."))
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
     }
 
     var intermittentActiveSection: some View {
-        Section("Live Tracker") {
+        Section(localized("intermittent.live.section", default: "Live Tracker")) {
             if let activeStart = intermittentTracker.activeStart {
                 TimelineView(.periodic(from: .now, by: 1)) { context in
                     let now = context.date
@@ -382,21 +400,25 @@ extension ContentView {
 
                         if accessibilityLayout {
                             VStack(spacing: 8) {
-                                LiveTrackerMetricChip(title: "Elapsed", value: countdownText(elapsed))
+                                LiveTrackerMetricChip(title: localized("intermittent.live.elapsed", default: "Elapsed"), value: countdownText(elapsed))
                                     .accessibilityIdentifier("intermittent.active_elapsed")
-                                LiveTrackerMetricChip(title: "Target", value: "\(intermittentTracker.presetHours)h fast")
+                                LiveTrackerMetricChip(title: localized("intermittent.live.target", default: "Target"), value: localizedFormat("intermittent.live.target_value_format", default: "%dh fast", intermittentTracker.presetHours))
                                 LiveTrackerMetricChip(
-                                    title: "Next",
-                                    value: eatingHours > 0 ? "\(eatingHours)h after fast" : "Custom rhythm")
+                                    title: localized("intermittent.live.next", default: "Next"),
+                                    value: eatingHours > 0
+                                        ? localizedFormat("intermittent.live.next_value_format", default: "%dh after fast", eatingHours)
+                                        : localized("intermittent.live.next_custom", default: "Custom rhythm"))
                             }
                         } else {
                             HStack(spacing: 8) {
-                                LiveTrackerMetricChip(title: "Elapsed", value: countdownText(elapsed))
+                                LiveTrackerMetricChip(title: localized("intermittent.live.elapsed", default: "Elapsed"), value: countdownText(elapsed))
                                     .accessibilityIdentifier("intermittent.active_elapsed")
-                                LiveTrackerMetricChip(title: "Target", value: "\(intermittentTracker.presetHours)h fast")
+                                LiveTrackerMetricChip(title: localized("intermittent.live.target", default: "Target"), value: localizedFormat("intermittent.live.target_value_format", default: "%dh fast", intermittentTracker.presetHours))
                                 LiveTrackerMetricChip(
-                                    title: "Next",
-                                    value: eatingHours > 0 ? "\(eatingHours)h after fast" : "Custom rhythm")
+                                    title: localized("intermittent.live.next", default: "Next"),
+                                    value: eatingHours > 0
+                                        ? localizedFormat("intermittent.live.next_value_format", default: "%dh after fast", eatingHours)
+                                        : localized("intermittent.live.next_custom", default: "Custom rhythm"))
                             }
                         }
                     }
@@ -425,7 +447,7 @@ extension ContentView {
                     VStack(alignment: .leading, spacing: 14) {
                         if accessibilityLayout {
                             VStack(alignment: .leading, spacing: 12) {
-                                liveEatingRing(progress: eatingProgress, hasEatingWindow: hasEatingWindow, countdown: hasEatingWindow ? countdownText(eatingRemaining) : "Ready")
+                                liveEatingRing(progress: eatingProgress, hasEatingWindow: hasEatingWindow, countdown: hasEatingWindow ? countdownText(eatingRemaining) : localized("intermittent.live.ready", default: "Ready"))
                                 liveEatingSummary(
                                     hasEatingWindow: hasEatingWindow,
                                     lastEnded: lastEnded,
@@ -433,7 +455,7 @@ extension ContentView {
                             }
                         } else {
                             HStack(alignment: .center, spacing: 16) {
-                                liveEatingRing(progress: eatingProgress, hasEatingWindow: hasEatingWindow, countdown: hasEatingWindow ? countdownText(eatingRemaining) : "Ready")
+                                liveEatingRing(progress: eatingProgress, hasEatingWindow: hasEatingWindow, countdown: hasEatingWindow ? countdownText(eatingRemaining) : localized("intermittent.live.ready", default: "Ready"))
                                 liveEatingSummary(
                                     hasEatingWindow: hasEatingWindow,
                                     lastEnded: lastEnded,
@@ -443,23 +465,29 @@ extension ContentView {
 
                         if accessibilityLayout {
                             VStack(spacing: 8) {
-                                LiveTrackerMetricChip(title: "Since End", value: countdownText(elapsedSinceEnd))
-                                LiveTrackerMetricChip(title: "Last Fast", value: "\(latestSession.targetHours)h plan")
+                                LiveTrackerMetricChip(title: localized("intermittent.live.since_end", default: "Since End"), value: countdownText(elapsedSinceEnd))
+                                LiveTrackerMetricChip(title: localized("intermittent.live.last_fast", default: "Last Fast"), value: localizedFormat("intermittent.live.last_fast_value_format", default: "%dh plan", latestSession.targetHours))
                                 LiveTrackerMetricChip(
-                                    title: "Status",
+                                    title: localized("intermittent.live.status", default: "Status"),
                                     value: hasEatingWindow
-                                        ? (eatingRemaining > 0 ? "Eating window open" : "Ready to fast")
-                                        : "Ready anytime")
+                                        ? (
+                                            eatingRemaining > 0
+                                                ? localized("intermittent.live.status_eating_window_open", default: "Eating window open")
+                                                : localized("intermittent.live.status_ready_to_fast", default: "Ready to fast"))
+                                        : localized("intermittent.live.status_ready_anytime", default: "Ready anytime"))
                             }
                         } else {
                             HStack(spacing: 8) {
-                                LiveTrackerMetricChip(title: "Since End", value: countdownText(elapsedSinceEnd))
-                                LiveTrackerMetricChip(title: "Last Fast", value: "\(latestSession.targetHours)h plan")
+                                LiveTrackerMetricChip(title: localized("intermittent.live.since_end", default: "Since End"), value: countdownText(elapsedSinceEnd))
+                                LiveTrackerMetricChip(title: localized("intermittent.live.last_fast", default: "Last Fast"), value: localizedFormat("intermittent.live.last_fast_value_format", default: "%dh plan", latestSession.targetHours))
                                 LiveTrackerMetricChip(
-                                    title: "Status",
+                                    title: localized("intermittent.live.status", default: "Status"),
                                     value: hasEatingWindow
-                                        ? (eatingRemaining > 0 ? "Eating window open" : "Ready to fast")
-                                        : "Ready anytime")
+                                        ? (
+                                            eatingRemaining > 0
+                                                ? localized("intermittent.live.status_eating_window_open", default: "Eating window open")
+                                                : localized("intermittent.live.status_ready_to_fast", default: "Ready to fast"))
+                                        : localized("intermittent.live.status_ready_anytime", default: "Ready anytime"))
                             }
                         }
                     }
@@ -477,9 +505,9 @@ extension ContentView {
             } else {
                 TimelineView(.periodic(from: .now, by: 1)) { _ in
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("No active fast")
+                        Text(localized("intermittent.live.no_active", default: "No active fast"))
                             .appSectionTitleStyle()
-                        Text("Pick a target below, adjust the start time if you already began, and start when ready.")
+                        Text(localized("intermittent.live.no_active_detail", default: "Pick a target below, adjust the start time if you already began, and start when ready."))
                             .appLeadTextStyle()
                             .accessibilityIdentifier("intermittent.no_active")
                     }
@@ -499,7 +527,10 @@ extension ContentView {
                     style: StrokeStyle(lineWidth: 12, lineCap: .round))
                 .rotationEffect(.degrees(-90))
             VStack(spacing: 2) {
-                Text(reached ? "Target" : "Remaining")
+                Text(
+                    reached
+                        ? localized("intermittent.live.ring.target", default: "Target")
+                        : localized("intermittent.live.ring.remaining", default: "Remaining"))
                     .font(.caption2.weight(.semibold))
                     .foregroundStyle(.secondary)
                 Text(countdown)
@@ -514,16 +545,22 @@ extension ContentView {
 
     private func liveFastSummary(reached: Bool, start: Date, targetDate: Date) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(reached ? "Fast target reached" : "Fasting in progress")
+            Text(
+                reached
+                    ? localized("intermittent.live.fast_target_reached", default: "Fast target reached")
+                    : localized("intermittent.live.fast_in_progress", default: "Fasting in progress"))
                 .font(.headline.weight(.semibold))
                 .foregroundStyle(CatholicTheme.primary)
-            Text("Started \(start.formatted(date: .abbreviated, time: .shortened))")
+            Text(localizedFormat("intermittent.live.started_format", default: "Started %@", start.formatted(date: .abbreviated, time: .shortened)))
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            Text("Target ends \(targetDate.formatted(date: .abbreviated, time: .shortened))")
+            Text(localizedFormat("intermittent.live.target_ends_format", default: "Target ends %@", targetDate.formatted(date: .abbreviated, time: .shortened)))
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            Text(reached ? "You can end your fast at any time." : "Keep going to complete this plan.")
+            Text(
+                reached
+                    ? localized("intermittent.live.end_anytime", default: "You can end your fast at any time.")
+                    : localized("intermittent.live.keep_going", default: "Keep going to complete this plan."))
                 .font(.caption)
                 .foregroundStyle(reached ? .green : .secondary)
         }
@@ -540,7 +577,10 @@ extension ContentView {
                     style: StrokeStyle(lineWidth: 12, lineCap: .round))
                 .rotationEffect(.degrees(-90))
             VStack(spacing: 2) {
-                Text(hasEatingWindow ? "Eating Window" : "Next Fast")
+                Text(
+                    hasEatingWindow
+                        ? localized("intermittent.live.eating_window", default: "Eating Window")
+                        : localized("intermittent.live.next_fast", default: "Next Fast"))
                     .font(.caption2.weight(.semibold))
                     .foregroundStyle(.secondary)
                 Text(countdown)
@@ -559,18 +599,21 @@ extension ContentView {
         nextSuggestedStart: Date) -> some View
     {
         VStack(alignment: .leading, spacing: 8) {
-            Text(hasEatingWindow ? "Eating window tracker" : "No fixed eating window")
+            Text(
+                hasEatingWindow
+                    ? localized("intermittent.live.eating_window_tracker", default: "Eating window tracker")
+                    : localized("intermittent.live.no_fixed_eating_window", default: "No fixed eating window"))
                 .font(.headline.weight(.semibold))
                 .foregroundStyle(CatholicTheme.primary)
-            Text("Last fast ended \(lastEnded.formatted(date: .abbreviated, time: .shortened))")
+            Text(localizedFormat("intermittent.live.last_ended_format", default: "Last fast ended %@", lastEnded.formatted(date: .abbreviated, time: .shortened)))
                 .font(.caption)
                 .foregroundStyle(.secondary)
             if hasEatingWindow {
-                Text("Suggested next fast start: \(nextSuggestedStart.formatted(date: .abbreviated, time: .shortened))")
+                Text(localizedFormat("intermittent.live.suggested_start_format", default: "Suggested next fast start: %@", nextSuggestedStart.formatted(date: .abbreviated, time: .shortened)))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             } else {
-                Text("Plans above 24h do not use a standard daily eating window.")
+                Text(localized("intermittent.live.no_standard_window", default: "Plans above 24h do not use a standard daily eating window."))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -578,12 +621,12 @@ extension ContentView {
     }
 
     var intermittentSessionHistorySection: some View {
-        Section("Recent Sessions") {
+        Section(localized("intermittent.history.section", default: "Recent Sessions")) {
             if intermittentTracker.sessions.isEmpty {
-                Text("No sessions yet. Start a fast to build your local history.")
+                Text(localized("intermittent.history.empty", default: "No sessions yet. Start a fast to build your local history."))
                     .foregroundStyle(.secondary)
                     .accessibilityIdentifier("intermittent.history_empty")
-                Button("Start First Fast") {
+                Button(localized("intermittent.history.start_first", default: "Start First Fast")) {
                     intermittentTracker.startFast()
                 }
                 .appPrimaryButtonStyle()
@@ -597,12 +640,15 @@ extension ContentView {
                             .padding(.top, 2)
 
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("\(session.start.formatted(date: .abbreviated, time: .shortened)) → \(session.end.formatted(date: .abbreviated, time: .shortened))")
+                            Text(localizedFormat("intermittent.history.range_format", default: "%@ → %@", session.start.formatted(date: .abbreviated, time: .shortened), session.end.formatted(date: .abbreviated, time: .shortened)))
                                 .font(.subheadline.weight(.semibold))
-                            Text("Duration: \(durationText(session.duration)) • Plan: \(session.targetHours)h")
+                            Text(localizedFormat("intermittent.history.detail_format", default: "Duration: %@ • Plan: %dh", durationText(session.duration), session.targetHours))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
-                            Text(session.completedTarget ? "Target met" : "Below target")
+                            Text(
+                                session.completedTarget
+                                    ? localized("intermittent.history.target_met", default: "Target met")
+                                    : localized("intermittent.history.below_target", default: "Below target"))
                                 .font(.caption)
                                 .foregroundStyle(session.completedTarget ? .green : .orange)
                         }
@@ -613,10 +659,10 @@ extension ContentView {
                 }
 
                 if !monetizationStore.premiumUnlocked, intermittentTracker.sessions.count > 3 {
-                    Text("Free shows the most recent 3 sessions. Premium unlocks the full recent history view.")
+                    Text(localized("intermittent.history.free_limit", default: "Free shows the most recent 3 sessions. Premium unlocks the full recent history view."))
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                    Button("Unlock Full History") {
+                    Button(localized("intermittent.history.unlock", default: "Unlock Full History")) {
                         openPremiumUpgrade(focusingOn: .accountability)
                     }
                     .appSecondaryButtonStyle()

@@ -46,9 +46,9 @@ extension ContentView {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 AppSectionLeadCard(
-                    eyebrow: "Support & Premium",
-                    title: "Choose a plan, then keep the journey visible",
-                    detail: "Yearly stays primary. Tips, billing, and legal tools remain below the plan choice.",
+                    eyebrow: localized("premium.section.support", default: "Support & Premium"),
+                    title: localized("ipad.more.premium.title", default: "Choose a plan, then keep the journey visible"),
+                    detail: localized("ipad.more.premium.detail", default: "Yearly stays primary. Tips, billing, and legal tools remain below the plan choice."),
                     serifTitle: true,
                     style: .utility)
 
@@ -63,15 +63,15 @@ extension ContentView {
 
                 if !monetizationStore.tipProducts.isEmpty {
                     VStack(alignment: .leading, spacing: 10) {
-                        Text("Optional support tips")
+                        Text(localized("ipad.more.tips.title", default: "Optional support tips"))
                             .appEyebrowStyle()
-                        Text("Tips support ongoing development and do not unlock features.")
+                        Text(localized("ipad.more.tips.detail", default: "Tips support ongoing development and do not unlock features."))
                             .appSupportingTextStyle()
                         ForEach(monetizationStore.tipProducts, id: \.id) { product in
                             Button {
                                 Task { await monetizationStore.purchase(product) }
                             } label: {
-                                Text("Send Tip • \(product.displayPrice)")
+                                Text(localizedFormat("ipad.more.tips.send_format", default: "Send Tip • %@", product.displayPrice))
                             }
                             .appSecondaryButtonStyle()
                             .accessibilityIdentifier("ipad.more.tip.\(product.id)")
@@ -99,14 +99,14 @@ extension ContentView {
                         .appSectionTitleStyle(serif: offer?.isPrimaryAnchor == true)
                     Text(product.displayPrice)
                         .appMetricValueStyle()
-                    Text(offer?.billingCadenceLabel ?? "Auto-renewing subscription")
+                    Text(offer?.billingCadenceLabel ?? localized("premium.offer.auto_renew", default: "Auto-renewing subscription"))
                         .appSupportingTextStyle()
                 }
 
                 Spacer()
 
                 if offer?.isPrimaryAnchor == true {
-                    Text("Best value")
+                    Text(localized("premium.offer.best_value", default: "Best value"))
                         .font(.caption2.weight(.semibold))
                         .padding(.horizontal, 8)
                         .padding(.vertical, 5)
@@ -122,7 +122,7 @@ extension ContentView {
                     .lineLimit(2)
             }
 
-            Button("Unlock \(offer?.displayTitle ?? product.displayName) • \(product.displayPrice)") {
+            Button(localizedFormat("premium.offer.unlock_format", default: "Unlock %@ • %@", offer?.displayTitle ?? product.displayName, product.displayPrice)) {
                 Task {
                     await monetizationStore.purchase(product)
                 }
@@ -139,13 +139,13 @@ extension ContentView {
 
     var ipadCompactPremiumUtilitiesCard: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Restore / Manage / Legal")
+            Text(localized("premium.legal.title", default: "Restore / Manage / Legal"))
                 .appEyebrowStyle()
 
-            Text("Keep these below the plan choice. Use them only if you need billing or legal help.")
+            Text(localized("premium.legal.summary", default: "Keep these below the plan choice. Use them only if you need billing or legal help."))
                 .appSupportingTextStyle()
 
-            Button("Restore Purchases") {
+            Button(localized("premium.legal.restore", default: "Restore Purchases")) {
                 Task {
                     await monetizationStore.restorePurchases()
                 }
@@ -154,7 +154,7 @@ extension ContentView {
             .disabled(monetizationStore.isPurchasing)
             .accessibilityIdentifier("premium.restore")
 
-            Button("Manage Subscription") {
+            Button(localized("premium.legal.manage", default: "Manage Subscription")) {
                 Task {
                     await monetizationStore.openManageSubscriptions()
                 }
@@ -163,13 +163,13 @@ extension ContentView {
             .disabled(monetizationStore.isPurchasing)
             .accessibilityIdentifier("premium.manage")
 
-            Link("Terms of Use (EULA)", destination: UIConstants.termsOfUseURL)
+            Link(localized("premium.legal.terms", default: "Terms of Use (EULA)"), destination: UIConstants.termsOfUseURL)
                 .appSupportingTextStyle()
                 .accessibilityIdentifier("premium.legal.terms")
-            Link("Privacy Policy", destination: UIConstants.privacyPolicyURL)
+            Link(localized("premium.legal.privacy", default: "Privacy Policy"), destination: UIConstants.privacyPolicyURL)
                 .appSupportingTextStyle()
                 .accessibilityIdentifier("premium.legal.privacy")
-            Link("Support", destination: UIConstants.supportSiteURL)
+            Link(localized("premium.legal.support", default: "Support"), destination: UIConstants.supportSiteURL)
                 .appSupportingTextStyle()
                 .accessibilityIdentifier("premium.legal.support")
         }

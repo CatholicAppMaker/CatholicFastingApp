@@ -162,6 +162,21 @@ struct ContentView: View {
         return String(format: format, locale: Locale.current, arguments: values)
     }
 
+    func localizedSeasonLabel(_ season: LiturgicalSeason) -> String {
+        switch season {
+        case .advent:
+            localized("season.advent", default: season.label)
+        case .christmas:
+            localized("season.christmas", default: season.label)
+        case .lent:
+            localized("season.lent", default: season.label)
+        case .easter:
+            localized("season.easter", default: season.label)
+        case .ordinary:
+            localized("season.ordinary", default: season.label)
+        }
+    }
+
     var appLayoutProfile: AppLayoutProfile {
         #if canImport(UIKit)
         if UIDevice.current.userInterfaceIdiom == .pad, horizontalSizeClass == .regular {
