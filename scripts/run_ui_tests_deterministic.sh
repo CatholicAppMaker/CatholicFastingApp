@@ -14,6 +14,7 @@ DESTINATION=""
 
 IPHONE_TESTS=(
   "CatholicFastingAppUITests/testFreshLaunchIPhoneCanCompleteOnboardingAndReachToday"
+  "CatholicFastingAppUITests/testFreshLaunchOnboardingQuoteReminderCanBeEnabledAndStillComplete"
   "CatholicFastingAppUITests/testSmokeOnboardingCanBeCompleted"
   "CatholicFastingAppUITests/testIPhoneOnboardingSpanishSelectionUpdatesVisibleCopy"
   "CatholicFastingAppUITests/testIPhoneOnboardingFrenchCanadianSelectionUpdatesVisibleCopy"

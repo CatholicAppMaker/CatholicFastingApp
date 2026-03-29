@@ -27,6 +27,27 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(app.otherElements["ipad.today.primary_card"].waitForExistence(timeout: 6))
     }
 
+    func testFreshLaunchOnboardingQuoteReminderCanBeEnabledAndStillComplete() {
+        let app = makeFreshLaunchApp()
+        app.launch()
+
+        let quoteToggle = app.switches["onboarding.reminder_quote_toggle"].firstMatch
+        XCTAssertTrue(scrollToElement(quoteToggle, in: app))
+        if !switchIsOn(quoteToggle) {
+            quoteToggle.tap()
+        }
+
+        let quoteTime = app.datePickers["onboarding.reminder_quote_time"].firstMatch
+        XCTAssertTrue(scrollToElement(quoteTime, in: app))
+
+        let continueButton = app.buttons["onboarding.continue"].firstMatch
+        XCTAssertTrue(scrollToElement(continueButton, in: app))
+        continueButton.tap()
+
+        XCTAssertTrue(app.navigationBars["Catholic Fasting"].waitForExistence(timeout: 6))
+        XCTAssertTrue(app.otherElements["surface.today.ready"].waitForExistence(timeout: 6))
+    }
+
     func testSmokeOnboardingCanBeCompleted() {
         let app = makeApp(skipOnboarding: false)
         app.launch()
