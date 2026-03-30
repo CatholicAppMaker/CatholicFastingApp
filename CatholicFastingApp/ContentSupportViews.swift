@@ -28,7 +28,11 @@ struct ObservanceRowView: View {
                         .foregroundStyle(.secondary)
                 }
 
-                Text("Why: \(observance.rationale)")
+                Text(
+                    AppLocalizer.localizedCurrentFormat(
+                        "observance.why_format",
+                        default: "Why: %@",
+                        observance.rationale))
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
@@ -39,7 +43,11 @@ struct ObservanceRowView: View {
                 }
 
                 if observance.kind == .fridayPenance, observance.obligation != .notApplicable {
-                    TextField("What penance did you do?", text: noteBinding)
+                    TextField(
+                        AppLocalizer.localizedCurrent(
+                            "friday_notes.prompt",
+                            default: "What penance did you do?"),
+                        text: noteBinding)
                         .textFieldStyle(.roundedBorder)
                         .font(.caption)
                 }
@@ -65,9 +73,13 @@ struct ObservanceRowView: View {
                         .foregroundStyle(statusColor)
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel("Set status \(status.label)")
+                .accessibilityLabel(
+                    AppLocalizer.localizedCurrentFormat(
+                        "observance.set_status_format",
+                        default: "Set status %@",
+                        status.label))
                 .contextMenu {
-                    Button("Toggle Complete", action: onToggleCompletion)
+                    Button(AppLocalizer.localizedCurrent("observance.toggle_complete", default: "Toggle Complete"), action: onToggleCompletion)
                 }
                 .padding(.top, 2)
             }
@@ -342,15 +354,15 @@ struct FridayNotesHistoryView: View {
                 }
             }
         }
-        .navigationTitle("Friday Notes")
-        .searchable(text: $searchText, prompt: "Search notes")
+        .navigationTitle(AppLocalizer.localizedCurrent("friday_notes.title", default: "Friday Notes"))
+        .searchable(text: $searchText, prompt: AppLocalizer.localizedCurrent("friday_notes.search", default: "Search notes"))
         .toolbar {
             ShareLink(
                 item: exportText,
-                subject: Text("Friday Penance Notes Export"),
-                message: Text("Exported from Catholic Fasting"))
+                subject: Text(AppLocalizer.localizedCurrent("friday_notes.export.subject", default: "Friday Penance Notes Export")),
+                message: Text(AppLocalizer.localizedCurrent("friday_notes.export.message", default: "Exported from Catholic Fasting")))
             {
-                Label("Export", systemImage: "square.and.arrow.up")
+                Label(AppLocalizer.localizedCurrent("shared.export", default: "Export"), systemImage: "square.and.arrow.up")
             }
             .disabled(filteredRecords.isEmpty)
         }

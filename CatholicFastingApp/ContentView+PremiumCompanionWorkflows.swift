@@ -128,8 +128,20 @@ extension ContentView {
                 }
                 .pickerStyle(.menu)
 
-                Stepper(localizedFormat("premium.planner.optional_per_week_format", default: "Optional disciplines/week: %d", premiumCompanion.optionalDisciplinesPerWeek), value: $premiumCompanion.optionalDisciplinesPerWeek, in: 0 ... 7)
-                Stepper(localizedFormat("premium.planner.fixed_fast_day_format", default: "Fixed personal fast day: %@", weekdayLabel(for: premiumCompanion.fixedFastWeekday)), value: $premiumCompanion.fixedFastWeekday, in: 1 ... 7)
+                Stepper(
+                    localizedFormat(
+                        "premium.planner.optional_per_week_format",
+                        default: "Optional disciplines/week: %d",
+                        premiumCompanion.optionalDisciplinesPerWeek),
+                    value: $premiumCompanion.optionalDisciplinesPerWeek,
+                    in: 0 ... 7)
+                Stepper(
+                    localizedFormat(
+                        "premium.planner.fixed_fast_day_format",
+                        default: "Fixed personal fast day: %@",
+                        weekdayLabel(for: premiumCompanion.fixedFastWeekday)),
+                    value: $premiumCompanion.fixedFastWeekday,
+                    in: 1 ... 7)
                 Toggle(localized("premium.planner.protect_feasts", default: "Protect feast/holy days from personal fasts"), isOn: $premiumCompanion.protectFeastDays)
             }
 
@@ -178,12 +190,7 @@ extension ContentView {
             Text(premiumReminderRecommendation.summaryLine)
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            Text(
-                """
-                \(localized("premium.reminders.daily_support", default: "Daily support")): \(premiumReminderRecommendation.shouldEnableDailySupport ? localized("shared.on", default: "On") : localized("shared.off", default: "Off")) • \
-                \(localized("premium.reminders.morning", default: "Morning")): \(premiumReminderRecommendation.shouldEnableMorning ? localized("shared.on", default: "On") : localized("shared.off", default: "Off")) • \
-                \(localized("premium.reminders.evening", default: "Evening")): \(premiumReminderRecommendation.shouldEnableEvening ? localized("shared.on", default: "On") : localized("shared.off", default: "Off"))
-                """)
+            Text(premiumReminderRecommendationLine)
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
@@ -194,9 +201,21 @@ extension ContentView {
             .accessibilityIdentifier("premium.apply_reminder_plan")
 
             DisclosureGroup(localized("premium.reminders.advanced", default: "Advanced reminder rules")) {
-                Toggle(localized("premium.reminders.rule.unlogged_by_noon", default: "Remind if no fasting log by noon"), isOn: $premiumCompanion.conditionRules.remindIfUnloggedByNoon)
-                Toggle(localized("premium.reminders.rule.double_required", default: "Double reminders on required days"), isOn: $premiumCompanion.conditionRules.requiredDaysDoubleReminder)
-                Toggle(localized("premium.reminders.rule.milestones", default: "Milestone nudges during active fast"), isOn: $premiumCompanion.conditionRules.milestoneNudgesForActiveFast)
+                Toggle(
+                    localized(
+                        "premium.reminders.rule.unlogged_by_noon",
+                        default: "Remind if no fasting log by noon"),
+                    isOn: $premiumCompanion.conditionRules.remindIfUnloggedByNoon)
+                Toggle(
+                    localized(
+                        "premium.reminders.rule.double_required",
+                        default: "Double reminders on required days"),
+                    isOn: $premiumCompanion.conditionRules.requiredDaysDoubleReminder)
+                Toggle(
+                    localized(
+                        "premium.reminders.rule.milestones",
+                        default: "Milestone nudges during active fast"),
+                    isOn: $premiumCompanion.conditionRules.milestoneNudgesForActiveFast)
 
                 Button(localized("premium.reminders.apply_rules", default: "Apply Condition Rules")) {
                     applyPremiumConditionRules()
@@ -229,7 +248,12 @@ extension ContentView {
                 .font(.caption)
             Text(localizedFormat("premium.analytics.overall_format", default: "Overall completion: %d%%", premiumAnalyticsSummary.overallCompletionPercent))
                 .font(.caption)
-            Text(localizedFormat("premium.analytics.missed_format", default: "Missed: %d • Substituted: %d", premiumAnalyticsSummary.missedCount, premiumAnalyticsSummary.substitutedCount))
+            Text(
+                localizedFormat(
+                    "premium.analytics.missed_format",
+                    default: "Missed: %d • Substituted: %d",
+                    premiumAnalyticsSummary.missedCount,
+                    premiumAnalyticsSummary.substitutedCount))
                 .font(.caption)
             Text(localizedFormat("premium.analytics.intermittent_hits_format", default: "Intermittent target hits: %d%%", premiumAnalyticsSummary.intermittentTargetHitPercent))
                 .font(.caption)
@@ -237,7 +261,14 @@ extension ContentView {
             if !premiumAnalyticsSummary.seasonRows.isEmpty {
                 DisclosureGroup(localized("premium.analytics.breakdown", default: "Season-by-season breakdown")) {
                     ForEach(premiumAnalyticsSummary.seasonRows) { row in
-                        Text(localizedFormat("premium.analytics.season_row_format", default: "%@: %d%% (%d/%d)", localizedSeasonLabel(row.season), row.completionPercent, row.completedCount, row.totalCount))
+                        Text(
+                            localizedFormat(
+                                "premium.analytics.season_row_format",
+                                default: "%@: %d%% (%d/%d)",
+                                localizedSeasonLabel(row.season),
+                                row.completionPercent,
+                                row.completedCount,
+                                row.totalCount))
                             .font(.caption2)
                             .foregroundStyle(.secondary)
                     }
@@ -245,6 +276,17 @@ extension ContentView {
             }
         }
         .accessibilityIdentifier("premium.analytics")
+    }
+
+    private var premiumReminderRecommendationLine: String {
+        let enabledText = localized("shared.on", default: "On")
+        let disabledText = localized("shared.off", default: "Off")
+        let segments = [
+            "\(localized("premium.reminders.daily_support", default: "Daily support")): \(premiumReminderRecommendation.shouldEnableDailySupport ? enabledText : disabledText)",
+            "\(localized("premium.reminders.morning", default: "Morning")): \(premiumReminderRecommendation.shouldEnableMorning ? enabledText : disabledText)",
+            "\(localized("premium.reminders.evening", default: "Evening")): \(premiumReminderRecommendation.shouldEnableEvening ? enabledText : disabledText)",
+        ]
+        return segments.joined(separator: " • ")
     }
 
     var premiumRecoveryCoachSection: some View {
@@ -338,12 +380,12 @@ extension ContentView {
             .disabled(!acceptedLegalNotice)
             .accessibilityIdentifier("premium.export_summary")
 
-            Text("Use this when you want one concise snapshot for personal review or spiritual conversation.")
+            Text(localized("premium.export.summary_note", default: "Use this when you want one concise snapshot for personal review or spiritual conversation."))
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
             if !acceptedLegalNotice {
-                Text("Enable consent in Privacy & Data before exporting premium summaries.")
+                Text(localized("premium.export.consent_note", default: "Enable consent in Privacy & Data before exporting premium summaries."))
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }
@@ -351,24 +393,24 @@ extension ContentView {
     }
 
     var premiumAdvancedExportSection: some View {
-        Section("Advanced Exports") {
-            DisclosureGroup("Weekly and monthly reports") {
+        Section(localized("premium.export.advanced.section", default: "Advanced Exports")) {
+            DisclosureGroup(localized("premium.export.advanced.group", default: "Weekly and monthly reports")) {
                 ShareLink(
                     item: premiumWeeklySummaryText,
-                    subject: Text("Catholic Fasting Weekly Report"),
-                    message: Text("Weekly fasting summary from Premium."))
+                    subject: Text(localized("premium.export.weekly.subject", default: "Catholic Fasting Weekly Report")),
+                    message: Text(localized("premium.export.weekly.message", default: "Weekly fasting summary from Premium.")))
                 {
-                    Label("Export Weekly Report", systemImage: "square.and.arrow.up")
+                    Label(localized("premium.export.weekly.button", default: "Export Weekly Report"), systemImage: "square.and.arrow.up")
                 }
                 .appSecondaryButtonStyle()
                 .disabled(!acceptedLegalNotice)
 
                 ShareLink(
                     item: premiumMonthlySummaryText,
-                    subject: Text("Catholic Fasting Monthly Report"),
-                    message: Text("Monthly fasting summary from Premium."))
+                    subject: Text(localized("premium.export.monthly.subject", default: "Catholic Fasting Monthly Report")),
+                    message: Text(localized("premium.export.monthly.message", default: "Monthly fasting summary from Premium.")))
                 {
-                    Label("Export Monthly Report", systemImage: "square.and.arrow.up")
+                    Label(localized("premium.export.monthly.button", default: "Export Monthly Report"), systemImage: "square.and.arrow.up")
                 }
                 .appSecondaryButtonStyle()
                 .disabled(!acceptedLegalNotice)
@@ -377,12 +419,12 @@ extension ContentView {
     }
 
     var premiumHouseholdShareSection: some View {
-        Section("Household Share (Local)") {
-            Text("This is a local transfer tool for households sharing one device workflow. It is not cloud sync.")
+        Section(localized("premium.household.section", default: "Household Share (Local)")) {
+            Text(localized("premium.household.intro", default: "This is a local transfer tool for households sharing one device workflow. It is not cloud sync."))
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            DisclosureGroup("Share code tools") {
-                Button("Generate Local Share Code") {
+            DisclosureGroup(localized("premium.household.group", default: "Share code tools")) {
+                Button(localized("premium.household.generate", default: "Generate Local Share Code")) {
                     generatePremiumHouseholdShareCode()
                 }
                 .appSecondaryButtonStyle()
@@ -391,9 +433,9 @@ extension ContentView {
                         .font(.caption2.monospaced())
                         .textSelection(.enabled)
                 }
-                TextField("Paste household share code", text: $premiumHouseholdImportCode, axis: .vertical)
+                TextField(localized("premium.household.import.placeholder", default: "Paste household share code"), text: $premiumHouseholdImportCode, axis: .vertical)
                     .lineLimit(2 ... 6)
-                Button("Import Household Code (Local)") {
+                Button(localized("premium.household.import.button", default: "Import Household Code (Local)")) {
                     importPremiumHouseholdShareCode()
                 }
                 .appSecondaryButtonStyle()

@@ -17,13 +17,21 @@ extension HomeSurface {
     var ipadSubtitle: String {
         switch self {
         case .today:
-            "See the day, the next obligation, and your recovery path at a glance."
+            AppLocalizer.localizedCurrent(
+                "ipad.sidebar.today.subtitle",
+                default: "See the day, the next obligation, and your recovery path at a glance.")
         case .fastingDays:
-            "Plan by season, month, and observance without leaving the workspace."
+            AppLocalizer.localizedCurrent(
+                "ipad.sidebar.fasting_days.subtitle",
+                default: "Plan by season, month, and observance without leaving the workspace.")
         case .intermittent:
-            "Keep the active fast, schedule, and recent history visible together."
+            AppLocalizer.localizedCurrent(
+                "ipad.sidebar.intermittent.subtitle",
+                default: "Keep the active fast, schedule, and recent history visible together.")
         case .more:
-            "Open focused tools and settings without one long phone-style list."
+            AppLocalizer.localizedCurrent(
+                "ipad.sidebar.more.subtitle",
+                default: "Open focused tools and settings without one long phone-style list.")
         }
     }
 }
@@ -32,7 +40,7 @@ extension ContentView {
     var ipadRootScaffold: some View {
         NavigationSplitView {
             List {
-                Section("Catholic Fasting") {
+                Section(AppLocalizer.localizedCurrent("shared.app_title", default: "Catholic Fasting")) {
                     ForEach(HomeSurface.primarySurfaces) { surface in
                         Button {
                             homeSurface = surface
@@ -53,7 +61,7 @@ extension ContentView {
                 }
             }
             .listStyle(.sidebar)
-            .navigationTitle("Catholic Fasting")
+            .navigationTitle(AppLocalizer.localizedCurrent("shared.app_title", default: "Catholic Fasting"))
             .navigationSplitViewColumnWidth(min: 260, ideal: 290, max: 320)
             .appListBackground()
         } detail: {
