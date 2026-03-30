@@ -46,7 +46,7 @@ extension ContentView {
                             homeSurface = surface
                         } label: {
                             VStack(alignment: .leading, spacing: 4) {
-                                Label(surface.label, systemImage: surface.iconName)
+                                Label(localizedHomeSurfaceLabel(surface), systemImage: surface.iconName)
                                     .font(.headline)
                                     .foregroundStyle(homeSurface == surface ? CatholicTheme.primary : .primary)
                                 Text(surface.ipadSubtitle)
@@ -90,7 +90,7 @@ extension ContentView {
             readinessMarkers
         }
         .appRootBackground()
-        .navigationTitle(surface.label)
+        .navigationTitle(localizedHomeSurfaceLabel(surface))
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

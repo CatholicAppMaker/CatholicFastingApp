@@ -16,11 +16,11 @@ enum RegionalSupportLevel: String, CaseIterable {
     var label: String {
         switch self {
         case .full:
-            "Modeled"
+            CoreLocalizer.localizedCurrent("regional.support.full", default: "Modeled")
         case .partial:
-            "Partial"
+            CoreLocalizer.localizedCurrent("regional.support.partial", default: "Partial")
         case .informational:
-            "Informational"
+            CoreLocalizer.localizedCurrent("regional.support.informational", default: "Informational")
         }
     }
 }
@@ -86,9 +86,9 @@ enum RegionalGuidanceContextFactory {
             RegionalRuleContext(
                 regionProfile: .us,
                 supportLevel: .full,
-                classificationLabel: "U.S. profile",
-                authorityLabel: "USCCB + universal law",
-                disclosureText: "This profile models universal fasting norms together with U.S.-specific Friday and holy day handling used throughout the app.",
+                classificationLabel: CoreLocalizer.localizedCurrent("regional.classification.us_profile", default: "U.S. profile"),
+                authorityLabel: CoreLocalizer.localizedCurrent("regional.authority.us", default: "USCCB + universal law"),
+                disclosureText: CoreLocalizer.localizedCurrent("regional.disclosure.us_profile", default: "This profile models universal fasting norms together with U.S.-specific Friday and holy day handling used throughout the app."),
                 citations: [
                     RuleCitation(authority: .universalLaw, title: "Code of Canon Law", shortReference: "Can. 1249-1253"),
                     RuleCitation(authority: .usccb, title: "USCCB Liturgical Guidance", shortReference: "U.S. conference norms"),
@@ -98,9 +98,9 @@ enum RegionalGuidanceContextFactory {
             RegionalRuleContext(
                 regionProfile: .canada,
                 supportLevel: .full,
-                classificationLabel: "Canada baseline",
-                authorityLabel: "Universal law + CCCB guidance",
-                disclosureText: "The Canada profile models the national baseline directly: universal fasting law, CCCB Friday penitential guidance, and Canada-wide holy day obligations. Diocesan proper calendars are not included in this release.",
+                classificationLabel: CoreLocalizer.localizedCurrent("regional.classification.canada_baseline", default: "Canada baseline"),
+                authorityLabel: CoreLocalizer.localizedCurrent("regional.authority.canada", default: "Universal law + CCCB guidance"),
+                disclosureText: CoreLocalizer.localizedCurrent("regional.disclosure.canada_profile", default: "The Canada profile models the national baseline directly: universal fasting law, CCCB Friday penitential guidance, and Canada-wide holy day obligations. Diocesan proper calendars are not included in this release."),
                 citations: [
                     RuleCitation(authority: .universalLaw, title: "Code of Canon Law", shortReference: "Can. 1249-1253"),
                     RuleCitation(authority: .cccb, title: "Keeping Friday", shortReference: "CCCB Friday guidance"),
@@ -110,9 +110,9 @@ enum RegionalGuidanceContextFactory {
             RegionalRuleContext(
                 regionProfile: .other,
                 supportLevel: .informational,
-                classificationLabel: "Local guidance",
-                authorityLabel: "Universal law + local conference law",
-                disclosureText: "Outside the U.S. and Canada profiles, the app treats regional norms as informational beyond universal fasting law. Users should follow local episcopal and diocesan guidance.",
+                classificationLabel: CoreLocalizer.localizedCurrent("regional.classification.local_guidance", default: "Local guidance"),
+                authorityLabel: CoreLocalizer.localizedCurrent("regional.authority.local", default: "Universal law + local conference law"),
+                disclosureText: CoreLocalizer.localizedCurrent("regional.disclosure.other_profile", default: "Outside the U.S. and Canada profiles, the app treats regional norms as informational beyond universal fasting law. Users should follow local episcopal and diocesan guidance."),
                 citations: [
                     RuleCitation(authority: .universalLaw, title: "Code of Canon Law", shortReference: "Can. 1249-1253"),
                     RuleCitation(authority: .pastoral, title: "Local Catholic Guidance", shortReference: "Consult local conference norms"),
@@ -127,9 +127,9 @@ enum RegionalGuidanceContextFactory {
             RegionalRuleContext(
                 regionProfile: settings.regionProfile,
                 supportLevel: .full,
-                classificationLabel: "Universal",
-                authorityLabel: "Universal law",
-                disclosureText: "This observance is grounded in universal fasting and abstinence law. Regional profiles change supporting explanation and Friday practice, not the universal core.",
+                classificationLabel: CoreLocalizer.localizedCurrent("regional.classification.universal", default: "Universal"),
+                authorityLabel: CoreLocalizer.localizedCurrent("regional.authority.universal", default: "Universal law"),
+                disclosureText: CoreLocalizer.localizedCurrent("regional.disclosure.universal_observance", default: "This observance is grounded in universal fasting and abstinence law. Regional profiles change supporting explanation and Friday practice, not the universal core."),
                 citations: observance.citations,
                 sourceURL: settings.regionProfile == .canada
                     ? RegionalGuidanceLinks.cccbKeepingFriday
@@ -140,27 +140,27 @@ enum RegionalGuidanceContextFactory {
                 RegionalRuleContext(
                     regionProfile: .us,
                     supportLevel: .full,
-                    classificationLabel: "U.S. norm",
-                    authorityLabel: "USCCB guidance",
-                    disclosureText: "Outside Lent Friday practice follows the U.S. mode selected in your profile.",
+                    classificationLabel: CoreLocalizer.localizedCurrent("regional.classification.us_norm", default: "U.S. norm"),
+                    authorityLabel: CoreLocalizer.localizedCurrent("regional.authority.usccb", default: "USCCB guidance"),
+                    disclosureText: CoreLocalizer.localizedCurrent("regional.disclosure.us_friday", default: "Outside Lent Friday practice follows the U.S. mode selected in your profile."),
                     citations: observance.citations,
                     sourceURL: RegionalGuidanceLinks.usccbFastAbstinence)
             case .canada:
                 RegionalRuleContext(
                     regionProfile: .canada,
                     supportLevel: .full,
-                    classificationLabel: "Canada guidance",
-                    authorityLabel: "CCCB guidance",
-                    disclosureText: "Friday remains penitential in the Canada profile. The app models abstinence or another charitable or pious practice based on CCCB guidance.",
+                    classificationLabel: CoreLocalizer.localizedCurrent("regional.classification.canada_guidance", default: "Canada guidance"),
+                    authorityLabel: CoreLocalizer.localizedCurrent("regional.authority.cccb", default: "CCCB guidance"),
+                    disclosureText: CoreLocalizer.localizedCurrent("regional.disclosure.canada_friday", default: "Friday remains penitential in the Canada profile. The app models abstinence or another charitable or pious practice based on CCCB guidance."),
                     citations: observance.citations,
                     sourceURL: RegionalGuidanceLinks.cccbKeepingFriday)
             case .other:
                 RegionalRuleContext(
                     regionProfile: .other,
                     supportLevel: .informational,
-                    classificationLabel: "Local guidance",
-                    authorityLabel: "Local conference law",
-                    disclosureText: "Friday practice outside the U.S. and Canada profiles is shown for planning context only unless local law is modeled.",
+                    classificationLabel: CoreLocalizer.localizedCurrent("regional.classification.local_guidance", default: "Local guidance"),
+                    authorityLabel: CoreLocalizer.localizedCurrent("regional.authority.local_conference", default: "Local conference law"),
+                    disclosureText: CoreLocalizer.localizedCurrent("regional.disclosure.other_friday", default: "Friday practice outside the U.S. and Canada profiles is shown for planning context only unless local law is modeled."),
                     citations: observance.citations,
                     sourceURL: nil)
             }
@@ -170,27 +170,27 @@ enum RegionalGuidanceContextFactory {
                 RegionalRuleContext(
                     regionProfile: .us,
                     supportLevel: .full,
-                    classificationLabel: "U.S. norm",
-                    authorityLabel: "Universal + U.S. holy day law",
-                    disclosureText: "U.S. holy day handling is modeled directly, including transferred or abrogated cases where applicable.",
+                    classificationLabel: CoreLocalizer.localizedCurrent("regional.classification.us_norm", default: "U.S. norm"),
+                    authorityLabel: CoreLocalizer.localizedCurrent("regional.authority.us_holyday", default: "Universal + U.S. holy day law"),
+                    disclosureText: CoreLocalizer.localizedCurrent("regional.disclosure.us_holyday", default: "U.S. holy day handling is modeled directly, including transferred or abrogated cases where applicable."),
                     citations: observance.citations,
                     sourceURL: RegionalGuidanceLinks.privacy)
             case .canada:
                 RegionalRuleContext(
                     regionProfile: .canada,
                     supportLevel: .full,
-                    classificationLabel: "Canada baseline",
-                    authorityLabel: "Universal law + Canada national baseline",
-                    disclosureText: "Canada holy day handling is modeled for the national baseline only. The app includes Canada-wide obligations and planning context, but not diocesan proper calendars.",
+                    classificationLabel: CoreLocalizer.localizedCurrent("regional.classification.canada_baseline", default: "Canada baseline"),
+                    authorityLabel: CoreLocalizer.localizedCurrent("regional.authority.canada_holyday", default: "Universal law + Canada national baseline"),
+                    disclosureText: CoreLocalizer.localizedCurrent("regional.disclosure.canada_holyday", default: "Canada holy day handling is modeled for the national baseline only. The app includes Canada-wide obligations and planning context, but not diocesan proper calendars."),
                     citations: observance.citations,
                     sourceURL: nil)
             case .other:
                 RegionalRuleContext(
                     regionProfile: .other,
                     supportLevel: .informational,
-                    classificationLabel: "Informational",
-                    authorityLabel: "Local conference law",
-                    disclosureText: "Holy day handling is informational outside the U.S. profile unless a fully modeled local obligation rule exists.",
+                    classificationLabel: CoreLocalizer.localizedCurrent("regional.classification.informational", default: "Informational"),
+                    authorityLabel: CoreLocalizer.localizedCurrent("regional.authority.local_conference", default: "Local conference law"),
+                    disclosureText: CoreLocalizer.localizedCurrent("regional.disclosure.other_holyday", default: "Holy day handling is informational outside the U.S. profile unless a fully modeled local obligation rule exists."),
                     citations: observance.citations,
                     sourceURL: nil)
             }
@@ -200,27 +200,27 @@ enum RegionalGuidanceContextFactory {
                 RegionalRuleContext(
                     regionProfile: .us,
                     supportLevel: .full,
-                    classificationLabel: "Calendar context",
-                    authorityLabel: "Liturgical planning",
-                    disclosureText: "These celebration days are included for liturgical and devotional planning. They are not fasting obligations.",
+                    classificationLabel: CoreLocalizer.localizedCurrent("regional.classification.calendar_context", default: "Calendar context"),
+                    authorityLabel: CoreLocalizer.localizedCurrent("regional.authority.liturgical_planning", default: "Liturgical planning"),
+                    disclosureText: CoreLocalizer.localizedCurrent("regional.disclosure.celebration_us", default: "These celebration days are included for liturgical and devotional planning. They are not fasting obligations."),
                     citations: observance.citations,
                     sourceURL: RegionalGuidanceLinks.privacy)
             case .canada:
                 RegionalRuleContext(
                     regionProfile: .canada,
                     supportLevel: .full,
-                    classificationLabel: "Canada baseline",
-                    authorityLabel: "Liturgical planning",
-                    disclosureText: "These celebration days are included for Canada-wide planning and devotion in the national baseline. Diocesan proper calendars are not included yet.",
+                    classificationLabel: CoreLocalizer.localizedCurrent("regional.classification.canada_baseline", default: "Canada baseline"),
+                    authorityLabel: CoreLocalizer.localizedCurrent("regional.authority.liturgical_planning", default: "Liturgical planning"),
+                    disclosureText: CoreLocalizer.localizedCurrent("regional.disclosure.celebration_canada", default: "These celebration days are included for Canada-wide planning and devotion in the national baseline. Diocesan proper calendars are not included yet."),
                     citations: observance.citations,
                     sourceURL: nil)
             case .other:
                 RegionalRuleContext(
                     regionProfile: .other,
                     supportLevel: .informational,
-                    classificationLabel: "Calendar context",
-                    authorityLabel: "Liturgical planning",
-                    disclosureText: "These celebration days are informational outside fully modeled regional calendars.",
+                    classificationLabel: CoreLocalizer.localizedCurrent("regional.classification.calendar_context", default: "Calendar context"),
+                    authorityLabel: CoreLocalizer.localizedCurrent("regional.authority.liturgical_planning", default: "Liturgical planning"),
+                    disclosureText: CoreLocalizer.localizedCurrent("regional.disclosure.celebration_other", default: "These celebration days are informational outside fully modeled regional calendars."),
                     citations: observance.citations,
                     sourceURL: nil)
             }
@@ -228,9 +228,9 @@ enum RegionalGuidanceContextFactory {
             RegionalRuleContext(
                 regionProfile: settings.regionProfile,
                 supportLevel: .informational,
-                classificationLabel: "Devotional",
-                authorityLabel: "Optional practice",
-                disclosureText: "Ember days are shown as devotional discipline and not as universal obligation days in this release.",
+                classificationLabel: CoreLocalizer.localizedCurrent("regional.classification.devotional", default: "Devotional"),
+                authorityLabel: CoreLocalizer.localizedCurrent("regional.authority.optional_practice", default: "Optional practice"),
+                disclosureText: CoreLocalizer.localizedCurrent("regional.disclosure.ember", default: "Ember days are shown as devotional discipline and not as universal obligation days in this release."),
                 citations: observance.citations,
                 sourceURL: nil)
         }

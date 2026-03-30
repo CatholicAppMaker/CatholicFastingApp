@@ -95,11 +95,17 @@ extension ContentView {
     var regionalNormSummaryLine: String {
         switch regionProfile {
         case .us:
-            "U.S. profile: Fridays in Lent are abstinence days; Fridays outside Lent remain penitential."
+            localized(
+                "regional.summary.us",
+                default: "U.S. profile: Fridays in Lent are abstinence days; Fridays outside Lent remain penitential.")
         case .canada:
-            "Canada profile: the national baseline keeps Fridays penitential all year and models Canada-wide holy day obligations."
+            localized(
+                "regional.summary.canada",
+                default: "Canada profile: the national baseline keeps Fridays penitential all year and models Canada-wide holy day obligations.")
         case .other:
-            "Regional guidance varies outside U.S./Canada; always follow local Church authority."
+            localized(
+                "regional.summary.other",
+                default: "Regional guidance varies outside U.S./Canada; always follow local Church authority.")
         }
     }
 
@@ -752,9 +758,16 @@ extension ContentView {
 
     func intermittentPlanDescription(_ hours: Int) -> String {
         if hours <= 24 {
-            return "\(hours)h fast / \(24 - hours)h eating"
+            return localizedFormat(
+                "intermittent.plan.schedule_format",
+                default: "%dh fast / %dh eating",
+                hours,
+                24 - hours)
         }
-        return "\(hours)h fast target"
+        return localizedFormat(
+            "intermittent.plan.target_only_format",
+            default: "%dh fast target",
+            hours)
     }
 
     var streakObservances: [Observance] {
