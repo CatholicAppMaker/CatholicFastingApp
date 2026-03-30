@@ -23,20 +23,38 @@ enum MissedDayRecoveryEngine {
         }
 
         let nextRequiredLine = if let nextRequired {
-            "Next required day: \(nextRequired.title) on \(nextRequired.date.formatted(date: .abbreviated, time: .omitted))."
+            CoreLocalizer.localizedCurrentFormat(
+                "premium.recovery.next_required.format",
+                default: "Next required day: %@ on %@.",
+                nextRequired.title,
+                nextRequired.date.formatted(date: .abbreviated, time: .omitted))
         } else {
-            "No future required observances remain in this calendar year."
+            CoreLocalizer.localizedCurrent(
+                "premium.recovery.next_required.none",
+                default: "No future required observances remain in this calendar year.")
         }
 
         return MissedDayRecoveryPlan(
             titleLine:
-            "Recent missed observance: \(lastMissed.title) (\(lastMissed.date.formatted(date: .abbreviated, time: .omitted))).",
+            CoreLocalizer.localizedCurrentFormat(
+                "premium.recovery.recent_missed.format",
+                default: "Recent missed observance: %@ (%@).",
+                lastMissed.title,
+                lastMissed.date.formatted(date: .abbreviated, time: .omitted)),
             summaryLine:
-            "Missing a day does not end your discipline. Recover with a practical next step today.",
+            CoreLocalizer.localizedCurrent(
+                "premium.recovery.missed.summary",
+                default: "Missing a day does not end your discipline. Recover with a practical next step today."),
             steps: [
-                "Offer a short prayer of repentance and renew your intention.",
-                "Choose one concrete recovery act today (charity, Scripture, Rosary, or a simplified meal).",
-                "Plan the next required day now so it is easier to keep.",
+                CoreLocalizer.localizedCurrent(
+                    "premium.recovery.missed.step1",
+                    default: "Offer a short prayer of repentance and renew your intention."),
+                CoreLocalizer.localizedCurrent(
+                    "premium.recovery.missed.step2",
+                    default: "Choose one concrete recovery act today (charity, Scripture, Rosary, or a simplified meal)."),
+                CoreLocalizer.localizedCurrent(
+                    "premium.recovery.missed.step3",
+                    default: "Plan the next required day now so it is easier to keep."),
             ],
             nextRequiredLine: nextRequiredLine)
     }

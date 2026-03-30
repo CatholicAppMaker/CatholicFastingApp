@@ -48,4 +48,35 @@ enum AppLocalizer {
         return NSLocalizedString(
             key, tableName: "Localizable", bundle: bundle, value: defaultValue, comment: "")
     }
+
+    static func currentLanguageMode(userDefaults: UserDefaults = .standard) -> LanguageMode {
+        let rawValue = userDefaults.string(forKey: StorageKeys.languageMode) ?? DefaultValues.language.rawValue
+        return LanguageMode(rawValue: rawValue) ?? .english
+    }
+
+    static func currentLanguageCode(userDefaults: UserDefaults = .standard) -> String {
+        currentLanguageMode(userDefaults: userDefaults).rawValue
+    }
+
+    static func currentLocale(userDefaults: UserDefaults = .standard) -> Locale {
+        Locale(identifier: currentLanguageMode(userDefaults: userDefaults).localizationCode)
+    }
+
+    static func localizedCurrent(
+        _ key: String,
+        default defaultValue: String,
+        userDefaults: UserDefaults = .standard) -> String
+    {
+        localized(key, default: defaultValue, languageCode: currentLanguageCode(userDefaults: userDefaults))
+    }
+
+    static func localizedCurrentFormat(
+        _ key: String,
+        default defaultValue: String,
+        _ arguments: CVarArg...,
+        userDefaults: UserDefaults = .standard) -> String
+    {
+        let format = localizedCurrent(key, default: defaultValue, userDefaults: userDefaults)
+        return String(format: format, locale: currentLocale(userDefaults: userDefaults), arguments: arguments)
+    }
 }

@@ -12,34 +12,40 @@ enum PremiumDirectionSummaryEngine {
         let formatter = DateFormatter()
         formatter.dateStyle = .long
         formatter.timeStyle = .short
+        formatter.locale = CoreLocalizer.currentLocale()
 
         let lines = [
-            "Catholic Fasting Premium Summary",
-            "Generated: \(formatter.string(from: date))",
+            CoreLocalizer.localizedCurrent(
+                "premium.summary.title",
+                default: "Catholic Fasting Premium Summary"),
+            CoreLocalizer.localizedCurrentFormat(
+                "premium.summary.generated",
+                default: "Generated: %@",
+                formatter.string(from: date)),
             "",
-            "Season",
+            CoreLocalizer.localizedCurrent("premium.summary.season.heading", default: "Season"),
             "- \(season.label)",
-            "- Plan: \(plan.titleLine)",
-            "- Focus: \(plan.focusLine)",
-            "- Intensity: \(plan.fastingIntensity)",
+            "- \(CoreLocalizer.localizedCurrentFormat("premium.summary.plan", default: "Plan: %@", plan.titleLine))",
+            "- \(CoreLocalizer.localizedCurrentFormat("premium.summary.focus", default: "Focus: %@", plan.focusLine))",
+            "- \(CoreLocalizer.localizedCurrentFormat("premium.summary.intensity", default: "Intensity: %@", plan.fastingIntensity))",
             "",
-            "Discipline Metrics",
-            "- Required completion: \(analytics.requiredCompletionPercent)%",
-            "- Overall completion: \(analytics.overallCompletionPercent)%",
-            "- Missed observances logged: \(analytics.missedCount)",
-            "- Substituted observances logged: \(analytics.substitutedCount)",
-            "- Intermittent target hit rate (recent): \(analytics.intermittentTargetHitPercent)%",
+            CoreLocalizer.localizedCurrent("premium.summary.metrics.heading", default: "Discipline Metrics"),
+            "- \(CoreLocalizer.localizedCurrentFormat("premium.summary.metrics.required", default: "Required completion: %d%%", analytics.requiredCompletionPercent))",
+            "- \(CoreLocalizer.localizedCurrentFormat("premium.summary.metrics.overall", default: "Overall completion: %d%%", analytics.overallCompletionPercent))",
+            "- \(CoreLocalizer.localizedCurrentFormat("premium.summary.metrics.missed", default: "Missed observances logged: %d", analytics.missedCount))",
+            "- \(CoreLocalizer.localizedCurrentFormat("premium.summary.metrics.substituted", default: "Substituted observances logged: %d", analytics.substitutedCount))",
+            "- \(CoreLocalizer.localizedCurrentFormat("premium.summary.metrics.intermittent", default: "Intermittent target hit rate (recent): %d%%", analytics.intermittentTargetHitPercent))",
             "",
-            "Reminder Strategy",
-            "- Daily support: \(reminder.shouldEnableDailySupport ? "On" : "Off")",
-            "- Morning reminder: \(reminder.shouldEnableMorning ? "On" : "Off")",
-            "- Evening reminder: \(reminder.shouldEnableEvening ? "On" : "Off")",
-            "- Guidance: \(reminder.summaryLine)",
+            CoreLocalizer.localizedCurrent("premium.summary.reminders.heading", default: "Reminder Strategy"),
+            "- \(CoreLocalizer.localizedCurrentFormat("premium.summary.reminders.daily_support", default: "Daily support: %@", reminder.shouldEnableDailySupport ? CoreLocalizer.localizedCurrent("shared.on", default: "On") : CoreLocalizer.localizedCurrent("shared.off", default: "Off")))",
+            "- \(CoreLocalizer.localizedCurrentFormat("premium.summary.reminders.morning", default: "Morning reminder: %@", reminder.shouldEnableMorning ? CoreLocalizer.localizedCurrent("shared.on", default: "On") : CoreLocalizer.localizedCurrent("shared.off", default: "Off")))",
+            "- \(CoreLocalizer.localizedCurrentFormat("premium.summary.reminders.evening", default: "Evening reminder: %@", reminder.shouldEnableEvening ? CoreLocalizer.localizedCurrent("shared.on", default: "On") : CoreLocalizer.localizedCurrent("shared.off", default: "Off")))",
+            "- \(CoreLocalizer.localizedCurrentFormat("premium.summary.reminders.guidance", default: "Guidance: %@", reminder.summaryLine))",
             "",
-            "Reflection",
+            CoreLocalizer.localizedCurrent("premium.summary.reflection.heading", default: "Reflection"),
             "- \(latestReflection.title)",
             "- \(latestReflection.body)",
-            "- Action: \(latestReflection.action)",
+            "- \(CoreLocalizer.localizedCurrentFormat("premium.summary.reflection.action", default: "Action: %@", latestReflection.action))",
         ]
         return lines.joined(separator: "\n")
     }
@@ -52,32 +58,56 @@ enum PremiumFastPrepGuidanceEngine {
     {
         if hasMedicalDispensation {
             return [
-                "Prep: choose medically safe meals and hydration.",
-                "During: prioritize stability and avoid unsafe restriction.",
-                "Refeed: return to normal meals gradually as advised.",
+                CoreLocalizer.localizedCurrent(
+                    "premium.fastprep.medical.prep",
+                    default: "Prep: choose medically safe meals and hydration."),
+                CoreLocalizer.localizedCurrent(
+                    "premium.fastprep.medical.during",
+                    default: "During: prioritize stability and avoid unsafe restriction."),
+                CoreLocalizer.localizedCurrent(
+                    "premium.fastprep.medical.refeed",
+                    default: "Refeed: return to normal meals gradually as advised."),
             ]
         }
 
         if targetHours <= 18 {
             return [
-                "Prep: hydrate and simplify your final meal.",
-                "During: keep prayer cues tied to hunger moments.",
-                "Refeed: break with moderate portions and protein/fiber.",
+                CoreLocalizer.localizedCurrent(
+                    "premium.fastprep.short.prep",
+                    default: "Prep: hydrate and simplify your final meal."),
+                CoreLocalizer.localizedCurrent(
+                    "premium.fastprep.short.during",
+                    default: "During: keep prayer cues tied to hunger moments."),
+                CoreLocalizer.localizedCurrent(
+                    "premium.fastprep.short.refeed",
+                    default: "Refeed: break with moderate portions and protein/fiber."),
             ]
         }
 
         if targetHours <= 36 {
             return [
-                "Prep: increase hydration the day before.",
-                "During: keep intensity moderate and avoid overexertion.",
-                "Refeed: start light, then full meal after 30-60 minutes.",
+                CoreLocalizer.localizedCurrent(
+                    "premium.fastprep.medium.prep",
+                    default: "Prep: increase hydration the day before."),
+                CoreLocalizer.localizedCurrent(
+                    "premium.fastprep.medium.during",
+                    default: "During: keep intensity moderate and avoid overexertion."),
+                CoreLocalizer.localizedCurrent(
+                    "premium.fastprep.medium.refeed",
+                    default: "Refeed: start light, then full meal after 30-60 minutes."),
             ]
         }
 
         return [
-            "Prep: plan schedule, hydration, and pastoral prudence.",
-            "During: monitor energy and stop if health concerns arise.",
-            "Refeed: start very gently, then normalize in stages.",
+            CoreLocalizer.localizedCurrent(
+                "premium.fastprep.long.prep",
+                default: "Prep: plan schedule, hydration, and pastoral prudence."),
+            CoreLocalizer.localizedCurrent(
+                "premium.fastprep.long.during",
+                default: "During: monitor energy and stop if health concerns arise."),
+            CoreLocalizer.localizedCurrent(
+                "premium.fastprep.long.refeed",
+                default: "Refeed: start very gently, then normalize in stages."),
         ]
     }
 }
@@ -90,12 +120,22 @@ enum PremiumMotivationEngine {
     {
         let seasonPhrase =
             switch season {
-            case .advent: "Watch with hope"
-            case .christmas: "Celebrate with gratitude"
-            case .lent: "Repent with discipline"
-            case .easter: "Persevere in new life"
-            case .ordinary: "Stay faithful in the ordinary"
+            case .advent:
+                CoreLocalizer.localizedCurrent("premium.motivation.advent", default: "Watch with hope")
+            case .christmas:
+                CoreLocalizer.localizedCurrent("premium.motivation.christmas", default: "Celebrate with gratitude")
+            case .lent:
+                CoreLocalizer.localizedCurrent("premium.motivation.lent", default: "Repent with discipline")
+            case .easter:
+                CoreLocalizer.localizedCurrent("premium.motivation.easter", default: "Persevere in new life")
+            case .ordinary:
+                CoreLocalizer.localizedCurrent("premium.motivation.ordinary", default: "Stay faithful in the ordinary")
             }
-        return "\(seasonPhrase) • \(template.label) rule • Streak \(streak)d"
+        return CoreLocalizer.localizedCurrentFormat(
+            "premium.motivation.line",
+            default: "%@ • %@ rule • Streak %dd",
+            seasonPhrase,
+            template.label,
+            streak)
     }
 }

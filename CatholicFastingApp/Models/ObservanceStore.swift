@@ -1,5 +1,54 @@
 @preconcurrency import Foundation
 
+enum CoreLocalizer {
+    private static let languageModeKey = "language_mode"
+
+    static func currentLanguageMode(userDefaults: UserDefaults = .standard) -> String {
+        userDefaults.string(forKey: languageModeKey) ?? "english"
+    }
+
+    static func currentLocalizationCode(userDefaults: UserDefaults = .standard) -> String {
+        switch currentLanguageMode(userDefaults: userDefaults) {
+        case "spanish":
+            "es"
+        case "frenchCanadian":
+            "fr-CA"
+        default:
+            "en"
+        }
+    }
+
+    static func currentLocale(userDefaults: UserDefaults = .standard) -> Locale {
+        Locale(identifier: currentLocalizationCode(userDefaults: userDefaults))
+    }
+
+    static func localizedCurrent(
+        _ key: String,
+        default defaultValue: String,
+        bundle: Bundle = .main,
+        userDefaults: UserDefaults = .standard) -> String
+    {
+        let code = currentLocalizationCode(userDefaults: userDefaults)
+        guard let path = bundle.path(forResource: code, ofType: "lproj"), let languageBundle = Bundle(path: path) else {
+            return defaultValue
+        }
+
+        return NSLocalizedString(
+            key, tableName: "Localizable", bundle: languageBundle, value: defaultValue, comment: "")
+    }
+
+    static func localizedCurrentFormat(
+        _ key: String,
+        default defaultValue: String,
+        _ arguments: CVarArg...,
+        bundle: Bundle = .main,
+        userDefaults: UserDefaults = .standard) -> String
+    {
+        let format = localizedCurrent(key, default: defaultValue, bundle: bundle, userDefaults: userDefaults)
+        return String(format: format, locale: currentLocale(userDefaults: userDefaults), arguments: arguments)
+    }
+}
+
 struct WidgetSnapshot: Codable, Equatable {
     let generatedAt: Date
     let todayTitle: String
@@ -79,26 +128,41 @@ enum PremiumRuleTemplate: String, Codable, CaseIterable, Identifiable {
 
     var label: String {
         switch self {
-        case .beginner: "Beginner"
-        case .steady: "Steady"
-        case .disciplined: "Disciplined"
-        case .traditional: "Traditional"
-        case .custom: "Custom"
+        case .beginner:
+            CoreLocalizer.localizedCurrent("premium.template.beginner.label", default: "Beginner")
+        case .steady:
+            CoreLocalizer.localizedCurrent("premium.template.steady.label", default: "Steady")
+        case .disciplined:
+            CoreLocalizer.localizedCurrent("premium.template.disciplined.label", default: "Disciplined")
+        case .traditional:
+            CoreLocalizer.localizedCurrent("premium.template.traditional.label", default: "Traditional")
+        case .custom:
+            CoreLocalizer.localizedCurrent("premium.template.custom.label", default: "Custom")
         }
     }
 
     var summary: String {
         switch self {
         case .beginner:
-            "One optional discipline per week with consistency focus."
+            CoreLocalizer.localizedCurrent(
+                "premium.template.beginner.summary",
+                default: "One optional discipline per week with consistency focus.")
         case .steady:
-            "Two optional disciplines weekly with stable reminders."
+            CoreLocalizer.localizedCurrent(
+                "premium.template.steady.summary",
+                default: "Two optional disciplines weekly with stable reminders.")
         case .disciplined:
-            "Three disciplined practices weekly plus review."
+            CoreLocalizer.localizedCurrent(
+                "premium.template.disciplined.summary",
+                default: "Three disciplined practices weekly plus review.")
         case .traditional:
-            "Stronger penitential rhythm with clear safeguards."
+            CoreLocalizer.localizedCurrent(
+                "premium.template.traditional.summary",
+                default: "Stronger penitential rhythm with clear safeguards.")
         case .custom:
-            "Fully user-adjusted rhythm."
+            CoreLocalizer.localizedCurrent(
+                "premium.template.custom.summary",
+                default: "Fully user-adjusted rhythm.")
         }
     }
 }
@@ -126,10 +190,14 @@ enum PremiumSeasonProgram: String, Codable, CaseIterable, Identifiable {
 
     var label: String {
         switch self {
-        case .liturgicalRhythm: "Liturgical Rhythm"
-        case .lentDeepen: "Lenten Deepen"
-        case .adventWatch: "Advent Watch"
-        case .fridayFidelity: "Friday Fidelity"
+        case .liturgicalRhythm:
+            CoreLocalizer.localizedCurrent("premium.program.liturgicalRhythm.label", default: "Liturgical Rhythm")
+        case .lentDeepen:
+            CoreLocalizer.localizedCurrent("premium.program.lentDeepen.label", default: "Lenten Deepen")
+        case .adventWatch:
+            CoreLocalizer.localizedCurrent("premium.program.adventWatch.label", default: "Advent Watch")
+        case .fridayFidelity:
+            CoreLocalizer.localizedCurrent("premium.program.fridayFidelity.label", default: "Friday Fidelity")
         }
     }
 }

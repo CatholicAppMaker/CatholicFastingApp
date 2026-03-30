@@ -224,26 +224,26 @@ extension ContentView {
     private var ipadPremiumLegalFooterCard: some View {
         VStack(alignment: .leading, spacing: 12) {
             IPadWorkspaceHeader(
-                eyebrow: "Restore / Manage / Legal",
-                title: "Billing and legal tools",
-                detail: "Use these only after plan choice or if you need billing and legal help.")
+                eyebrow: localized("premium.legal.title", default: "Restore / Manage / Legal"),
+                title: localized("ipad.premium.legal.title", default: "Billing and legal tools"),
+                detail: localized("ipad.premium.legal.detail", default: "Use these only after plan choice or if you need billing and legal help."))
 
             HStack(spacing: 10) {
-                Button("Restore Purchases") {
+                Button(localized("premium.legal.restore", default: "Restore Purchases")) {
                     Task { await monetizationStore.restorePurchases() }
                 }
                 .appSecondaryButtonStyle()
 
-                Button("Manage Subscription") {
+                Button(localized("premium.legal.manage", default: "Manage Subscription")) {
                     Task { await monetizationStore.openManageSubscriptions() }
                 }
                 .appSecondaryButtonStyle()
             }
 
             VStack(alignment: .leading, spacing: 6) {
-                Link("Terms of Use (EULA)", destination: UIConstants.termsOfUseURL)
-                Link("Privacy Policy", destination: UIConstants.privacyPolicyURL)
-                Link("Support", destination: UIConstants.supportSiteURL)
+                Link(localized("premium.legal.terms", default: "Terms of Use (EULA)"), destination: UIConstants.termsOfUseURL)
+                Link(localized("premium.legal.privacy", default: "Privacy Policy"), destination: UIConstants.privacyPolicyURL)
+                Link(localized("premium.legal.support", default: "Support"), destination: UIConstants.supportSiteURL)
             }
             .appSupportingTextStyle()
         }

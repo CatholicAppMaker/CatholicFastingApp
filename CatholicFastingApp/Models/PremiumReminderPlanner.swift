@@ -37,8 +37,9 @@ enum PremiumReminderPlanner {
                 shouldEnableDailySupport: true,
                 shouldEnableMorning: true,
                 shouldEnableEvening: true,
-                summaryLine:
-                "Recovery mode: enable both morning and evening reminders for the next 2 weeks.")
+                summaryLine: CoreLocalizer.localizedCurrent(
+                    "premium.reminder.recovery.summary",
+                    default: "Recovery mode: enable both morning and evening reminders for the next 2 weeks."))
         }
 
         if !upcomingRequired.isEmpty {
@@ -46,15 +47,18 @@ enum PremiumReminderPlanner {
                 shouldEnableDailySupport: true,
                 shouldEnableMorning: true,
                 shouldEnableEvening: false,
-                summaryLine:
-                "Preparation mode: keep morning reminders on for upcoming required observances.")
+                summaryLine: CoreLocalizer.localizedCurrent(
+                    "premium.reminder.preparation.summary",
+                    default: "Preparation mode: keep morning reminders on for upcoming required observances."))
         }
 
         return PremiumReminderRecommendation(
             shouldEnableDailySupport: true,
             shouldEnableMorning: false,
             shouldEnableEvening: true,
-            summaryLine: "Maintenance mode: evening examen reminders are enough for your current rhythm.")
+            summaryLine: CoreLocalizer.localizedCurrent(
+                "premium.reminder.maintenance.summary",
+                default: "Maintenance mode: evening examen reminders are enough for your current rhythm."))
     }
 }
 
@@ -68,19 +72,25 @@ enum PremiumConditionReminderAdvisor {
                 shouldEnableDailySupport: true,
                 shouldEnableMorning: true,
                 shouldEnableEvening: true,
-                summaryLine: "Condition rules enabled: required-day double reminders are active.")
+                summaryLine: CoreLocalizer.localizedCurrent(
+                    "premium.reminder.condition.required_double",
+                    default: "Condition rules enabled: required-day double reminders are active."))
         }
         if rules.remindIfUnloggedByNoon {
             return PremiumReminderRecommendation(
                 shouldEnableDailySupport: true,
                 shouldEnableMorning: true,
                 shouldEnableEvening: false,
-                summaryLine: "Condition rules enabled: noon check-in recovery reminders are active.")
+                summaryLine: CoreLocalizer.localizedCurrent(
+                    "premium.reminder.condition.noon_recovery",
+                    default: "Condition rules enabled: noon check-in recovery reminders are active."))
         }
         return PremiumReminderRecommendation(
             shouldEnableDailySupport: true,
             shouldEnableMorning: false,
             shouldEnableEvening: true,
-            summaryLine: "Condition rules enabled: evening examen support is active.")
+            summaryLine: CoreLocalizer.localizedCurrent(
+                "premium.reminder.condition.evening_examen",
+                default: "Condition rules enabled: evening examen support is active."))
     }
 }
