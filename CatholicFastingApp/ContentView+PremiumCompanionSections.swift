@@ -183,17 +183,6 @@ extension ContentView {
             }
             .appPrimaryButtonStyle()
             .accessibilityIdentifier("premium.open_tools")
-
-            #if DEBUG && targetEnvironment(simulator)
-            Button("Reset Simulator Premium") {
-                Task {
-                    await monetizationStore.resetSimulatorDebugPurchase()
-                }
-            }
-            .appSecondaryButtonStyle()
-            .disabled(monetizationStore.isPurchasing)
-            .accessibilityIdentifier("premium.reset_simulator")
-            #endif
         }
         .padding(14)
         .appSurfaceCard(.primary, cornerRadius: 18)

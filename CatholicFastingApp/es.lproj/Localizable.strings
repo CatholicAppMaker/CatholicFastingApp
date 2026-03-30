@@ -791,6 +791,7 @@
 "premium.analytics.overall_format" = "Cumplimiento general: %d%%";
 "premium.analytics.missed_format" = "Omitidos: %d • Sustituidos: %d";
 "premium.analytics.intermittent_hits_format" = "Metas intermitentes logradas: %d%%";
+"ipad.intermittent.plan_hours_format" = "%dh";
 "premium.analytics.breakdown" = "Desglose por tiempo";
 "premium.analytics.season_row_format" = "%@: %d%% (%d/%d)";
 "premium.recovery.section" = "Acompañamiento de recuperación";

@@ -119,7 +119,7 @@ struct SacredHeroCard: View {
                     Image(systemName: fallbackSymbol)
                         .font(.system(size: 28, weight: .semibold))
                         .foregroundStyle(Color.white.opacity(0.9))
-                    Text("Catholic Fasting")
+                    Text(AppLocalizer.localizedCurrent("shared.app_title", default: "Catholic Fasting"))
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(Color.white.opacity(0.9))
                 }

@@ -123,7 +123,7 @@ extension ContentView {
                         intermittentPresetBinding.wrappedValue = hours
                     } label: {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("\(hours)h")
+                            Text(localizedFormat("ipad.intermittent.plan_hours_format", default: "%dh", hours))
                                 .font(.headline)
                             Text(intermittentPlanDescription(hours))
                                 .appSupportingTextStyle()

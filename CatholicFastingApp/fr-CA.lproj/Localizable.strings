@@ -791,6 +791,7 @@
 "premium.analytics.overall_format" = "Achèvement global : %d%%";
 "premium.analytics.missed_format" = "Manqués : %d • Remplacés : %d";
 "premium.analytics.intermittent_hits_format" = "Cibles intermittentes atteintes : %d%%";
+"ipad.intermittent.plan_hours_format" = "%dh";
 "premium.analytics.breakdown" = "Répartition par saison";
 "premium.analytics.season_row_format" = "%@ : %d%% (%d/%d)";
 "premium.recovery.section" = "Coaching de reprise";
