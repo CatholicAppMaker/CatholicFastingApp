@@ -209,10 +209,12 @@ struct IPadObservanceSelectionRow: View {
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
             VStack(alignment: .leading, spacing: 6) {
-                Text(context.observance.title)
+                Text(ObservanceTitleLocalizer.localizedCurrent(context.observance.title))
                     .font(.headline)
                     .foregroundStyle(.primary)
-                Text(context.observance.date.formatted(date: .abbreviated, time: .omitted))
+                Text(context.observance.date.formatted(
+                    Date.FormatStyle(date: .abbreviated, time: .omitted)
+                        .locale(AppLocalizer.currentLocale())))
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 HStack(spacing: 6) {

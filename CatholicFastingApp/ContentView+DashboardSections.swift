@@ -473,7 +473,7 @@ extension ContentView {
             Text(localizedFormat("today.overview.streak_format", default: "Current streak: %d day(s)", currentStreak))
                 .foregroundStyle(CatholicTheme.primary.opacity(0.9))
             if let next = upcomingMandatoryObservance {
-                Text(localizedFormat("today.overview.next_required_format", default: "Next required: %@ • %@", next.title, next.date.formatted(date: .abbreviated, time: .omitted)))
+                Text(localizedFormat("today.overview.next_required_format", default: "Next required: %@ • %@", localizedObservanceTitle(next.title), localizedAbbreviatedDate(next.date)))
                     .foregroundStyle(.red.opacity(0.85))
             } else {
                 Text(localized("today.overview.none", default: "No upcoming required observances this year."))
@@ -499,7 +499,7 @@ extension ContentView {
             Text(localizedFormat("today.overview.streak_format", default: "Current streak: %d day(s)", currentStreak))
                 .foregroundStyle(CatholicTheme.primary.opacity(0.9))
             if let next = upcomingMandatoryObservance {
-                Text(localizedFormat("today.overview.next_required_format", default: "Next required: %@ • %@", next.title, next.date.formatted(date: .abbreviated, time: .omitted)))
+                Text(localizedFormat("today.overview.next_required_format", default: "Next required: %@ • %@", localizedObservanceTitle(next.title), localizedAbbreviatedDate(next.date)))
                     .foregroundStyle(.red.opacity(0.85))
             } else {
                 Text(localized("today.overview.none", default: "No upcoming required observances this year."))
@@ -524,7 +524,7 @@ extension ContentView {
 
     private var todayAtAGlanceNextLabel: String {
         if let next = upcomingMandatoryObservance {
-            return next.date.formatted(.dateTime.month(.abbreviated).day())
+            return localizedAbbreviatedDate(next.date)
         }
         return "Open"
     }

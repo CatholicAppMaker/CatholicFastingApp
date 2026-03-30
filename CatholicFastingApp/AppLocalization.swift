@@ -80,3 +80,40 @@ enum AppLocalizer {
         return String(format: format, locale: currentLocale(userDefaults: userDefaults), arguments: arguments)
     }
 }
+
+enum ObservanceTitleLocalizer {
+    static func localizedCurrent(_ title: String, userDefaults: UserDefaults = .standard) -> String {
+        switch title {
+        case "Ash Wednesday":
+            AppLocalizer.localizedCurrent("observance.title.ash_wednesday", default: title, userDefaults: userDefaults)
+        case "Good Friday":
+            AppLocalizer.localizedCurrent("observance.title.good_friday", default: title, userDefaults: userDefaults)
+        case "Friday of Lent":
+            AppLocalizer.localizedCurrent("observance.title.friday_of_lent", default: title, userDefaults: userDefaults)
+        case "Friday Penance (Outside Lent)":
+            AppLocalizer.localizedCurrent("observance.title.friday_penance_outside_lent", default: title, userDefaults: userDefaults)
+        case "Ember Day":
+            AppLocalizer.localizedCurrent("observance.title.ember_day", default: title, userDefaults: userDefaults)
+        case "Palm Sunday", "Palm Sunday of the Passion of the Lord":
+            AppLocalizer.localizedCurrent("observance.title.palm_sunday", default: title, userDefaults: userDefaults)
+        case "Holy Thursday (Evening Mass of the Lord's Supper)":
+            AppLocalizer.localizedCurrent("observance.title.holy_thursday", default: title, userDefaults: userDefaults)
+        case "Mary, Mother of God":
+            AppLocalizer.localizedCurrent("observance.title.mary_mother_of_god", default: title, userDefaults: userDefaults)
+        case "Ascension":
+            AppLocalizer.localizedCurrent("observance.title.ascension", default: title, userDefaults: userDefaults)
+        case "Assumption of the Blessed Virgin Mary":
+            AppLocalizer.localizedCurrent("observance.title.assumption", default: title, userDefaults: userDefaults)
+        case "All Saints":
+            AppLocalizer.localizedCurrent("observance.title.all_saints", default: title, userDefaults: userDefaults)
+        case "Immaculate Conception":
+            AppLocalizer.localizedCurrent("observance.title.immaculate_conception", default: title, userDefaults: userDefaults)
+        case "Immaculate Conception (Transferred)":
+            AppLocalizer.localizedCurrent("observance.title.immaculate_conception_transferred", default: title, userDefaults: userDefaults)
+        case "Christmas":
+            AppLocalizer.localizedCurrent("observance.title.christmas", default: title, userDefaults: userDefaults)
+        default:
+            title
+        }
+    }
+}

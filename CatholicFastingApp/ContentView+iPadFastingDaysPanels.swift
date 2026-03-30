@@ -125,8 +125,8 @@ extension ContentView {
                     HStack(spacing: 10) {
                         ForEach(quickFocus) { observance in
                             IPadKeyDateChip(
-                                title: observance.title,
-                                subtitle: observance.date.formatted(date: .abbreviated, time: .omitted),
+                                title: localizedObservanceTitle(observance.title),
+                                subtitle: localizedAbbreviatedDate(observance.date),
                                 isSelected: selectedFastingObservanceID == observance.id)
                             {
                                 selectedFastingObservanceID = observance.id
@@ -176,8 +176,8 @@ extension ContentView {
                 VStack(alignment: .leading, spacing: 14) {
                     IPadWorkspaceHeader(
                         eyebrow: context.regionalContext.classificationLabel,
-                        title: selected.title,
-                        detail: selected.date.formatted(date: .complete, time: .omitted))
+                        title: localizedObservanceTitle(selected.title),
+                        detail: localizedCompleteDate(selected.date))
                     VStack(alignment: .leading, spacing: 8) {
                         HStack(spacing: 8) {
                             StatusTag(text: selected.kind.label, color: selected.kind.color)
@@ -301,7 +301,7 @@ extension ContentView {
 
     func ipadFastingDayGroups(from items: [Observance]) -> [(String, [Observance])] {
         let grouped = Dictionary(grouping: items) { observance in
-            observance.date.formatted(.dateTime.month(.wide).year())
+            localizedMonthYear(observance.date)
         }
         return grouped
             .map { key, value in

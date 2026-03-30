@@ -89,11 +89,11 @@ extension ContentView {
             }
 
             if let activeStart = intermittentTracker.activeStart {
-                Text(localizedFormat("intermittent.current_plan.started_format", default: "Started %@", activeStart.formatted(date: .abbreviated, time: .shortened)))
+                Text(localizedFormat("intermittent.current_plan.started_format", default: "Started %@", localizedAbbreviatedDateTime(activeStart)))
                     .appSupportingTextStyle()
                     .foregroundStyle(CatholicTheme.primary.opacity(0.9))
             } else if let latestSession = intermittentTracker.sessions.first {
-                Text(localizedFormat("intermittent.current_plan.last_ended_format", default: "Last fast ended %@", latestSession.end.formatted(date: .abbreviated, time: .shortened)))
+                Text(localizedFormat("intermittent.current_plan.last_ended_format", default: "Last fast ended %@", localizedAbbreviatedDateTime(latestSession.end)))
                     .appSupportingTextStyle()
                 Text(
                     latestSession.completedTarget
@@ -146,6 +146,7 @@ extension ContentView {
                     in: intermittentManualStartRange,
                     displayedComponents: [.date, .hourAndMinute])
                     .datePickerStyle(.compact)
+                    .environment(\.locale, contentLocale)
                     .accessibilityIdentifier("intermittent.start_date")
 
                 Text(localized("intermittent.controls.started_hint", default: "If you already started, set the start time here before beginning the timer."))
@@ -165,6 +166,7 @@ extension ContentView {
                     in: intermittentManualStartRange,
                     displayedComponents: [.date, .hourAndMinute])
                     .datePickerStyle(.compact)
+                    .environment(\.locale, contentLocale)
                     .accessibilityIdentifier("intermittent.start_date")
 
                 Text(localized("intermittent.controls.adjust_hint", default: "Adjust the start time here if you began fasting earlier. The live tracker updates right away."))
@@ -551,10 +553,10 @@ extension ContentView {
                     : localized("intermittent.live.fast_in_progress", default: "Fasting in progress"))
                 .font(.headline.weight(.semibold))
                 .foregroundStyle(CatholicTheme.primary)
-            Text(localizedFormat("intermittent.live.started_format", default: "Started %@", start.formatted(date: .abbreviated, time: .shortened)))
+            Text(localizedFormat("intermittent.live.started_format", default: "Started %@", localizedAbbreviatedDateTime(start)))
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            Text(localizedFormat("intermittent.live.target_ends_format", default: "Target ends %@", targetDate.formatted(date: .abbreviated, time: .shortened)))
+            Text(localizedFormat("intermittent.live.target_ends_format", default: "Target ends %@", localizedAbbreviatedDateTime(targetDate)))
                 .font(.caption)
                 .foregroundStyle(.secondary)
             Text(
@@ -605,11 +607,11 @@ extension ContentView {
                     : localized("intermittent.live.no_fixed_eating_window", default: "No fixed eating window"))
                 .font(.headline.weight(.semibold))
                 .foregroundStyle(CatholicTheme.primary)
-            Text(localizedFormat("intermittent.live.last_ended_format", default: "Last fast ended %@", lastEnded.formatted(date: .abbreviated, time: .shortened)))
+            Text(localizedFormat("intermittent.live.last_ended_format", default: "Last fast ended %@", localizedAbbreviatedDateTime(lastEnded)))
                 .font(.caption)
                 .foregroundStyle(.secondary)
             if hasEatingWindow {
-                Text(localizedFormat("intermittent.live.suggested_start_format", default: "Suggested next fast start: %@", nextSuggestedStart.formatted(date: .abbreviated, time: .shortened)))
+                Text(localizedFormat("intermittent.live.suggested_start_format", default: "Suggested next fast start: %@", localizedAbbreviatedDateTime(nextSuggestedStart)))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             } else {
@@ -640,7 +642,7 @@ extension ContentView {
                             .padding(.top, 2)
 
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(localizedFormat("intermittent.history.range_format", default: "%@ → %@", session.start.formatted(date: .abbreviated, time: .shortened), session.end.formatted(date: .abbreviated, time: .shortened)))
+                            Text(localizedFormat("intermittent.history.range_format", default: "%@ → %@", localizedAbbreviatedDateTime(session.start), localizedAbbreviatedDateTime(session.end)))
                                 .font(.subheadline.weight(.semibold))
                             Text(localizedFormat("intermittent.history.detail_format", default: "Duration: %@ • Plan: %dh", durationText(session.duration), session.targetHours))
                                 .font(.caption)

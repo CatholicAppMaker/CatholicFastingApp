@@ -94,8 +94,8 @@ extension ContentView {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
             IPadSummaryMetricCard(
                 title: localized("ipad.today.metrics.next_required", default: "Next required"),
-                value: upcomingMandatoryObservance?.title ?? localized("ipad.today.metrics.none_ahead", default: "None ahead"),
-                subtitle: upcomingMandatoryObservance?.date.formatted(date: .abbreviated, time: .omitted) ?? localized("ipad.today.metrics.current_year_clear", default: "Current year clear"))
+                value: upcomingMandatoryObservance.map { localizedObservanceTitle($0.title) } ?? localized("ipad.today.metrics.none_ahead", default: "None ahead"),
+                subtitle: upcomingMandatoryObservance.map { localizedAbbreviatedDate($0.date) } ?? localized("ipad.today.metrics.current_year_clear", default: "Current year clear"))
             IPadSummaryMetricCard(
                 title: localized("ipad.today.metrics.this_week", default: "This week"),
                 value: "\(weeklyCompletedObservancesCount)/\(weeklyActionableObservanceCount)",

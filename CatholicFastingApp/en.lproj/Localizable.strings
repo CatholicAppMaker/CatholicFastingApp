@@ -214,7 +214,7 @@
 "today.overview.section" = "Overview";
 "today.overview.completion_format" = "%d of %d required days completed";
 "today.overview.streak_format" = "Current streak: %d days";
-"today.overview.next_required_format" = "Next required day: %@";
+"today.overview.next_required_format" = "Next required day: %@ • %@";
 "today.overview.none" = "None scheduled";
 "today.overview.open_view" = "Open fasting overview";
 "today.overview.focus_required" = "Focus next required day";

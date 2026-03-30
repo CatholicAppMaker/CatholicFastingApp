@@ -4,8 +4,42 @@ import TipKit
 #endif
 
 extension ContentView {
+    func localizedObservanceTitle(_ title: String) -> String {
+        ObservanceTitleLocalizer.localizedCurrent(title)
+    }
+
     var liturgicalCalendar: Calendar {
         .gregorian
+    }
+
+    var contentLocale: Locale {
+        AppLocalizer.currentLocale()
+    }
+
+    func localizedAbbreviatedDate(_ date: Date) -> String {
+        date.formatted(
+            Date.FormatStyle(date: .abbreviated, time: .omitted)
+                .locale(contentLocale))
+    }
+
+    func localizedCompleteDate(_ date: Date) -> String {
+        date.formatted(
+            Date.FormatStyle(date: .complete, time: .omitted)
+                .locale(contentLocale))
+    }
+
+    func localizedAbbreviatedDateTime(_ date: Date) -> String {
+        date.formatted(
+            Date.FormatStyle(date: .abbreviated, time: .shortened)
+                .locale(contentLocale))
+    }
+
+    func localizedMonthYear(_ date: Date) -> String {
+        date.formatted(
+            Date.FormatStyle()
+                .month(.wide)
+                .year()
+                .locale(contentLocale))
     }
 
     var regionProfile: RuleSettings.RegionProfile {
@@ -414,9 +448,9 @@ extension ContentView {
         }
         return WidgetSnapshot(
             generatedAt: Date(),
-            todayTitle: todayObservance?.title ?? "No observance today",
+            todayTitle: todayObservance.map { localizedObservanceTitle($0.title) } ?? "No observance today",
             todayObligation: todayObservance?.dispositionLabel ?? "No obligation",
-            nextRequiredTitle: upcomingMandatoryObservance?.title ?? "No upcoming required observance",
+            nextRequiredTitle: upcomingMandatoryObservance.map { localizedObservanceTitle($0.title) } ?? "No upcoming required observance",
             nextRequiredDate: upcomingMandatoryObservance?.date,
             completionRate: completionRateValue,
             hasActiveIntermittentFast: intermittentTracker.activeStart != nil,
@@ -485,9 +519,13 @@ extension ContentView {
 
     var heroSummaryText: String {
         if let next = upcomingMandatoryObservance {
-            return "Next required observance is \(next.title) on \(next.date.formatted(date: .abbreviated, time: .omitted))."
+            return localizedFormat(
+                "today.hero.next_required_summary_format",
+                default: "Next required observance is %@ on %@.",
+                localizedObservanceTitle(next.title),
+                localizedAbbreviatedDate(next.date))
         }
-        return "No remaining required observances this year."
+        return localized("today.hero.none_remaining", default: "No remaining required observances this year.")
     }
 
     var todayFoodDecision: DailyFoodDecision {

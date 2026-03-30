@@ -46,10 +46,10 @@ extension ContentView {
                                     : localized("ipad.intermittent.live.fasting", default: "Fasting in progress"))
                                 .font(.title3.weight(.semibold))
                                 .foregroundStyle(CatholicTheme.primary)
-                            Text(localizedFormat("ipad.intermittent.live.started", default: "Started %@", start.formatted(date: .abbreviated, time: .shortened)))
+                            Text(localizedFormat("ipad.intermittent.live.started", default: "Started %@", localizedAbbreviatedDateTime(start)))
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
-                            Text(localizedFormat("ipad.intermittent.live.ends", default: "Target ends %@", targetDate.formatted(date: .abbreviated, time: .shortened)))
+                            Text(localizedFormat("ipad.intermittent.live.ends", default: "Target ends %@", localizedAbbreviatedDateTime(targetDate)))
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                             Text(
@@ -77,7 +77,7 @@ extension ContentView {
                             Text(localized("ipad.intermittent.live.between_fasts", default: "Between fasts"))
                                 .font(.title3.weight(.semibold))
                                 .foregroundStyle(CatholicTheme.primary)
-                            Text(localizedFormat("ipad.intermittent.live.last_ended", default: "Last fast ended %@", latestSession.end.formatted(date: .abbreviated, time: .shortened)))
+                            Text(localizedFormat("ipad.intermittent.live.last_ended", default: "Last fast ended %@", localizedAbbreviatedDateTime(latestSession.end)))
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                             Text(
@@ -159,6 +159,7 @@ extension ContentView {
                     in: intermittentManualStartRange,
                     displayedComponents: [.date, .hourAndMinute])
                     .datePickerStyle(.compact)
+                    .environment(\.locale, contentLocale)
                     .accessibilityIdentifier("ipad.intermittent.start_date")
 
                 Text(localized("ipad.intermittent.controls.started_hint", default: "If you already began fasting, backdate the start time here before you start the timer."))
@@ -170,6 +171,7 @@ extension ContentView {
                     in: intermittentManualStartRange,
                     displayedComponents: [.date, .hourAndMinute])
                     .datePickerStyle(.compact)
+                    .environment(\.locale, contentLocale)
                     .accessibilityIdentifier("ipad.intermittent.start_date")
 
                 Text(localized("ipad.intermittent.controls.adjust_hint", default: "If you started earlier than the timer, adjust the start time here and the live tracker updates immediately."))

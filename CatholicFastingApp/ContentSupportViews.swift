@@ -10,10 +10,10 @@ struct ObservanceRowView: View {
     var body: some View {
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 5) {
-                Text(observance.title)
+                Text(ObservanceTitleLocalizer.localizedCurrent(observance.title))
                     .font(.headline)
 
-                Text(observance.date.formatted(date: .abbreviated, time: .omitted))
+                Text(observance.date.formatted(Date.FormatStyle(date: .abbreviated, time: .omitted).locale(AppLocalizer.currentLocale())))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
 

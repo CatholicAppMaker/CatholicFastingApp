@@ -326,10 +326,10 @@ extension ContentView {
                         .appEyebrowStyle()
                         .textCase(.uppercase)
 
-                    Text(nextRequired.title)
+                    Text(localizedObservanceTitle(nextRequired.title))
                         .appSectionTitleStyle(serif: true)
 
-                    Text(nextRequired.date.formatted(date: .abbreviated, time: .omitted))
+                    Text(localizedAbbreviatedDate(nextRequired.date))
                         .font(.headline)
                         .foregroundStyle(.red)
                 }
@@ -341,10 +341,10 @@ extension ContentView {
                         .appEyebrowStyle()
                         .textCase(.uppercase)
 
-                    Text(nextPotential.title)
+                    Text(localizedObservanceTitle(nextPotential.title))
                         .appSectionTitleStyle(serif: true)
 
-                    Text(nextPotential.date.formatted(date: .abbreviated, time: .omitted))
+                    Text(localizedAbbreviatedDate(nextPotential.date))
                         .font(.headline)
                         .foregroundStyle(.orange)
 
@@ -492,12 +492,12 @@ extension ContentView {
                 ForEach(displayItems) { observance in
                     HStack(alignment: .top) {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(observance.title)
+                            Text(localizedObservanceTitle(observance.title))
                                 .font(.headline)
                             Text("\(observance.kind.label) • \(observanceDispositionLabel(for: observance))")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
-                            Text(observance.date.formatted(date: .abbreviated, time: .omitted))
+                            Text(localizedAbbreviatedDate(observance.date))
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                         }
@@ -553,7 +553,7 @@ extension ContentView {
                 ForEach(todayItems) { observance in
                     HStack {
                         VStack(alignment: .leading) {
-                            Text(observance.title)
+                            Text(localizedObservanceTitle(observance.title))
                                 .font(.headline)
                             Text("\(observance.kind.label) • \(observanceDispositionLabel(for: observance))")
                                 .font(.caption)
