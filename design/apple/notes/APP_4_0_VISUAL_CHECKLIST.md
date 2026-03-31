@@ -10,6 +10,9 @@ Primary local references:
 - `/Users/kevpierce/Desktop/CatholicFastingApp/design/apple/videos/wwdc25-build-swiftui-new-design.pdf`
 - `/Users/kevpierce/Desktop/CatholicFastingApp/design/apple/videos/wwdc20-make-your-app-visually-accessible.pdf`
 
+External anti-pattern reference:
+- `Uncodixfy` (`https://github.com/cyxzdev/Uncodixfy`)
+
 ## Design Rules
 - SF-style UI text is the default for controls, labels, body, utility text, and metrics.
 - `New York` is accent typography only: observance titles, seasonal headings, premium journey emphasis.
@@ -17,6 +20,15 @@ Primary local references:
 - Keep the tone `sacred calm`, not dramatic or ornamental.
 - Prefer native controls and compact interactions over custom chrome.
 - Use elevated surfaces to clarify hierarchy, not to decorate every block equally.
+
+## Uncodixfy Filter
+- Use `Uncodixfy` as a negative filter when we revisit UI work: it is a good check against generic AI habits such as floating card stacks, decorative eyebrow labels, over-rounded controls, fake premium gradients, and empty dashboard filler.
+- Do **not** apply it mechanically. Catholic Fasting still intentionally keeps:
+  - liturgical imagery
+  - restrained serif emphasis for sacred or premium headings
+  - iOS 26 glass/elevated surfaces where they clarify hierarchy
+- If a new UI idea feels like it exists mostly to look “premium,” run it through the `Uncodixfy` filter and simplify it.
+- If a UI idea improves hierarchy, readability, and platform fit, keep it even if it is more visually expressive than `Uncodixfy` would normally prefer.
 
 ## Cross-App Checklist
 - The first screen on every tab answers the main user question without scrolling.
