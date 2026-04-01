@@ -20,3 +20,7 @@ DerivedData/
 # SwiftPM/Xcode generated user files
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 .swiftpm/xcode/xcuserdata/
+
+# Local downloads / installers
+*.dmg
+design/apple/downloads/
