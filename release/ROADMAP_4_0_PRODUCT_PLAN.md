@@ -1,6 +1,9 @@
 # Catholic Fasting App 4.0 Product Plan
 
 Last reviewed: March 21, 2026
+Status: `4.0` shipped and live
+
+Follow-on planning now lives in `/Users/kevpierce/Desktop/CatholicFastingApp/release/ROADMAP_4_1_PLANNING_RESET.md`.
 
 ## Goal
 
