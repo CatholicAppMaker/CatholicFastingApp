@@ -65,6 +65,65 @@
 			<false/>
 		</dict>
 	</dict>
+	<key>CFBundleIcons~ipad</key>
+	<dict>
+		<key>CFBundleAlternateIcons</key>
+		<dict>
+				<key>AppIconAdvent</key>
+				<dict>
+					<key>CFBundleIconFiles</key>
+					<array>
+						<string>AppIconAdvent</string>
+						<string>IconFallbacks/AppIconAdvent-120</string>
+						<string>IconFallbacks/AppIconAdvent-152</string>
+					</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+				<key>AppIconChristmas</key>
+				<dict>
+					<key>CFBundleIconFiles</key>
+					<array>
+						<string>AppIconChristmas</string>
+						<string>IconFallbacks/AppIconChristmas-120</string>
+						<string>IconFallbacks/AppIconChristmas-152</string>
+					</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+				<key>AppIconEaster</key>
+				<dict>
+					<key>CFBundleIconFiles</key>
+					<array>
+						<string>AppIconEaster</string>
+						<string>IconFallbacks/AppIconEaster-120</string>
+						<string>IconFallbacks/AppIconEaster-152</string>
+					</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+				<key>AppIconLent</key>
+				<dict>
+					<key>CFBundleIconFiles</key>
+					<array>
+						<string>AppIconLent</string>
+						<string>IconFallbacks/AppIconLent-120</string>
+						<string>IconFallbacks/AppIconLent-152</string>
+					</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+		</dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string>AppIcon</string>
+			</array>
+			<key>UIPrerenderedIcon</key>
+			<false/>
+		</dict>
+	</dict>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>

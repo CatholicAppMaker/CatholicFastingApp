@@ -1,8 +1,8 @@
 import SwiftUI
 #if canImport(UIKit)
+import os
 import UIKit
 #endif
-import os
 
 @main
 struct CatholicFastingAppApp: App {
@@ -16,56 +16,97 @@ struct CatholicFastingAppApp: App {
         WindowGroup {
             ContentView()
                 .preferredColorScheme(.light)
-                .task {
-                    SeasonalIconManager.applyForCurrentSeasonIfNeeded()
+                .onChange(of: scenePhase) { _, newPhase in
+                    guard newPhase == .active else {
+                        return
+                    }
+
+                    Task {
+                        await SeasonalIconManager.shared.handleSceneDidBecomeActive()
+                    }
                 }
         }
-        .onChange(of: scenePhase) { _, newPhase in
-            guard newPhase == .active else { return }
-            SeasonalIconManager.applyForCurrentSeasonIfNeeded()
-        }
     }
 }
 
-private enum SeasonalIconManager {
-    private static let logger = Logger(subsystem: "com.kevpierce.CatholicFastingApp", category: "Icon")
+#if canImport(UIKit)
+private actor SeasonalIconManager {
+    static let shared = SeasonalIconManager()
 
-    static func applyForCurrentSeasonIfNeeded() {
-        #if canImport(UIKit)
-        guard ProcessInfo.processInfo.environment["UITEST_MODE"] != "1" else { return }
-        guard UIApplication.shared.supportsAlternateIcons else { return }
+    private let logger = Logger(subsystem: "com.kevpierce.CatholicFastingApp", category: "SeasonalIconManager")
+    private var hasPerformedDeferredLaunchRefresh = false
+    private var isApplying = false
 
-        let seasonModeEnabled =
-            UserDefaults.standard.object(forKey: StorageKeys.liturgicalSeasonColorsEnabled) == nil
-                ? true
-                : UserDefaults.standard.bool(forKey: StorageKeys.liturgicalSeasonColorsEnabled)
-        let season = LiturgicalSeasonThemeEngine.season(for: Date())
-        let target = iconName(for: seasonModeEnabled ? season : .ordinary)
-        guard UIApplication.shared.alternateIconName != target else { return }
+    func handleSceneDidBecomeActive() async {
+        guard ProcessInfo.processInfo.environment["UITEST_MODE"] != "1" else {
+            return
+        }
 
-        UIApplication.shared.setAlternateIconName(target) { error in
-            if let error {
-                logger.error("Seasonal icon update failed: \(error.localizedDescription)")
+        let defaults = UserDefaults.standard
+        guard defaults.bool(forKey: StorageKeys.didCompleteOnboarding) else {
+            return
+        }
+
+        if !hasPerformedDeferredLaunchRefresh {
+            hasPerformedDeferredLaunchRefresh = true
+            try? await Task.sleep(for: .seconds(1))
+        }
+
+        await applyForCurrentSeasonIfNeeded(userDefaults: defaults)
+    }
+
+    private func applyForCurrentSeasonIfNeeded(userDefaults: UserDefaults) async {
+        guard !isApplying else {
+            return
+        }
+
+        isApplying = true
+        defer { isApplying = false }
+
+        let targetIcon = currentSeasonalIconName(userDefaults: userDefaults)
+        let currentIcon = await MainActor.run { UIApplication.shared.alternateIconName }
+
+        guard targetIcon != currentIcon else {
+            return
+        }
+
+        let supportsAlternateIcons = await MainActor.run { UIApplication.shared.supportsAlternateIcons }
+        guard supportsAlternateIcons else {
+            logger.debug("Skipping seasonal icon update because alternate icons are unavailable on this device.")
+            return
+        }
+
+        await MainActor.run {
+            UIApplication.shared.setAlternateIconName(targetIcon) { error in
+                if let error {
+                    self.logger.error("Seasonal icon update failed: \(error.localizedDescription, privacy: .public)")
+                }
             }
         }
-        #endif
     }
 
-    static func iconName(for season: LiturgicalSeason) -> String? {
-        switch season {
+    private func currentSeasonalIconName(now: Date = Date(), userDefaults: UserDefaults) -> String? {
+        let seasonModeEnabled =
+            userDefaults.object(forKey: StorageKeys.liturgicalSeasonColorsEnabled) == nil
+                ? true
+                : userDefaults.bool(forKey: StorageKeys.liturgicalSeasonColorsEnabled)
+        let season = LiturgicalSeasonThemeEngine.season(for: now)
+
+        switch seasonModeEnabled ? season : .ordinary {
         case .ordinary:
-            nil
+            return nil
         case .advent:
-            "AppIconAdvent"
+            return "AppIconAdvent"
         case .christmas:
-            "AppIconChristmas"
+            return "AppIconChristmas"
         case .lent:
-            "AppIconLent"
+            return "AppIconLent"
         case .easter:
-            "AppIconEaster"
+            return "AppIconEaster"
         }
     }
 }
+#endif
 
 private enum UITestBootstrap {
     static func applyLaunchOverridesIfNeeded() {

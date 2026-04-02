@@ -103,33 +103,34 @@ extension ContentView {
         }
     }
 
-    var tabRootView: some View {
-        TabView(selection: $homeSurface) {
-            surfaceList(for: .today)
-                .tabItem {
-                    Label(localizedHomeSurfaceLabel(.today), systemImage: HomeSurface.today.iconName)
-                }
-                .tag(HomeSurface.today)
-                .accessibilityIdentifier("tab.today")
-            surfaceList(for: .fastingDays)
-                .tabItem {
-                    Label(localizedHomeSurfaceLabel(.fastingDays), systemImage: HomeSurface.fastingDays.iconName)
-                }
-                .tag(HomeSurface.fastingDays)
-                .accessibilityIdentifier("tab.fasting_days")
-            surfaceList(for: .intermittent)
-                .tabItem {
-                    Label(localizedHomeSurfaceLabel(.intermittent), systemImage: HomeSurface.intermittent.iconName)
-                }
-                .tag(HomeSurface.intermittent)
-                .accessibilityIdentifier("tab.intermittent")
-            surfaceList(for: .more)
-                .tabItem {
-                    Label(localizedHomeSurfaceLabel(.more), systemImage: HomeSurface.more.iconName)
-                }
-                .tag(HomeSurface.more)
-                .accessibilityIdentifier("tab.more")
-        }
+    var tabRootView: AnyView {
+        AnyView(
+            TabView(selection: $homeSurface) {
+                tabSurface(for: .today)
+                    .tabItem {
+                        Label(localizedHomeSurfaceLabel(.today), systemImage: HomeSurface.today.iconName)
+                    }
+                    .tag(HomeSurface.today)
+                    .accessibilityIdentifier("tab.today")
+                tabSurface(for: .fastingDays)
+                    .tabItem {
+                        Label(localizedHomeSurfaceLabel(.fastingDays), systemImage: HomeSurface.fastingDays.iconName)
+                    }
+                    .tag(HomeSurface.fastingDays)
+                    .accessibilityIdentifier("tab.fasting_days")
+                tabSurface(for: .intermittent)
+                    .tabItem {
+                        Label(localizedHomeSurfaceLabel(.intermittent), systemImage: HomeSurface.intermittent.iconName)
+                    }
+                    .tag(HomeSurface.intermittent)
+                    .accessibilityIdentifier("tab.intermittent")
+                tabSurface(for: .more)
+                    .tabItem {
+                        Label(localizedHomeSurfaceLabel(.more), systemImage: HomeSurface.more.iconName)
+                    }
+                    .tag(HomeSurface.more)
+                    .accessibilityIdentifier("tab.more")
+            })
     }
 
     var body: some View {
@@ -145,23 +146,24 @@ extension ContentView {
             })
     }
 
-    var tabRootScaffold: some View {
-        tabRootView
-            .appRootBackground()
-            .toolbarBackground(.visible, for: .tabBar)
-            .toolbarBackground(CatholicTheme.parchment.opacity(0.88), for: .tabBar)
-            .overlay(alignment: .topLeading) {
-                readinessMarkers
-            }
-            .navigationTitle(localizedHomeSurfaceLabel(homeSurface))
-            .navigationBarTitleDisplayMode(.large)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    seasonBadge
+    var tabRootScaffold: AnyView {
+        AnyView(
+            tabRootView
+                .appRootBackground()
+                .toolbarBackground(.visible, for: .tabBar)
+                .toolbarBackground(CatholicTheme.parchment.opacity(0.88), for: .tabBar)
+                .overlay(alignment: .topLeading) {
+                    readinessMarkers
                 }
-                .sharedBackgroundVisibility(.hidden)
-            }
-            .tint(CatholicTheme.primary)
+                .navigationTitle(localizedHomeSurfaceLabel(homeSurface))
+                .navigationBarTitleDisplayMode(.large)
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        seasonBadge
+                    }
+                    .sharedBackgroundVisibility(.hidden)
+                }
+                .tint(CatholicTheme.primary))
     }
 
     func applyRootLifecycleHandlers(to content: some View) -> some View {
@@ -391,6 +393,10 @@ extension ContentView {
         }
         .listStyle(.insetGrouped)
         .appListBackground()
+    }
+
+    func tabSurface(for surface: HomeSurface) -> AnyView {
+        AnyView(surfaceList(for: surface))
     }
 
     @ViewBuilder
