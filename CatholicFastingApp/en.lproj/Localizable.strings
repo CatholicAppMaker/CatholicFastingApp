@@ -101,6 +101,8 @@
 "settings.shared.yes" = "Yes";
 "settings.shared.no" = "No";
 
+"onboarding.hero.title" = "Catholic Fasting";
+"onboarding.hero.subtitle" = "Language, region, reminders.";
 "onboarding.title" = "Welcome";
 "onboarding.finish" = "Finish Setup";
 "onboarding.step1.title" = "Step 1 of 4: Eligibility Profile";

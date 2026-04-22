@@ -438,6 +438,8 @@
 "settings.shared.yes" = "Sí";
 "settings.shared.no" = "No";
 
+"onboarding.hero.title" = "Ayuno católico";
+"onboarding.hero.subtitle" = "Idioma, región y recordatorios.";
 "onboarding.title" = "Bienvenido";
 "onboarding.finish" = "Finalizar configuración";
 "onboarding.step1.title" = "Paso 1 de 4: Perfil de elegibilidad";

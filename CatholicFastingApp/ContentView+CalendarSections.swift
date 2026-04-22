@@ -17,7 +17,7 @@ enum SacredHeroImageSelector {
     private static let dashboardArt: [SacredHeroArtwork] = [
         SacredHeroArtwork(
             assetName: "HeroSacred",
-            title: "Christ Pantocrator",
+            title: "Chapel Altar",
             subtitle: "Let your fasting be prayerful, intentional, and rooted in the Church."),
         SacredHeroArtwork(
             assetName: "SacredMonstrance",
@@ -45,8 +45,8 @@ enum SacredHeroImageSelector {
             subtitle: "Offer fasting in union with the Eucharistic life of the Church."),
         SacredHeroArtwork(
             assetName: "SacredScriptureCandle",
-            title: "Scripture Candle",
-            subtitle: "Let the Word of God shape your fasting and your charity."),
+            title: "Prayer Journal",
+            subtitle: "Let reflection shape your fasting and your charity."),
         SacredHeroArtwork(
             assetName: "SacredJerusalemCross",
             title: "Jerusalem Cross",
@@ -88,7 +88,7 @@ enum SacredHeroImageSelector {
             subtitle: "Pair abstinence with prayer for deeper conversion."),
         SacredHeroArtwork(
             assetName: "HeroSacred",
-            title: "Christ Pantocrator",
+            title: "Chapel Altar",
             subtitle: "Keep the Lord at the center of your fasting discipline."),
         SacredHeroArtwork(
             assetName: "SacredCathedralLight",
@@ -139,7 +139,7 @@ enum SacredHeroImageSelector {
             subtitle: "Use optional fasting as a path of inner conversion."),
         SacredHeroArtwork(
             assetName: "SacredScriptureCandle",
-            title: "Prayer and the Word",
+            title: "Prayer Journal",
             subtitle: "Keep intermittent fasting tied to prayer, not just metrics."),
         SacredHeroArtwork(
             assetName: "SacredMonstrance",
@@ -170,7 +170,7 @@ enum SacredHeroImageSelector {
     private static let guidanceArt: [SacredHeroArtwork] = [
         SacredHeroArtwork(
             assetName: "GuidanceSacred",
-            title: "St. Peter's Basilica",
+            title: "Pastoral Guidance",
             subtitle: "Guidance should always be interpreted with pastoral direction."),
         SacredHeroArtwork(
             assetName: "SacredMonstrance",
@@ -306,11 +306,8 @@ extension ContentView {
                     assetName: fastingDaysHeroArtwork.assetName,
                     title: fastingDaysHeroArtwork.title,
                     subtitle: fastingDaysHeroArtwork.subtitle,
-                    height: 132,
+                    height: 118,
                     cornerRadius: 16)
-
-                CatholicFastingQuoteCard(quote: fastingDaysFastingQuote, compact: true)
-                    .accessibilityIdentifier("fasting_days.quote")
             }
             .accessibilityElement(children: .combine)
             .accessibilityLabel("\(fastingDaysHeroArtwork.title). \(fastingDaysHeroArtwork.subtitle)")

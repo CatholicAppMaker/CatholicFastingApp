@@ -19,24 +19,13 @@ enum SacredImageryCatalog {
         SacredImageryItem(id: "cathedral-light", assetName: "SacredCathedralLight", title: "Cathedral Light", subtitle: "Remember the liturgy while you fast."),
         SacredImageryItem(id: "ash-wednesday", assetName: "SacredAshWednesday", title: "Ash Cross", subtitle: "Repentance remains the core of fasting."),
         SacredImageryItem(id: "desert-pilgrimage", assetName: "SacredDesertPilgrimage", title: "Desert Pilgrimage", subtitle: "Keep your sacrifice steady over time."),
-        SacredImageryItem(id: "scripture-candle", assetName: "SacredScriptureCandle", title: "Scripture Candle", subtitle: "Anchor discipline in prayer and the Word."),
+        SacredImageryItem(id: "prayer-journal", assetName: "SacredScriptureCandle", title: "Prayer Journal", subtitle: "Keep discipline joined to reflection and prayer."),
         SacredImageryItem(id: "palm-sunday", assetName: "SacredPalmSunday", title: "Palm Branch", subtitle: "Prepare your heart for Holy Week."),
         SacredImageryItem(id: "chalice-vine", assetName: "SacredChaliceVine", title: "Chalice and Vine", subtitle: "Offer fasting in a Eucharistic spirit."),
-        SacredImageryItem(id: "pantocrator", assetName: "HeroSacred", title: "Christ Pantocrator", subtitle: "Keep your fasting centered on Christ."),
-        SacredImageryItem(id: "basilica", assetName: "GuidanceSacred", title: "St. Peter's Basilica", subtitle: "Stay rooted in the life and teaching of the Church."),
+        SacredImageryItem(id: "chapel-altar", assetName: "HeroSacred", title: "Chapel Altar", subtitle: "Keep your fasting quiet, prayerful, and rooted in worship."),
+        SacredImageryItem(id: "pastoral-guidance", assetName: "GuidanceSacred", title: "Pastoral Guidance", subtitle: "Apply fasting guidance with clarity, prudence, and peace."),
         SacredImageryItem(id: "jerusalem-cross", assetName: "SacredJerusalemCross", title: "Jerusalem Cross", subtitle: "Let your sacrifice witness to the Gospel."),
         SacredImageryItem(id: "marian-monogram", assetName: "SacredMarianMonogram", title: "Marian Monogram", subtitle: "Fast with humility and trust in Mary's example."),
-        SacredImageryItem(id: "concept-chi-rho", assetName: "SacredConceptChiRho", title: "Chi-Rho Crest", subtitle: "Keep each offering centered on Christ."),
-        SacredImageryItem(id: "concept-rosary", assetName: "SacredConceptRosary", title: "Rosary Emblem", subtitle: "Unite prayer and discipline day by day."),
-        SacredImageryItem(id: "concept-heart", assetName: "SacredConceptHeart", title: "Heart of Mercy", subtitle: "Let fasting lead to deeper charity."),
-        SacredImageryItem(id: "monstrance-adoration-night", assetName: "SacredMonstrance", title: "Adoration Night", subtitle: "Anchor discipline in Eucharistic worship."),
-        SacredImageryItem(id: "scripture-candle-watch", assetName: "SacredScriptureCandle", title: "Watchful Prayer", subtitle: "Keep vigil in prayer while you fast."),
-        SacredImageryItem(id: "cathedral-light-vestibule", assetName: "SacredCathedralLight", title: "Church Light", subtitle: "Bring fasting into the rhythm of the liturgy."),
-        SacredImageryItem(id: "palm-branch-procession", assetName: "SacredPalmSunday", title: "Procession", subtitle: "Walk with Christ through discipline and mercy."),
-        SacredImageryItem(id: "jerusalem-cross-pilgrim", assetName: "SacredJerusalemCross", title: "Pilgrim Cross", subtitle: "Offer each sacrifice for the Church and world."),
-        SacredImageryItem(id: "marian-monogram-fiat", assetName: "SacredMarianMonogram", title: "Marian Fiat", subtitle: "Practice faithful discipline with humility."),
-        SacredImageryItem(id: "chi-rho-victory", assetName: "SacredConceptChiRho", title: "Christ Our Victory", subtitle: "Keep every fast ordered to Christ."),
-        SacredImageryItem(id: "rosary-emblem-perseverance", assetName: "SacredConceptRosary", title: "Rosary Perseverance", subtitle: "Persevere in small sacrifices with prayer."),
     ]
 }
 
@@ -64,39 +53,45 @@ struct SacredHeroCard: View {
             heroMediaLayer
 
             LinearGradient(
-                colors: [CatholicTheme.primary.opacity(0.20), Color.clear, Color.black.opacity(0.70)],
+                colors: [CatholicTheme.primary.opacity(0.16), Color.clear, Color.black.opacity(0.62)],
                 startPoint: .topLeading,
                 endPoint: .bottom)
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(title)
-                    .font(.system(.title3, design: .serif).weight(.bold))
-                    .foregroundStyle(.white)
-                    .lineLimit(2)
-                    .minimumScaleFactor(0.9)
-                Text(subtitle)
-                    .font(.subheadline)
-                    .foregroundStyle(Color.white.opacity(0.92))
-                    .lineLimit(3)
-                    .minimumScaleFactor(0.9)
+                if !title.isEmpty {
+                    Text(title)
+                        .font(.system(.title3, design: .serif).weight(.bold))
+                        .foregroundStyle(.white)
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.9)
+                }
+                if !subtitle.isEmpty {
+                    Text(subtitle)
+                        .font(.subheadline)
+                        .foregroundStyle(Color.white.opacity(0.92))
+                        .lineLimit(3)
+                        .minimumScaleFactor(0.9)
+                }
             }
-            .padding(12)
+            .padding(14)
         }
         .overlay(alignment: .topTrailing) {
-            Image(systemName: fallbackSymbol)
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(Color.white.opacity(0.78))
-                .padding(8)
-                .background(Color.black.opacity(0.16), in: Circle())
-                .padding(8)
-                .accessibilityHidden(true)
+            if !SacredImageAssetResolver.hasAsset(named: assetName) {
+                Image(systemName: fallbackSymbol)
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(Color.white.opacity(0.78))
+                    .padding(8)
+                    .background(Color.black.opacity(0.16), in: Circle())
+                    .padding(8)
+                    .accessibilityHidden(true)
+            }
         }
         .frame(height: height)
         .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                .stroke(CatholicTheme.cardBorder.opacity(0.72), lineWidth: 1))
-        .shadow(color: CatholicTheme.primary.opacity(0.14), radius: 18, y: 8)
+                .stroke(CatholicTheme.cardBorder.opacity(0.52), lineWidth: 1))
+        .shadow(color: CatholicTheme.primary.opacity(0.08), radius: 12, y: 6)
         .appRoundedGlass(cornerRadius: cornerRadius)
         .modifier(AccessibilityIDModifier(id: accessibilityIdentifier))
     }

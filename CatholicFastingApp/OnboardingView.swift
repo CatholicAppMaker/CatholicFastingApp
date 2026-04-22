@@ -23,9 +23,9 @@ struct OnboardingView: View {
                     VStack(alignment: .leading, spacing: 12) {
                         SacredHeroCard(
                             assetName: "HeroSacred",
-                            title: localized("onboarding.hero.title", default: "Catholic Fasting"),
-                            subtitle: localized("onboarding.hero.subtitle", default: "Set language, region, and reminders once so the app can stay calm and clear each day."),
-                            height: 162,
+                            title: "",
+                            subtitle: "",
+                            height: 188,
                             cornerRadius: 18,
                             accessibilityIdentifier: "onboarding.hero")
 

@@ -472,6 +472,8 @@
 "settings.quick.refresh_status" = "Actualiser l’état des rappels";
 "settings.quick.enable_consent_hint" = "Activez le consentement ci-dessus pour demander et planifier des rappels.";
 
+"onboarding.hero.title" = "Jeûne catholique";
+"onboarding.hero.subtitle" = "Langue, région et rappels.";
 "onboarding.title" = "Bienvenue";
 "onboarding.finish" = "Terminer la configuration";
 "onboarding.step1.title" = "Étape 1 sur 4 : Profil d’admissibilité";
