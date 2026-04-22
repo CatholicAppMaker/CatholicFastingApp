@@ -242,10 +242,26 @@ struct PremiumHouseholdSharePacket: Codable, Equatable {
 enum WidgetSnapshotStore {
     private static let key = "widget_snapshot"
     private static let appGroupIdentifier = "group.com.kevpierce.CatholicFastingApp"
+    private static var prefersLocalOnlyStorage: Bool {
+        let processInfo = ProcessInfo.processInfo
+        let arguments = processInfo.arguments
+        let environment = processInfo.environment
+        return environment["UITEST_MODE"] == "1"
+            || environment["DISABLE_APP_GROUP_STORAGE"] == "1"
+            || arguments.contains("-uitest-reset")
+            || arguments.contains("-uitest-skip-onboarding")
+            || arguments.contains("-uitest-seed-deterministic")
+            || arguments.contains("-uitest-seed-missed")
+    }
+
+    private static var sharedDefaults: UserDefaults? {
+        guard !prefersLocalOnlyStorage else { return nil }
+        return UserDefaults(suiteName: appGroupIdentifier)
+    }
 
     static func persist(_ snapshot: WidgetSnapshot) {
         guard let data = try? JSONEncoder().encode(snapshot) else { return }
-        if let sharedDefaults = UserDefaults(suiteName: appGroupIdentifier) {
+        if let sharedDefaults {
             sharedDefaults.set(data, forKey: key)
         } else {
             UserDefaults.standard.set(data, forKey: key)
@@ -253,7 +269,7 @@ enum WidgetSnapshotStore {
     }
 
     static func load() -> WidgetSnapshot? {
-        let data: Data? = if let sharedDefaults = UserDefaults(suiteName: appGroupIdentifier) {
+        let data: Data? = if let sharedDefaults {
             sharedDefaults.data(forKey: key)
         } else {
             UserDefaults.standard.data(forKey: key)
@@ -263,7 +279,7 @@ enum WidgetSnapshotStore {
     }
 
     static func clear() {
-        if let sharedDefaults = UserDefaults(suiteName: appGroupIdentifier) {
+        if let sharedDefaults {
             sharedDefaults.removeObject(forKey: key)
         }
         UserDefaults.standard.removeObject(forKey: key)
