@@ -404,9 +404,9 @@ extension ContentView {
         switch surface {
         case .today:
             Group {
-                dashboardSacredImageSection
                 todayDecisionCardSection
                 dashboardQuickActionsSection
+                dashboardSacredImageSection
                 todayTenSecondSection
                 todaySection
                 setupProgressSection
@@ -417,10 +417,10 @@ extension ContentView {
                 if simplifiedModeEnabled {
                     todaySimpleSummarySection
                 } else {
-                    dashboardDevotionalGallerySection
                     planningProgressSection
                     dashboardSeasonSection
                     dashboardHeroSection
+                    dashboardDevotionalGallerySection
                     progressSection
                     analyticsSection
                     milestoneReferralSection
@@ -431,16 +431,16 @@ extension ContentView {
             }
         case .fastingDays:
             Group {
-                fastingDaysHeroSection
                 fastingDaysOverviewSection
+                fastingDaysHeroSection
                 fastingDaysDisplayOptionsSection
                 fastingDaysListSection
             }
         case .intermittent:
             Group {
-                intermittentHeroSection
                 intermittentActiveSection
                 intermittentControlsSection
+                intermittentHeroSection
                 intermittentOverviewSection
                 intermittentAdvancedToolsSection
             }

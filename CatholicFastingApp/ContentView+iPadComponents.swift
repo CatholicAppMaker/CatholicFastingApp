@@ -1,15 +1,18 @@
 import SwiftUI
 
 struct IPadPaneCardModifier: ViewModifier {
+    let style: AppSurfaceCardStyle
+    let cornerRadius: CGFloat
+
     func body(content: Content) -> some View {
         content
-            .appSurfaceCard(.standard, cornerRadius: 22)
+            .appSurfaceCard(style, cornerRadius: cornerRadius)
     }
 }
 
 extension View {
-    func iPadPaneCard() -> some View {
-        modifier(IPadPaneCardModifier())
+    func iPadPaneCard(_ style: AppSurfaceCardStyle = .standard, cornerRadius: CGFloat = 20) -> some View {
+        modifier(IPadPaneCardModifier(style: style, cornerRadius: cornerRadius))
     }
 }
 
@@ -53,7 +56,7 @@ struct IPadSummaryMetricCard: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(14)
-        .appSurfaceCard(.utility, cornerRadius: 16)
+        .appSurfaceCard(.utility, cornerRadius: 14)
     }
 }
 

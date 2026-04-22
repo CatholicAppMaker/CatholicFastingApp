@@ -25,7 +25,7 @@ extension View {
     }
 
     func appRoundedGlass(cornerRadius: CGFloat) -> some View {
-        glassEffect(.regular, in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+        glassEffect(.regular, in: RoundedRectangle(cornerRadius: min(cornerRadius, 15), style: .continuous))
     }
 
     func appCapsuleGlass() -> some View {
@@ -54,11 +54,13 @@ extension View {
     func appLeadTextStyle() -> some View {
         font(.subheadline)
             .foregroundStyle(.secondary)
+            .lineSpacing(1.5)
     }
 
     func appSupportingTextStyle() -> some View {
         font(.footnote)
             .foregroundStyle(.secondary)
+            .lineSpacing(1)
     }
 
     func appMetricValueStyle() -> some View {
@@ -148,25 +150,25 @@ enum AppSurfaceCardStyle {
 
     var fillOpacity: Double {
         switch self {
-        case .primary: 0.96
-        case .standard: 0.92
-        case .utility: 0.88
+        case .primary: 0.94
+        case .standard: 0.88
+        case .utility: 0.80
         }
     }
 
     var tintOpacity: Double {
         switch self {
-        case .primary: 0.16
-        case .standard: 0.08
-        case .utility: 0.04
+        case .primary: 0.11
+        case .standard: 0.045
+        case .utility: 0.018
         }
     }
 
     var strokeOpacity: Double {
         switch self {
-        case .primary: 0.62
-        case .standard: 0.46
-        case .utility: 0.36
+        case .primary: 0.50
+        case .standard: 0.34
+        case .utility: 0.22
         }
     }
 }
@@ -176,19 +178,24 @@ struct AppSurfaceCardModifier: ViewModifier {
     let cornerRadius: CGFloat
 
     func body(content: Content) -> some View {
+        let resolvedCornerRadius = min(cornerRadius, style == .primary ? 18 : 15)
+
         content
             .background(
-                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                RoundedRectangle(cornerRadius: resolvedCornerRadius, style: .continuous)
                     .fill(CatholicTheme.parchment.opacity(style.fillOpacity))
                     .allowsHitTesting(false))
             .overlay(
-                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                RoundedRectangle(cornerRadius: resolvedCornerRadius, style: .continuous)
                     .fill(CatholicTheme.accent.opacity(style.tintOpacity))
                     .allowsHitTesting(false))
             .overlay(
-                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                RoundedRectangle(cornerRadius: resolvedCornerRadius, style: .continuous)
                     .stroke(CatholicTheme.cardBorder.opacity(style.strokeOpacity), lineWidth: 1)
                     .allowsHitTesting(false))
-            .shadow(color: CatholicTheme.primary.opacity(style == .primary ? 0.08 : 0.04), radius: style == .primary ? 18 : 10, y: style == .primary ? 10 : 5)
+            .shadow(
+                color: CatholicTheme.primary.opacity(style == .primary ? 0.055 : 0.018),
+                radius: style == .primary ? 10 : 4,
+                y: style == .primary ? 5 : 2)
     }
 }

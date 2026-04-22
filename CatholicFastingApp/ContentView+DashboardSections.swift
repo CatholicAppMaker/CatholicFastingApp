@@ -45,7 +45,14 @@ extension ContentView {
 
     var planningProgressSection: some View {
         Section(localized("today.plan_snapshot.section", default: "Year Plan Snapshot")) {
-            Text(localizedFormat("today.plan_snapshot.progress_format", default: "Required: %d/%d • Optional: %d/%d", yearlyRequiredCompletions, planningData.requiredGoal, yearlyOptionalCompletions, planningData.optionalGoal))
+            Text(
+                localizedFormat(
+                    "today.plan_snapshot.progress_format",
+                    default: "Required: %d/%d • Optional: %d/%d",
+                    yearlyRequiredCompletions,
+                    planningData.requiredGoal,
+                    yearlyOptionalCompletions,
+                    planningData.optionalGoal))
                 .font(.subheadline)
             ProgressView(value: requirementGoalProgress)
                 .tint(CatholicTheme.primary)
@@ -143,11 +150,8 @@ extension ContentView {
                     assetName: seasonalAsset,
                     title: activeSeasonalContentPack.campaignTitle,
                     subtitle: activeSeasonalContentPack.campaignSubtitle,
-                    height: 210,
+                    height: 168,
                     accessibilityIdentifier: "dashboard.sacred_image")
-
-                CatholicFastingQuoteCard(quote: dashboardFastingQuote, compact: true)
-                    .accessibilityIdentifier("dashboard.fasting_quote")
             }
         }
     }
@@ -243,20 +247,15 @@ extension ContentView {
                     .foregroundStyle(.secondary)
                 ProgressView(value: completionRateValue)
                     .tint(CatholicTheme.accent)
-                ViewThatFits(in: .horizontal) {
-                    HStack(spacing: 8) {
-                        MetricTile(title: localized("today.metric.required", default: "Required"), value: "\(mandatoryObservanceCount)")
-                        MetricTile(title: localized("today.metric.done", default: "Done"), value: "\(completedCount)")
-                        MetricTile(title: localized("today.metric.streak", default: "Streak"), value: "\(currentStreak)d")
-                    }
-                    VStack(spacing: 8) {
-                        HStack(spacing: 8) {
-                            MetricTile(title: localized("today.metric.required", default: "Required"), value: "\(mandatoryObservanceCount)")
-                            MetricTile(title: localized("today.metric.done", default: "Done"), value: "\(completedCount)")
-                        }
-                        MetricTile(title: localized("today.metric.streak", default: "Streak"), value: "\(currentStreak)d")
-                    }
-                }
+                Text(
+                    localizedFormat(
+                        "today.plan_snapshot.progress_format",
+                        default: "Required: %d/%d • Optional: %d/%d",
+                        yearlyRequiredCompletions,
+                        planningData.requiredGoal,
+                        yearlyOptionalCompletions,
+                        planningData.optionalGoal))
+                    .appSupportingTextStyle()
             }
             .accessibilityIdentifier("dashboard.hero")
             .padding(14)
@@ -473,7 +472,12 @@ extension ContentView {
             Text(localizedFormat("today.overview.streak_format", default: "Current streak: %d day(s)", currentStreak))
                 .foregroundStyle(CatholicTheme.primary.opacity(0.9))
             if let next = upcomingMandatoryObservance {
-                Text(localizedFormat("today.overview.next_required_format", default: "Next required: %@ • %@", localizedObservanceTitle(next.title), localizedAbbreviatedDate(next.date)))
+                Text(
+                    localizedFormat(
+                        "today.overview.next_required_format",
+                        default: "Next required: %@ • %@",
+                        localizedObservanceTitle(next.title),
+                        localizedAbbreviatedDate(next.date)))
                     .foregroundStyle(.red.opacity(0.85))
             } else {
                 Text(localized("today.overview.none", default: "No upcoming required observances this year."))
@@ -499,7 +503,12 @@ extension ContentView {
             Text(localizedFormat("today.overview.streak_format", default: "Current streak: %d day(s)", currentStreak))
                 .foregroundStyle(CatholicTheme.primary.opacity(0.9))
             if let next = upcomingMandatoryObservance {
-                Text(localizedFormat("today.overview.next_required_format", default: "Next required: %@ • %@", localizedObservanceTitle(next.title), localizedAbbreviatedDate(next.date)))
+                Text(
+                    localizedFormat(
+                        "today.overview.next_required_format",
+                        default: "Next required: %@ • %@",
+                        localizedObservanceTitle(next.title),
+                        localizedAbbreviatedDate(next.date)))
                     .foregroundStyle(.red.opacity(0.85))
             } else {
                 Text(localized("today.overview.none", default: "No upcoming required observances this year."))

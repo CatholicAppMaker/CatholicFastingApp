@@ -39,15 +39,19 @@ enum UIConstants {
     static let deepLinkFastingDaysURL = AppURLFactory.make("catholicfasting://fasting-days")
     static let deepLinkIntermittentURL = AppURLFactory.make("catholicfasting://intermittent")
     static let deepLinkMoreURL = AppURLFactory.make("catholicfasting://more")
-    static let exportISO8601: ISO8601DateFormatter = {
+    static let deepLinkSettingsURL = AppURLFactory.make("catholicfasting://settings")
+    static let deepLinkPremiumURL = AppURLFactory.make("catholicfasting://premium")
+    static var exportISO8601: ISO8601DateFormatter {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime]
         return formatter
-    }()
+    }
 }
 
 enum AppDeepLinkTarget: Equatable {
     case surface(HomeSurface)
+    case settings
+    case premium
 
     static func parse(url: URL) -> AppDeepLinkTarget? {
         guard let scheme = url.scheme?.lowercased(), scheme == "catholicfasting" else {
@@ -62,8 +66,10 @@ enum AppDeepLinkTarget: Equatable {
             .surface(.fastingDays)
         case "track", "intermittent", "fast":
             .surface(.intermittent)
+        case "premium", "support-premium", "support", "toolkit":
+            .premium
         case "more", "settings":
-            .surface(.more)
+            .settings
         default:
             nil
         }

@@ -86,7 +86,7 @@ extension ContentView {
             .accessibilityIdentifier("ipad.today.food_guidance_preview")
         }
         .padding(18)
-        .iPadPaneCard()
+        .iPadPaneCard(.primary)
         .accessibilityIdentifier("ipad.today.primary_card")
     }
 
@@ -94,8 +94,10 @@ extension ContentView {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
             IPadSummaryMetricCard(
                 title: localized("ipad.today.metrics.next_required", default: "Next required"),
-                value: upcomingMandatoryObservance.map { localizedObservanceTitle($0.title) } ?? localized("ipad.today.metrics.none_ahead", default: "None ahead"),
-                subtitle: upcomingMandatoryObservance.map { localizedAbbreviatedDate($0.date) } ?? localized("ipad.today.metrics.current_year_clear", default: "Current year clear"))
+                value: upcomingMandatoryObservance.map { localizedObservanceTitle($0.title) }
+                    ?? localized("ipad.today.metrics.none_ahead", default: "None ahead"),
+                subtitle: upcomingMandatoryObservance.map { localizedAbbreviatedDate($0.date) }
+                    ?? localized("ipad.today.metrics.current_year_clear", default: "Current year clear"))
             IPadSummaryMetricCard(
                 title: localized("ipad.today.metrics.this_week", default: "This week"),
                 value: "\(weeklyCompletedObservancesCount)/\(weeklyActionableObservanceCount)",
@@ -175,7 +177,12 @@ extension ContentView {
                 detail: localized("ipad.today.planning.detail", default: "See progress without leaving the dashboard."))
 
             HStack(spacing: 10) {
-                IPadSummaryMetricCard(title: localized("ipad.today.planning.required_goal", default: "Required goal"), value: "\(yearlyRequiredCompletions)/\(planningData.requiredGoal)", subtitle: localized("ipad.today.planning.required_goal_detail", default: "required days logged"))
+                IPadSummaryMetricCard(
+                    title: localized("ipad.today.planning.required_goal", default: "Required goal"),
+                    value: "\(yearlyRequiredCompletions)/\(planningData.requiredGoal)",
+                    subtitle: localized(
+                        "ipad.today.planning.required_goal_detail",
+                        default: "required days logged"))
                 IPadSummaryMetricCard(
                     title: localized("ipad.today.planning.optional_goal", default: "Optional goal"),
                     value: "\(yearlyOptionalCompletions)/\(planningData.optionalGoal)",

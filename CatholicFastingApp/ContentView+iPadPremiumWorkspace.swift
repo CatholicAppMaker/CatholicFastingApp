@@ -11,9 +11,14 @@ extension ContentView {
                     IPadWorkspaceHeroBand(
                         assetName: moreDestinationHeroItem(for: .supportAndPremium).assetName,
                         seasonLabel: localizedSeasonLabel(currentLiturgicalSeason),
-                        seasonContextLabel: localizedFormat("ipad.hero.season_label", default: "Liturgical Season: %@", localizedSeasonLabel(currentLiturgicalSeason)),
+                        seasonContextLabel: localizedFormat(
+                            "ipad.hero.season_label",
+                            default: "Liturgical Season: %@",
+                            localizedSeasonLabel(currentLiturgicalSeason)),
                         title: localized("premium.workspace.hero.title", default: "Premium Formation Toolkit"),
-                        subtitle: localized("premium.workspace.hero.subtitle", default: "Choose a plan, keep the Guided Seasonal Journey visible, and use the rest of premium as supporting tools."),
+                        subtitle: localized(
+                            "premium.workspace.hero.subtitle",
+                            default: "Choose a plan, keep the Guided Seasonal Journey visible, and use the rest of premium as supporting tools."),
                         quote: dailySeasonalQuote,
                         regionContext: RegionalGuidanceContextFactory.generalContext(for: settings),
                         compact: compact,
@@ -66,7 +71,7 @@ extension ContentView {
             }
         }
         .padding(18)
-        .iPadPaneCard()
+        .iPadPaneCard(.primary)
     }
 
     private var ipadPremiumPillarRail: some View {
@@ -119,9 +124,24 @@ extension ContentView {
                 detail: localized("premium.workspace.dashboard.detail", default: "Keep the current week visible, then use the surrounding tools to support it."))
 
             HStack(spacing: 10) {
-                IPadSummaryMetricCard(title: localized("premium.workspace.metrics.required.title", default: "Required"), value: "\(analytics.requiredCompletionPercent)%", subtitle: localized("premium.workspace.metrics.required.subtitle", default: "required days completed"))
-                IPadSummaryMetricCard(title: localized("premium.workspace.metrics.overall.title", default: "Overall"), value: "\(analytics.overallCompletionPercent)%", subtitle: localized("premium.workspace.metrics.overall.subtitle", default: "all logged observances"), tint: CatholicTheme.accent)
-                IPadSummaryMetricCard(title: localized("premium.workspace.metrics.intermittent.title", default: "Intermittent"), value: "\(analytics.intermittentTargetHitPercent)%", subtitle: localized("premium.workspace.metrics.intermittent.subtitle", default: "recent target hit rate"), tint: .orange)
+                IPadSummaryMetricCard(
+                    title: localized("premium.workspace.metrics.required.title", default: "Required"),
+                    value: "\(analytics.requiredCompletionPercent)%",
+                    subtitle: localized(
+                        "premium.workspace.metrics.required.subtitle",
+                        default: "required days completed"))
+                IPadSummaryMetricCard(
+                    title: localized("premium.workspace.metrics.overall.title", default: "Overall"),
+                    value: "\(analytics.overallCompletionPercent)%",
+                    subtitle: localized("premium.workspace.metrics.overall.subtitle", default: "all logged observances"),
+                    tint: CatholicTheme.accent)
+                IPadSummaryMetricCard(
+                    title: localized("premium.workspace.metrics.intermittent.title", default: "Intermittent"),
+                    value: "\(analytics.intermittentTargetHitPercent)%",
+                    subtitle: localized(
+                        "premium.workspace.metrics.intermittent.subtitle",
+                        default: "recent target hit rate"),
+                    tint: .orange)
             }
 
             HStack(alignment: .top, spacing: 14) {
@@ -159,7 +179,11 @@ extension ContentView {
                         .textCase(.uppercase)
                     Text(premiumGuidedJourneyNextAction?.title ?? localized("premium.workspace.next_step.complete", default: "Week complete"))
                         .appSectionTitleStyle(serif: true)
-                    Text(premiumGuidedJourneyNextAction?.detail ?? localized("premium.workspace.next_step.detail", default: "Use the reflection or accountability tools below to keep the rhythm steady."))
+                    Text(
+                        premiumGuidedJourneyNextAction?.detail
+                            ?? localized(
+                                "premium.workspace.next_step.detail",
+                                default: "Use the reflection or accountability tools below to keep the rhythm steady."))
                         .appSupportingTextStyle()
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -199,7 +223,7 @@ extension ContentView {
             }
         }
         .padding(18)
-        .iPadPaneCard()
+        .iPadPaneCard(.primary)
         .accessibilityIdentifier("ipad.premium.dashboard")
     }
 

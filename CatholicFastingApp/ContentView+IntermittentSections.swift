@@ -61,11 +61,8 @@ extension ContentView {
                     subtitle: intermittentTracker.activeStart == nil
                         ? localized("intermittent.hero.subtitle_idle", default: "Choose a target, then start when ready.")
                         : localized("intermittent.hero.subtitle_active", default: "Your live fast and next action are below."),
-                    height: 152,
+                    height: 124,
                     accessibilityIdentifier: "intermittent.hero.card")
-
-                CatholicFastingQuoteCard(quote: intermittentFastingQuote, compact: true)
-                    .accessibilityIdentifier("intermittent.hero.quote")
             }
             .accessibilityIdentifier("intermittent.hero")
         }
@@ -75,16 +72,34 @@ extension ContentView {
         Section(localized("intermittent.current_plan.title", default: "Current Plan")) {
             ViewThatFits(in: .horizontal) {
                 HStack {
-                    MetricTile(title: localized("intermittent.metric.sessions", default: "Sessions"), value: "\(intermittentTracker.sessions.count)", detail: localized("intermittent.metric.sessions.detail", default: "saved locally"))
-                    MetricTile(title: localized("intermittent.metric.target", default: "Target"), value: intermittentWindowLabel, detail: localized("intermittent.metric.target.detail", default: "active fasting window"))
-                    MetricTile(title: localized("intermittent.metric.longest", default: "Longest"), value: intermittentLongestSessionText, detail: localized("intermittent.metric.longest.detail", default: "best recent duration"))
+                    MetricTile(
+                        title: localized("intermittent.metric.sessions", default: "Sessions"),
+                        value: "\(intermittentTracker.sessions.count)",
+                        detail: localized("intermittent.metric.sessions.detail", default: "saved locally"))
+                    MetricTile(
+                        title: localized("intermittent.metric.target", default: "Target"),
+                        value: intermittentWindowLabel,
+                        detail: localized("intermittent.metric.target.detail", default: "active fasting window"))
+                    MetricTile(
+                        title: localized("intermittent.metric.longest", default: "Longest"),
+                        value: intermittentLongestSessionText,
+                        detail: localized("intermittent.metric.longest.detail", default: "best recent duration"))
                 }
                 VStack(spacing: 8) {
                     HStack {
-                        MetricTile(title: localized("intermittent.metric.sessions", default: "Sessions"), value: "\(intermittentTracker.sessions.count)", detail: localized("intermittent.metric.sessions.detail", default: "saved locally"))
-                        MetricTile(title: localized("intermittent.metric.target", default: "Target"), value: intermittentWindowLabel, detail: localized("intermittent.metric.target.detail", default: "active fasting window"))
+                        MetricTile(
+                            title: localized("intermittent.metric.sessions", default: "Sessions"),
+                            value: "\(intermittentTracker.sessions.count)",
+                            detail: localized("intermittent.metric.sessions.detail", default: "saved locally"))
+                        MetricTile(
+                            title: localized("intermittent.metric.target", default: "Target"),
+                            value: intermittentWindowLabel,
+                            detail: localized("intermittent.metric.target.detail", default: "active fasting window"))
                     }
-                    MetricTile(title: localized("intermittent.metric.longest", default: "Longest"), value: intermittentLongestSessionText, detail: localized("intermittent.metric.longest.detail", default: "best recent duration"))
+                    MetricTile(
+                        title: localized("intermittent.metric.longest", default: "Longest"),
+                        value: intermittentLongestSessionText,
+                        detail: localized("intermittent.metric.longest.detail", default: "best recent duration"))
                 }
             }
 
@@ -402,9 +417,16 @@ extension ContentView {
 
                         if accessibilityLayout {
                             VStack(spacing: 8) {
-                                LiveTrackerMetricChip(title: localized("intermittent.live.elapsed", default: "Elapsed"), value: countdownText(elapsed))
+                                LiveTrackerMetricChip(
+                                    title: localized("intermittent.live.elapsed", default: "Elapsed"),
+                                    value: countdownText(elapsed))
                                     .accessibilityIdentifier("intermittent.active_elapsed")
-                                LiveTrackerMetricChip(title: localized("intermittent.live.target", default: "Target"), value: localizedFormat("intermittent.live.target_value_format", default: "%dh fast", intermittentTracker.presetHours))
+                                LiveTrackerMetricChip(
+                                    title: localized("intermittent.live.target", default: "Target"),
+                                    value: localizedFormat(
+                                        "intermittent.live.target_value_format",
+                                        default: "%dh fast",
+                                        intermittentTracker.presetHours))
                                 LiveTrackerMetricChip(
                                     title: localized("intermittent.live.next", default: "Next"),
                                     value: eatingHours > 0
@@ -413,9 +435,16 @@ extension ContentView {
                             }
                         } else {
                             HStack(spacing: 8) {
-                                LiveTrackerMetricChip(title: localized("intermittent.live.elapsed", default: "Elapsed"), value: countdownText(elapsed))
+                                LiveTrackerMetricChip(
+                                    title: localized("intermittent.live.elapsed", default: "Elapsed"),
+                                    value: countdownText(elapsed))
                                     .accessibilityIdentifier("intermittent.active_elapsed")
-                                LiveTrackerMetricChip(title: localized("intermittent.live.target", default: "Target"), value: localizedFormat("intermittent.live.target_value_format", default: "%dh fast", intermittentTracker.presetHours))
+                                LiveTrackerMetricChip(
+                                    title: localized("intermittent.live.target", default: "Target"),
+                                    value: localizedFormat(
+                                        "intermittent.live.target_value_format",
+                                        default: "%dh fast",
+                                        intermittentTracker.presetHours))
                                 LiveTrackerMetricChip(
                                     title: localized("intermittent.live.next", default: "Next"),
                                     value: eatingHours > 0
@@ -449,7 +478,12 @@ extension ContentView {
                     VStack(alignment: .leading, spacing: 14) {
                         if accessibilityLayout {
                             VStack(alignment: .leading, spacing: 12) {
-                                liveEatingRing(progress: eatingProgress, hasEatingWindow: hasEatingWindow, countdown: hasEatingWindow ? countdownText(eatingRemaining) : localized("intermittent.live.ready", default: "Ready"))
+                                liveEatingRing(
+                                    progress: eatingProgress,
+                                    hasEatingWindow: hasEatingWindow,
+                                    countdown: hasEatingWindow
+                                        ? countdownText(eatingRemaining)
+                                        : localized("intermittent.live.ready", default: "Ready"))
                                 liveEatingSummary(
                                     hasEatingWindow: hasEatingWindow,
                                     lastEnded: lastEnded,
@@ -457,7 +491,12 @@ extension ContentView {
                             }
                         } else {
                             HStack(alignment: .center, spacing: 16) {
-                                liveEatingRing(progress: eatingProgress, hasEatingWindow: hasEatingWindow, countdown: hasEatingWindow ? countdownText(eatingRemaining) : localized("intermittent.live.ready", default: "Ready"))
+                                liveEatingRing(
+                                    progress: eatingProgress,
+                                    hasEatingWindow: hasEatingWindow,
+                                    countdown: hasEatingWindow
+                                        ? countdownText(eatingRemaining)
+                                        : localized("intermittent.live.ready", default: "Ready"))
                                 liveEatingSummary(
                                     hasEatingWindow: hasEatingWindow,
                                     lastEnded: lastEnded,
@@ -467,8 +506,15 @@ extension ContentView {
 
                         if accessibilityLayout {
                             VStack(spacing: 8) {
-                                LiveTrackerMetricChip(title: localized("intermittent.live.since_end", default: "Since End"), value: countdownText(elapsedSinceEnd))
-                                LiveTrackerMetricChip(title: localized("intermittent.live.last_fast", default: "Last Fast"), value: localizedFormat("intermittent.live.last_fast_value_format", default: "%dh plan", latestSession.targetHours))
+                                LiveTrackerMetricChip(
+                                    title: localized("intermittent.live.since_end", default: "Since End"),
+                                    value: countdownText(elapsedSinceEnd))
+                                LiveTrackerMetricChip(
+                                    title: localized("intermittent.live.last_fast", default: "Last Fast"),
+                                    value: localizedFormat(
+                                        "intermittent.live.last_fast_value_format",
+                                        default: "%dh plan",
+                                        latestSession.targetHours))
                                 LiveTrackerMetricChip(
                                     title: localized("intermittent.live.status", default: "Status"),
                                     value: hasEatingWindow
@@ -480,8 +526,15 @@ extension ContentView {
                             }
                         } else {
                             HStack(spacing: 8) {
-                                LiveTrackerMetricChip(title: localized("intermittent.live.since_end", default: "Since End"), value: countdownText(elapsedSinceEnd))
-                                LiveTrackerMetricChip(title: localized("intermittent.live.last_fast", default: "Last Fast"), value: localizedFormat("intermittent.live.last_fast_value_format", default: "%dh plan", latestSession.targetHours))
+                                LiveTrackerMetricChip(
+                                    title: localized("intermittent.live.since_end", default: "Since End"),
+                                    value: countdownText(elapsedSinceEnd))
+                                LiveTrackerMetricChip(
+                                    title: localized("intermittent.live.last_fast", default: "Last Fast"),
+                                    value: localizedFormat(
+                                        "intermittent.live.last_fast_value_format",
+                                        default: "%dh plan",
+                                        latestSession.targetHours))
                                 LiveTrackerMetricChip(
                                     title: localized("intermittent.live.status", default: "Status"),
                                     value: hasEatingWindow
@@ -642,9 +695,19 @@ extension ContentView {
                             .padding(.top, 2)
 
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(localizedFormat("intermittent.history.range_format", default: "%@ → %@", localizedAbbreviatedDateTime(session.start), localizedAbbreviatedDateTime(session.end)))
+                            Text(
+                                localizedFormat(
+                                    "intermittent.history.range_format",
+                                    default: "%@ → %@",
+                                    localizedAbbreviatedDateTime(session.start),
+                                    localizedAbbreviatedDateTime(session.end)))
                                 .font(.subheadline.weight(.semibold))
-                            Text(localizedFormat("intermittent.history.detail_format", default: "Duration: %@ • Plan: %dh", durationText(session.duration), session.targetHours))
+                            Text(
+                                localizedFormat(
+                                    "intermittent.history.detail_format",
+                                    default: "Duration: %@ • Plan: %dh",
+                                    durationText(session.duration),
+                                    session.targetHours))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                             Text(

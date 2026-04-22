@@ -122,13 +122,23 @@ extension ContentView {
                     .lineLimit(2)
             }
 
-            Button(localizedFormat("premium.offer.unlock_format", default: "Unlock %@ • %@", offer?.displayTitle ?? product.displayName, product.displayPrice)) {
-                Task {
-                    await monetizationStore.purchase(product)
+            if offer?.isPrimaryAnchor == true {
+                Button(localizedFormat("premium.offer.unlock_format", default: "Unlock %@ • %@", offer?.displayTitle ?? product.displayName, product.displayPrice)) {
+                    Task {
+                        await monetizationStore.purchase(product)
+                    }
                 }
+                .appPrimaryButtonStyle()
+                .disabled(monetizationStore.isPurchasing)
+            } else {
+                Button(localizedFormat("premium.offer.unlock_format", default: "Unlock %@ • %@", offer?.displayTitle ?? product.displayName, product.displayPrice)) {
+                    Task {
+                        await monetizationStore.purchase(product)
+                    }
+                }
+                .appSecondaryButtonStyle(legacyTint: CatholicTheme.accent)
+                .disabled(monetizationStore.isPurchasing)
             }
-            .appPrimaryButtonStyle(legacyTint: offer?.isPrimaryAnchor == true ? CatholicTheme.primary : CatholicTheme.accent)
-            .disabled(monetizationStore.isPurchasing)
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
