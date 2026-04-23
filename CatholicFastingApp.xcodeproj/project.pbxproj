@@ -47,6 +47,10 @@
 		89C0E4C05D4D4852A2DA0FDB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 814A0E53822CDA8707F85426 /* Cocoa.framework */; };
 		8A7A6E28239BB0799A1B30CD /* CatholicFastingMacPlatformServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A06565C93288E82AB43BEA /* CatholicFastingMacPlatformServices.swift */; };
 		9A8500D42540F7E0A22DF099 /* AppShellTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844E3D54BFF59FC2E48222DA /* AppShellTypes.swift */; };
+		9A8B7C6D5E4F302112233445 /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00000000000000000000060 /* AppIntents.framework */; };
+		9A8B7C6D5E4F302112233446 /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00000000000000000000060 /* AppIntents.framework */; };
+		9A8B7C6D5E4F302112233447 /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00000000000000000000060 /* AppIntents.framework */; };
+		9A8B7C6D5E4F302112233448 /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00000000000000000000060 /* AppIntents.framework */; };
 		9BB7304C660E289D4F38353E /* CatholicFastingMacCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AACCBCA739CD2182CF26BD /* CatholicFastingMacCalendarView.swift */; };
 		9C6B156E989A01B8BD55A864 /* ObservanceCalculator+DateMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89934BF64AF569966A346C66 /* ObservanceCalculator+DateMath.swift */; };
 		A00000000000000000000001 /* CatholicFastingAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000011 /* CatholicFastingAppApp.swift */; };
@@ -64,9 +68,6 @@
 		A0000000000000000000003E /* ContentView+SettingsSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000003F /* ContentView+SettingsSections.swift */; };
 		A00000000000000000000040 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000043 /* Localizable.strings */; };
 		A00000000000000000000045 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000044 /* PrivacyInfo.xcprivacy */; };
-		C4F200000000000000000001 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000044 /* PrivacyInfo.xcprivacy */; };
-		C4F200000000000000000002 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000044 /* PrivacyInfo.xcprivacy */; };
-		C4F200000000000000000003 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000044 /* PrivacyInfo.xcprivacy */; };
 		A00000000000000000000046 /* ContentView+CalendarSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000047 /* ContentView+CalendarSections.swift */; };
 		A00000000000000000000048 /* ContentView+IntermittentSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000049 /* ContentView+IntermittentSections.swift */; };
 		A0000000000000000000004A /* ContentView+StateHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000004B /* ContentView+StateHelpers.swift */; };
@@ -80,10 +81,6 @@
 		A0000000000000000000005A /* LiturgicalSeasonThemeEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000005B /* LiturgicalSeasonThemeEngine.swift */; };
 		A00000000000000000000061 /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00000000000000000000060 /* AppIntents.framework */; };
 		A00000000000000000000062 /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00000000000000000000060 /* AppIntents.framework */; };
-		9A8B7C6D5E4F302112233445 /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00000000000000000000060 /* AppIntents.framework */; };
-		9A8B7C6D5E4F302112233446 /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00000000000000000000060 /* AppIntents.framework */; };
-		9A8B7C6D5E4F302112233447 /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00000000000000000000060 /* AppIntents.framework */; };
-		9A8B7C6D5E4F302112233448 /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00000000000000000000060 /* AppIntents.framework */; };
 		A00000000000000000000063 /* PremiumExperienceEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000064 /* PremiumExperienceEngine.swift */; };
 		A00000000000000000000076 /* CatholicFastingWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000071 /* CatholicFastingWidgetBundle.swift */; };
 		A00000000000000000000077 /* CatholicFastingWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000072 /* CatholicFastingWidget.swift */; };
@@ -151,6 +148,9 @@
 		C2BAC214F072A2751C007C1E /* SeasonalQuoteCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D35B1144A8BE633CE79E81 /* SeasonalQuoteCatalog.swift */; };
 		C3926A7F8E6CC16F87181A7F /* ReminderScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AC0674F4B54B5FC5B87ECA /* ReminderScheduler.swift */; };
 		C3C4A799E5C7911C65BA104E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 814A0E53822CDA8707F85426 /* Cocoa.framework */; };
+		C4F200000000000000000001 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000044 /* PrivacyInfo.xcprivacy */; };
+		C4F200000000000000000002 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000044 /* PrivacyInfo.xcprivacy */; };
+		C4F200000000000000000003 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000044 /* PrivacyInfo.xcprivacy */; };
 		C91D6825FF3CAD853D62EAF6 /* CompletionStatusAndFastTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23170EB4059A07DAE6CDD358 /* CompletionStatusAndFastTracker.swift */; };
 		C97B48B6A475C9ADD56E89E4 /* CatholicFastingMacAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E881F846F5C380A2FD0A04FB /* CatholicFastingMacAppUITests.swift */; };
 		CB899C5389F804275147CB13 /* AppLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7793FEC713108D10B0E2FD79 /* AppLocalization.swift */; };
@@ -948,7 +948,6 @@
 					};
 					E8C4C8A42C2442B82854383B = {
 						CreatedOnToolsVersion = 26.4;
-						DevelopmentTeam = 22L6MB4Z6V;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -1293,6 +1292,8 @@
 				CURRENT_PROJECT_VERSION = 10;
 				ENABLE_APP_SANDBOX = YES;
 				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_KEY_CFBundleDisplayName = "Catholic Fasting App";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -1634,8 +1635,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 10;
+				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_APP_SANDBOX = YES;
 				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_KEY_CFBundleDisplayName = "Catholic Fasting App";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
