@@ -1,0 +1,5 @@
+#include "MacSharedRelease.xcconfig"
+
+PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingApp
+INFOPLIST_FILE = CatholicFastingMacApp/Info.plist
+CODE_SIGN_ENTITLEMENTS = CatholicFastingMacApp/CatholicFastingMacApp.entitlements

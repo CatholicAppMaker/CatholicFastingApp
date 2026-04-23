@@ -1,8 +1,9 @@
 #!/bin/zsh
 set -euo pipefail
 
-PROJECT="/Users/kevpierce/Desktop/CatholicFastingApp/CatholicFastingApp.xcodeproj"
-SCHEME="CatholicFastingApp"
+ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+PROJECT="${PROJECT:-${ROOT_DIR}/CatholicFastingApp.xcodeproj}"
+SCHEME="${SCHEME:-CatholicFastingApp}"
 TIMEOUT_SECONDS=180
 REQUESTED_SUITE="${1:-}"
 SUITE="${SUITE:-${REQUESTED_SUITE:-iphone}}"

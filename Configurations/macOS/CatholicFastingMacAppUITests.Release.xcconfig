@@ -1,0 +1,4 @@
+#include "MacSharedRelease.xcconfig"
+
+PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingMacAppUITests
+INFOPLIST_FILE = CatholicFastingMacAppUITests/Info.plist
