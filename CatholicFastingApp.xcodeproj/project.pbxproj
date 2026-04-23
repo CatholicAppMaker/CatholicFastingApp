@@ -24,6 +24,7 @@
 		37DCB3199298E45E1C678A83 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 814A0E53822CDA8707F85426 /* Cocoa.framework */; };
 		3C1FB855B1639D44F08447BD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 814A0E53822CDA8707F85426 /* Cocoa.framework */; };
 		411F4D62067BB5C815D23FE9 /* CatholicFastingMacPremiumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA67BD07170391133F0CC34 /* CatholicFastingMacPremiumView.swift */; };
+		F5A500000000000000000004 /* CatholicFastingMacPremiumSubscriptionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A500000000000000000003 /* CatholicFastingMacPremiumSubscriptionCard.swift */; };
 		421E2EB4368F74C4830E385C /* CatholicFastingMacGuidanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BBCFF4986FF227CD161216 /* CatholicFastingMacGuidanceView.swift */; };
 		47E098AE026DC9EF33B8952C /* CatholicFastingMacRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6AE4FE712CF7C44B64042FD /* CatholicFastingMacRootView.swift */; };
 		4EAB38353A34F7FF3C5912D1 /* PremiumRecoveryCoachEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0024CD838FA8D778315AF4B /* PremiumRecoveryCoachEngine.swift */; };
@@ -89,6 +90,7 @@
 		A00000000000000000000095 /* AppShellTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000092 /* AppShellTypes.swift */; };
 		A00000000000000000000096 /* ReminderScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000093 /* ReminderScheduler.swift */; };
 		A00000000000000000000097 /* ContentView+RootShell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000094 /* ContentView+RootShell.swift */; };
+		A00000000000000000000134 /* ContentView+HistorySections.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000133 /* ContentView+HistorySections.swift */; };
 		A00000000000000000000099 /* ContentView+PremiumCompanionSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000009A /* ContentView+PremiumCompanionSections.swift */; };
 		A0000000000000000000009C /* GrowthContracts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000009B /* GrowthContracts.swift */; };
 		A0000000000000000000009E /* ContentView+iPadLayouts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000009D /* ContentView+iPadLayouts.swift */; };
@@ -137,6 +139,7 @@
 		A0000000000000000000010E /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000010F /* OnboardingView.swift */; };
 		A00000000000000000000110 /* ContentView+SettingsDataSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000111 /* ContentView+SettingsDataSections.swift */; };
 		A00000000000000000000120 /* SeasonalQuoteCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000121 /* SeasonalQuoteCatalog.swift */; };
+		A00000000000000000000132 /* FastingHistoryCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000131 /* FastingHistoryCatalog.swift */; };
 		A0AEECC45D8510E3BEB829F5 /* MissedDayRecoveryEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D24671EF8B5C44D6E26DC1C /* MissedDayRecoveryEngine.swift */; };
 		A33B58395959AC064CFFAAF6 /* PremiumAdaptiveRulePlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C009A99FB027665F39EA3581 /* PremiumAdaptiveRulePlanner.swift */; };
 		A8B7CC1918B5BAC11307ADE0 /* ObservanceQueryEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A11A7D18BD16FE73699ED4 /* ObservanceQueryEngine.swift */; };
@@ -146,6 +149,7 @@
 		B3D696E2394ACC14EDDA16E4 /* PremiumSubscriptionHealthEvaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CFD45EC538D589CB5706F0 /* PremiumSubscriptionHealthEvaluator.swift */; };
 		B45C35C76360145C2CC4AAB3 /* DataProtectionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3348367DBCE3DFA8D1CA8D7E /* DataProtectionEngine.swift */; };
 		C2BAC214F072A2751C007C1E /* SeasonalQuoteCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D35B1144A8BE633CE79E81 /* SeasonalQuoteCatalog.swift */; };
+		F5A500000000000000000002 /* FastingHistoryCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A500000000000000000001 /* FastingHistoryCatalog.swift */; };
 		C3926A7F8E6CC16F87181A7F /* ReminderScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AC0674F4B54B5FC5B87ECA /* ReminderScheduler.swift */; };
 		C3C4A799E5C7911C65BA104E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 814A0E53822CDA8707F85426 /* Cocoa.framework */; };
 		C4F200000000000000000001 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000044 /* PrivacyInfo.xcprivacy */; };
@@ -269,6 +273,7 @@
 		7793FEC713108D10B0E2FD79 /* AppLocalization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppLocalization.swift; path = CatholicFastingApp/AppLocalization.swift; sourceTree = "<group>"; };
 		7D2A7F411498D48CB4AFE19D /* CatholicFastingMacApp.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; name = CatholicFastingMacApp.entitlements; path = CatholicFastingMacApp/CatholicFastingMacApp.entitlements; sourceTree = SOURCE_ROOT; };
 		80D35B1144A8BE633CE79E81 /* SeasonalQuoteCatalog.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SeasonalQuoteCatalog.swift; path = CatholicFastingApp/Models/SeasonalQuoteCatalog.swift; sourceTree = "<group>"; };
+		F5A500000000000000000001 /* FastingHistoryCatalog.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FastingHistoryCatalog.swift; path = CatholicFastingApp/Models/FastingHistoryCatalog.swift; sourceTree = "<group>"; };
 		814A0E53822CDA8707F85426 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		826B1BDE034A92D80BD47E87 /* ObservanceStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ObservanceStore.swift; path = CatholicFastingApp/Models/ObservanceStore.swift; sourceTree = "<group>"; };
 		844E3D54BFF59FC2E48222DA /* AppShellTypes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppShellTypes.swift; path = CatholicFastingApp/AppShellTypes.swift; sourceTree = "<group>"; };
@@ -326,6 +331,7 @@
 		A00000000000000000000092 /* AppShellTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppShellTypes.swift; sourceTree = "<group>"; };
 		A00000000000000000000093 /* ReminderScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderScheduler.swift; sourceTree = "<group>"; };
 		A00000000000000000000094 /* ContentView+RootShell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+RootShell.swift"; sourceTree = "<group>"; };
+		A00000000000000000000133 /* ContentView+HistorySections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+HistorySections.swift"; sourceTree = "<group>"; };
 		A00000000000000000000098 /* Premium.storekit */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Premium.storekit; sourceTree = "<group>"; };
 		A0000000000000000000009A /* ContentView+PremiumCompanionSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+PremiumCompanionSections.swift"; sourceTree = "<group>"; };
 		A0000000000000000000009B /* GrowthContracts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthContracts.swift; sourceTree = "<group>"; };
@@ -375,6 +381,7 @@
 		A0000000000000000000010F /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		A00000000000000000000111 /* ContentView+SettingsDataSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+SettingsDataSections.swift"; sourceTree = "<group>"; };
 		A00000000000000000000121 /* SeasonalQuoteCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonalQuoteCatalog.swift; sourceTree = "<group>"; };
+		A00000000000000000000131 /* FastingHistoryCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastingHistoryCatalog.swift; sourceTree = "<group>"; };
 		A00000000000000000000130 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		A0D8686C36CC6AAAC5FB77C4 /* RequiredDayReminderPlanner.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RequiredDayReminderPlanner.swift; path = CatholicFastingApp/Models/RequiredDayReminderPlanner.swift; sourceTree = "<group>"; };
 		A0E80EEB484B951F7F7B7532 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = CatholicFastingMacApp/Info.plist; sourceTree = SOURCE_ROOT; };
@@ -388,6 +395,7 @@
 		B458A4836824C30EE3247CDA /* CatholicFastingMacWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CatholicFastingMacWidget.swift; path = CatholicFastingMacWidget/CatholicFastingMacWidget.swift; sourceTree = SOURCE_ROOT; };
 		B969CAC681EFB71BFBF0F14D /* DailyFoodDecisionEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DailyFoodDecisionEngine.swift; path = CatholicFastingApp/Models/DailyFoodDecisionEngine.swift; sourceTree = "<group>"; };
 		BAA67BD07170391133F0CC34 /* CatholicFastingMacPremiumView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CatholicFastingMacPremiumView.swift; sourceTree = "<group>"; };
+		F5A500000000000000000003 /* CatholicFastingMacPremiumSubscriptionCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CatholicFastingMacPremiumSubscriptionCard.swift; sourceTree = "<group>"; };
 		BB0885793D014406AA980316 /* CatholicFastingMacAppUITests.Debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = CatholicFastingMacAppUITests.Debug.xcconfig; sourceTree = "<group>"; };
 		BEAE225C1E566856E60802B1 /* CatholicFastingMacMenuBarView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CatholicFastingMacMenuBarView.swift; path = CatholicFastingMacApp/CatholicFastingMacMenuBarView.swift; sourceTree = SOURCE_ROOT; };
 		BF9B39DD0FFB7A81742A86BA /* ObservanceCalculator+CalendarEntries.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "ObservanceCalculator+CalendarEntries.swift"; path = "CatholicFastingApp/Models/ObservanceCalculator+CalendarEntries.swift"; sourceTree = "<group>"; };
@@ -504,6 +512,7 @@
 				37AACCBCA739CD2182CF26BD /* CatholicFastingMacCalendarView.swift */,
 				5A2A984A8700EF269223CED0 /* CatholicFastingMacIntermittentView.swift */,
 				BAA67BD07170391133F0CC34 /* CatholicFastingMacPremiumView.swift */,
+				F5A500000000000000000003 /* CatholicFastingMacPremiumSubscriptionCard.swift */,
 				35BBCFF4986FF227CD161216 /* CatholicFastingMacGuidanceView.swift */,
 				EBAE6A8A53A950B571F3300B /* CatholicFastingMacModel+Computed.swift */,
 				1679AF776EF39D11142DBC40 /* CatholicFastingMacModel+Lifecycle.swift */,
@@ -584,6 +593,7 @@
 				A00000000000000000000049 /* ContentView+IntermittentSections.swift */,
 				A0000000000000000000004B /* ContentView+StateHelpers.swift */,
 				A00000000000000000000094 /* ContentView+RootShell.swift */,
+				A00000000000000000000133 /* ContentView+HistorySections.swift */,
 				A0000000000000000000009D /* ContentView+iPadLayouts.swift */,
 				A000000000000000000000AE /* ContentView+iPadComponents.swift */,
 				A000000000000000000000A5 /* ContentView+iPadToday.swift */,
@@ -660,6 +670,7 @@
 				A000000000000000000000D2 /* PremiumJourneyEngine.swift */,
 				A0000000000000000000009B /* GrowthContracts.swift */,
 				A00000000000000000000121 /* SeasonalQuoteCatalog.swift */,
+				A00000000000000000000131 /* FastingHistoryCatalog.swift */,
 				A000000000000000000000A4 /* RegionalGuidanceContext.swift */,
 			);
 			path = Models;
@@ -742,6 +753,7 @@
 				1E1D8C801F78C9B24735A510 /* RuleBundleRepository.swift */,
 				F0D4348BF299FD87E51E6D5A /* RuleDomain.swift */,
 				80D35B1144A8BE633CE79E81 /* SeasonalQuoteCatalog.swift */,
+				F5A500000000000000000001 /* FastingHistoryCatalog.swift */,
 				B046ED302D36929C87CF922A /* SyncDiagnostics.swift */,
 				90A1D3ACC5C7E88B5BEAC65C /* SyncStore.swift */,
 			);
@@ -1084,6 +1096,7 @@
 				1B069BBC576556D4F4AD02C7 /* RuleBundleRepository.swift in Sources */,
 				5A19EC8338BCC8D9C6C0729C /* RuleDomain.swift in Sources */,
 				C2BAC214F072A2751C007C1E /* SeasonalQuoteCatalog.swift in Sources */,
+				F5A500000000000000000002 /* FastingHistoryCatalog.swift in Sources */,
 				B31BF071CEE7E3DDACF338DF /* SyncDiagnostics.swift in Sources */,
 				51E92B5726DF59B2613453CC /* SyncStore.swift in Sources */,
 				312C0726814F3BDC338D68E8 /* AppStorageConfig.swift in Sources */,
@@ -1106,6 +1119,7 @@
 				9BB7304C660E289D4F38353E /* CatholicFastingMacCalendarView.swift in Sources */,
 				5B7E94610D09D87A60FA334D /* CatholicFastingMacIntermittentView.swift in Sources */,
 				411F4D62067BB5C815D23FE9 /* CatholicFastingMacPremiumView.swift in Sources */,
+				F5A500000000000000000004 /* CatholicFastingMacPremiumSubscriptionCard.swift in Sources */,
 				421E2EB4368F74C4830E385C /* CatholicFastingMacGuidanceView.swift in Sources */,
 				B1CC837A0B9B882D2DC40C24 /* CatholicFastingMacModel+Computed.swift in Sources */,
 				52DF170D7A70B2EF4A4B4985 /* CatholicFastingMacModel+Lifecycle.swift in Sources */,
@@ -1152,6 +1166,7 @@
 				A000000000000000000000C2 /* PremiumJourneyEngine.swift in Sources */,
 				A0000000000000000000009C /* GrowthContracts.swift in Sources */,
 				A00000000000000000000120 /* SeasonalQuoteCatalog.swift in Sources */,
+				A00000000000000000000132 /* FastingHistoryCatalog.swift in Sources */,
 				A0000000000000000000009F /* RegionalGuidanceContext.swift in Sources */,
 				A00000000000000000000038 /* ContentSupportViews.swift in Sources */,
 				A0000000000000000000003A /* ContentView+DashboardSections.swift in Sources */,
@@ -1159,6 +1174,7 @@
 				A00000000000000000000048 /* ContentView+IntermittentSections.swift in Sources */,
 				A0000000000000000000004A /* ContentView+StateHelpers.swift in Sources */,
 				A00000000000000000000097 /* ContentView+RootShell.swift in Sources */,
+				A00000000000000000000134 /* ContentView+HistorySections.swift in Sources */,
 				A0000000000000000000009E /* ContentView+iPadLayouts.swift in Sources */,
 				A000000000000000000000AD /* ContentView+iPadComponents.swift in Sources */,
 				A000000000000000000000A0 /* ContentView+iPadToday.swift in Sources */,

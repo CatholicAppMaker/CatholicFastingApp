@@ -9,22 +9,9 @@ struct CatholicFastingMacRootView: View {
     var body: some View {
         NavigationSplitView {
             List(CatholicFastingMacSurface.allCases, id: \.self, selection: $model.selectedSurface) { surface in
-                HStack(spacing: 10) {
-                    Image(systemName: surface.systemImage)
-                        .foregroundStyle(.secondary)
-                        .frame(width: 16)
-
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(surface.title)
-                            .lineLimit(1)
-                        Text(surface.subtitle)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .lineLimit(1)
-                    }
-                }
-                .tag(surface)
-                .accessibilityIdentifier("mac.sidebar.\(surface.rawValue)")
+                CatholicFastingMacSidebarRow(surface: surface)
+                    .tag(surface)
+                    .accessibilityIdentifier("mac.sidebar.\(surface.rawValue)")
             }
             .navigationTitle("Catholic Fasting")
             .listStyle(.sidebar)
@@ -89,5 +76,26 @@ struct CatholicFastingMacRootView: View {
         Binding(
             get: { !model.didCompleteOnboarding },
             set: { _ in })
+    }
+}
+
+private struct CatholicFastingMacSidebarRow: View {
+    let surface: CatholicFastingMacSurface
+
+    var body: some View {
+        HStack(spacing: 10) {
+            Image(systemName: surface.systemImage)
+                .foregroundStyle(.secondary)
+                .frame(width: 16)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(surface.title)
+                    .lineLimit(1)
+                Text(surface.subtitle)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+            }
+        }
     }
 }

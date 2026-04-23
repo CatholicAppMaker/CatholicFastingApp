@@ -107,12 +107,9 @@ extension ContentView {
         }
     }
 
+    @ViewBuilder
     var setupProgressSection: some View {
-        guard !isQuickSetupComplete else {
-            return AnyView(EmptyView())
-        }
-
-        return AnyView(
+        if !isQuickSetupComplete {
             Section(localized("today.setup.title", default: "Finish Setup")) {
                 Text(localized("today.setup.intro", default: "Complete these once for clearer, safer guidance."))
                     .font(.subheadline)
@@ -137,7 +134,8 @@ extension ContentView {
                 }
                 .appPrimaryButtonStyle()
                 .accessibilityIdentifier("today.setup.open_quick_setup")
-            })
+            }
+        }
     }
 
     var dashboardSacredImageSection: some View {
@@ -378,12 +376,9 @@ extension ContentView {
         }
     }
 
+    @ViewBuilder
     var todayRecoverySection: some View {
-        guard let plan = missedDayRecoveryPlan else {
-            return AnyView(EmptyView())
-        }
-
-        return AnyView(
+        if let plan = missedDayRecoveryPlan {
             Section(localized("today.recovery.section", default: "Recovery Plan")) {
                 Text(plan.titleLine)
                     .font(.headline)
@@ -411,15 +406,13 @@ extension ContentView {
                 }
                 .accessibilityIdentifier("today.recovery.open_fasting_days")
                 .appSecondaryButtonStyle()
-            })
+            }
+        }
     }
 
+    @ViewBuilder
     var milestoneReferralSection: some View {
-        guard currentStreak >= 3 else {
-            return AnyView(EmptyView())
-        }
-
-        return AnyView(
+        if currentStreak >= 3 {
             Section(localized("today.share.section", default: "Share With a Friend")) {
                 Text(localizedFormat("today.share.intro_format", default: "You completed a %d-day streak. Share the app if it is helping.", currentStreak))
                     .font(.subheadline)
@@ -432,7 +425,8 @@ extension ContentView {
                     Label(localized("today.share.button", default: "Share App"), systemImage: "square.and.arrow.up")
                 }
                 .appSecondaryButtonStyle()
-            })
+            }
+        }
     }
 
     var dashboardSeasonSection: some View {

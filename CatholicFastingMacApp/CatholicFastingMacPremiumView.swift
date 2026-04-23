@@ -37,57 +37,7 @@ struct CatholicFastingMacPremiumView: View {
     }
 
     private var subscriptionCard: some View {
-        MacCard(
-            title: model.monetizationStore.premiumUnlocked ? "Premium active" : "Subscription",
-            subtitle: model.monetizationStore.subscriptionHealthMessage.isEmpty
-                ? "Store status"
-                : model.monetizationStore.subscriptionHealthMessage)
-        {
-            if model.monetizationStore.premiumUnlocked {
-                Text("Premium tools are unlocked on this Mac. Planner, analytics, recovery coaching, and support reminders are available below.")
-                    .foregroundStyle(.secondary)
-            } else if model.monetizationStore.premiumProducts.isEmpty {
-                Text(model.monetizationStore.statusMessage.isEmpty ? "Loading premium products…" : model.monetizationStore.statusMessage)
-                    .foregroundStyle(.secondary)
-            }
-
-            ForEach(model.monetizationStore.premiumProducts, id: \.id) { product in
-                HStack {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(product.displayName)
-                        Text(product.displayPrice)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                    Spacer()
-                    Button("Unlock") {
-                        Task { await model.monetizationStore.purchase(product) }
-                    }
-                    .accessibilityIdentifier("mac.premium.unlock.\(product.id)")
-                    .disabled(model.monetizationStore.isPurchasing)
-                }
-            }
-
-            HStack {
-                Button("Restore Purchases") {
-                    Task { await model.monetizationStore.restorePurchases() }
-                }
-                .buttonStyle(.bordered)
-                .accessibilityIdentifier("mac.premium.restore")
-
-                Button("Manage Subscription") {
-                    Task { await model.monetizationStore.openManageSubscriptions() }
-                }
-                .buttonStyle(.bordered)
-                .accessibilityIdentifier("mac.premium.manage")
-            }
-
-            if !model.monetizationStore.statusMessage.isEmpty {
-                Text(model.monetizationStore.statusMessage)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-        }
+        CatholicFastingMacPremiumSubscriptionCard(model: model)
     }
 
     private var plannerCard: some View {
@@ -188,7 +138,7 @@ struct CatholicFastingMacPremiumView: View {
                 }
                 .accessibilityIdentifier("mac.premium.apply_condition_rules")
 
-                Text("Current support setup: daily \(model.dailyReminderSupportEnabled ? "on" : "off"), morning \(model.morningReminderEnabled ? "on" : "off"), evening \(model.eveningReminderEnabled ? "on" : "off").")
+                Text(currentSupportSetupSummary)
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
@@ -500,5 +450,16 @@ struct CatholicFastingMacPremiumView: View {
         Binding(
             get: { model.premiumCompanion.protectFeastDays },
             set: { model.premiumCompanion.protectFeastDays = $0 })
+    }
+
+    private var currentSupportSetupSummary: String {
+        let daily = supportState(model.dailyReminderSupportEnabled)
+        let morning = supportState(model.morningReminderEnabled)
+        let evening = supportState(model.eveningReminderEnabled)
+        return "Current support setup: daily \(daily), morning \(morning), evening \(evening)."
+    }
+
+    private func supportState(_ isEnabled: Bool) -> String {
+        isEnabled ? "on" : "off"
     }
 }
