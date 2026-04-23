@@ -7,6 +7,48 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		02E7873BB86064516185B87B /* CatholicFastingMacModel+Intermittent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 012E73CEA82D163F92FEB738 /* CatholicFastingMacModel+Intermittent.swift */; };
+		05ED4A390F1EB8BEC05068B5 /* PremiumReminderPlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87FE23E356AEC4039AFEE4C /* PremiumReminderPlanner.swift */; };
+		123D82254CAEFE80DF8FB096 /* CatholicFastingMacWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A23681831D450BEAA2854939 /* CatholicFastingMacWidgetBundle.swift */; };
+		17C2D2DF8A99F658B9B0FA20 /* GuidanceTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57AEF80D93128C90C5BF50A7 /* GuidanceTypes.swift */; };
+		1863FA8F857A33C87C1A6271 /* CatholicFastingMacSurfaces.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5016333C0CDE946F4EAC53F /* CatholicFastingMacSurfaces.swift */; };
+		1B069BBC576556D4F4AD02C7 /* RuleBundleRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1D8C801F78C9B24735A510 /* RuleBundleRepository.swift */; };
+		22BAC51DC1140264743EE4FD /* RegionalGuidanceContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99E37B8D1501DEEAAFFE2A57 /* RegionalGuidanceContext.swift */; };
+		2795039C33F51F3B18039AEE /* CatholicFastingMacTodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AC0BC9695A0C0689C36F371 /* CatholicFastingMacTodayView.swift */; };
+		2D50CC360BD8FF0E5F2389E8 /* CatholicFastingMacAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9D436C6E4FD5B0BE6ECDD29 /* CatholicFastingMacAppTests.swift */; };
+		2D90161F77D86958EAD44782 /* GrowthContracts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3735756DD32DF33CDD8DD8CC /* GrowthContracts.swift */; };
+		2F97AC34C944499634016C81 /* GuidanceEngines.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1453E85B85FE842BCE5936 /* GuidanceEngines.swift */; };
+		301EB9FE0A15B846EF1803E5 /* CatholicFastingMacUITestBootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933DB962497E990AEDACDD33 /* CatholicFastingMacUITestBootstrap.swift */; };
+		312C0726814F3BDC338D68E8 /* AppStorageConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7FE87D9E30CD967C5CA2A33 /* AppStorageConfig.swift */; };
+		367390E8A0502630170C033E /* IntermittentFastTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8580439C1FAD0C7BCE86E4 /* IntermittentFastTracker.swift */; };
+		37DCB3199298E45E1C678A83 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 814A0E53822CDA8707F85426 /* Cocoa.framework */; };
+		3C1FB855B1639D44F08447BD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 814A0E53822CDA8707F85426 /* Cocoa.framework */; };
+		411F4D62067BB5C815D23FE9 /* CatholicFastingMacPremiumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA67BD07170391133F0CC34 /* CatholicFastingMacPremiumView.swift */; };
+		421E2EB4368F74C4830E385C /* CatholicFastingMacGuidanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BBCFF4986FF227CD161216 /* CatholicFastingMacGuidanceView.swift */; };
+		47E098AE026DC9EF33B8952C /* CatholicFastingMacRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6AE4FE712CF7C44B64042FD /* CatholicFastingMacRootView.swift */; };
+		4EAB38353A34F7FF3C5912D1 /* PremiumRecoveryCoachEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0024CD838FA8D778315AF4B /* PremiumRecoveryCoachEngine.swift */; };
+		51E92B5726DF59B2613453CC /* SyncStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A1D3ACC5C7E88B5BEAC65C /* SyncStore.swift */; };
+		52DF170D7A70B2EF4A4B4985 /* CatholicFastingMacModel+Lifecycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1679AF776EF39D11142DBC40 /* CatholicFastingMacModel+Lifecycle.swift */; };
+		53A8498A969867FC89E1CF39 /* CatholicFastingMacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937D5CD1703E9635E4E09B48 /* CatholicFastingMacApp.swift */; };
+		54C8052D46966D29B2F104CF /* CatholicFastingMacAppUITests+DesktopFlows.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2092F083F4789DDDB445B6D /* CatholicFastingMacAppUITests+DesktopFlows.swift */; };
+		5A19EC8338BCC8D9C6C0729C /* RuleDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D4348BF299FD87E51E6D5A /* RuleDomain.swift */; };
+		5B7E94610D09D87A60FA334D /* CatholicFastingMacIntermittentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2A984A8700EF269223CED0 /* CatholicFastingMacIntermittentView.swift */; };
+		5D20DDEA8A3F26BC92C929E4 /* PremiumAnalyticsEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4FD1136B1001888B20A9057 /* PremiumAnalyticsEngine.swift */; };
+		5DACF771E7A9B7B407A90A05 /* IntermittentFastSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2D4B629D1777EE0CB983F5F /* IntermittentFastSession.swift */; };
+		66E212F071D7AF3C1BE9A81B /* CatholicFastingMacModel+Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6584D7CD61DB4C4A59B051E /* CatholicFastingMacModel+Persistence.swift */; };
+		6FDE8514711BE2759A4516A1 /* IntermittentFastLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F923CA15BA6F3079EA230C /* IntermittentFastLiveActivity.swift */; };
+		7479131C6986EF02D507BDF3 /* CatholicFastingMacViewSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3599C9255E87DB9D3E1B54CE /* CatholicFastingMacViewSupport.swift */; };
+		7B417335F38D87EF785593CA /* MonetizationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCACDD3DF1566795A7D78137 /* MonetizationStore.swift */; };
+		7FCEFE817F94A99FDA8E90B7 /* ObservanceCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCAE90F694EE4878A1A7960 /* ObservanceCalculator.swift */; };
+		800313ECE8615EE79DCFCB97 /* CatholicFastingMacSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96414814768402322273FCB9 /* CatholicFastingMacSettingsView.swift */; };
+		80207485935FEFB860A120C5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C29196BE77717E7F4662538 /* Assets.xcassets */; };
+		80A5DCAAE6E8A3F2589B687A /* DailyFoodDecisionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B969CAC681EFB71BFBF0F14D /* DailyFoodDecisionEngine.swift */; };
+		85176E4969B13F3FEC2FCAB6 /* LiturgicalSeasonThemeEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90910105F6BF8DC251AADE2B /* LiturgicalSeasonThemeEngine.swift */; };
+		89C0E4C05D4D4852A2DA0FDB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 814A0E53822CDA8707F85426 /* Cocoa.framework */; };
+		8A7A6E28239BB0799A1B30CD /* CatholicFastingMacPlatformServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A06565C93288E82AB43BEA /* CatholicFastingMacPlatformServices.swift */; };
+		9A8500D42540F7E0A22DF099 /* AppShellTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844E3D54BFF59FC2E48222DA /* AppShellTypes.swift */; };
+		9BB7304C660E289D4F38353E /* CatholicFastingMacCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AACCBCA739CD2182CF26BD /* CatholicFastingMacCalendarView.swift */; };
+		9C6B156E989A01B8BD55A864 /* ObservanceCalculator+DateMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89934BF64AF569966A346C66 /* ObservanceCalculator+DateMath.swift */; };
 		A00000000000000000000001 /* CatholicFastingAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000011 /* CatholicFastingAppApp.swift */; };
 		A00000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000012 /* ContentView.swift */; };
 		A00000000000000000000003 /* ObservanceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000013 /* ObservanceStore.swift */; };
@@ -22,6 +64,9 @@
 		A0000000000000000000003E /* ContentView+SettingsSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000003F /* ContentView+SettingsSections.swift */; };
 		A00000000000000000000040 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000043 /* Localizable.strings */; };
 		A00000000000000000000045 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000044 /* PrivacyInfo.xcprivacy */; };
+		C4F200000000000000000001 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000044 /* PrivacyInfo.xcprivacy */; };
+		C4F200000000000000000002 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000044 /* PrivacyInfo.xcprivacy */; };
+		C4F200000000000000000003 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000044 /* PrivacyInfo.xcprivacy */; };
 		A00000000000000000000046 /* ContentView+CalendarSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000047 /* ContentView+CalendarSections.swift */; };
 		A00000000000000000000048 /* ContentView+IntermittentSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000049 /* ContentView+IntermittentSections.swift */; };
 		A0000000000000000000004A /* ContentView+StateHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000004B /* ContentView+StateHelpers.swift */; };
@@ -91,9 +136,50 @@
 		A0000000000000000000010E /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000010F /* OnboardingView.swift */; };
 		A00000000000000000000110 /* ContentView+SettingsDataSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000111 /* ContentView+SettingsDataSections.swift */; };
 		A00000000000000000000120 /* SeasonalQuoteCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000121 /* SeasonalQuoteCatalog.swift */; };
+		A0AEECC45D8510E3BEB829F5 /* MissedDayRecoveryEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D24671EF8B5C44D6E26DC1C /* MissedDayRecoveryEngine.swift */; };
+		A33B58395959AC064CFFAAF6 /* PremiumAdaptiveRulePlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C009A99FB027665F39EA3581 /* PremiumAdaptiveRulePlanner.swift */; };
+		A8B7CC1918B5BAC11307ADE0 /* ObservanceQueryEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A11A7D18BD16FE73699ED4 /* ObservanceQueryEngine.swift */; };
+		AA206579DD86231913507987 /* RequiredDayReminderPlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D8686C36CC6AAAC5FB77C4 /* RequiredDayReminderPlanner.swift */; };
+		B1CC837A0B9B882D2DC40C24 /* CatholicFastingMacModel+Computed.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBAE6A8A53A950B571F3300B /* CatholicFastingMacModel+Computed.swift */; };
+		B31BF071CEE7E3DDACF338DF /* SyncDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = B046ED302D36929C87CF922A /* SyncDiagnostics.swift */; };
+		B3D696E2394ACC14EDDA16E4 /* PremiumSubscriptionHealthEvaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CFD45EC538D589CB5706F0 /* PremiumSubscriptionHealthEvaluator.swift */; };
+		B45C35C76360145C2CC4AAB3 /* DataProtectionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3348367DBCE3DFA8D1CA8D7E /* DataProtectionEngine.swift */; };
+		C2BAC214F072A2751C007C1E /* SeasonalQuoteCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D35B1144A8BE633CE79E81 /* SeasonalQuoteCatalog.swift */; };
+		C3926A7F8E6CC16F87181A7F /* ReminderScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AC0674F4B54B5FC5B87ECA /* ReminderScheduler.swift */; };
+		C3C4A799E5C7911C65BA104E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 814A0E53822CDA8707F85426 /* Cocoa.framework */; };
+		C91D6825FF3CAD853D62EAF6 /* CompletionStatusAndFastTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23170EB4059A07DAE6CDD358 /* CompletionStatusAndFastTracker.swift */; };
+		C97B48B6A475C9ADD56E89E4 /* CatholicFastingMacAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E881F846F5C380A2FD0A04FB /* CatholicFastingMacAppUITests.swift */; };
+		CB899C5389F804275147CB13 /* AppLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7793FEC713108D10B0E2FD79 /* AppLocalization.swift */; };
+		CD41C03D5483FC63B1A58CE5 /* ObservanceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 826B1BDE034A92D80BD47E87 /* ObservanceStore.swift */; };
+		CF044F7934DC8D51899816A9 /* CatholicFastingMacMenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEAE225C1E566856E60802B1 /* CatholicFastingMacMenuBarView.swift */; };
+		D03E68508A9E1C5CC346C7CA /* ObservanceCalculator+CalendarEntries.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9B39DD0FFB7A81742A86BA /* ObservanceCalculator+CalendarEntries.swift */; };
+		D6C658B67DEBB74A5E22F22F /* CatholicFastingMacWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B458A4836824C30EE3247CDA /* CatholicFastingMacWidget.swift */; };
+		E57CB1BEFE1BC4BCD2DF6F0D /* PremiumReflectionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AB1A74D9ACFD373E9175E5 /* PremiumReflectionEngine.swift */; };
+		E8AB35153BD92F4C189219FB /* CatholicFastingMacModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1804F6C9E872273CDD560EF5 /* CatholicFastingMacModel.swift */; };
+		E99401F45CA6516EB18D0E4D /* CatholicFastingMacNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B7DE4D5151901E3D166534 /* CatholicFastingMacNavigation.swift */; };
+		E9D57CE3867434AC8981677F /* FridayPenanceNotes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3CD535324F41C735415173 /* FridayPenanceNotes.swift */; };
+		EABDBC5F7B4E2A86B8FD4148 /* CatholicFastingMacWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 5F2D9B41CB589ED66F340D15 /* CatholicFastingMacWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F243D0A230B7EF9986686816 /* FoundationDateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F027C22803CC1109B3B54537 /* FoundationDateExtensions.swift */; };
+		F856F72E010CFDC194F6FCDC /* PremiumJourneyEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F626578DAE9D71EC633ADA90 /* PremiumJourneyEngine.swift */; };
+		FAE9286F7301490EE5B57A23 /* AppThemeAndLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8588A309D9D81F9F4035A660 /* AppThemeAndLinks.swift */; };
+		FCF1BEE2127E4C46D167331F /* PremiumExperienceEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D393AA5F31ADC45E20771F /* PremiumExperienceEngine.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		26725DDCB17B9454D19E539B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A00000000000000000000007 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E8C4C8A42C2442B82854383B;
+			remoteInfo = CatholicFastingMacApp;
+		};
+		4F2433B9181340795BEA9627 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A00000000000000000000007 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 599AB41AB63606815F5F527D;
+			remoteInfo = CatholicFastingMacWidget;
+		};
 		A0000000000000000000002B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A00000000000000000000007 /* Project object */;
@@ -107,6 +193,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = A0000000000000000000007E;
 			remoteInfo = CatholicFastingWidget;
+		};
+		CFCAB215972D4E8713993460 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A00000000000000000000007 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E8C4C8A42C2442B82854383B;
+			remoteInfo = CatholicFastingMacApp;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -122,9 +215,71 @@
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D845EC3EA3BE43B1004D014F /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				EABDBC5F7B4E2A86B8FD4148 /* CatholicFastingMacWidget.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		012E73CEA82D163F92FEB738 /* CatholicFastingMacModel+Intermittent.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CatholicFastingMacModel+Intermittent.swift"; sourceTree = "<group>"; };
+		04AB1A74D9ACFD373E9175E5 /* PremiumReflectionEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PremiumReflectionEngine.swift; path = CatholicFastingApp/Models/PremiumReflectionEngine.swift; sourceTree = "<group>"; };
+		0579E1198F2407F5618685A1 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = CatholicFastingMacAppUITests/Info.plist; sourceTree = "<group>"; };
+		09AC0674F4B54B5FC5B87ECA /* ReminderScheduler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ReminderScheduler.swift; path = CatholicFastingApp/ReminderScheduler.swift; sourceTree = "<group>"; };
+		0D82867824624AA6F895F606 /* CatholicFastingMacApp.Release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = CatholicFastingMacApp.Release.xcconfig; sourceTree = "<group>"; };
+		14D393AA5F31ADC45E20771F /* PremiumExperienceEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PremiumExperienceEngine.swift; path = CatholicFastingApp/Models/PremiumExperienceEngine.swift; sourceTree = "<group>"; };
+		1678B8CC83C94CD49D982226 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = CatholicFastingMacAppTests/Info.plist; sourceTree = "<group>"; };
+		1679AF776EF39D11142DBC40 /* CatholicFastingMacModel+Lifecycle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CatholicFastingMacModel+Lifecycle.swift"; sourceTree = "<group>"; };
+		1804F6C9E872273CDD560EF5 /* CatholicFastingMacModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CatholicFastingMacModel.swift; path = CatholicFastingMacApp/CatholicFastingMacModel.swift; sourceTree = SOURCE_ROOT; };
+		1AC0BC9695A0C0689C36F371 /* CatholicFastingMacTodayView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CatholicFastingMacTodayView.swift; sourceTree = "<group>"; };
+		1BC81D51596B6DD5FDDE880B /* CatholicFastingMacWidget.Debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = CatholicFastingMacWidget.Debug.xcconfig; sourceTree = "<group>"; };
+		1D24671EF8B5C44D6E26DC1C /* MissedDayRecoveryEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MissedDayRecoveryEngine.swift; path = CatholicFastingApp/Models/MissedDayRecoveryEngine.swift; sourceTree = "<group>"; };
+		1E1D8C801F78C9B24735A510 /* RuleBundleRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RuleBundleRepository.swift; path = CatholicFastingApp/Models/RuleBundleRepository.swift; sourceTree = "<group>"; };
+		1ECED45EB3C4B871F45A07EB /* CatholicFastingMacAppUITests.Release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = CatholicFastingMacAppUITests.Release.xcconfig; sourceTree = "<group>"; };
+		23170EB4059A07DAE6CDD358 /* CompletionStatusAndFastTracker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CompletionStatusAndFastTracker.swift; path = CatholicFastingApp/Models/CompletionStatusAndFastTracker.swift; sourceTree = "<group>"; };
+		25F923CA15BA6F3079EA230C /* IntermittentFastLiveActivity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = IntermittentFastLiveActivity.swift; path = CatholicFastingApp/Models/IntermittentFastLiveActivity.swift; sourceTree = "<group>"; };
+		3348367DBCE3DFA8D1CA8D7E /* DataProtectionEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DataProtectionEngine.swift; path = CatholicFastingApp/Models/DataProtectionEngine.swift; sourceTree = "<group>"; };
+		3599C9255E87DB9D3E1B54CE /* CatholicFastingMacViewSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CatholicFastingMacViewSupport.swift; sourceTree = "<group>"; };
+		35BBCFF4986FF227CD161216 /* CatholicFastingMacGuidanceView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CatholicFastingMacGuidanceView.swift; sourceTree = "<group>"; };
+		3735756DD32DF33CDD8DD8CC /* GrowthContracts.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GrowthContracts.swift; path = CatholicFastingApp/Models/GrowthContracts.swift; sourceTree = "<group>"; };
+		37AACCBCA739CD2182CF26BD /* CatholicFastingMacCalendarView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CatholicFastingMacCalendarView.swift; sourceTree = "<group>"; };
+		3D63356B2FA4C13C54AC6907 /* CatholicFastingMacApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatholicFastingMacApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3FC75E283E0CE5BC2C267DFE /* CatholicFastingMacAppTests.Release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = CatholicFastingMacAppTests.Release.xcconfig; sourceTree = "<group>"; };
+		45CFD45EC538D589CB5706F0 /* PremiumSubscriptionHealthEvaluator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PremiumSubscriptionHealthEvaluator.swift; path = CatholicFastingApp/Models/PremiumSubscriptionHealthEvaluator.swift; sourceTree = "<group>"; };
+		4930D0946249A585233B2BB3 /* CatholicFastingMacWidget.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; name = CatholicFastingMacWidget.entitlements; path = CatholicFastingMacWidget/CatholicFastingMacWidget.entitlements; sourceTree = SOURCE_ROOT; };
+		4C29196BE77717E7F4662538 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = CatholicFastingApp/Assets.xcassets; sourceTree = "<group>"; };
+		52B7DE4D5151901E3D166534 /* CatholicFastingMacNavigation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CatholicFastingMacNavigation.swift; path = CatholicFastingMacApp/CatholicFastingMacNavigation.swift; sourceTree = SOURCE_ROOT; };
+		57AEF80D93128C90C5BF50A7 /* GuidanceTypes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GuidanceTypes.swift; path = CatholicFastingApp/Models/GuidanceTypes.swift; sourceTree = "<group>"; };
+		5A2A984A8700EF269223CED0 /* CatholicFastingMacIntermittentView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CatholicFastingMacIntermittentView.swift; sourceTree = "<group>"; };
+		5F2D9B41CB589ED66F340D15 /* CatholicFastingMacWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CatholicFastingMacWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		67A06565C93288E82AB43BEA /* CatholicFastingMacPlatformServices.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CatholicFastingMacPlatformServices.swift; path = CatholicFastingMacApp/CatholicFastingMacPlatformServices.swift; sourceTree = SOURCE_ROOT; };
+		6F8FE0DADE98C15C94625A9F /* MacSharedRelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = MacSharedRelease.xcconfig; sourceTree = "<group>"; };
+		75C060EE0B3B0B2A326ED1A5 /* CatholicFastingMacWidget.Release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = CatholicFastingMacWidget.Release.xcconfig; sourceTree = "<group>"; };
+		7793FEC713108D10B0E2FD79 /* AppLocalization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppLocalization.swift; path = CatholicFastingApp/AppLocalization.swift; sourceTree = "<group>"; };
+		7D2A7F411498D48CB4AFE19D /* CatholicFastingMacApp.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; name = CatholicFastingMacApp.entitlements; path = CatholicFastingMacApp/CatholicFastingMacApp.entitlements; sourceTree = SOURCE_ROOT; };
+		80D35B1144A8BE633CE79E81 /* SeasonalQuoteCatalog.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SeasonalQuoteCatalog.swift; path = CatholicFastingApp/Models/SeasonalQuoteCatalog.swift; sourceTree = "<group>"; };
+		814A0E53822CDA8707F85426 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		826B1BDE034A92D80BD47E87 /* ObservanceStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ObservanceStore.swift; path = CatholicFastingApp/Models/ObservanceStore.swift; sourceTree = "<group>"; };
+		844E3D54BFF59FC2E48222DA /* AppShellTypes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppShellTypes.swift; path = CatholicFastingApp/AppShellTypes.swift; sourceTree = "<group>"; };
+		8588A309D9D81F9F4035A660 /* AppThemeAndLinks.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppThemeAndLinks.swift; path = CatholicFastingApp/AppThemeAndLinks.swift; sourceTree = "<group>"; };
+		89934BF64AF569966A346C66 /* ObservanceCalculator+DateMath.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "ObservanceCalculator+DateMath.swift"; path = "CatholicFastingApp/Models/ObservanceCalculator+DateMath.swift"; sourceTree = "<group>"; };
+		8E52A3B425280EE09F269141 /* MacSharedDebug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = MacSharedDebug.xcconfig; sourceTree = "<group>"; };
+		903C9E4D0CF158E49C149A51 /* CatholicFastingMacAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CatholicFastingMacAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		90910105F6BF8DC251AADE2B /* LiturgicalSeasonThemeEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LiturgicalSeasonThemeEngine.swift; path = CatholicFastingApp/Models/LiturgicalSeasonThemeEngine.swift; sourceTree = "<group>"; };
+		90A1D3ACC5C7E88B5BEAC65C /* SyncStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SyncStore.swift; path = CatholicFastingApp/Models/SyncStore.swift; sourceTree = "<group>"; };
+		933DB962497E990AEDACDD33 /* CatholicFastingMacUITestBootstrap.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CatholicFastingMacUITestBootstrap.swift; path = CatholicFastingMacApp/CatholicFastingMacUITestBootstrap.swift; sourceTree = SOURCE_ROOT; };
+		937D5CD1703E9635E4E09B48 /* CatholicFastingMacApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CatholicFastingMacApp.swift; path = CatholicFastingMacApp/CatholicFastingMacApp.swift; sourceTree = SOURCE_ROOT; };
+		96414814768402322273FCB9 /* CatholicFastingMacSettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CatholicFastingMacSettingsView.swift; path = CatholicFastingMacApp/CatholicFastingMacSettingsView.swift; sourceTree = SOURCE_ROOT; };
+		99760D75F3E839C35BD8A674 /* CatholicFastingWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CatholicFastingWidget.swift; path = CatholicFastingWidget/CatholicFastingWidget.swift; sourceTree = "<group>"; };
+		99E37B8D1501DEEAAFFE2A57 /* RegionalGuidanceContext.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RegionalGuidanceContext.swift; path = CatholicFastingApp/Models/RegionalGuidanceContext.swift; sourceTree = "<group>"; };
+		9F3CD535324F41C735415173 /* FridayPenanceNotes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FridayPenanceNotes.swift; path = CatholicFastingApp/Models/FridayPenanceNotes.swift; sourceTree = "<group>"; };
 		A0000000000000000000000F /* CatholicFastingApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatholicFastingApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A00000000000000000000011 /* CatholicFastingAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatholicFastingAppApp.swift; sourceTree = "<group>"; };
 		A00000000000000000000012 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -217,9 +372,61 @@
 		A00000000000000000000111 /* ContentView+SettingsDataSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+SettingsDataSections.swift"; sourceTree = "<group>"; };
 		A00000000000000000000121 /* SeasonalQuoteCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonalQuoteCatalog.swift; sourceTree = "<group>"; };
 		A00000000000000000000130 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		A0D8686C36CC6AAAC5FB77C4 /* RequiredDayReminderPlanner.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RequiredDayReminderPlanner.swift; path = CatholicFastingApp/Models/RequiredDayReminderPlanner.swift; sourceTree = "<group>"; };
+		A0E80EEB484B951F7F7B7532 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = CatholicFastingMacApp/Info.plist; sourceTree = SOURCE_ROOT; };
+		A23681831D450BEAA2854939 /* CatholicFastingMacWidgetBundle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CatholicFastingMacWidgetBundle.swift; path = CatholicFastingMacWidget/CatholicFastingMacWidgetBundle.swift; sourceTree = SOURCE_ROOT; };
+		A4FD1136B1001888B20A9057 /* PremiumAnalyticsEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PremiumAnalyticsEngine.swift; path = CatholicFastingApp/Models/PremiumAnalyticsEngine.swift; sourceTree = "<group>"; };
+		A87FE23E356AEC4039AFEE4C /* PremiumReminderPlanner.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PremiumReminderPlanner.swift; path = CatholicFastingApp/Models/PremiumReminderPlanner.swift; sourceTree = "<group>"; };
+		A8EC090283950B266E1E87C3 /* CatholicFastingWidgetBundle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CatholicFastingWidgetBundle.swift; path = CatholicFastingWidget/CatholicFastingWidgetBundle.swift; sourceTree = "<group>"; };
+		AB06E0B3CCA2032973F1E44B /* CatholicFastingMacAppTests.Debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = CatholicFastingMacAppTests.Debug.xcconfig; sourceTree = "<group>"; };
+		B0024CD838FA8D778315AF4B /* PremiumRecoveryCoachEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PremiumRecoveryCoachEngine.swift; path = CatholicFastingApp/Models/PremiumRecoveryCoachEngine.swift; sourceTree = "<group>"; };
+		B046ED302D36929C87CF922A /* SyncDiagnostics.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SyncDiagnostics.swift; path = CatholicFastingApp/Models/SyncDiagnostics.swift; sourceTree = "<group>"; };
+		B458A4836824C30EE3247CDA /* CatholicFastingMacWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CatholicFastingMacWidget.swift; path = CatholicFastingMacWidget/CatholicFastingMacWidget.swift; sourceTree = SOURCE_ROOT; };
+		B969CAC681EFB71BFBF0F14D /* DailyFoodDecisionEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DailyFoodDecisionEngine.swift; path = CatholicFastingApp/Models/DailyFoodDecisionEngine.swift; sourceTree = "<group>"; };
+		BAA67BD07170391133F0CC34 /* CatholicFastingMacPremiumView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CatholicFastingMacPremiumView.swift; sourceTree = "<group>"; };
+		BB0885793D014406AA980316 /* CatholicFastingMacAppUITests.Debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = CatholicFastingMacAppUITests.Debug.xcconfig; sourceTree = "<group>"; };
+		BEAE225C1E566856E60802B1 /* CatholicFastingMacMenuBarView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CatholicFastingMacMenuBarView.swift; path = CatholicFastingMacApp/CatholicFastingMacMenuBarView.swift; sourceTree = SOURCE_ROOT; };
+		BF9B39DD0FFB7A81742A86BA /* ObservanceCalculator+CalendarEntries.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "ObservanceCalculator+CalendarEntries.swift"; path = "CatholicFastingApp/Models/ObservanceCalculator+CalendarEntries.swift"; sourceTree = "<group>"; };
+		C009A99FB027665F39EA3581 /* PremiumAdaptiveRulePlanner.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PremiumAdaptiveRulePlanner.swift; path = CatholicFastingApp/Models/PremiumAdaptiveRulePlanner.swift; sourceTree = "<group>"; };
+		C5016333C0CDE946F4EAC53F /* CatholicFastingMacSurfaces.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CatholicFastingMacSurfaces.swift; path = CatholicFastingMacApp/CatholicFastingMacSurfaces.swift; sourceTree = SOURCE_ROOT; };
+		C6584D7CD61DB4C4A59B051E /* CatholicFastingMacModel+Persistence.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CatholicFastingMacModel+Persistence.swift"; sourceTree = "<group>"; };
+		C7A11A7D18BD16FE73699ED4 /* ObservanceQueryEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ObservanceQueryEngine.swift; path = CatholicFastingApp/Models/ObservanceQueryEngine.swift; sourceTree = "<group>"; };
+		CFCAE90F694EE4878A1A7960 /* ObservanceCalculator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ObservanceCalculator.swift; path = CatholicFastingApp/Models/ObservanceCalculator.swift; sourceTree = "<group>"; };
+		D085D285F997C2ECE03DBDE8 /* CatholicFastingMacApp.Debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = CatholicFastingMacApp.Debug.xcconfig; sourceTree = "<group>"; };
+		D167FE87A601C695C753FB1C /* CatholicFastingMacAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CatholicFastingMacAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D7FE87D9E30CD967C5CA2A33 /* AppStorageConfig.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppStorageConfig.swift; path = CatholicFastingApp/AppStorageConfig.swift; sourceTree = "<group>"; };
+		D9D436C6E4FD5B0BE6ECDD29 /* CatholicFastingMacAppTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CatholicFastingMacAppTests.swift; path = CatholicFastingMacAppTests/CatholicFastingMacAppTests.swift; sourceTree = "<group>"; };
+		DB8580439C1FAD0C7BCE86E4 /* IntermittentFastTracker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = IntermittentFastTracker.swift; path = CatholicFastingApp/Models/IntermittentFastTracker.swift; sourceTree = "<group>"; };
+		DE1453E85B85FE842BCE5936 /* GuidanceEngines.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GuidanceEngines.swift; path = CatholicFastingApp/Models/GuidanceEngines.swift; sourceTree = "<group>"; };
+		E2D4B629D1777EE0CB983F5F /* IntermittentFastSession.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = IntermittentFastSession.swift; path = CatholicFastingApp/Models/IntermittentFastSession.swift; sourceTree = "<group>"; };
+		E881F846F5C380A2FD0A04FB /* CatholicFastingMacAppUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CatholicFastingMacAppUITests.swift; path = CatholicFastingMacAppUITests/CatholicFastingMacAppUITests.swift; sourceTree = "<group>"; };
+		EBAE6A8A53A950B571F3300B /* CatholicFastingMacModel+Computed.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CatholicFastingMacModel+Computed.swift"; sourceTree = "<group>"; };
+		EE51A599718C2C0E35088B92 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = CatholicFastingMacWidget/Info.plist; sourceTree = SOURCE_ROOT; };
+		F027C22803CC1109B3B54537 /* FoundationDateExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FoundationDateExtensions.swift; path = CatholicFastingApp/Models/FoundationDateExtensions.swift; sourceTree = "<group>"; };
+		F0D4348BF299FD87E51E6D5A /* RuleDomain.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RuleDomain.swift; path = CatholicFastingApp/Models/RuleDomain.swift; sourceTree = "<group>"; };
+		F2092F083F4789DDDB445B6D /* CatholicFastingMacAppUITests+DesktopFlows.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "CatholicFastingMacAppUITests+DesktopFlows.swift"; path = "CatholicFastingMacAppUITests/CatholicFastingMacAppUITests+DesktopFlows.swift"; sourceTree = "<group>"; };
+		F626578DAE9D71EC633ADA90 /* PremiumJourneyEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PremiumJourneyEngine.swift; path = CatholicFastingApp/Models/PremiumJourneyEngine.swift; sourceTree = "<group>"; };
+		F6AE4FE712CF7C44B64042FD /* CatholicFastingMacRootView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CatholicFastingMacRootView.swift; path = CatholicFastingMacApp/CatholicFastingMacRootView.swift; sourceTree = SOURCE_ROOT; };
+		FCACDD3DF1566795A7D78137 /* MonetizationStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MonetizationStore.swift; path = CatholicFastingApp/MonetizationStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		0607A2C1F893498A4C4BF540 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C3C4A799E5C7911C65BA104E /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8EB629B97507003FA9B91C9C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				89C0E4C05D4D4852A2DA0FDB /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A0000000000000000000000C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -243,9 +450,91 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C8E716F9C181CFA43839D750 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37DCB3199298E45E1C678A83 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E40EBBD12559B82E8D2EB5CE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C1FB855B1639D44F08447BD /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3EBD5D8C3BBAAC15BA999471 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A286EF72B250C8F6096620D9 /* OS X */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		8F8533CF6B47EB4BD73EA080 /* CatholicFastingMacApp */ = {
+			isa = PBXGroup;
+			children = (
+				937D5CD1703E9635E4E09B48 /* CatholicFastingMacApp.swift */,
+				BEAE225C1E566856E60802B1 /* CatholicFastingMacMenuBarView.swift */,
+				1804F6C9E872273CDD560EF5 /* CatholicFastingMacModel.swift */,
+				52B7DE4D5151901E3D166534 /* CatholicFastingMacNavigation.swift */,
+				67A06565C93288E82AB43BEA /* CatholicFastingMacPlatformServices.swift */,
+				F6AE4FE712CF7C44B64042FD /* CatholicFastingMacRootView.swift */,
+				96414814768402322273FCB9 /* CatholicFastingMacSettingsView.swift */,
+				C5016333C0CDE946F4EAC53F /* CatholicFastingMacSurfaces.swift */,
+				A0E80EEB484B951F7F7B7532 /* Info.plist */,
+				7D2A7F411498D48CB4AFE19D /* CatholicFastingMacApp.entitlements */,
+				933DB962497E990AEDACDD33 /* CatholicFastingMacUITestBootstrap.swift */,
+				3599C9255E87DB9D3E1B54CE /* CatholicFastingMacViewSupport.swift */,
+				1AC0BC9695A0C0689C36F371 /* CatholicFastingMacTodayView.swift */,
+				37AACCBCA739CD2182CF26BD /* CatholicFastingMacCalendarView.swift */,
+				5A2A984A8700EF269223CED0 /* CatholicFastingMacIntermittentView.swift */,
+				BAA67BD07170391133F0CC34 /* CatholicFastingMacPremiumView.swift */,
+				35BBCFF4986FF227CD161216 /* CatholicFastingMacGuidanceView.swift */,
+				EBAE6A8A53A950B571F3300B /* CatholicFastingMacModel+Computed.swift */,
+				1679AF776EF39D11142DBC40 /* CatholicFastingMacModel+Lifecycle.swift */,
+				012E73CEA82D163F92FEB738 /* CatholicFastingMacModel+Intermittent.swift */,
+				C6584D7CD61DB4C4A59B051E /* CatholicFastingMacModel+Persistence.swift */,
+			);
+			path = CatholicFastingMacApp;
+			sourceTree = SOURCE_ROOT;
+		};
+		90339FE58F2D4D247908B953 /* CatholicFastingMacWidget */ = {
+			isa = PBXGroup;
+			children = (
+				99760D75F3E839C35BD8A674 /* CatholicFastingWidget.swift */,
+				A8EC090283950B266E1E87C3 /* CatholicFastingWidgetBundle.swift */,
+				EE51A599718C2C0E35088B92 /* Info.plist */,
+				4930D0946249A585233B2BB3 /* CatholicFastingMacWidget.entitlements */,
+				B458A4836824C30EE3247CDA /* CatholicFastingMacWidget.swift */,
+				A23681831D450BEAA2854939 /* CatholicFastingMacWidgetBundle.swift */,
+			);
+			path = CatholicFastingMacWidget;
+			sourceTree = "<group>";
+		};
+		962E391862E7BD7C36E11534 /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				C54FE4736FBE5560B0CCD947 /* macOS */,
+			);
+			path = Configurations;
+			sourceTree = "<group>";
+		};
+		9F4AF320CDE1B34F50354A8D /* CatholicFastingMacAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				1678B8CC83C94CD49D982226 /* Info.plist */,
+				D9D436C6E4FD5B0BE6ECDD29 /* CatholicFastingMacAppTests.swift */,
+			);
+			name = CatholicFastingMacAppTests;
+			sourceTree = SOURCE_ROOT;
+		};
 		A00000000000000000000005 = {
 			isa = PBXGroup;
 			children = (
@@ -253,6 +542,13 @@
 				A00000000000000000000024 /* CatholicFastingAppUITests */,
 				A00000000000000000000084 /* CatholicFastingWidget */,
 				A0000000000000000000000E /* Products */,
+				8F8533CF6B47EB4BD73EA080 /* CatholicFastingMacApp */,
+				90339FE58F2D4D247908B953 /* CatholicFastingMacWidget */,
+				D9DAF40729A482EB25E7D45E /* CatholicFastingMacShared */,
+				3EBD5D8C3BBAAC15BA999471 /* Frameworks */,
+				A8390C23115CC1358837F634 /* CatholicFastingMacAppUITests */,
+				9F4AF320CDE1B34F50354A8D /* CatholicFastingMacAppTests */,
+				962E391862E7BD7C36E11534 /* Configurations */,
 			);
 			sourceTree = "<group>";
 		};
@@ -262,6 +558,10 @@
 				A0000000000000000000000F /* CatholicFastingApp.app */,
 				A00000000000000000000022 /* CatholicFastingAppUITests.xctest */,
 				A00000000000000000000070 /* CatholicFastingWidget.appex */,
+				3D63356B2FA4C13C54AC6907 /* CatholicFastingMacApp.app */,
+				5F2D9B41CB589ED66F340D15 /* CatholicFastingMacWidget.appex */,
+				D167FE87A601C695C753FB1C /* CatholicFastingMacAppUITests.xctest */,
+				903C9E4D0CF158E49C149A51 /* CatholicFastingMacAppTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -382,9 +682,142 @@
 			path = CatholicFastingWidget;
 			sourceTree = "<group>";
 		};
+		A286EF72B250C8F6096620D9 /* OS X */ = {
+			isa = PBXGroup;
+			children = (
+				814A0E53822CDA8707F85426 /* Cocoa.framework */,
+			);
+			name = "OS X";
+			sourceTree = "<group>";
+		};
+		A8390C23115CC1358837F634 /* CatholicFastingMacAppUITests */ = {
+			isa = PBXGroup;
+			children = (
+				0579E1198F2407F5618685A1 /* Info.plist */,
+				E881F846F5C380A2FD0A04FB /* CatholicFastingMacAppUITests.swift */,
+				F2092F083F4789DDDB445B6D /* CatholicFastingMacAppUITests+DesktopFlows.swift */,
+			);
+			name = CatholicFastingMacAppUITests;
+			sourceTree = SOURCE_ROOT;
+		};
+		BC496842A2B498E8E3E924EB /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				23170EB4059A07DAE6CDD358 /* CompletionStatusAndFastTracker.swift */,
+				B969CAC681EFB71BFBF0F14D /* DailyFoodDecisionEngine.swift */,
+				3348367DBCE3DFA8D1CA8D7E /* DataProtectionEngine.swift */,
+				F027C22803CC1109B3B54537 /* FoundationDateExtensions.swift */,
+				9F3CD535324F41C735415173 /* FridayPenanceNotes.swift */,
+				3735756DD32DF33CDD8DD8CC /* GrowthContracts.swift */,
+				DE1453E85B85FE842BCE5936 /* GuidanceEngines.swift */,
+				57AEF80D93128C90C5BF50A7 /* GuidanceTypes.swift */,
+				25F923CA15BA6F3079EA230C /* IntermittentFastLiveActivity.swift */,
+				E2D4B629D1777EE0CB983F5F /* IntermittentFastSession.swift */,
+				DB8580439C1FAD0C7BCE86E4 /* IntermittentFastTracker.swift */,
+				90910105F6BF8DC251AADE2B /* LiturgicalSeasonThemeEngine.swift */,
+				1D24671EF8B5C44D6E26DC1C /* MissedDayRecoveryEngine.swift */,
+				BF9B39DD0FFB7A81742A86BA /* ObservanceCalculator+CalendarEntries.swift */,
+				89934BF64AF569966A346C66 /* ObservanceCalculator+DateMath.swift */,
+				CFCAE90F694EE4878A1A7960 /* ObservanceCalculator.swift */,
+				C7A11A7D18BD16FE73699ED4 /* ObservanceQueryEngine.swift */,
+				826B1BDE034A92D80BD47E87 /* ObservanceStore.swift */,
+				C009A99FB027665F39EA3581 /* PremiumAdaptiveRulePlanner.swift */,
+				A4FD1136B1001888B20A9057 /* PremiumAnalyticsEngine.swift */,
+				14D393AA5F31ADC45E20771F /* PremiumExperienceEngine.swift */,
+				F626578DAE9D71EC633ADA90 /* PremiumJourneyEngine.swift */,
+				B0024CD838FA8D778315AF4B /* PremiumRecoveryCoachEngine.swift */,
+				04AB1A74D9ACFD373E9175E5 /* PremiumReflectionEngine.swift */,
+				A87FE23E356AEC4039AFEE4C /* PremiumReminderPlanner.swift */,
+				45CFD45EC538D589CB5706F0 /* PremiumSubscriptionHealthEvaluator.swift */,
+				99E37B8D1501DEEAAFFE2A57 /* RegionalGuidanceContext.swift */,
+				A0D8686C36CC6AAAC5FB77C4 /* RequiredDayReminderPlanner.swift */,
+				1E1D8C801F78C9B24735A510 /* RuleBundleRepository.swift */,
+				F0D4348BF299FD87E51E6D5A /* RuleDomain.swift */,
+				80D35B1144A8BE633CE79E81 /* SeasonalQuoteCatalog.swift */,
+				B046ED302D36929C87CF922A /* SyncDiagnostics.swift */,
+				90A1D3ACC5C7E88B5BEAC65C /* SyncStore.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		C54FE4736FBE5560B0CCD947 /* macOS */ = {
+			isa = PBXGroup;
+			children = (
+				8E52A3B425280EE09F269141 /* MacSharedDebug.xcconfig */,
+				6F8FE0DADE98C15C94625A9F /* MacSharedRelease.xcconfig */,
+				D085D285F997C2ECE03DBDE8 /* CatholicFastingMacApp.Debug.xcconfig */,
+				0D82867824624AA6F895F606 /* CatholicFastingMacApp.Release.xcconfig */,
+				1BC81D51596B6DD5FDDE880B /* CatholicFastingMacWidget.Debug.xcconfig */,
+				75C060EE0B3B0B2A326ED1A5 /* CatholicFastingMacWidget.Release.xcconfig */,
+				AB06E0B3CCA2032973F1E44B /* CatholicFastingMacAppTests.Debug.xcconfig */,
+				3FC75E283E0CE5BC2C267DFE /* CatholicFastingMacAppTests.Release.xcconfig */,
+				BB0885793D014406AA980316 /* CatholicFastingMacAppUITests.Debug.xcconfig */,
+				1ECED45EB3C4B871F45A07EB /* CatholicFastingMacAppUITests.Release.xcconfig */,
+			);
+			path = macOS;
+			sourceTree = "<group>";
+		};
+		C9755266076A19A6284CF195 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				D7FE87D9E30CD967C5CA2A33 /* AppStorageConfig.swift */,
+				7793FEC713108D10B0E2FD79 /* AppLocalization.swift */,
+				8588A309D9D81F9F4035A660 /* AppThemeAndLinks.swift */,
+				844E3D54BFF59FC2E48222DA /* AppShellTypes.swift */,
+				09AC0674F4B54B5FC5B87ECA /* ReminderScheduler.swift */,
+				FCACDD3DF1566795A7D78137 /* MonetizationStore.swift */,
+				4C29196BE77717E7F4662538 /* Assets.xcassets */,
+			);
+			name = Support;
+			sourceTree = "<group>";
+		};
+		D9DAF40729A482EB25E7D45E /* CatholicFastingMacShared */ = {
+			isa = PBXGroup;
+			children = (
+				BC496842A2B498E8E3E924EB /* Models */,
+				C9755266076A19A6284CF195 /* Support */,
+			);
+			name = CatholicFastingMacShared;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		4FB525DD1FBF7F76BC70D647 /* CatholicFastingMacAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 591716426A3BB146B3B731E4 /* Build configuration list for PBXNativeTarget "CatholicFastingMacAppTests" */;
+			buildPhases = (
+				47C41AA64CB476CC532E4A21 /* Sources */,
+				8EB629B97507003FA9B91C9C /* Frameworks */,
+				1D7B06EA2AF39C9A2A50F2B6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5289EEDB7585C8DB58B4F4CD /* PBXTargetDependency */,
+			);
+			name = CatholicFastingMacAppTests;
+			productName = CatholicFastingMacAppTests;
+			productReference = 903C9E4D0CF158E49C149A51 /* CatholicFastingMacAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		599AB41AB63606815F5F527D /* CatholicFastingMacWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3EB92F99AD93DE73ECC9D38E /* Build configuration list for PBXNativeTarget "CatholicFastingMacWidget" */;
+			buildPhases = (
+				E2EBE1C3D55F67D023B2C371 /* Sources */,
+				0607A2C1F893498A4C4BF540 /* Frameworks */,
+				9D35DA20174AC67C9F518022 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CatholicFastingMacWidget;
+			productName = CatholicFastingMacWidget;
+			productReference = 5F2D9B41CB589ED66F340D15 /* CatholicFastingMacWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		A00000000000000000000006 /* CatholicFastingApp */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A00000000000000000000009 /* Build configuration list for PBXNativeTarget "CatholicFastingApp" */;
@@ -438,6 +871,43 @@
 			productReference = A00000000000000000000070 /* CatholicFastingWidget.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		AFC5134474C00A50CD94DBEC /* CatholicFastingMacAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 97F718FF270B2B97EC1DB19A /* Build configuration list for PBXNativeTarget "CatholicFastingMacAppUITests" */;
+			buildPhases = (
+				27D3EE3A5262623B87C193F2 /* Sources */,
+				E40EBBD12559B82E8D2EB5CE /* Frameworks */,
+				DF1FDABA1B30059F4729A037 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B11FC3935F53FE8651EEEC16 /* PBXTargetDependency */,
+			);
+			name = CatholicFastingMacAppUITests;
+			productName = CatholicFastingMacAppUITests;
+			productReference = D167FE87A601C695C753FB1C /* CatholicFastingMacAppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		E8C4C8A42C2442B82854383B /* CatholicFastingMacApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7BDBA7951A3051909BA45690 /* Build configuration list for PBXNativeTarget "CatholicFastingMacApp" */;
+			buildPhases = (
+				483AFDBEFA14940575BFC9E4 /* Sources */,
+				C8E716F9C181CFA43839D750 /* Frameworks */,
+				BB57E06C119FABB277076AC8 /* Resources */,
+				D845EC3EA3BE43B1004D014F /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				135F5DDEA570CD9B337D1865 /* PBXTargetDependency */,
+			);
+			name = CatholicFastingMacApp;
+			productName = CatholicFastingMacApp;
+			productReference = 3D63356B2FA4C13C54AC6907 /* CatholicFastingMacApp.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -448,6 +918,11 @@
 				LastSwiftUpdateCheck = 2620;
 				LastUpgradeCheck = 2620;
 				TargetAttributes = {
+					599AB41AB63606815F5F527D = {
+						CreatedOnToolsVersion = 26.4;
+						DevelopmentTeam = 22L6MB4Z6V;
+						ProvisioningStyle = Automatic;
+					};
 					A00000000000000000000006 = {
 						CreatedOnToolsVersion = 26.2;
 						SystemCapabilities = {
@@ -462,6 +937,11 @@
 					};
 					A0000000000000000000007E = {
 						CreatedOnToolsVersion = 26.2;
+					};
+					E8C4C8A42C2442B82854383B = {
+						CreatedOnToolsVersion = 26.4;
+						DevelopmentTeam = 22L6MB4Z6V;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -483,11 +963,30 @@
 				A00000000000000000000006 /* CatholicFastingApp */,
 				A00000000000000000000027 /* CatholicFastingAppUITests */,
 				A0000000000000000000007E /* CatholicFastingWidget */,
+				E8C4C8A42C2442B82854383B /* CatholicFastingMacApp */,
+				599AB41AB63606815F5F527D /* CatholicFastingMacWidget */,
+				AFC5134474C00A50CD94DBEC /* CatholicFastingMacAppUITests */,
+				4FB525DD1FBF7F76BC70D647 /* CatholicFastingMacAppTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		1D7B06EA2AF39C9A2A50F2B6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9D35DA20174AC67C9F518022 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C4F200000000000000000002 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A0000000000000000000000D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -503,12 +1002,111 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C4F200000000000000000003 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BB57E06C119FABB277076AC8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				80207485935FEFB860A120C5 /* Assets.xcassets in Resources */,
+				C4F200000000000000000001 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DF1FDABA1B30059F4729A037 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		27D3EE3A5262623B87C193F2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C97B48B6A475C9ADD56E89E4 /* CatholicFastingMacAppUITests.swift in Sources */,
+				54C8052D46966D29B2F104CF /* CatholicFastingMacAppUITests+DesktopFlows.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		47C41AA64CB476CC532E4A21 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D50CC360BD8FF0E5F2389E8 /* CatholicFastingMacAppTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		483AFDBEFA14940575BFC9E4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C91D6825FF3CAD853D62EAF6 /* CompletionStatusAndFastTracker.swift in Sources */,
+				80A5DCAAE6E8A3F2589B687A /* DailyFoodDecisionEngine.swift in Sources */,
+				B45C35C76360145C2CC4AAB3 /* DataProtectionEngine.swift in Sources */,
+				F243D0A230B7EF9986686816 /* FoundationDateExtensions.swift in Sources */,
+				E9D57CE3867434AC8981677F /* FridayPenanceNotes.swift in Sources */,
+				2D90161F77D86958EAD44782 /* GrowthContracts.swift in Sources */,
+				2F97AC34C944499634016C81 /* GuidanceEngines.swift in Sources */,
+				17C2D2DF8A99F658B9B0FA20 /* GuidanceTypes.swift in Sources */,
+				6FDE8514711BE2759A4516A1 /* IntermittentFastLiveActivity.swift in Sources */,
+				5DACF771E7A9B7B407A90A05 /* IntermittentFastSession.swift in Sources */,
+				367390E8A0502630170C033E /* IntermittentFastTracker.swift in Sources */,
+				85176E4969B13F3FEC2FCAB6 /* LiturgicalSeasonThemeEngine.swift in Sources */,
+				A0AEECC45D8510E3BEB829F5 /* MissedDayRecoveryEngine.swift in Sources */,
+				D03E68508A9E1C5CC346C7CA /* ObservanceCalculator+CalendarEntries.swift in Sources */,
+				9C6B156E989A01B8BD55A864 /* ObservanceCalculator+DateMath.swift in Sources */,
+				7FCEFE817F94A99FDA8E90B7 /* ObservanceCalculator.swift in Sources */,
+				A8B7CC1918B5BAC11307ADE0 /* ObservanceQueryEngine.swift in Sources */,
+				CD41C03D5483FC63B1A58CE5 /* ObservanceStore.swift in Sources */,
+				A33B58395959AC064CFFAAF6 /* PremiumAdaptiveRulePlanner.swift in Sources */,
+				5D20DDEA8A3F26BC92C929E4 /* PremiumAnalyticsEngine.swift in Sources */,
+				FCF1BEE2127E4C46D167331F /* PremiumExperienceEngine.swift in Sources */,
+				F856F72E010CFDC194F6FCDC /* PremiumJourneyEngine.swift in Sources */,
+				4EAB38353A34F7FF3C5912D1 /* PremiumRecoveryCoachEngine.swift in Sources */,
+				E57CB1BEFE1BC4BCD2DF6F0D /* PremiumReflectionEngine.swift in Sources */,
+				05ED4A390F1EB8BEC05068B5 /* PremiumReminderPlanner.swift in Sources */,
+				B3D696E2394ACC14EDDA16E4 /* PremiumSubscriptionHealthEvaluator.swift in Sources */,
+				22BAC51DC1140264743EE4FD /* RegionalGuidanceContext.swift in Sources */,
+				AA206579DD86231913507987 /* RequiredDayReminderPlanner.swift in Sources */,
+				1B069BBC576556D4F4AD02C7 /* RuleBundleRepository.swift in Sources */,
+				5A19EC8338BCC8D9C6C0729C /* RuleDomain.swift in Sources */,
+				C2BAC214F072A2751C007C1E /* SeasonalQuoteCatalog.swift in Sources */,
+				B31BF071CEE7E3DDACF338DF /* SyncDiagnostics.swift in Sources */,
+				51E92B5726DF59B2613453CC /* SyncStore.swift in Sources */,
+				312C0726814F3BDC338D68E8 /* AppStorageConfig.swift in Sources */,
+				CB899C5389F804275147CB13 /* AppLocalization.swift in Sources */,
+				FAE9286F7301490EE5B57A23 /* AppThemeAndLinks.swift in Sources */,
+				9A8500D42540F7E0A22DF099 /* AppShellTypes.swift in Sources */,
+				C3926A7F8E6CC16F87181A7F /* ReminderScheduler.swift in Sources */,
+				7B417335F38D87EF785593CA /* MonetizationStore.swift in Sources */,
+				53A8498A969867FC89E1CF39 /* CatholicFastingMacApp.swift in Sources */,
+				CF044F7934DC8D51899816A9 /* CatholicFastingMacMenuBarView.swift in Sources */,
+				E8AB35153BD92F4C189219FB /* CatholicFastingMacModel.swift in Sources */,
+				E99401F45CA6516EB18D0E4D /* CatholicFastingMacNavigation.swift in Sources */,
+				8A7A6E28239BB0799A1B30CD /* CatholicFastingMacPlatformServices.swift in Sources */,
+				47E098AE026DC9EF33B8952C /* CatholicFastingMacRootView.swift in Sources */,
+				800313ECE8615EE79DCFCB97 /* CatholicFastingMacSettingsView.swift in Sources */,
+				1863FA8F857A33C87C1A6271 /* CatholicFastingMacSurfaces.swift in Sources */,
+				301EB9FE0A15B846EF1803E5 /* CatholicFastingMacUITestBootstrap.swift in Sources */,
+				7479131C6986EF02D507BDF3 /* CatholicFastingMacViewSupport.swift in Sources */,
+				2795039C33F51F3B18039AEE /* CatholicFastingMacTodayView.swift in Sources */,
+				9BB7304C660E289D4F38353E /* CatholicFastingMacCalendarView.swift in Sources */,
+				5B7E94610D09D87A60FA334D /* CatholicFastingMacIntermittentView.swift in Sources */,
+				411F4D62067BB5C815D23FE9 /* CatholicFastingMacPremiumView.swift in Sources */,
+				421E2EB4368F74C4830E385C /* CatholicFastingMacGuidanceView.swift in Sources */,
+				B1CC837A0B9B882D2DC40C24 /* CatholicFastingMacModel+Computed.swift in Sources */,
+				52DF170D7A70B2EF4A4B4985 /* CatholicFastingMacModel+Lifecycle.swift in Sources */,
+				02E7873BB86064516185B87B /* CatholicFastingMacModel+Intermittent.swift in Sources */,
+				66E212F071D7AF3C1BE9A81B /* CatholicFastingMacModel+Persistence.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A0000000000000000000000B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -607,9 +1205,30 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E2EBE1C3D55F67D023B2C371 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D6C658B67DEBB74A5E22F22F /* CatholicFastingMacWidget.swift in Sources */,
+				123D82254CAEFE80DF8FB096 /* CatholicFastingMacWidgetBundle.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		135F5DDEA570CD9B337D1865 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = CatholicFastingMacWidget;
+			target = 599AB41AB63606815F5F527D /* CatholicFastingMacWidget */;
+			targetProxy = 4F2433B9181340795BEA9627 /* PBXContainerItemProxy */;
+		};
+		5289EEDB7585C8DB58B4F4CD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = CatholicFastingMacApp;
+			target = E8C4C8A42C2442B82854383B /* CatholicFastingMacApp */;
+			targetProxy = 26725DDCB17B9454D19E539B /* PBXContainerItemProxy */;
+		};
 		A0000000000000000000002C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = A00000000000000000000006 /* CatholicFastingApp */;
@@ -619,6 +1238,12 @@
 			isa = PBXTargetDependency;
 			target = A0000000000000000000007E /* CatholicFastingWidget */;
 			targetProxy = A00000000000000000000082 /* PBXContainerItemProxy */;
+		};
+		B11FC3935F53FE8651EEEC16 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = CatholicFastingMacApp;
+			target = E8C4C8A42C2442B82854383B /* CatholicFastingMacApp */;
+			targetProxy = CFCAB215972D4E8713993460 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -636,6 +1261,59 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		72A14E7991DA589092860D05 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1ECED45EB3C4B871F45A07EB /* CatholicFastingMacAppUITests.Release.xcconfig */;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = NO;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = CatholicFastingMacApp;
+			};
+			name = Release;
+		};
+		8A2888696B310410FFC7D3C6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D085D285F997C2ECE03DBDE8 /* CatholicFastingMacApp.Debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = MacAppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 10;
+				ENABLE_APP_SANDBOX = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 4.2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SDKROOT = macosx;
+				SKIP_INSTALL = NO;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		8EFC34654BB5917B9202A065 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3FC75E283E0CE5BC2C267DFE /* CatholicFastingMacAppTests.Release.xcconfig */;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = NO;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = CatholicFastingMacApp;
+			};
+			name = Release;
+		};
 		A00000000000000000000016 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -755,7 +1433,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = CatholicFastingApp/CatholicFastingApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_ASSET_PATHS = "\"CatholicFastingApp/Preview Content\"";
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_PREVIEWS = YES;
@@ -774,7 +1452,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.1;
+				MARKETING_VERSION = 4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
@@ -793,7 +1471,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = CatholicFastingApp/CatholicFastingApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_PREVIEWS = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -811,7 +1489,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.1;
+				MARKETING_VERSION = 4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
@@ -825,7 +1503,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -836,7 +1514,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.1;
+				MARKETING_VERSION = 4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingAppUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
@@ -850,7 +1528,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -861,7 +1539,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.1;
+				MARKETING_VERSION = 4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingAppUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
@@ -877,7 +1555,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = CatholicFastingWidget/CatholicFastingWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -888,7 +1566,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 4.1;
+				MARKETING_VERSION = 4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingApp.CatholicFastingWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -904,7 +1582,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = CatholicFastingWidget/CatholicFastingWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -915,7 +1593,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 4.1;
+				MARKETING_VERSION = 4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingApp.CatholicFastingWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -925,9 +1603,146 @@
 			};
 			name = Release;
 		};
+		A04BF275256D79AC2BAFD268 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AB06E0B3CCA2032973F1E44B /* CatholicFastingMacAppTests.Debug.xcconfig */;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = NO;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = CatholicFastingMacApp;
+			};
+			name = Debug;
+		};
+		C047F8F8BA3251C72D06571B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0D82867824624AA6F895F606 /* CatholicFastingMacApp.Release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = MacAppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 10;
+				ENABLE_APP_SANDBOX = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 4.2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = NO;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		C07E62B8FEC8F064E720F8E0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 75C060EE0B3B0B2A326ED1A5 /* CatholicFastingMacWidget.Release.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CURRENT_PROJECT_VERSION = 10;
+				ENABLE_APP_SANDBOX = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 4.2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		C43DC243C96F916CA9EC4796 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BB0885793D014406AA980316 /* CatholicFastingMacAppUITests.Debug.xcconfig */;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = NO;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = CatholicFastingMacApp;
+			};
+			name = Debug;
+		};
+		ED5E994602FBACFA76853F03 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1BC81D51596B6DD5FDDE880B /* CatholicFastingMacWidget.Debug.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CURRENT_PROJECT_VERSION = 10;
+				ENABLE_APP_SANDBOX = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 4.2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		3EB92F99AD93DE73ECC9D38E /* Build configuration list for PBXNativeTarget "CatholicFastingMacWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C07E62B8FEC8F064E720F8E0 /* Release */,
+				ED5E994602FBACFA76853F03 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		591716426A3BB146B3B731E4 /* Build configuration list for PBXNativeTarget "CatholicFastingMacAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8EFC34654BB5917B9202A065 /* Release */,
+				A04BF275256D79AC2BAFD268 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7BDBA7951A3051909BA45690 /* Build configuration list for PBXNativeTarget "CatholicFastingMacApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C047F8F8BA3251C72D06571B /* Release */,
+				8A2888696B310410FFC7D3C6 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		97F718FF270B2B97EC1DB19A /* Build configuration list for PBXNativeTarget "CatholicFastingMacAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				72A14E7991DA589092860D05 /* Release */,
+				C43DC243C96F916CA9EC4796 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		A00000000000000000000008 /* Build configuration list for PBXProject "CatholicFastingApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

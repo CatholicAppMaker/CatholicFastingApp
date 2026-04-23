@@ -2,6 +2,9 @@ import SwiftUI
 #if canImport(StoreKit)
 import StoreKit
 #endif
+#if canImport(AppKit)
+import AppKit
+#endif
 #if canImport(UIKit)
 import UIKit
 #endif
@@ -32,6 +35,10 @@ final class MonetizationStore: ObservableObject {
     private var updatesTask: Task<Void, Never>?
 
     init() {
+        if Self.usesLocalDebugPremiumOverride {
+            premiumUnlocked = UserDefaults.standard.bool(forKey: Self.debugPremiumUnlockedKey)
+            statusMessage = premiumUnlocked ? "Premium unlocked for local UI testing." : ""
+        }
         updatesTask = Task {
             await monitorTransactionUpdates()
         }
@@ -42,6 +49,15 @@ final class MonetizationStore: ObservableObject {
     }
 
     func refreshCatalogAndEntitlements() async {
+        if Self.usesLocalDebugPremiumOverride {
+            premiumUnlocked = UserDefaults.standard.bool(forKey: Self.debugPremiumUnlockedKey)
+            premiumProducts = []
+            tipProducts = []
+            statusMessage = premiumUnlocked ? "Premium unlocked for local UI testing." : ""
+            await refreshSubscriptionHealth()
+            return
+        }
+
         isLoading = true
         defer { isLoading = false }
 
@@ -63,7 +79,7 @@ final class MonetizationStore: ObservableObject {
     }
 
     func purchase(_ product: Product) async {
-        if Self.usesSimulatorDebugPurchases {
+        if Self.usesLocalDebugPremiumOverride {
             if Self.premiumProductIDs.contains(product.id) {
                 premiumUnlocked = true
                 UserDefaults.standard.set(true, forKey: Self.debugPremiumUnlockedKey)
@@ -107,7 +123,7 @@ final class MonetizationStore: ObservableObject {
     }
 
     func restorePurchases() async {
-        if Self.usesSimulatorDebugPurchases {
+        if Self.usesLocalDebugPremiumOverride {
             premiumUnlocked = UserDefaults.standard.bool(forKey: Self.debugPremiumUnlockedKey)
             await refreshSubscriptionHealth()
             statusMessage =
@@ -145,13 +161,19 @@ final class MonetizationStore: ObservableObject {
                 statusMessage = "Unable to open subscription settings."
             }
         }
+        #elseif canImport(AppKit)
+        if Self.openManageSubscriptionsURL() {
+            statusMessage = "Opened account subscriptions in the App Store."
+        } else {
+            statusMessage = "Unable to open subscription settings."
+        }
         #else
         statusMessage = "Subscription management is unavailable on this platform."
         #endif
     }
 
     func resetSimulatorDebugPurchase() async {
-        guard Self.usesSimulatorDebugPurchases else { return }
+        guard Self.usesLocalDebugPremiumOverride else { return }
         UserDefaults.standard.removeObject(forKey: Self.debugPremiumUnlockedKey)
         premiumUnlocked = false
         statusMessage = "Simulator debug premium reset."
@@ -159,7 +181,7 @@ final class MonetizationStore: ObservableObject {
     }
 
     private func refreshEntitlements() async {
-        if Self.usesSimulatorDebugPurchases {
+        if Self.usesLocalDebugPremiumOverride {
             premiumUnlocked = UserDefaults.standard.bool(forKey: Self.debugPremiumUnlockedKey)
             return
         }
@@ -175,7 +197,7 @@ final class MonetizationStore: ObservableObject {
     }
 
     private func monitorTransactionUpdates() async {
-        if Self.usesSimulatorDebugPurchases {
+        if Self.usesLocalDebugPremiumOverride {
             return
         }
 
@@ -229,6 +251,12 @@ final class MonetizationStore: ObservableObject {
     }
     #endif
 
+    #if canImport(AppKit)
+    private static func openManageSubscriptionsURL() -> Bool {
+        NSWorkspace.shared.open(UIConstants.manageSubscriptionsURL)
+    }
+    #endif
+
     private func premiumSortIndex(for productID: String) -> Int {
         Self.premiumCatalog.offers.firstIndex(where: { $0.id == productID }) ?? 99
     }
@@ -252,6 +280,10 @@ final class MonetizationStore: ObservableObject {
         #else
         false
         #endif
+    }
+
+    private static var usesLocalDebugPremiumOverride: Bool {
+        usesSimulatorDebugPurchases || ProcessInfo.processInfo.environment["UITEST_MODE"] == "1"
     }
 }
 #else

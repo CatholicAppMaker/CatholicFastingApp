@@ -4,12 +4,24 @@ import UserNotifications
 #endif
 
 enum ReminderScheduler {
+    private struct PendingNotificationRequests: @unchecked Sendable {
+        let value: [UNNotificationRequest]
+    }
+
     private static let reminderPrefix = "required-day-"
     private static let supportReminderPrefix = "habit-support-"
     private static let quoteReminderPrefix = "daily-quote-"
     private static let intermittentSchedulePrefix = "intermittent-schedule-"
     private static let reminderCategory = "habit-reminder"
     private static let dailyQuoteSchedulingHorizon = 21
+
+    private static var notificationSettingsNoun: String {
+        #if os(macOS)
+        "System Settings"
+        #else
+        "Settings"
+        #endif
+    }
 
     static func requestPermission() async -> String {
         #if canImport(UserNotifications)
@@ -20,7 +32,7 @@ enum ReminderScheduler {
             return "Permission already granted"
         }
         if existingStatus == .denied {
-            return "Notifications denied. Enable them in iOS Settings."
+            return "Notifications denied. Enable them in \(notificationSettingsNoun)."
         }
         do {
             let granted = try await center.requestAuthorization(options: [.alert, .sound, .badge])
@@ -378,7 +390,7 @@ enum ReminderScheduler {
             return "Permission not requested"
         }
         if status == .denied {
-            return "Notifications denied in iOS Settings"
+            return "Notifications denied in \(notificationSettingsNoun)"
         }
 
         let requests = await pendingRequests(center)
@@ -480,11 +492,12 @@ enum ReminderScheduler {
     }
 
     private static func pendingRequests(_ center: UNUserNotificationCenter) async -> [UNNotificationRequest] {
-        await withCheckedContinuation { continuation in
+        let wrapped = await withCheckedContinuation { continuation in
             center.getPendingNotificationRequests { requests in
-                continuation.resume(returning: requests)
+                continuation.resume(returning: PendingNotificationRequests(value: requests))
             }
         }
+        return wrapped.value
     }
 
     private static func authorizationStatus(_ center: UNUserNotificationCenter) async

@@ -1,0 +1,6 @@
+#include "MacSharedDebug.xcconfig"
+
+PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingMacAppTests
+INFOPLIST_FILE = CatholicFastingMacAppTests/Info.plist
+TEST_HOST = $(BUILT_PRODUCTS_DIR)/CatholicFastingMacApp.app/Contents/MacOS/CatholicFastingMacApp
+BUNDLE_LOADER = $(TEST_HOST)
