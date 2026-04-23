@@ -4,7 +4,7 @@ extension ContentView {
     var ipadMoreDestinationGroups: [(String, [MoreHubDestination])] {
         [
             (localized("more.workspace.group.core", default: "Core"), [.supportAndPremium, .setupAndReminders, .profileAndNorms]),
-            (localized("more.workspace.group.guidance", default: "Guidance"), [.guidanceAndRules, .privacyAndData]),
+            (localized("more.workspace.group.guidance", default: "Guidance"), [.guidanceAndRules, .historyOfFasting, .privacyAndData]),
         ]
     }
 

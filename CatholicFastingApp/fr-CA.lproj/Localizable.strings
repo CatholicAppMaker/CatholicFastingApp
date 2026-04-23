@@ -55,8 +55,17 @@
 "more.destination.profile.subtitle" = "Mettre à jour votre profil, les normes et le thème.";
 "more.destination.guidance.title" = "Conseils et règles";
 "more.destination.guidance.subtitle" = "Ouvrir le guide alimentaire, les normes et les sources.";
+"more.destination.history.title" = "Histoire du jeûne";
+"more.destination.history.subtitle" = "Découvrez comment le jeûne catholique s'est développé au fil des siècles.";
 "more.destination.privacy.title" = "Confidentialité et données";
 "more.destination.privacy.subtitle" = "Revoir le consentement, les exportations, les sauvegardes et les outils de réinitialisation.";
+"history.overview.eyebrow" = "Référence de formation";
+"history.overview.title" = "Comment le jeûne catholique s'est développé";
+"history.overview.detail" = "Une ligne du temps lisible du jeûne, de l'Église primitive à la pratique latine actuelle. C'est une formation historique, séparée des règles d'aujourd'hui.";
+"history.timeline.section" = "Ligne du temps et articles";
+"history.timeline.footer" = "Utilisez Conseils et règles pour les obligations actuelles. Cette section explique comment la discipline s'est développée avec le temps.";
+"history.article.body" = "Article";
+"history.article.sources" = "Notes de sources";
 "more.hub.hero.title" = "Plus";
 "more.hub.hero.subtitle" = "Un endroit calme pour la configuration, les conseils, la confidentialité et l’aide Premium.";
 "more.hub.lead.title" = "Choisissez une page ciblée";

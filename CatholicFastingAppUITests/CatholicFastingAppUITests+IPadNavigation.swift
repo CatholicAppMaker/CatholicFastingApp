@@ -12,6 +12,7 @@ extension CatholicFastingAppUITests {
             "Setup & Reminders",
             "Profile & Norms",
             "Guidance & Rules",
+            "History of Fasting",
             "Privacy & Data",
         ]
 
@@ -96,6 +97,7 @@ extension CatholicFastingAppUITests {
             "setupAndReminders",
             "profileAndNorms",
             "guidanceAndRules",
+            "historyOfFasting",
             "privacyAndData",
         ]
 
@@ -117,6 +119,32 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(regionPicker, in: app))
         XCTAssertTrue(scrollToElement(app.otherElements["settings.quick.reminder_actions"].firstMatch, in: app))
         XCTAssertTrue(scrollToElement(app.switches["settings.quick.quote_toggle"].firstMatch, in: app))
+    }
+
+    func testIPhoneHistoryOfFastingOpensEraArticle() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openMoreDestination("History of Fasting", in: app)
+
+        let earlyChurch = app.buttons["history.article.earlyChurch"].firstMatch
+        XCTAssertTrue(scrollToElement(earlyChurch, in: app))
+        earlyChurch.tap()
+
+        XCTAssertTrue(app.navigationBars["Early Church foundations"].waitForExistence(timeout: 4))
+        XCTAssertTrue(elementByIdentifier("history.article.body.earlyChurch", in: app).waitForExistence(timeout: 4))
+    }
+
+    func testIPadHistoryOfFastingWorkspaceOpensArticleList() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadMoreDestination("historyOfFasting", in: app)
+
+        XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
+        XCTAssertTrue(scrollToElement(app.buttons["history.article.earlyChurch"].firstMatch, in: app))
     }
 
     func testIPadMoreDefaultsToPremiumWorkspace() {

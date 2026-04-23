@@ -319,3 +319,12 @@
 "premium.hero.subtitle" = "Choose one clear premium path for planning, reminders, reflection, and review through the Church year.";
 "premium.hero.active_title" = "Formation Toolkit Active";
 "premium.hero.active_subtitle" = "Keep planning, recovery, reflection, and review in one focused Catholic workflow.";
+"more.destination.history.title" = "History of Fasting";
+"more.destination.history.subtitle" = "Learn how Catholic fasting developed through the ages.";
+"history.overview.eyebrow" = "Formation Reference";
+"history.overview.title" = "How Catholic fasting developed";
+"history.overview.detail" = "A readable timeline of fasting from the early Church to current Latin Church practice. This is historical formation, separate from today's rules.";
+"history.timeline.section" = "Timeline and Articles";
+"history.timeline.footer" = "Use Guidance & Rules for current obligations. This section explains how the discipline developed over time.";
+"history.article.body" = "Article";
+"history.article.sources" = "Source Notes";

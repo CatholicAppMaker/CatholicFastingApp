@@ -68,6 +68,60 @@ final class GrowthContractsTests: XCTestCase {
         }
     }
 
+    func testFastingHistoryCatalogHasFiveStableEras() {
+        let articles = FastingHistoryCatalog.articles(locale: .english)
+
+        XCTAssertEqual(articles.map(\.eraID), FastingHistoryEraID.allCases)
+        XCTAssertEqual(articles.count, 5)
+        XCTAssertEqual(articles.first?.eraID, .earlyChurch)
+        XCTAssertEqual(articles.last?.eraID, .postVaticanII)
+    }
+
+    func testFastingHistoryCatalogHasLocalizedContentAcrossSupportedLocales() {
+        let locales: [ContentLocale] = [.english, .spanish, .frenchCanadian]
+
+        for locale in locales {
+            let articles = FastingHistoryCatalog.articles(locale: locale)
+
+            XCTAssertEqual(articles.count, 5)
+            for article in articles {
+                XCTAssertEqual(article.locale, locale)
+                XCTAssertFalse(article.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                XCTAssertFalse(article.dateRange.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                XCTAssertFalse(article.summary.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                XCTAssertGreaterThan(article.body.count, 400)
+            }
+        }
+
+        let englishTitles = FastingHistoryCatalog.articles(locale: .english).map(\.title)
+        XCTAssertNotEqual(englishTitles, FastingHistoryCatalog.articles(locale: .spanish).map(\.title))
+        XCTAssertNotEqual(englishTitles, FastingHistoryCatalog.articles(locale: .frenchCanadian).map(\.title))
+        XCTAssertNotEqual(
+            FastingHistoryCatalog.article(for: .postVaticanII, locale: .english).body,
+            FastingHistoryCatalog.article(for: .postVaticanII, locale: .spanish).body)
+        XCTAssertNotEqual(
+            FastingHistoryCatalog.article(for: .postVaticanII, locale: .english).body,
+            FastingHistoryCatalog.article(for: .postVaticanII, locale: .frenchCanadian).body)
+    }
+
+    func testFastingHistoryCatalogIncludesSourceNotesForEveryArticle() {
+        let locales: [ContentLocale] = [.english, .spanish, .frenchCanadian]
+
+        for locale in locales {
+            for article in FastingHistoryCatalog.articles(locale: locale) {
+                XCTAssertGreaterThanOrEqual(article.sourceNotes.count, 1)
+                for sourceNote in article.sourceNotes {
+                    XCTAssertFalse(sourceNote.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    XCTAssertFalse(sourceNote.detail.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                }
+            }
+        }
+    }
+
+    func testFastingHistoryCatalogRemainsFreeFormationContent() {
+        XCTAssertFalse(FastingHistoryCatalog.isPremiumFeature)
+    }
+
     func testDailyQuoteReminderProviderUsesLocalizedSeasonalQuotePool() {
         let date = Date(timeIntervalSince1970: 1_773_100_800) // 2026-03-10 UTC
 

@@ -127,6 +127,8 @@ final class CatholicFastingAppUITests: XCTestCase {
             "profileAndNorms"
         case "Guidance & Rules":
             "guidanceAndRules"
+        case "History of Fasting":
+            "historyOfFasting"
         case "Privacy & Data":
             "privacyAndData"
         default:
@@ -144,6 +146,8 @@ final class CatholicFastingAppUITests: XCTestCase {
             "Profile & Norms"
         case "guidanceAndRules":
             "Guidance & Rules"
+        case "historyOfFasting":
+            "History of Fasting"
         case "privacyAndData":
             "Privacy & Data"
         default:
@@ -265,6 +269,8 @@ final class CatholicFastingAppUITests: XCTestCase {
             XCTAssertTrue(scrollToElement(app.pickers["settings.region_picker"].firstMatch, in: app))
         case "guidanceAndRules":
             XCTAssertTrue(scrollToElement(app.otherElements["guidance.food.section"].firstMatch, in: app))
+        case "historyOfFasting":
+            XCTAssertTrue(scrollToElement(app.buttons["history.article.earlyChurch"].firstMatch, in: app))
         case "privacyAndData":
             XCTAssertTrue(app.navigationBars["Privacy & Data"].firstMatch.waitForExistence(timeout: 4))
             XCTAssertTrue(app.buttons["launch.export_data"].firstMatch.waitForExistence(timeout: 4))

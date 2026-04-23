@@ -55,8 +55,17 @@
 "more.destination.profile.subtitle" = "Actualice su perfil, normas y tema.";
 "more.destination.guidance.title" = "Guía y reglas";
 "more.destination.guidance.subtitle" = "Abra la guía de alimentos, normas y fuentes.";
+"more.destination.history.title" = "Historia del ayuno";
+"more.destination.history.subtitle" = "Conozca cómo se desarrolló el ayuno católico a través de los siglos.";
 "more.destination.privacy.title" = "Privacidad y datos";
 "more.destination.privacy.subtitle" = "Revise consentimiento, exportaciones, respaldos y herramientas de reinicio.";
+"history.overview.eyebrow" = "Referencia formativa";
+"history.overview.title" = "Cómo se desarrolló el ayuno católico";
+"history.overview.detail" = "Una línea de tiempo legible del ayuno desde la Iglesia primitiva hasta la práctica latina actual. Es formación histórica, separada de las reglas de hoy.";
+"history.timeline.section" = "Línea de tiempo y artículos";
+"history.timeline.footer" = "Use Guía y reglas para las obligaciones actuales. Esta sección explica cómo se desarrolló la disciplina con el tiempo.";
+"history.article.body" = "Artículo";
+"history.article.sources" = "Notas de fuentes";
 "more.hub.hero.title" = "Más";
 "more.hub.hero.subtitle" = "Un lugar tranquilo para configuración, guía, privacidad y soporte Premium.";
 "more.hub.lead.title" = "Elija una página enfocada";

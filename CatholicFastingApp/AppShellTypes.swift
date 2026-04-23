@@ -45,6 +45,7 @@ enum MoreHubDestination: String, CaseIterable, Identifiable {
     case setupAndReminders
     case profileAndNorms
     case guidanceAndRules
+    case historyOfFasting
     case privacyAndData
 
     var id: String {
@@ -57,6 +58,7 @@ enum MoreHubDestination: String, CaseIterable, Identifiable {
         case .setupAndReminders: "Setup & Reminders"
         case .profileAndNorms: "Profile & Norms"
         case .guidanceAndRules: "Guidance & Rules"
+        case .historyOfFasting: "History of Fasting"
         case .privacyAndData: "Privacy & Data"
         }
     }
@@ -67,6 +69,7 @@ enum MoreHubDestination: String, CaseIterable, Identifiable {
         case .setupAndReminders: "Finish setup and manage reminders."
         case .profileAndNorms: "Update your profile, norms, and theme."
         case .guidanceAndRules: "Open food guidance, norms, and sources."
+        case .historyOfFasting: "Learn how Catholic fasting developed through the ages."
         case .privacyAndData: "Review consent, exports, backups, and reset tools."
         }
     }
@@ -77,6 +80,7 @@ enum MoreHubDestination: String, CaseIterable, Identifiable {
         case .setupAndReminders: "bell.badge"
         case .profileAndNorms: "person.crop.circle"
         case .guidanceAndRules: "book.closed"
+        case .historyOfFasting: "clock.arrow.circlepath"
         case .privacyAndData: "lock.shield"
         }
     }
