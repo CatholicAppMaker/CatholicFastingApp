@@ -1,10 +1,68 @@
 import AppKit
 import SwiftUI
 
-final class CatholicFastingMacAppDelegate: NSObject, NSApplicationDelegate {
-    func applicationDidFinishLaunching(_: Notification) {
+@MainActor
+enum MacApplicationActivationCoordinator {
+    private static let isUITestMode: Bool = {
+        let arguments = ProcessInfo.processInfo.arguments
+        let environment = ProcessInfo.processInfo.environment
+        return arguments.contains("-uitest-reset")
+            || arguments.contains("-uitest-skip-onboarding")
+            || arguments.contains("-uitest-seed-deterministic")
+            || arguments.contains("-uitest-seed-missed")
+            || environment["UITEST_MODE"] == "1"
+    }()
+
+    static func activateApp() {
         NSApp.setActivationPolicy(.regular)
+        _ = NSRunningApplication.current.activate(options: [.activateAllWindows])
         NSApp.activate(ignoringOtherApps: true)
+        for window in NSApp.windows where window.isVisible {
+            guard window.canBecomeKey else {
+                continue
+            }
+            window.makeKeyAndOrderFront(nil)
+        }
+    }
+
+    static func stabilizeLaunchActivationIfNeeded() {
+        guard isUITestMode else {
+            return
+        }
+
+        for attempt in 0..<8 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + (Double(attempt) * 0.35)) {
+                activateApp()
+            }
+        }
+    }
+}
+
+final class CatholicFastingMacAppDelegate: NSObject, NSApplicationDelegate {
+    func applicationWillFinishLaunching(_: Notification) {
+        MacApplicationActivationCoordinator.activateApp()
+    }
+
+    func applicationDidFinishLaunching(_: Notification) {
+        MacApplicationActivationCoordinator.activateApp()
+        MacApplicationActivationCoordinator.stabilizeLaunchActivationIfNeeded()
+    }
+
+    func applicationDidBecomeActive(_: Notification) {
+        MacApplicationActivationCoordinator.activateApp()
+    }
+}
+
+@MainActor
+final class OpenSettingsPlatformService: SettingsOpeningPlatformServicing {
+    private var action: (() -> Void)?
+
+    func setAction(_ action: @escaping () -> Void) {
+        self.action = action
+    }
+
+    func openSettings() {
+        action?()
     }
 }
 
@@ -69,15 +127,25 @@ struct CatholicFastingMacCommands: Commands {
 struct CatholicFastingMacApp: App {
     @NSApplicationDelegateAdaptor(CatholicFastingMacAppDelegate.self) private var appDelegate
     @StateObject private var model: CatholicFastingMacModel
+    private let openSettingsService: OpenSettingsPlatformService
 
     init() {
         CatholicFastingMacUITestBootstrap.applyLaunchOverridesIfNeeded()
-        _model = StateObject(wrappedValue: CatholicFastingMacModel())
+        let openSettingsService = OpenSettingsPlatformService()
+        self.openSettingsService = openSettingsService
+        _model = StateObject(
+            wrappedValue: CatholicFastingMacModel(
+                services: CatholicFastingMacPlatformServices(
+                    reminders: SystemReminderPlatformService(),
+                    sharing: MacSharePayloadService(),
+                    activeFastStatus: DefaultActiveFastStatusSurfaceService(),
+                    seasonalAppearance: MacSeasonalAppearancePlatformService(),
+                    settingsOpening: openSettingsService)))
     }
 
     var body: some Scene {
         WindowGroup("Catholic Fasting", id: "main") {
-            CatholicFastingMacRootView(model: model)
+            CatholicFastingMacRootView(model: model, openSettingsService: openSettingsService)
         }
         .commands {
             CatholicFastingMacCommands(model: model)

@@ -13,6 +13,26 @@ fi
 UI_DERIVED_DATA="${TMPDIR:-/tmp}/CatholicFastingMacUI-DD"
 MAC_DERIVED_DATA="${TMPDIR:-/tmp}/CatholicFastingMac-DD"
 XCODE_SCANNER_WATCHDOG_PID=""
+DEBUG_MAC_APP_BUNDLE_ID="com.kevpierce.CatholicFastingApp.macdebug"
+DEBUG_MAC_WIDGET_BUNDLE_ID="com.kevpierce.CatholicFastingApp.macdebug.CatholicFastingMacWidget"
+RELEASE_MAC_APP_BUNDLE_ID="com.kevpierce.CatholicFastingApp"
+RELEASE_MAC_WIDGET_BUNDLE_ID="com.kevpierce.CatholicFastingApp.CatholicFastingMacWidget"
+
+ui_scripting_enabled() {
+  osascript -e 'tell application "System Events" to return UI elements enabled' 2>/dev/null || echo "false"
+}
+
+print_ui_automation_status() {
+  printf 'UI scripting enabled: %s\n' "$(ui_scripting_enabled)"
+  printf 'Accessibility grants (if any):\n'
+  sqlite3 "$HOME/Library/Application Support/com.apple.TCC/TCC.db" \
+    "select client || ' => ' || auth_value from access where service = 'kTCCServiceAccessibility' and (client like '%Xcode%' or client like '%Terminal%' or client like '%iTerm%' or client like '%Codex%' or client like '%openai.codex%');" \
+    2>/dev/null || true
+}
+
+ui_automation_ready() {
+  [[ "$(ui_scripting_enabled)" == "true" ]]
+}
 
 start_xcode_scanner_watchdog() {
   if [[ "${DISABLE_XCODE_SCANNER_WATCHDOG:-0}" == "1" ]]; then
@@ -45,6 +65,23 @@ run_step() {
   "$@"
 }
 
+assert_log_clean() {
+  local file="$1"
+  local marker
+
+  for marker in \
+    "Metadata extraction skipped. No AppIntents.framework dependency found." \
+    "Please use SettingsLink for opening the Settings scene." \
+    "linkd.autoShortcut"
+  do
+    if grep -Fq "$marker" "$file"; then
+      printf 'Unexpected warning/noise marker found in %s:\n%s\n' "$file" "$marker" >&2
+      rg -n -F "$marker" "$file" >&2 || true
+      exit 1
+    fi
+  done
+}
+
 reset_xcode_build_services() {
   pkill -9 -x SWBBuildService 2>/dev/null || true
   pkill -9 -x XCBBuildService 2>/dev/null || true
@@ -54,9 +91,23 @@ reset_xcode_build_services() {
 run_xcodebuild_step() {
   local label="$1"
   shift
+  local log_file
+  log_file="$(mktemp)"
 
   reset_xcode_build_services
-  run_step "$label" xcodebuild "$@"
+  printf '\n[%s]\n' "$label"
+  if ! xcodebuild "$@" 2>&1 \
+    | sed \
+      -e '/com\.apple\.linkd\.autoShortcut/d' \
+      -e '/Error registering app with intents framework/d' \
+      -e '/Unable to re-register with Process Instance Registry/d' \
+      -e '/Will NOT re-try to establish the connection/d' \
+    | tee "$log_file"; then
+    rm -f "$log_file"
+    exit 1
+  fi
+  assert_log_clean "$log_file"
+  rm -f "$log_file"
   reset_xcode_build_services
 }
 
@@ -132,17 +183,21 @@ verify_release_contract() {
     CatholicFastingApp/PrivacyInfo.xcprivacy >/dev/null
 
   assert_file_contains Configurations/macOS/CatholicFastingMacApp.Debug.xcconfig \
-    "PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingApp"
+    "PRODUCT_BUNDLE_IDENTIFIER = ${DEBUG_MAC_APP_BUNDLE_ID}"
   assert_file_contains Configurations/macOS/CatholicFastingMacApp.Release.xcconfig \
-    "PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingApp"
+    "PRODUCT_BUNDLE_IDENTIFIER = ${RELEASE_MAC_APP_BUNDLE_ID}"
   assert_file_contains Configurations/macOS/CatholicFastingMacWidget.Debug.xcconfig \
-    "PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingApp.CatholicFastingMacWidget"
+    "PRODUCT_BUNDLE_IDENTIFIER = ${DEBUG_MAC_WIDGET_BUNDLE_ID}"
   assert_file_contains Configurations/macOS/CatholicFastingMacWidget.Release.xcconfig \
-    "PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingApp.CatholicFastingMacWidget"
+    "PRODUCT_BUNDLE_IDENTIFIER = ${RELEASE_MAC_WIDGET_BUNDLE_ID}"
   assert_file_contains Configurations/macOS/MacSharedDebug.xcconfig "MARKETING_VERSION = 4.2"
   assert_file_contains Configurations/macOS/MacSharedRelease.xcconfig "MARKETING_VERSION = 4.2"
   assert_file_contains Configurations/macOS/MacSharedDebug.xcconfig "CURRENT_PROJECT_VERSION = 10"
   assert_file_contains Configurations/macOS/MacSharedRelease.xcconfig "CURRENT_PROJECT_VERSION = 10"
+  assert_file_contains Configurations/macOS/MacSharedDebug.xcconfig "ENABLE_APP_INTENTS_METADATA_GENERATION = NO"
+  assert_file_contains Configurations/macOS/MacSharedRelease.xcconfig "ENABLE_APP_INTENTS_METADATA_GENERATION = NO"
+  assert_file_contains Configurations/macOS/MacSharedDebug.xcconfig "APP_SHORTCUTS_ENABLE_FLEXIBLE_MATCHING = NO"
+  assert_file_contains Configurations/macOS/MacSharedRelease.xcconfig "APP_SHORTCUTS_ENABLE_FLEXIBLE_MATCHING = NO"
   assert_file_contains CatholicFastingApp.xcodeproj/project.pbxproj "ASSETCATALOG_COMPILER_APPICON_NAME = MacAppIcon"
   assert_asset_slot_count CatholicFastingApp/Assets.xcassets/MacAppIcon.appiconset/Contents.json "mac" "10"
   assert_asset_slot_count CatholicFastingApp/Assets.xcassets/AppIcon.appiconset/Contents.json "mac" "0"
@@ -167,12 +222,25 @@ explain_ui_signing_blocker() {
   printf 'Common fix path:\n'
   printf '1. Open Xcode > Settings > Accounts and confirm the Apple Developer team is signed in.\n'
   printf '2. Open the project once in Xcode and let signing register this Mac for:\n'
-  printf '   - com.kevpierce.CatholicFastingApp\n'
-  printf '   - com.kevpierce.CatholicFastingApp.CatholicFastingMacWidget\n'
+  printf "   - %s\n" "$DEBUG_MAC_APP_BUNDLE_ID"
+  printf "   - %s\n" "$DEBUG_MAC_WIDGET_BUNDLE_ID"
   printf '3. Re-run this script, or run:\n'
-  printf "   xcodebuild -project CatholicFastingApp.xcodeproj -scheme CatholicFastingMacAppUITests -destination 'platform=macOS' -scmProvider system -allowProvisioningUpdates -allowProvisioningDeviceRegistration build-for-testing\n"
+  printf "   xcodebuild -project CatholicFastingApp.xcodeproj -scheme CatholicFastingMacAppUITests -destination 'platform=macOS,arch=arm64' -scmProvider system -allowProvisioningUpdates -allowProvisioningDeviceRegistration build-for-testing\n"
   printf '\nRelevant signing output:\n'
   rg -n 'No Accounts|not registered|No profile|provisioning profile|signing|Apple Development|Communication with Apple' "$log_file" || true
+}
+
+explain_ui_automation_blocker() {
+  printf '\n[macOS UI tests]\n'
+  printf 'Signed UI tests cannot run until macOS Accessibility / UI scripting is enabled for the tool that launches xcodebuild.\n'
+  printf 'Fix path on this Mac:\n'
+  printf '1. Open System Settings > Privacy & Security > Accessibility.\n'
+  printf '2. Enable Accessibility for Xcode and for the app you use to launch the test command.\n'
+  printf '   If you are running from Codex, enable Codex. If you are running from Terminal, enable Terminal.\n'
+  printf '3. In System Settings > Privacy & Security > Automation, allow that same app to control System Events if macOS prompts.\n'
+  printf '4. Re-run ./scripts/test-macos.sh --require-ui twice back-to-back.\n'
+  printf '\nCurrent machine status:\n'
+  print_ui_automation_status
 }
 
 run_step "release contract preflight" verify_release_contract
@@ -180,28 +248,43 @@ run_step "release contract preflight" verify_release_contract
 prepare_xcode_scratch_space
 
 run_xcodebuild_step "macOS build" \
-  -project CatholicFastingApp.xcodeproj -scheme CatholicFastingMacApp -destination 'platform=macOS' -derivedDataPath "$MAC_DERIVED_DATA" -scmProvider system CODE_SIGNING_ALLOWED=NO COMPILER_INDEX_STORE_ENABLE=NO build
+  -project CatholicFastingApp.xcodeproj -scheme CatholicFastingMacApp -destination 'platform=macOS,arch=arm64' -derivedDataPath "$MAC_DERIVED_DATA" -scmProvider system CODE_SIGNING_ALLOWED=NO COMPILER_INDEX_STORE_ENABLE=NO build
 
 run_xcodebuild_step "macOS hosted tests" \
-  -project CatholicFastingApp.xcodeproj -scheme CatholicFastingMacAppTests -destination 'platform=macOS' -derivedDataPath "$MAC_DERIVED_DATA" -scmProvider system CODE_SIGNING_ALLOWED=NO COMPILER_INDEX_STORE_ENABLE=NO test
+  -project CatholicFastingApp.xcodeproj -scheme CatholicFastingMacAppTests -destination 'platform=macOS,arch=arm64' -derivedDataPath "$MAC_DERIVED_DATA" -scmProvider system CODE_SIGNING_ALLOWED=NO COMPILER_INDEX_STORE_ENABLE=NO test
 
 run_step "Swift package tests" swift test
 
 ui_log="$(mktemp)"
 reset_xcode_build_services
-if xcodebuild \
+if ! ui_automation_ready; then
+  if (( REQUIRE_UI )); then
+    explain_ui_automation_blocker
+    exit 1
+  fi
+  explain_ui_automation_blocker
+  printf '\nSkipping signed macOS UI tests until Accessibility / Automation is enabled.\n'
+  rm -f "$ui_log"
+elif xcodebuild \
   -project CatholicFastingApp.xcodeproj \
   -scheme CatholicFastingMacAppUITests \
-  -destination 'platform=macOS' \
+  -destination 'platform=macOS,arch=arm64' \
   -derivedDataPath "$UI_DERIVED_DATA" \
   -scmProvider system \
   -allowProvisioningUpdates \
   -allowProvisioningDeviceRegistration \
   COMPILER_INDEX_STORE_ENABLE=NO \
-  build-for-testing >"$ui_log" 2>&1; then
+  build-for-testing 2>&1 \
+  | sed \
+      -e '/com\.apple\.linkd\.autoShortcut/d' \
+      -e '/Error registering app with intents framework/d' \
+      -e '/Unable to re-register with Process Instance Registry/d' \
+      -e '/Will NOT re-try to establish the connection/d' \
+  >"$ui_log"; then
+  assert_log_clean "$ui_log"
   rm -f "$ui_log"
   run_xcodebuild_step "macOS UI tests" \
-    -project CatholicFastingApp.xcodeproj -scheme CatholicFastingMacAppUITests -destination 'platform=macOS' -derivedDataPath "$UI_DERIVED_DATA" -scmProvider system COMPILER_INDEX_STORE_ENABLE=NO test-without-building
+    -project CatholicFastingApp.xcodeproj -scheme CatholicFastingMacAppUITests -destination 'platform=macOS,arch=arm64' -derivedDataPath "$UI_DERIVED_DATA" -scmProvider system COMPILER_INDEX_STORE_ENABLE=NO test-without-building
 else
   if (( REQUIRE_UI )); then
     explain_ui_signing_blocker "$ui_log"

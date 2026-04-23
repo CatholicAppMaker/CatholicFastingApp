@@ -108,15 +108,26 @@ struct MacSeasonalAppearancePlatformService: SeasonalAppearancePlatformServicing
 }
 
 @MainActor
+protocol SettingsOpeningPlatformServicing {
+    func openSettings()
+}
+
+struct NoopSettingsOpeningPlatformService: SettingsOpeningPlatformServicing {
+    func openSettings() {}
+}
+
+@MainActor
 struct CatholicFastingMacPlatformServices {
     let reminders: ReminderPlatformServicing
     let sharing: SharePayloadPlatformServicing
     let activeFastStatus: ActiveFastStatusSurfaceServicing
     let seasonalAppearance: SeasonalAppearancePlatformServicing
+    let settingsOpening: SettingsOpeningPlatformServicing
 
     static let live = CatholicFastingMacPlatformServices(
         reminders: SystemReminderPlatformService(),
         sharing: MacSharePayloadService(),
         activeFastStatus: DefaultActiveFastStatusSurfaceService(),
-        seasonalAppearance: MacSeasonalAppearancePlatformService())
+        seasonalAppearance: MacSeasonalAppearancePlatformService(),
+        settingsOpening: NoopSettingsOpeningPlatformService())
 }

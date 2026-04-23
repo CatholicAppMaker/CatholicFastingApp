@@ -80,6 +80,10 @@
 		A0000000000000000000005A /* LiturgicalSeasonThemeEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000005B /* LiturgicalSeasonThemeEngine.swift */; };
 		A00000000000000000000061 /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00000000000000000000060 /* AppIntents.framework */; };
 		A00000000000000000000062 /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00000000000000000000060 /* AppIntents.framework */; };
+		9A8B7C6D5E4F302112233445 /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00000000000000000000060 /* AppIntents.framework */; };
+		9A8B7C6D5E4F302112233446 /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00000000000000000000060 /* AppIntents.framework */; };
+		9A8B7C6D5E4F302112233447 /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00000000000000000000060 /* AppIntents.framework */; };
+		9A8B7C6D5E4F302112233448 /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00000000000000000000060 /* AppIntents.framework */; };
 		A00000000000000000000063 /* PremiumExperienceEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000064 /* PremiumExperienceEngine.swift */; };
 		A00000000000000000000076 /* CatholicFastingWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000071 /* CatholicFastingWidgetBundle.swift */; };
 		A00000000000000000000077 /* CatholicFastingWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000072 /* CatholicFastingWidget.swift */; };
@@ -415,6 +419,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A8B7C6D5E4F302112233445 /* AppIntents.framework in Frameworks */,
 				C3C4A799E5C7911C65BA104E /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -423,6 +428,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A8B7C6D5E4F302112233447 /* AppIntents.framework in Frameworks */,
 				89C0E4C05D4D4852A2DA0FDB /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -454,6 +460,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A8B7C6D5E4F302112233446 /* AppIntents.framework in Frameworks */,
 				37DCB3199298E45E1C678A83 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -462,6 +469,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A8B7C6D5E4F302112233448 /* AppIntents.framework in Frameworks */,
 				3C1FB855B1639D44F08447BD /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

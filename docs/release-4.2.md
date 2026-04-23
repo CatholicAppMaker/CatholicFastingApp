@@ -21,9 +21,12 @@ If App Store Connect has already consumed build `10` for version `4.2`, bump eve
 
 - Add macOS as a platform on the existing Catholic Fasting app record.
 - Add macOS to the existing Catholic Fasting App Store record for universal purchase.
-- Use the existing app bundle ID for the native Mac app and a unique extension bundle ID for the Mac widget:
+- Use the existing app bundle ID for the native Mac app and a unique extension bundle ID for the Mac widget in `Release`:
   - `com.kevpierce.CatholicFastingApp`
   - `com.kevpierce.CatholicFastingApp.CatholicFastingMacWidget`
+- Keep the local `Debug` Mac IDs separate so unsigned desktop verification does not trigger iOS shortcut-registration noise:
+  - `com.kevpierce.CatholicFastingApp.macdebug`
+  - `com.kevpierce.CatholicFastingApp.macdebug.CatholicFastingMacWidget`
 - Keep subscriptions in the existing product family:
   - `com.kevpierce.catholicfasting.premium.monthly.v3`
   - `com.kevpierce.catholicfasting.premium.yearly.v3`
@@ -54,10 +57,12 @@ Catholic Fasting 4.2 adds native Mac support, including a desktop sidebar layout
 swift test
 xcodebuild -project CatholicFastingApp.xcodeproj -scheme CatholicFastingApp -destination 'generic/platform=iOS' build
 xcodebuild -project CatholicFastingApp.xcodeproj -scheme CatholicFastingWidget -destination 'generic/platform=iOS' build
-xcodebuild -project CatholicFastingApp.xcodeproj -scheme CatholicFastingMacApp -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build
-xcodebuild -project CatholicFastingApp.xcodeproj -scheme CatholicFastingMacAppTests -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO test
+xcodebuild -project CatholicFastingApp.xcodeproj -scheme CatholicFastingMacApp -destination 'platform=macOS,arch=arm64' CODE_SIGNING_ALLOWED=NO build
+xcodebuild -project CatholicFastingApp.xcodeproj -scheme CatholicFastingMacAppTests -destination 'platform=macOS,arch=arm64' CODE_SIGNING_ALLOWED=NO test
 ./scripts/test-macos.sh --require-ui
 ```
+
+For 4.2, App Shortcuts and App Intents remain iPhone/iPad-only. The native Mac targets explicitly disable App Intents metadata generation and App Shortcuts flexible matching in the shared Mac xcconfigs.
 
 ## Release Candidate Gate
 

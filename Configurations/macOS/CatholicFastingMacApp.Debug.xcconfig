@@ -1,5 +1,5 @@
 #include "MacSharedDebug.xcconfig"
 
-PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingApp
+PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingApp.macdebug
 INFOPLIST_FILE = CatholicFastingMacApp/Info.plist
 CODE_SIGN_ENTITLEMENTS = CatholicFastingMacApp/CatholicFastingMacApp.entitlements

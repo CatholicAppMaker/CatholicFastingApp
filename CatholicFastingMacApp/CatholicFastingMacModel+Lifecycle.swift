@@ -4,17 +4,13 @@ import SwiftUI
 @MainActor
 extension CatholicFastingMacModel {
     func bringAppToFront() {
-        NSApp.activate(ignoringOtherApps: true)
-    }
-
-    func openSettingsWindow() {
-        bringAppToFront()
-        NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+        MacApplicationActivationCoordinator.activateApp()
     }
 
     func openSettings(_ pane: CatholicFastingMacSettingsPane) {
         selectedSettingsPane = pane
-        openSettingsWindow()
+        bringAppToFront()
+        services.settingsOpening.openSettings()
     }
 
     func performInitialStartupTasks() async {

@@ -8,6 +8,7 @@ final class CatholicFastingMacAppTests: XCTestCase {
     private var reminderService: TestReminderPlatformService!
     private var sharingService: TestSharePayloadPlatformService!
     private var seasonalService: TestSeasonalAppearancePlatformService!
+    private var settingsOpeningService: TestSettingsOpeningPlatformService!
 
     override func setUp() {
         super.setUp()
@@ -16,6 +17,7 @@ final class CatholicFastingMacAppTests: XCTestCase {
         reminderService = TestReminderPlatformService()
         sharingService = TestSharePayloadPlatformService()
         seasonalService = TestSeasonalAppearancePlatformService()
+        settingsOpeningService = TestSettingsOpeningPlatformService()
         LocalFeatureStore.clearAll()
         WidgetSnapshotStore.clear()
     }
@@ -27,6 +29,7 @@ final class CatholicFastingMacAppTests: XCTestCase {
         reminderService = nil
         sharingService = nil
         seasonalService = nil
+        settingsOpeningService = nil
         defaults = nil
         defaultsSuiteName = ""
         super.tearDown()
@@ -64,9 +67,11 @@ final class CatholicFastingMacAppTests: XCTestCase {
 
         model.handleDeepLink(.surface(.more))
         XCTAssertEqual(model.selectedSettingsPane, .profile)
+        XCTAssertEqual(settingsOpeningService.openSettingsCalls, 1)
 
         model.handleDeepLink(.settings)
         XCTAssertEqual(model.selectedSettingsPane, .profile)
+        XCTAssertEqual(settingsOpeningService.openSettingsCalls, 2)
 
         model.handleDeepLink(.premium)
         XCTAssertEqual(model.selectedSurface, .premium)
@@ -78,6 +83,15 @@ final class CatholicFastingMacAppTests: XCTestCase {
         XCTAssertEqual(AppDeepLinkTarget.parse(url: UIConstants.deepLinkPremiumURL), .premium)
         XCTAssertEqual(try AppDeepLinkTarget.parse(url: XCTUnwrap(URL(string: "catholicfasting://more"))), .settings)
         XCTAssertEqual(try AppDeepLinkTarget.parse(url: XCTUnwrap(URL(string: "catholicfasting://toolkit"))), .premium)
+    }
+
+    func testOpenSettingsSelectsPaneAndInvokesSettingsOpener() {
+        let model = makeModel()
+
+        model.openSettings(.privacy)
+
+        XCTAssertEqual(model.selectedSettingsPane, .privacy)
+        XCTAssertEqual(settingsOpeningService.openSettingsCalls, 1)
     }
 
     func testDeepLinkParserAcceptsDesktopRouteAliasesAndRejectsUnknownSchemes() throws {
@@ -515,7 +529,11 @@ final class CatholicFastingMacAppTests: XCTestCase {
     }
 
     func testRuntimeBundleUsesReleaseVersionAndUniversalAppIdentifier() {
+        #if DEBUG
+        XCTAssertEqual(Bundle.main.bundleIdentifier, "com.kevpierce.CatholicFastingApp.macdebug")
+        #else
         XCTAssertEqual(Bundle.main.bundleIdentifier, "com.kevpierce.CatholicFastingApp")
+        #endif
         XCTAssertEqual(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String, "4.2")
         XCTAssertEqual(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String, "10")
     }
@@ -552,7 +570,8 @@ final class CatholicFastingMacAppTests: XCTestCase {
                 reminders: reminderService,
                 sharing: sharingService,
                 activeFastStatus: DefaultActiveFastStatusSurfaceService(),
-                seasonalAppearance: seasonalService),
+                seasonalAppearance: seasonalService,
+                settingsOpening: settingsOpeningService),
             isUITestMode: isUITestMode)
     }
 }
@@ -628,5 +647,14 @@ private final class TestSeasonalAppearancePlatformService: SeasonalAppearancePla
 
     func handleSceneDidBecomeActive() async {
         handleSceneDidBecomeActiveCalls += 1
+    }
+}
+
+@MainActor
+private final class TestSettingsOpeningPlatformService: SettingsOpeningPlatformServicing {
+    private(set) var openSettingsCalls = 0
+
+    func openSettings() {
+        openSettingsCalls += 1
     }
 }

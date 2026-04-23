@@ -2,6 +2,8 @@ import SwiftUI
 
 struct CatholicFastingMacRootView: View {
     @ObservedObject var model: CatholicFastingMacModel
+    let openSettingsService: OpenSettingsPlatformService
+    @Environment(\.openSettings) private var openSettings
     @State private var hasRunStartup = false
 
     var body: some View {
@@ -33,10 +35,18 @@ struct CatholicFastingMacRootView: View {
         .navigationSplitViewStyle(.balanced)
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("mac.root.ready")
+        .onAppear {
+            MacApplicationActivationCoordinator.activateApp()
+        }
         .task {
             guard !hasRunStartup else { return }
             hasRunStartup = true
+            MacApplicationActivationCoordinator.activateApp()
+            openSettingsService.setAction {
+                openSettings()
+            }
             await model.performInitialStartupTasks()
+            MacApplicationActivationCoordinator.stabilizeLaunchActivationIfNeeded()
         }
         .onOpenURL { url in
             guard let target = AppDeepLinkTarget.parse(url: url) else { return }
