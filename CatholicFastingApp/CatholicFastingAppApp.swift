@@ -47,6 +47,11 @@ private actor SeasonalIconManager {
             return
         }
 
+        guard SeasonalAppIconPolicy.automaticUpdatesEnabled(userDefaults: defaults) else {
+            logger.debug("Skipping seasonal icon update because automatic app icon updates are disabled.")
+            return
+        }
+
         if !hasPerformedDeferredLaunchRefresh {
             hasPerformedDeferredLaunchRefresh = true
             try? await Task.sleep(for: .seconds(1))
@@ -63,7 +68,7 @@ private actor SeasonalIconManager {
         isApplying = true
         defer { isApplying = false }
 
-        let targetIcon = currentSeasonalIconName(userDefaults: userDefaults)
+        let targetIcon = SeasonalAppIconPolicy.targetIconName(userDefaults: userDefaults)
         let currentIcon = await MainActor.run { UIApplication.shared.alternateIconName }
 
         guard targetIcon != currentIcon else {
@@ -82,27 +87,6 @@ private actor SeasonalIconManager {
                     self.logger.error("Seasonal icon update failed: \(error.localizedDescription, privacy: .public)")
                 }
             }
-        }
-    }
-
-    private func currentSeasonalIconName(now: Date = Date(), userDefaults: UserDefaults) -> String? {
-        let seasonModeEnabled =
-            userDefaults.object(forKey: StorageKeys.liturgicalSeasonColorsEnabled) == nil
-                ? true
-                : userDefaults.bool(forKey: StorageKeys.liturgicalSeasonColorsEnabled)
-        let season = LiturgicalSeasonThemeEngine.season(for: now)
-
-        switch seasonModeEnabled ? season : .ordinary {
-        case .ordinary:
-            return nil
-        case .advent:
-            return "AppIconAdvent"
-        case .christmas:
-            return "AppIconChristmas"
-        case .lent:
-            return "AppIconLent"
-        case .easter:
-            return "AppIconEaster"
         }
     }
 }
@@ -143,6 +127,7 @@ private enum UITestBootstrap {
                 "accepted_legal_notice",
                 "accepted_legal_notice_at",
                 "liturgical_season_colors_enabled",
+                "seasonal_app_icon_updates_enabled",
                 "daily_reminder_support_enabled",
                 "morning_reminder_enabled",
                 "evening_reminder_enabled",

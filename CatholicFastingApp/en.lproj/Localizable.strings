@@ -42,8 +42,10 @@
 
 "settings.theme.title" = "Liturgical Theme";
 "settings.theme.enable_liturgical_colors" = "Enable Liturgical Season Colors";
+"settings.theme.enable_seasonal_app_icon" = "Automatically update the app icon for the liturgical season";
 "settings.theme.active_season_format" = "Active season: %@. Colors update automatically throughout the liturgical year.";
 "settings.theme.disabled_hint" = "Season-based colors are off. Turn this on for Advent, Lent, Easter, and Ordinary Time palettes.";
+"settings.theme.icon_prompt_hint" = "Seasonal icons are optional. iOS may show a confirmation alert the first time the icon changes.";
 
 "settings.privacy.title" = "Privacy & Consent";
 "settings.privacy.legal_ack" = "I understand this app supplements (not replaces) pastoral guidance";

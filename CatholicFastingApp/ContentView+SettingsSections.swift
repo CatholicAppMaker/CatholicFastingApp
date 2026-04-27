@@ -247,6 +247,12 @@ extension ContentView {
                     "settings.theme.enable_liturgical_colors", default: "Enable Liturgical Season Colors"),
                 isOn: $liturgicalSeasonColorsEnabled)
                 .accessibilityIdentifier("settings.liturgical_theme_toggle")
+            Toggle(
+                localized(
+                    "settings.theme.enable_seasonal_app_icon",
+                    default: "Automatically update the app icon for the liturgical season"),
+                isOn: $seasonalAppIconUpdatesEnabled)
+                .accessibilityIdentifier("settings.seasonal_app_icon_toggle")
             Text(
                 liturgicalSeasonColorsEnabled
                     ? localizedFormat(
@@ -258,6 +264,13 @@ extension ContentView {
                         "settings.theme.disabled_hint",
                         default:
                         "Season-based colors are off. Turn this on for Advent, Lent, Easter, and Ordinary Time palettes."))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Text(
+                localized(
+                    "settings.theme.icon_prompt_hint",
+                    default:
+                    "Seasonal icons are optional. iOS may show a confirmation alert the first time the icon changes."))
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
@@ -401,11 +414,14 @@ extension ContentView {
         case .us:
             return localized(
                 "settings.region_guidance.us",
-                default: "United States profile: Ash Wednesday and Good Friday are fast and abstinence days, Fridays of Lent are abstinence, and Fridays outside Lent are penitential.")
+                default:
+                "United States profile: Ash Wednesday and Good Friday are fast and abstinence days, Fridays of Lent are abstinence, and Fridays outside Lent are penitential.")
         case .canada:
             return localized(
                 "settings.region_guidance.canada",
-                default: "Canada profile: the app models the national baseline, including Canada-wide holy day obligations and CCCB Friday guidance. Diocesan proper calendars are not included yet.")
+                default:
+                "Canada profile: the app models the national baseline, including Canada-wide holy day obligations " +
+                    "and CCCB Friday guidance. Diocesan proper calendars are not included yet.")
         case .other:
             return localized(
                 "settings.region_guidance.other",
