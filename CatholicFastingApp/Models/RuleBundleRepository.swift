@@ -3,6 +3,7 @@
 import CryptoKit
 #endif
 
+// swiftlint:disable nesting
 enum RuleBundleRepository {
     struct BundleSnapshot {
         let metadata: RuleBundleMetadata
@@ -36,6 +37,8 @@ enum RuleBundleRepository {
                 case signature
             }
         }
+
+        // swiftlint:enable nesting
 
         let metadata: MetadataDocument
         let changes: [ChangeDocument]

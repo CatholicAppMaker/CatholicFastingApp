@@ -14,6 +14,24 @@ enum PremiumDirectionSummaryEngine {
         formatter.timeStyle = .short
         formatter.locale = CoreLocalizer.currentLocale()
 
+        let enabledLabel = CoreLocalizer.localizedCurrent("shared.on", default: "On")
+        let disabledLabel = CoreLocalizer.localizedCurrent("shared.off", default: "Off")
+        let intermittentTargetHitRate = CoreLocalizer.localizedCurrentFormat(
+            "premium.summary.metrics.intermittent",
+            default: "Intermittent target hit rate (recent): %d%%",
+            analytics.intermittentTargetHitPercent)
+        let dailySupportLabel = CoreLocalizer.localizedCurrentFormat(
+            "premium.summary.reminders.daily_support",
+            default: "Daily support: %@",
+            reminder.shouldEnableDailySupport ? enabledLabel : disabledLabel)
+        let morningReminderLabel = CoreLocalizer.localizedCurrentFormat(
+            "premium.summary.reminders.morning",
+            default: "Morning reminder: %@",
+            reminder.shouldEnableMorning ? enabledLabel : disabledLabel)
+        let eveningReminderLabel = CoreLocalizer.localizedCurrentFormat(
+            "premium.summary.reminders.evening",
+            default: "Evening reminder: %@",
+            reminder.shouldEnableEvening ? enabledLabel : disabledLabel)
         let lines = [
             CoreLocalizer.localizedCurrent(
                 "premium.summary.title",
@@ -34,12 +52,12 @@ enum PremiumDirectionSummaryEngine {
             "- \(CoreLocalizer.localizedCurrentFormat("premium.summary.metrics.overall", default: "Overall completion: %d%%", analytics.overallCompletionPercent))",
             "- \(CoreLocalizer.localizedCurrentFormat("premium.summary.metrics.missed", default: "Missed observances logged: %d", analytics.missedCount))",
             "- \(CoreLocalizer.localizedCurrentFormat("premium.summary.metrics.substituted", default: "Substituted observances logged: %d", analytics.substitutedCount))",
-            "- \(CoreLocalizer.localizedCurrentFormat("premium.summary.metrics.intermittent", default: "Intermittent target hit rate (recent): %d%%", analytics.intermittentTargetHitPercent))",
+            "- \(intermittentTargetHitRate)",
             "",
             CoreLocalizer.localizedCurrent("premium.summary.reminders.heading", default: "Reminder Strategy"),
-            "- \(CoreLocalizer.localizedCurrentFormat("premium.summary.reminders.daily_support", default: "Daily support: %@", reminder.shouldEnableDailySupport ? CoreLocalizer.localizedCurrent("shared.on", default: "On") : CoreLocalizer.localizedCurrent("shared.off", default: "Off")))",
-            "- \(CoreLocalizer.localizedCurrentFormat("premium.summary.reminders.morning", default: "Morning reminder: %@", reminder.shouldEnableMorning ? CoreLocalizer.localizedCurrent("shared.on", default: "On") : CoreLocalizer.localizedCurrent("shared.off", default: "Off")))",
-            "- \(CoreLocalizer.localizedCurrentFormat("premium.summary.reminders.evening", default: "Evening reminder: %@", reminder.shouldEnableEvening ? CoreLocalizer.localizedCurrent("shared.on", default: "On") : CoreLocalizer.localizedCurrent("shared.off", default: "Off")))",
+            "- \(dailySupportLabel)",
+            "- \(morningReminderLabel)",
+            "- \(eveningReminderLabel)",
             "- \(CoreLocalizer.localizedCurrentFormat("premium.summary.reminders.guidance", default: "Guidance: %@", reminder.summaryLine))",
             "",
             CoreLocalizer.localizedCurrent("premium.summary.reflection.heading", default: "Reflection"),

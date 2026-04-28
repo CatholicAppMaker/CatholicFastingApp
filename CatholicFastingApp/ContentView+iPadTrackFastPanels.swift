@@ -174,7 +174,10 @@ extension ContentView {
                     .environment(\.locale, contentLocale)
                     .accessibilityIdentifier("ipad.intermittent.start_date")
 
-                Text(localized("ipad.intermittent.controls.adjust_hint", default: "If you started earlier than the timer, adjust the start time here and the live tracker updates immediately."))
+                Text(
+                    localized(
+                        "ipad.intermittent.controls.adjust_hint",
+                        default: "If you started earlier than the timer, adjust the start time here and the live tracker updates immediately."))
                     .appSupportingTextStyle()
             }
 
@@ -213,12 +216,28 @@ extension ContentView {
                 detail: localized("ipad.intermittent.planning.detail", default: "Keep the current rhythm visible without crowding the live tracker."))
 
             HStack(spacing: 10) {
-                IPadSummaryMetricCard(title: localized("ipad.intermittent.planning.sessions", default: "Sessions"), value: "\(intermittentTracker.sessions.count)", subtitle: localized("ipad.intermittent.planning.sessions_detail", default: "tracked locally"))
-                IPadSummaryMetricCard(title: localized("ipad.intermittent.planning.plan", default: "Plan"), value: intermittentWindowLabel, subtitle: reminderTier.summary, tint: CatholicTheme.accent)
-                IPadSummaryMetricCard(title: localized("ipad.intermittent.planning.longest", default: "Longest"), value: intermittentLongestSessionText, subtitle: localized("ipad.intermittent.planning.longest_detail", default: "best recent duration"), tint: .orange)
+                IPadSummaryMetricCard(
+                    title: localized("ipad.intermittent.planning.sessions", default: "Sessions"),
+                    value: "\(intermittentTracker.sessions.count)",
+                    subtitle: localized("ipad.intermittent.planning.sessions_detail", default: "tracked locally"))
+                IPadSummaryMetricCard(
+                    title: localized("ipad.intermittent.planning.plan", default: "Plan"),
+                    value: intermittentWindowLabel,
+                    subtitle: reminderTier.summary,
+                    tint: CatholicTheme.accent)
+                IPadSummaryMetricCard(
+                    title: localized("ipad.intermittent.planning.longest", default: "Longest"),
+                    value: intermittentLongestSessionText,
+                    subtitle: localized("ipad.intermittent.planning.longest_detail", default: "best recent duration"),
+                    tint: .orange)
             }
 
-            Text(notificationStatus.isEmpty ? localized("ipad.intermittent.planning.notification_empty", default: "Reminder status will appear after scheduling.") : notificationStatus)
+            Text(
+                notificationStatus.isEmpty
+                    ? localized(
+                        "ipad.intermittent.planning.notification_empty",
+                        default: "Reminder status will appear after scheduling.")
+                    : notificationStatus)
                 .appSupportingTextStyle()
                 .padding(12)
                 .frame(maxWidth: .infinity, alignment: .leading)

@@ -20,7 +20,7 @@ final class CatholicFastingMacAppUITests: XCTestCase {
             "-ApplePersistenceIgnoreState",
             "YES",
             "-NSQuitAlwaysKeepsWindows",
-            "NO"
+            "NO",
         ])
         if resetData {
             arguments.append("-uitest-reset")

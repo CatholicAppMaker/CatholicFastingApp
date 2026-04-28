@@ -58,9 +58,13 @@ extension ContentView {
                     .pickerStyle(.segmented)
                     .accessibilityIdentifier("ipad.fasting_days.scope")
 
-                    Toggle(localized("ipad.fasting_days.filters.include_optional", default: "Include optional fasting days"), isOn: $fastingDaysIncludeOptionalDays)
+                    Toggle(
+                        localized("ipad.fasting_days.filters.include_optional", default: "Include optional fasting days"),
+                        isOn: $fastingDaysIncludeOptionalDays)
                         .accessibilityIdentifier("ipad.fasting_days.optional_toggle")
-                    Toggle(localized("ipad.fasting_days.filters.include_celebrations", default: "Include feast, holy, and memorial days"), isOn: $fastingDaysIncludeFeastAndHolyDays)
+                    Toggle(
+                        localized("ipad.fasting_days.filters.include_celebrations", default: "Include feast, holy, and memorial days"),
+                        isOn: $fastingDaysIncludeFeastAndHolyDays)
                         .accessibilityIdentifier("ipad.fasting_days.feast_toggle")
 
                     Picker(localized("ipad.fasting_days.filters.year", default: "Calendar year"), selection: $year) {

@@ -3,6 +3,7 @@
 enum ObservanceCalculator {
     static let minimumSupportedBirthYear = 1900
     private static let cacheLock = NSLock()
+    // swiftlint:disable:next modifier_order
     private nonisolated(unsafe) static var calendarCache: [CalendarCacheKey: [Observance]] = [:]
 
     struct CalendarCacheKey: Hashable {

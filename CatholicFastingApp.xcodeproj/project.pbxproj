@@ -72,6 +72,7 @@
 		A00000000000000000000046 /* ContentView+CalendarSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000047 /* ContentView+CalendarSections.swift */; };
 		A00000000000000000000048 /* ContentView+IntermittentSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000049 /* ContentView+IntermittentSections.swift */; };
 		A0000000000000000000004A /* ContentView+StateHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000004B /* ContentView+StateHelpers.swift */; };
+		A00000000000000000000138 /* ContentView+LaunchLifecycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000137 /* ContentView+LaunchLifecycle.swift */; };
 		A0000000000000000000004C /* FridayPenanceNotes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000004D /* FridayPenanceNotes.swift */; };
 		A0000000000000000000004E /* IntermittentFastTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000004F /* IntermittentFastTracker.swift */; };
 		A00000000000000000000050 /* SyncDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000051 /* SyncDiagnostics.swift */; };
@@ -92,6 +93,7 @@
 		A00000000000000000000097 /* ContentView+RootShell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000094 /* ContentView+RootShell.swift */; };
 		A00000000000000000000134 /* ContentView+HistorySections.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000133 /* ContentView+HistorySections.swift */; };
 		A00000000000000000000099 /* ContentView+PremiumCompanionSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000009A /* ContentView+PremiumCompanionSections.swift */; };
+		A0000000000000000000013A /* AppLaunchPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000139 /* AppLaunchPolicy.swift */; };
 		A0000000000000000000009C /* GrowthContracts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000009B /* GrowthContracts.swift */; };
 		A0000000000000000000009E /* ContentView+iPadLayouts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000009D /* ContentView+iPadLayouts.swift */; };
 		A0000000000000000000009F /* RegionalGuidanceContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000A4 /* RegionalGuidanceContext.swift */; };
@@ -314,6 +316,7 @@
 		A00000000000000000000047 /* ContentView+CalendarSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+CalendarSections.swift"; sourceTree = "<group>"; };
 		A00000000000000000000049 /* ContentView+IntermittentSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+IntermittentSections.swift"; sourceTree = "<group>"; };
 		A0000000000000000000004B /* ContentView+StateHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+StateHelpers.swift"; sourceTree = "<group>"; };
+		A00000000000000000000137 /* ContentView+LaunchLifecycle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+LaunchLifecycle.swift"; sourceTree = "<group>"; };
 		A0000000000000000000004D /* FridayPenanceNotes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FridayPenanceNotes.swift; sourceTree = "<group>"; };
 		A0000000000000000000004F /* IntermittentFastTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntermittentFastTracker.swift; sourceTree = "<group>"; };
 		A00000000000000000000051 /* SyncDiagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncDiagnostics.swift; sourceTree = "<group>"; };
@@ -336,6 +339,7 @@
 		A00000000000000000000133 /* ContentView+HistorySections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+HistorySections.swift"; sourceTree = "<group>"; };
 		A00000000000000000000098 /* Premium.storekit */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Premium.storekit; sourceTree = "<group>"; };
 		A0000000000000000000009A /* ContentView+PremiumCompanionSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+PremiumCompanionSections.swift"; sourceTree = "<group>"; };
+		A00000000000000000000139 /* AppLaunchPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLaunchPolicy.swift; sourceTree = "<group>"; };
 		A0000000000000000000009B /* GrowthContracts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthContracts.swift; sourceTree = "<group>"; };
 		A0000000000000000000009D /* ContentView+iPadLayouts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+iPadLayouts.swift"; sourceTree = "<group>"; };
 		A000000000000000000000A4 /* RegionalGuidanceContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionalGuidanceContext.swift; sourceTree = "<group>"; };
@@ -596,6 +600,7 @@
 				A00000000000000000000047 /* ContentView+CalendarSections.swift */,
 				A00000000000000000000049 /* ContentView+IntermittentSections.swift */,
 				A0000000000000000000004B /* ContentView+StateHelpers.swift */,
+				A00000000000000000000137 /* ContentView+LaunchLifecycle.swift */,
 				A00000000000000000000094 /* ContentView+RootShell.swift */,
 				A00000000000000000000133 /* ContentView+HistorySections.swift */,
 				A0000000000000000000009D /* ContentView+iPadLayouts.swift */,
@@ -674,10 +679,11 @@
 				A000000000000000000000D2 /* PremiumJourneyEngine.swift */,
 				A0000000000000000000009B /* GrowthContracts.swift */,
 				A00000000000000000000121 /* SeasonalQuoteCatalog.swift */,
-				A00000000000000000000131 /* FastingHistoryCatalog.swift */,
-				A00000000000000000000135 /* SeasonalAppIconPolicy.swift */,
-				A000000000000000000000A4 /* RegionalGuidanceContext.swift */,
-			);
+					A00000000000000000000131 /* FastingHistoryCatalog.swift */,
+					A00000000000000000000135 /* SeasonalAppIconPolicy.swift */,
+					A00000000000000000000139 /* AppLaunchPolicy.swift */,
+					A000000000000000000000A4 /* RegionalGuidanceContext.swift */,
+				);
 			path = Models;
 			sourceTree = "<group>";
 		};
@@ -1173,14 +1179,16 @@
 				A000000000000000000000C2 /* PremiumJourneyEngine.swift in Sources */,
 				A0000000000000000000009C /* GrowthContracts.swift in Sources */,
 				A00000000000000000000120 /* SeasonalQuoteCatalog.swift in Sources */,
-				A00000000000000000000132 /* FastingHistoryCatalog.swift in Sources */,
-				A00000000000000000000136 /* SeasonalAppIconPolicy.swift in Sources */,
-				A0000000000000000000009F /* RegionalGuidanceContext.swift in Sources */,
+					A00000000000000000000132 /* FastingHistoryCatalog.swift in Sources */,
+					A00000000000000000000136 /* SeasonalAppIconPolicy.swift in Sources */,
+					A0000000000000000000013A /* AppLaunchPolicy.swift in Sources */,
+					A0000000000000000000009F /* RegionalGuidanceContext.swift in Sources */,
 				A00000000000000000000038 /* ContentSupportViews.swift in Sources */,
 				A0000000000000000000003A /* ContentView+DashboardSections.swift in Sources */,
 				A00000000000000000000046 /* ContentView+CalendarSections.swift in Sources */,
 				A00000000000000000000048 /* ContentView+IntermittentSections.swift in Sources */,
 				A0000000000000000000004A /* ContentView+StateHelpers.swift in Sources */,
+				A00000000000000000000138 /* ContentView+LaunchLifecycle.swift in Sources */,
 				A00000000000000000000097 /* ContentView+RootShell.swift in Sources */,
 				A00000000000000000000134 /* ContentView+HistorySections.swift in Sources */,
 				A0000000000000000000009E /* ContentView+iPadLayouts.swift in Sources */,

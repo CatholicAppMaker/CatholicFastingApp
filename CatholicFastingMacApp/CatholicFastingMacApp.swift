@@ -30,7 +30,7 @@ enum MacApplicationActivationCoordinator {
             return
         }
 
-        for attempt in 0..<8 {
+        for attempt in 0 ..< 8 {
             DispatchQueue.main.asyncAfter(deadline: .now() + (Double(attempt) * 0.35)) {
                 activateApp()
             }
