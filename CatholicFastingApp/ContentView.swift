@@ -28,6 +28,9 @@ struct ContentView: View {
     @State var selectedPremiumToolDestination: PremiumToolDestination? = .planner
     @State var selectedFastingObservanceID = ""
     @State var didConfigureTips = false
+    @State var didPrepareLaunchState = false
+    @State var didRunDeferredStartup = false
+    @State var didRefreshStoreCatalog = false
     @State var planningData = LocalFeatureStore.loadPlanningData()
     @State var intermittentSchedules = LocalFeatureStore.loadSchedules()
     @State var activeIntermittentScheduleID = LocalFeatureStore.loadActiveScheduleID() ?? ""

@@ -202,14 +202,34 @@ extension ContentView {
                 {
                     didCompleteOnboarding = true
                     launchFunnelSnapshot.completedOnboardingAt = Date()
+                    Task {
+                        await runDeferredPlatformStartupIfNeeded()
+                    }
                 }
             }
             .task {
-                await performInitialStartupTasks()
+                prepareLocalLaunchStateIfNeeded()
+            }
+            .onChange(of: didCompleteOnboarding) { _, completed in
+                guard completed else { return }
+                Task {
+                    await runDeferredPlatformStartupIfNeeded()
+                }
             }
             .onChange(of: homeSurface) { _, newValue in
                 if newValue == .fastingDays, launchFunnelSnapshot.firstActionCompletedAt == nil {
                     launchFunnelSnapshot.firstActionCompletedAt = Date()
+                }
+                if newValue == .more, selectedMoreDestination == .supportAndPremium {
+                    Task {
+                        await refreshStoreCatalogIfNeeded()
+                    }
+                }
+            }
+            .onChange(of: selectedMoreDestination) { _, newValue in
+                guard homeSurface == .more, newValue == .supportAndPremium else { return }
+                Task {
+                    await refreshStoreCatalogIfNeeded()
                 }
             }
             .onChange(of: supportPremiumSurfaceRaw) { _, newValue in
@@ -218,6 +238,9 @@ extension ContentView {
                         launchFunnelSnapshot.paywallSeenAt = Date()
                     }
                     launchFunnelSnapshot.paywallViewCount += 1
+                    Task {
+                        await refreshStoreCatalogIfNeeded()
+                    }
                 }
             }
             .onChange(of: monetizationStore.isPurchasing) { _, isPurchasing in
@@ -233,9 +256,11 @@ extension ContentView {
             .onChange(of: scenePhase) { _, newValue in
                 if newValue == .active {
                     Task {
-                        _ = await ReminderScheduler.topUpRequiredReminders(observances: rollingUpcomingObservances)
-                        await refreshDailyQuoteReminderIfNeeded()
-                        notificationStatus = await ReminderScheduler.notificationSummary()
+                        prepareLocalLaunchStateIfNeeded()
+                        await runDeferredPlatformStartupIfNeeded()
+                        if didRunDeferredStartup {
+                            await refreshReminderIntegrationsIfNeeded()
+                        }
                     }
                 } else if newValue == .background {
                     saveAdvancedState()
