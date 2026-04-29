@@ -247,12 +247,6 @@ extension ContentView {
                     "settings.theme.enable_liturgical_colors", default: "Enable Liturgical Season Colors"),
                 isOn: $liturgicalSeasonColorsEnabled)
                 .accessibilityIdentifier("settings.liturgical_theme_toggle")
-            Toggle(
-                localized(
-                    "settings.theme.enable_seasonal_app_icon",
-                    default: "Automatically update the app icon for the liturgical season"),
-                isOn: $seasonalAppIconUpdatesEnabled)
-                .accessibilityIdentifier("settings.seasonal_app_icon_toggle")
             Text(
                 liturgicalSeasonColorsEnabled
                     ? localizedFormat(
@@ -264,13 +258,6 @@ extension ContentView {
                         "settings.theme.disabled_hint",
                         default:
                         "Season-based colors are off. Turn this on for Advent, Lent, Easter, and Ordinary Time palettes."))
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            Text(
-                localized(
-                    "settings.theme.icon_prompt_hint",
-                    default:
-                    "Seasonal icons are optional. iOS may show a confirmation alert the first time the icon changes."))
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }

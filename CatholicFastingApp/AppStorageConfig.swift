@@ -14,7 +14,6 @@ enum DefaultValues {
     static let language = LanguageMode.english
     static let regionProfile = RuleSettings.RegionProfile.us
     static let liturgicalSeasonColorsEnabled = true
-    static let seasonalAppIconUpdatesEnabled = false
     static let dailyReminderSupportEnabled = true
     static let morningReminderEnabled = true
     static let eveningReminderEnabled = false
@@ -44,7 +43,6 @@ enum StorageKeys {
     static let acceptedLegalNotice = "accepted_legal_notice"
     static let acceptedLegalNoticeAt = "accepted_legal_notice_at"
     static let liturgicalSeasonColorsEnabled = "liturgical_season_colors_enabled"
-    static let seasonalAppIconUpdatesEnabled = SeasonalAppIconPolicy.automaticUpdatesStorageKey
     static let dailyReminderSupportEnabled = "daily_reminder_support_enabled"
     static let morningReminderEnabled = "morning_reminder_enabled"
     static let eveningReminderEnabled = "evening_reminder_enabled"

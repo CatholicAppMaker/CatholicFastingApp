@@ -8,20 +8,8 @@ final class SeasonalAppIconPolicyTests: XCTestCase {
         return value
     }
 
-    func testAutomaticSeasonalIconUpdatesDefaultOff() {
+    func testSeasonalIconUpdatesDefaultToCurrentSeason() {
         let defaults = makeDefaults()
-        XCTAssertFalse(SeasonalAppIconPolicy.automaticUpdatesEnabled(userDefaults: defaults))
-        XCTAssertNil(
-            SeasonalAppIconPolicy.targetIconName(
-                now: makeDate(2026, 4, 12),
-                userDefaults: defaults,
-                calendar: calendar))
-    }
-
-    func testAutomaticSeasonalIconUpdatesReturnSeasonalIconWhenEnabled() {
-        let defaults = makeDefaults()
-        defaults.set(true, forKey: SeasonalAppIconPolicy.automaticUpdatesStorageKey)
-
         XCTAssertEqual(
             SeasonalAppIconPolicy.targetIconName(
                 now: makeDate(2026, 4, 12),
@@ -32,7 +20,6 @@ final class SeasonalAppIconPolicyTests: XCTestCase {
 
     func testSeasonalIconUpdatesRespectLiturgicalThemeToggle() {
         let defaults = makeDefaults()
-        defaults.set(true, forKey: SeasonalAppIconPolicy.automaticUpdatesStorageKey)
         defaults.set(false, forKey: SeasonalAppIconPolicy.liturgicalSeasonColorsStorageKey)
 
         XCTAssertNil(

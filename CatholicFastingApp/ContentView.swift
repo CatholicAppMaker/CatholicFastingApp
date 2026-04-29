@@ -76,8 +76,6 @@ struct ContentView: View {
     @AppStorage(StorageKeys.acceptedLegalNoticeAt) var acceptedLegalNoticeAt = ""
     @AppStorage(StorageKeys.liturgicalSeasonColorsEnabled) var liturgicalSeasonColorsEnabled =
         DefaultValues.liturgicalSeasonColorsEnabled
-    @AppStorage(StorageKeys.seasonalAppIconUpdatesEnabled) var seasonalAppIconUpdatesEnabled =
-        DefaultValues.seasonalAppIconUpdatesEnabled
     @AppStorage(StorageKeys.dailyReminderSupportEnabled) var dailyReminderSupportEnabled =
         DefaultValues.dailyReminderSupportEnabled
     @AppStorage(StorageKeys.morningReminderEnabled) var morningReminderEnabled =

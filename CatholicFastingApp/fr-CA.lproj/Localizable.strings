@@ -390,10 +390,8 @@
 
 "settings.theme.title" = "Thème liturgique";
 "settings.theme.enable_liturgical_colors" = "Activer les couleurs du temps liturgique";
-"settings.theme.enable_seasonal_app_icon" = "Mettre à jour automatiquement l’icône de l’app selon le temps liturgique";
 "settings.theme.active_season_format" = "Temps actuel : %@. Les couleurs se mettent à jour automatiquement tout au long de l’année liturgique.";
 "settings.theme.disabled_hint" = "Les couleurs saisonnières sont désactivées. Activez-les pour l’Avent, le Carême, Pâques et le temps ordinaire.";
-"settings.theme.icon_prompt_hint" = "Les icônes saisonnières sont facultatives. iOS peut afficher une alerte de confirmation la première fois que l’icône change.";
 
 "settings.privacy.title" = "Confidentialité et consentement";
 "settings.privacy.legal_ack" = "Je comprends que cette application complète l’accompagnement pastoral sans le remplacer";

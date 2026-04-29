@@ -47,11 +47,6 @@ private actor SeasonalIconManager {
             return
         }
 
-        guard SeasonalAppIconPolicy.automaticUpdatesEnabled(userDefaults: defaults) else {
-            logger.debug("Skipping seasonal icon update because automatic app icon updates are disabled.")
-            return
-        }
-
         if !hasPerformedDeferredLaunchRefresh {
             hasPerformedDeferredLaunchRefresh = true
             try? await Task.sleep(for: .seconds(1))
@@ -127,7 +122,6 @@ private enum UITestBootstrap {
                 "accepted_legal_notice",
                 "accepted_legal_notice_at",
                 "liturgical_season_colors_enabled",
-                "seasonal_app_icon_updates_enabled",
                 "daily_reminder_support_enabled",
                 "morning_reminder_enabled",
                 "evening_reminder_enabled",
