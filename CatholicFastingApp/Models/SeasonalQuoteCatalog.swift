@@ -102,10 +102,29 @@ enum SeasonalContentPackCatalog {
         case .frenchCanadian:
             frenchCanadianPacks
         }
-        guard let fallbackPack = packs[.ordinary] else {
-            preconditionFailure("Seasonal content catalog is missing ordinary time for \(locale.rawValue)")
-        }
+        let fallbackPack = packs[.ordinary] ?? ordinaryFallbackPack(locale: locale)
         return packs[season] ?? fallbackPack
+    }
+
+    private static func ordinaryFallbackPack(locale: ContentLocale) -> SeasonalContentPack {
+        SeasonalContentPack(
+            season: .ordinary,
+            locale: locale,
+            heroAssetNames: ["SacredMonstrance"],
+            campaignTitle: "Ordinary Time",
+            campaignSubtitle: "Keep prayer, fasting, and charity steady.",
+            formationLines: [
+                "Review the next required day.",
+                "Choose one concrete Friday penance.",
+                "Keep the discipline simple and faithful.",
+            ],
+            quotes: [
+                SeasonalContentPack.RotatingQuote(
+                    text: "Fast with fidelity, pray with humility, and give with charity.",
+                    author: "Catholic Fasting",
+                    source: "In-app formation",
+                    tradition: "Pastoral"),
+            ])
     }
 
     private static let englishPacks: [LiturgicalSeason: SeasonalContentPack] = [

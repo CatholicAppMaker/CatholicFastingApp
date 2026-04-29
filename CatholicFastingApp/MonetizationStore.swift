@@ -33,14 +33,12 @@ final class MonetizationStore: ObservableObject {
 
     private static let debugPremiumUnlockedKey = "debug_simulator_premium_unlocked"
     private var updatesTask: Task<Void, Never>?
+    private var hasStartedTransactionMonitoring = false
 
     init() {
         if Self.usesLocalDebugPremiumOverride {
             premiumUnlocked = UserDefaults.standard.bool(forKey: Self.debugPremiumUnlockedKey)
             statusMessage = premiumUnlocked ? "Premium unlocked for local UI testing." : ""
-        }
-        updatesTask = Task {
-            await monitorTransactionUpdates()
         }
     }
 
@@ -58,6 +56,7 @@ final class MonetizationStore: ObservableObject {
             return
         }
 
+        startTransactionMonitoringIfNeeded()
         isLoading = true
         defer { isLoading = false }
 
@@ -91,6 +90,7 @@ final class MonetizationStore: ObservableObject {
             return
         }
 
+        startTransactionMonitoringIfNeeded()
         isPurchasing = true
         defer { isPurchasing = false }
 
@@ -133,6 +133,7 @@ final class MonetizationStore: ObservableObject {
             return
         }
 
+        startTransactionMonitoringIfNeeded()
         isPurchasing = true
         defer { isPurchasing = false }
 
@@ -178,6 +179,15 @@ final class MonetizationStore: ObservableObject {
         premiumUnlocked = false
         statusMessage = "Simulator debug premium reset."
         await refreshSubscriptionHealth()
+    }
+
+    func startTransactionMonitoringIfNeeded() {
+        guard !Self.usesLocalDebugPremiumOverride else { return }
+        guard !hasStartedTransactionMonitoring else { return }
+        hasStartedTransactionMonitoring = true
+        updatesTask = Task { [weak self] in
+            await self?.monitorTransactionUpdates()
+        }
     }
 
     private func refreshEntitlements() async {

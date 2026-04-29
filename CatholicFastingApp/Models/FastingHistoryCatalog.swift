@@ -50,10 +50,30 @@ enum FastingHistoryCatalog {
             frenchCanadian
         }
 
-        guard let article = catalog[eraID] else {
-            preconditionFailure("Missing fasting history article for \(locale.rawValue) \(eraID.rawValue)")
+        if let article = catalog[eraID] {
+            return article
         }
-        return article
+
+        assertionFailure("Missing fasting history article for \(locale.rawValue) \(eraID.rawValue)")
+        return english[eraID] ?? fallbackArticle(for: eraID, locale: locale)
+    }
+
+    private static func fallbackArticle(
+        for eraID: FastingHistoryEraID,
+        locale: ContentLocale) -> FastingHistoryArticle
+    {
+        FastingHistoryArticle(
+            eraID: eraID,
+            locale: locale,
+            title: "History of Fasting",
+            dateRange: "",
+            summary: "This history article is temporarily unavailable.",
+            body: "This history article is temporarily unavailable.",
+            sourceNotes: [
+                FastingHistorySourceNote(
+                    title: "Catholic Fasting",
+                    detail: "Fallback content shown because the local history catalog is incomplete."),
+            ])
     }
 
     private static let english: [FastingHistoryEraID: FastingHistoryArticle] = [

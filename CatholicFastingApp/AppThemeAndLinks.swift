@@ -4,7 +4,8 @@ import SwiftUI
 enum AppURLFactory {
     static func make(_ rawValue: String) -> URL {
         guard let url = URL(string: rawValue) else {
-            preconditionFailure("Invalid static URL: \(rawValue)")
+            assertionFailure("Invalid static URL: \(rawValue)")
+            return URL(fileURLWithPath: "/")
         }
         return url
     }

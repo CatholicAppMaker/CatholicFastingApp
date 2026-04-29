@@ -109,25 +109,25 @@ extension ContentView {
 
     var tabRootView: some View {
         TabView(selection: $homeSurface) {
-            tabSurface(for: .today)
+            phoneTab(for: .today)
                 .tabItem {
                     Label(localizedHomeSurfaceLabel(.today), systemImage: HomeSurface.today.iconName)
                 }
                 .tag(HomeSurface.today)
                 .accessibilityIdentifier("tab.today")
-            tabSurface(for: .fastingDays)
+            phoneTab(for: .fastingDays)
                 .tabItem {
                     Label(localizedHomeSurfaceLabel(.fastingDays), systemImage: HomeSurface.fastingDays.iconName)
                 }
                 .tag(HomeSurface.fastingDays)
                 .accessibilityIdentifier("tab.fasting_days")
-            tabSurface(for: .intermittent)
+            phoneTab(for: .intermittent)
                 .tabItem {
                     Label(localizedHomeSurfaceLabel(.intermittent), systemImage: HomeSurface.intermittent.iconName)
                 }
                 .tag(HomeSurface.intermittent)
                 .accessibilityIdentifier("tab.intermittent")
-            tabSurface(for: .more)
+            phoneTab(for: .more)
                 .tabItem {
                     Label(localizedHomeSurfaceLabel(.more), systemImage: HomeSurface.more.iconName)
                 }
@@ -137,16 +137,20 @@ extension ContentView {
     }
 
     var body: some View {
-        applyRootLifecycleHandlers(
-            to: Group {
-                if appLayoutProfile.usesSplitViewShell {
-                    ipadRootScaffold
-                } else {
-                    NavigationStack {
-                        tabRootScaffold
-                    }
-                }
-            })
+        Group {
+            if didCompleteOnboarding {
+                applyRootLifecycleHandlers(
+                    to: Group {
+                        if appLayoutProfile.usesSplitViewShell {
+                            ipadRootScaffold
+                        } else {
+                            tabRootScaffold
+                        }
+                    })
+            } else {
+                onboardingLaunchRoot
+            }
+        }
     }
 
     var tabRootScaffold: some View {
@@ -157,15 +161,21 @@ extension ContentView {
             .overlay(alignment: .topLeading) {
                 readinessMarkers
             }
-            .navigationTitle(localizedHomeSurfaceLabel(homeSurface))
-            .navigationBarTitleDisplayMode(.large)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    seasonBadge
-                }
-                .sharedBackgroundVisibility(.hidden)
-            }
             .tint(CatholicTheme.primary)
+    }
+
+    func phoneTab(for surface: HomeSurface) -> some View {
+        NavigationStack {
+            tabSurface(for: surface)
+                .navigationTitle(localizedHomeSurfaceLabel(surface))
+                .navigationBarTitleDisplayMode(.large)
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        seasonBadge
+                    }
+                    .sharedBackgroundVisibility(.hidden)
+                }
+        }
     }
 
     func applyRootLifecycleHandlers(to content: some View) -> some View {
@@ -182,29 +192,6 @@ extension ContentView {
                 Task {
                     await refreshDailyQuoteReminderIfNeeded()
                     notificationStatus = await ReminderScheduler.notificationSummary()
-                }
-            }
-            .sheet(isPresented: onboardingBinding) {
-                OnboardingView(
-                    age14OrOlderForAbstinence: $age14OrOlderForAbstinence,
-                    age18OrOlderForFasting: $age18OrOlderForFasting,
-                    medicalDispensation: $medicalDispensation,
-                    languageModeRaw: $languageModeRaw,
-                    regionProfileRaw: $regionProfileRaw,
-                    fridayModeRaw: $fridayModeRaw,
-                    reminderTierRaw: $reminderTierRaw,
-                    dailyReminderSupportEnabled: $dailyReminderSupportEnabled,
-                    morningReminderEnabled: $morningReminderEnabled,
-                    eveningReminderEnabled: $eveningReminderEnabled,
-                    dailyQuoteReminderEnabled: $dailyQuoteReminderEnabled,
-                    dailyQuoteReminderHour: $dailyQuoteReminderHour,
-                    dailyQuoteReminderMinute: $dailyQuoteReminderMinute)
-                {
-                    didCompleteOnboarding = true
-                    launchFunnelSnapshot.completedOnboardingAt = Date()
-                    Task {
-                        await runDeferredPlatformStartupIfNeeded()
-                    }
                 }
             }
             .task {
@@ -266,6 +253,34 @@ extension ContentView {
                     saveAdvancedState()
                 }
             }
+    }
+
+    var onboardingLaunchRoot: some View {
+        OnboardingView(
+            age14OrOlderForAbstinence: $age14OrOlderForAbstinence,
+            age18OrOlderForFasting: $age18OrOlderForFasting,
+            medicalDispensation: $medicalDispensation,
+            languageModeRaw: $languageModeRaw,
+            regionProfileRaw: $regionProfileRaw,
+            fridayModeRaw: $fridayModeRaw,
+            reminderTierRaw: $reminderTierRaw,
+            dailyReminderSupportEnabled: $dailyReminderSupportEnabled,
+            morningReminderEnabled: $morningReminderEnabled,
+            eveningReminderEnabled: $eveningReminderEnabled,
+            dailyQuoteReminderEnabled: $dailyQuoteReminderEnabled,
+            dailyQuoteReminderHour: $dailyQuoteReminderHour,
+            dailyQuoteReminderMinute: $dailyQuoteReminderMinute)
+        {
+            didCompleteOnboarding = true
+            launchFunnelSnapshot.completedOnboardingAt = Date()
+            Task {
+                await runDeferredPlatformStartupIfNeeded()
+            }
+        }
+        .appRootBackground()
+        .task {
+            prepareLocalLaunchStateIfNeeded()
+        }
     }
 
     func applyPersistenceHandlers(to content: some View) -> some View {

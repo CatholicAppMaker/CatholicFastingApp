@@ -254,8 +254,19 @@ enum WidgetSnapshotStore {
             || arguments.contains("-uitest-seed-missed")
     }
 
+    private static var canUseSharedAppGroupStorage: Bool {
+        #if os(iOS)
+        // The iOS app target is intentionally not provisioned with App Groups.
+        // Keep the containing app on local storage; the widget extension owns shared storage.
+        return Bundle.main.bundlePath.hasSuffix(".appex")
+        #else
+        return true
+        #endif
+    }
+
     private static var sharedDefaults: UserDefaults? {
         guard !prefersLocalOnlyStorage else { return nil }
+        guard canUseSharedAppGroupStorage else { return nil }
         return UserDefaults(suiteName: appGroupIdentifier)
     }
 

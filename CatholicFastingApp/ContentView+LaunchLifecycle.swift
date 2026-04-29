@@ -53,6 +53,7 @@ extension ContentView {
         }
         #endif
 
+        monetizationStore.startTransactionMonitoringIfNeeded()
         await refreshStoreCatalogIfNeeded()
         await refreshReminderIntegrationsIfNeeded()
     }
