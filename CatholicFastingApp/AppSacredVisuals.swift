@@ -123,6 +123,91 @@ struct SacredHeroCard: View {
     }
 }
 
+struct SacredSurfaceAnchorCard: View {
+    enum Presentation {
+        case standalone
+        case embedded
+    }
+
+    let assetName: String
+    let title: String
+    let subtitle: String
+    var imageHeight: CGFloat = 116
+    var cornerRadius: CGFloat = 16
+    var presentation: Presentation = .standalone
+    var accessibilityIdentifier: String?
+    var fallbackSymbol: String = "cross.case.fill"
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            imageLayer
+                .frame(height: imageHeight)
+                .clipShape(RoundedRectangle(cornerRadius: min(cornerRadius, 14), style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: min(cornerRadius, 14), style: .continuous)
+                        .stroke(CatholicTheme.cardBorder.opacity(0.38), lineWidth: 1))
+
+            VStack(alignment: .leading, spacing: 4) {
+                if !title.isEmpty {
+                    Text(title)
+                        .appSectionTitleStyle(serif: true)
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.82)
+                }
+
+                if !subtitle.isEmpty {
+                    Text(subtitle)
+                        .appSupportingTextStyle()
+                        .lineLimit(3)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+        }
+        .padding(presentation == .standalone ? 12 : 0)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .modifier(SacredSurfaceAnchorChrome(presentation: presentation, cornerRadius: cornerRadius))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(title). \(subtitle)")
+        .modifier(AccessibilityIDModifier(id: accessibilityIdentifier))
+    }
+
+    @ViewBuilder
+    private var imageLayer: some View {
+        if SacredImageAssetResolver.hasAsset(named: assetName) {
+            Image(assetName)
+                .resizable()
+                .scaledToFill()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .clipped()
+        } else {
+            ZStack {
+                LinearGradient(
+                    colors: [CatholicTheme.accent.opacity(0.42), CatholicTheme.primary.opacity(0.62)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing)
+                Image(systemName: fallbackSymbol)
+                    .font(.system(size: 28, weight: .semibold))
+                    .foregroundStyle(Color.white.opacity(0.88))
+            }
+        }
+    }
+}
+
+private struct SacredSurfaceAnchorChrome: ViewModifier {
+    let presentation: SacredSurfaceAnchorCard.Presentation
+    let cornerRadius: CGFloat
+
+    func body(content: Content) -> some View {
+        switch presentation {
+        case .standalone:
+            content
+                .appSurfaceCard(.standard, cornerRadius: cornerRadius)
+        case .embedded:
+            content
+        }
+    }
+}
+
 private struct AccessibilityIDModifier: ViewModifier {
     let id: String?
 

@@ -47,24 +47,21 @@ extension ContentView {
     }
 
     var intermittentHeroArtwork: SacredHeroArtwork {
-        SacredHeroImageSelector.artwork(for: .intermittent)
+        SacredHeroImageSelector.anchorArtwork(for: .intermittent)
     }
 
     var intermittentHeroSection: some View {
         Section {
-            VStack(alignment: .leading, spacing: 8) {
-                SacredHeroCard(
-                    assetName: intermittentHeroArtwork.assetName,
-                    title: intermittentTracker.activeStart == nil
-                        ? localized("intermittent.hero.title_idle", default: "Track Fast")
-                        : localized("intermittent.hero.title_active", default: "Fast in progress"),
-                    subtitle: intermittentTracker.activeStart == nil
-                        ? localized("intermittent.hero.subtitle_idle", default: "Choose a target, then start when ready.")
-                        : localized("intermittent.hero.subtitle_active", default: "Your live fast and next action are below."),
-                    height: 124,
-                    accessibilityIdentifier: "intermittent.hero.card")
-            }
-            .accessibilityIdentifier("intermittent.hero")
+            SacredSurfaceAnchorCard(
+                assetName: intermittentHeroArtwork.assetName,
+                title: intermittentTracker.activeStart == nil
+                    ? localized("intermittent.hero.title_idle", default: "Track Fast")
+                    : localized("intermittent.hero.title_active", default: "Fast in progress"),
+                subtitle: intermittentTracker.activeStart == nil
+                    ? localized("intermittent.hero.subtitle_idle", default: "Choose a target, then start when ready.")
+                    : localized("intermittent.hero.subtitle_active", default: "Your live fast and next action are below."),
+                imageHeight: 108,
+                accessibilityIdentifier: "intermittent.hero")
         }
     }
 

@@ -122,12 +122,13 @@ struct IPadWorkspaceHeroBand: View {
         Group {
             if compact {
                 VStack(alignment: .leading, spacing: 14) {
-                    SacredHeroCard(
+                    SacredSurfaceAnchorCard(
                         assetName: assetName,
                         title: title,
                         subtitle: subtitle,
-                        height: 144,
+                        imageHeight: 132,
                         cornerRadius: 20,
+                        presentation: .embedded,
                         accessibilityIdentifier: accessibilityIdentifier)
 
                     VStack(alignment: .leading, spacing: 10) {
@@ -146,12 +147,13 @@ struct IPadWorkspaceHeroBand: View {
                 }
             } else {
                 HStack(alignment: .top, spacing: 18) {
-                    SacredHeroCard(
+                    SacredSurfaceAnchorCard(
                         assetName: assetName,
                         title: title,
                         subtitle: subtitle,
-                        height: 196,
+                        imageHeight: 148,
                         cornerRadius: 20,
+                        presentation: .embedded,
                         accessibilityIdentifier: accessibilityIdentifier)
                         .frame(maxWidth: .infinity)
 

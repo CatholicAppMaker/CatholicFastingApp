@@ -497,9 +497,9 @@ extension ContentView {
 
     @ViewBuilder
     var todaySurfaceSections: some View {
+        dashboardSacredImageSection
         todayDecisionCardSection
         dashboardQuickActionsSection
-        dashboardSacredImageSection
         todayTenSecondSection
         todaySection
         setupProgressSection
@@ -513,7 +513,6 @@ extension ContentView {
             planningProgressSection
             dashboardSeasonSection
             dashboardHeroSection
-            dashboardDevotionalGallerySection
             progressSection
             analyticsSection
             milestoneReferralSection
@@ -525,17 +524,17 @@ extension ContentView {
 
     @ViewBuilder
     var fastingDaysSurfaceSections: some View {
-        fastingDaysOverviewSection
         fastingDaysHeroSection
+        fastingDaysOverviewSection
         fastingDaysDisplayOptionsSection
         fastingDaysListSection
     }
 
     @ViewBuilder
     var intermittentSurfaceSections: some View {
+        intermittentHeroSection
         intermittentActiveSection
         intermittentControlsSection
-        intermittentHeroSection
         intermittentOverviewSection
         intermittentAdvancedToolsSection
     }
@@ -548,25 +547,14 @@ extension ContentView {
 
     @ViewBuilder
     var moreHubSection: some View {
-        let hero = moreDestinationHeroItem(for: .supportAndPremium)
         Section {
-            VStack(alignment: .leading, spacing: 14) {
-                SacredHeroCard(
-                    assetName: hero.assetName,
-                    title: localizedMoreHubHeroTitle(),
-                    subtitle: localizedMoreHubHeroSubtitle(),
-                    height: 152,
-                    cornerRadius: 16,
-                    accessibilityIdentifier: "more.hub.hero")
-
-                CatholicFastingQuoteCard(quote: guidanceFastingQuote, compact: true)
-                    .accessibilityIdentifier("more.hub.quote")
-
-                AppSectionLeadCard(
-                    eyebrow: localizedMoreHubHeroTitle(),
-                    title: localizedMoreHubLeadTitle(),
-                    detail: localizedMoreHubLeadDetail())
-            }
+            SacredSurfaceAnchorCard(
+                assetName: SacredHeroImageSelector.anchorArtwork(for: .guidance).assetName,
+                title: localizedMoreHubHeroTitle(),
+                subtitle: localizedMoreHubHeroSubtitle(),
+                imageHeight: 112,
+                cornerRadius: 16,
+                accessibilityIdentifier: "more.hub.hero")
         }
 
         Section {
@@ -682,27 +670,36 @@ extension ContentView {
     }
 
     func moreDestinationHeroItem(for destination: MoreHubDestination) -> SacredImageryItem {
-        let gallery = SacredImageryCatalog.fastingGallery
-        guard !gallery.isEmpty else {
-            return SacredImageryItem(
-                id: "fallback-hero",
-                assetName: "HeroSacred",
-                title: localizedMoreDestinationTitle(destination),
-                subtitle: localizedMoreDestinationSubtitle(destination))
+        let assetName = switch destination {
+        case .supportAndPremium:
+            "SacredChaliceVine"
+        case .setupAndReminders:
+            "SacredScriptureCandle"
+        case .profileAndNorms:
+            "SacredMarianMonogram"
+        case .guidanceAndRules:
+            "GuidanceSacred"
+        case .historyOfFasting:
+            "HeroSacred"
+        case .privacyAndData:
+            "SacredRosaryCross"
         }
-        let all = MoreHubDestination.allCases
-        let idx = all.firstIndex(of: destination) ?? 0
-        return gallery[idx % gallery.count]
+
+        return SacredImageryItem(
+            id: "\(destination.rawValue)-hero",
+            assetName: assetName,
+            title: localizedMoreDestinationTitle(destination),
+            subtitle: localizedMoreDestinationSubtitle(destination))
     }
 
     func moreDestinationHeroSection(for destination: MoreHubDestination) -> some View {
         let hero = moreDestinationHeroItem(for: destination)
         return Section {
-            SacredHeroCard(
+            SacredSurfaceAnchorCard(
                 assetName: hero.assetName,
                 title: localizedMoreDestinationTitle(destination),
                 subtitle: localizedMoreDestinationSubtitle(destination),
-                height: 122,
+                imageHeight: 104,
                 cornerRadius: 16,
                 accessibilityIdentifier: "more.\(destination.rawValue).hero")
         }

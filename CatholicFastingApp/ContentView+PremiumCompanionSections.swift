@@ -188,15 +188,15 @@ extension ContentView {
 
     var premiumUpgradeHeroCard: some View {
         VStack(alignment: .leading, spacing: 12) {
-            SacredHeroCard(
-                assetName: guidanceHeroArtwork.assetName,
+            SacredSurfaceAnchorCard(
+                assetName: moreDestinationHeroItem(for: .supportAndPremium).assetName,
                 title: monetizationStore.premiumUnlocked
                     ? localized("premium.hero.active_title", default: "Formation Toolkit Active")
                     : localized("premium.hero.title", default: "Formation Toolkit"),
                 subtitle: monetizationStore.premiumUnlocked
                     ? localized("premium.hero.active_subtitle", default: "Keep planning, recovery, reflection, and review in one focused Catholic workflow.")
                     : localized("premium.hero.subtitle", default: "Choose one clear premium path for planning, reminders, reflection, and review through the Church year."),
-                height: 156,
+                imageHeight: 112,
                 accessibilityIdentifier: "premium.hero")
 
             CatholicFastingQuoteCard(

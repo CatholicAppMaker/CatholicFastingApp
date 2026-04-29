@@ -231,6 +231,31 @@ enum SacredHeroImageSelector {
         }
     }
 
+    static func anchorArtwork(for scene: SacredHeroScene) -> SacredHeroArtwork {
+        switch scene {
+        case .dashboard:
+            SacredHeroArtwork(
+                assetName: "HeroSacred",
+                title: "Daily Catholic Fasting",
+                subtitle: "Keep today's discipline rooted in prayer, worship, and charity.")
+        case .fastingDays:
+            SacredHeroArtwork(
+                assetName: "SacredAshWednesday",
+                title: "Fasting Day Planner",
+                subtitle: "See required days, optional practices, and celebrations in one steady rhythm.")
+        case .intermittent:
+            SacredHeroArtwork(
+                assetName: "SacredScriptureCandle",
+                title: "Track Fast",
+                subtitle: "Keep optional fasting tied to prayer and reflection, not just metrics.")
+        case .guidance:
+            SacredHeroArtwork(
+                assetName: "GuidanceSacred",
+                title: "Guidance and Support",
+                subtitle: "Open setup, rules, privacy, and premium tools from one calm place.")
+        }
+    }
+
     private static func daySeed(for date: Date) -> Int {
         (Calendar.gregorian.ordinality(of: .day, in: .year, for: date) ?? 1) - 1
     }
@@ -301,17 +326,15 @@ extension ContentView {
 
     var fastingDaysHeroSection: some View {
         Section {
-            VStack(alignment: .leading, spacing: 10) {
-                SacredHeroCard(
-                    assetName: fastingDaysHeroArtwork.assetName,
-                    title: fastingDaysHeroArtwork.title,
-                    subtitle: fastingDaysHeroArtwork.subtitle,
-                    height: 118,
-                    cornerRadius: 16)
-            }
-            .accessibilityElement(children: .combine)
-            .accessibilityLabel("\(fastingDaysHeroArtwork.title). \(fastingDaysHeroArtwork.subtitle)")
-            .accessibilityIdentifier("fasting_days.hero")
+            SacredSurfaceAnchorCard(
+                assetName: SacredHeroImageSelector.anchorArtwork(for: .fastingDays).assetName,
+                title: localized("ipad.fasting_days.hero.title", default: "Fasting Day Planner"),
+                subtitle: localized(
+                    "ipad.fasting_days.hero.subtitle",
+                    default: "Browse obligation days, optional practices, and celebrations without leaving the workspace."),
+                imageHeight: 110,
+                cornerRadius: 16,
+                accessibilityIdentifier: "fasting_days.hero")
         }
     }
 

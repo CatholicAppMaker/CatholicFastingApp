@@ -5,11 +5,11 @@ import TipKit
 
 extension ContentView {
     var dashboardHeroArtwork: SacredHeroArtwork {
-        SacredHeroImageSelector.artwork(for: .dashboard)
+        SacredHeroImageSelector.anchorArtwork(for: .dashboard)
     }
 
     var fastingDaysHeroArtwork: SacredHeroArtwork {
-        SacredHeroImageSelector.artwork(for: .fastingDays)
+        SacredHeroImageSelector.anchorArtwork(for: .fastingDays)
     }
 
     var dashboardFastingQuote: CatholicFastingQuote {
@@ -139,18 +139,13 @@ extension ContentView {
     }
 
     var dashboardSacredImageSection: some View {
-        let seasonalAssets = activeSeasonalContentPack.heroAssetNames
-        let day = liturgicalCalendar.ordinality(of: .day, in: .year, for: Date()) ?? 1
-        let seasonalAsset = seasonalAssets.isEmpty ? dashboardHeroArtwork.assetName : seasonalAssets[(day - 1) % seasonalAssets.count]
-        return Section {
-            VStack(alignment: .leading, spacing: 10) {
-                SacredHeroCard(
-                    assetName: seasonalAsset,
-                    title: activeSeasonalContentPack.campaignTitle,
-                    subtitle: activeSeasonalContentPack.campaignSubtitle,
-                    height: 168,
-                    accessibilityIdentifier: "dashboard.sacred_image")
-            }
+        Section {
+            SacredSurfaceAnchorCard(
+                assetName: dashboardHeroArtwork.assetName,
+                title: activeSeasonalContentPack.campaignTitle,
+                subtitle: activeSeasonalContentPack.campaignSubtitle,
+                imageHeight: 112,
+                accessibilityIdentifier: "dashboard.sacred_image")
         }
     }
 

@@ -411,7 +411,7 @@ enum CatholicFastingQuoteSelector {
 
 extension ContentView {
     var guidanceHeroArtwork: SacredHeroArtwork {
-        SacredHeroImageSelector.artwork(for: .guidance)
+        SacredHeroImageSelector.anchorArtwork(for: .guidance)
     }
 
     var guidanceDevotionalGallerySection: some View {
