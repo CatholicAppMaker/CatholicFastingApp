@@ -109,30 +109,10 @@ extension ContentView {
 
     var tabRootView: some View {
         TabView(selection: $homeSurface) {
-            phoneTab(for: .today)
-                .tabItem {
-                    Label(localizedHomeSurfaceLabel(.today), systemImage: HomeSurface.today.iconName)
-                }
-                .tag(HomeSurface.today)
-                .accessibilityIdentifier("tab.today")
-            phoneTab(for: .fastingDays)
-                .tabItem {
-                    Label(localizedHomeSurfaceLabel(.fastingDays), systemImage: HomeSurface.fastingDays.iconName)
-                }
-                .tag(HomeSurface.fastingDays)
-                .accessibilityIdentifier("tab.fasting_days")
-            phoneTab(for: .intermittent)
-                .tabItem {
-                    Label(localizedHomeSurfaceLabel(.intermittent), systemImage: HomeSurface.intermittent.iconName)
-                }
-                .tag(HomeSurface.intermittent)
-                .accessibilityIdentifier("tab.intermittent")
-            phoneTab(for: .more)
-                .tabItem {
-                    Label(localizedHomeSurfaceLabel(.more), systemImage: HomeSurface.more.iconName)
-                }
-                .tag(HomeSurface.more)
-                .accessibilityIdentifier("tab.more")
+            todayPhoneTab
+            fastingDaysPhoneTab
+            intermittentPhoneTab
+            morePhoneTab
         }
     }
 
@@ -164,18 +144,72 @@ extension ContentView {
             .tint(CatholicTheme.primary)
     }
 
-    func phoneTab(for surface: HomeSurface) -> some View {
+    var todayPhoneTab: some View {
         NavigationStack {
-            tabSurface(for: surface)
-                .navigationTitle(localizedHomeSurfaceLabel(surface))
+            todaySurfaceList
+                .navigationTitle(localizedHomeSurfaceLabel(.today))
                 .navigationBarTitleDisplayMode(.large)
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        seasonBadge
-                    }
-                    .sharedBackgroundVisibility(.hidden)
-                }
+                .toolbar { phoneTabToolbar }
         }
+        .phoneNavigationDestinations(for: self)
+        .tabItem {
+            Label(localizedHomeSurfaceLabel(.today), systemImage: HomeSurface.today.iconName)
+        }
+        .tag(HomeSurface.today)
+        .accessibilityIdentifier("tab.today")
+    }
+
+    var fastingDaysPhoneTab: some View {
+        NavigationStack {
+            fastingDaysSurfaceList
+                .navigationTitle(localizedHomeSurfaceLabel(.fastingDays))
+                .navigationBarTitleDisplayMode(.large)
+                .toolbar { phoneTabToolbar }
+        }
+        .phoneNavigationDestinations(for: self)
+        .tabItem {
+            Label(localizedHomeSurfaceLabel(.fastingDays), systemImage: HomeSurface.fastingDays.iconName)
+        }
+        .tag(HomeSurface.fastingDays)
+        .accessibilityIdentifier("tab.fasting_days")
+    }
+
+    var intermittentPhoneTab: some View {
+        NavigationStack {
+            intermittentSurfaceList
+                .navigationTitle(localizedHomeSurfaceLabel(.intermittent))
+                .navigationBarTitleDisplayMode(.large)
+                .toolbar { phoneTabToolbar }
+        }
+        .phoneNavigationDestinations(for: self)
+        .tabItem {
+            Label(localizedHomeSurfaceLabel(.intermittent), systemImage: HomeSurface.intermittent.iconName)
+        }
+        .tag(HomeSurface.intermittent)
+        .accessibilityIdentifier("tab.intermittent")
+    }
+
+    var morePhoneTab: some View {
+        NavigationStack {
+            moreSurfaceList
+                .navigationTitle(localizedHomeSurfaceLabel(.more))
+                .navigationBarTitleDisplayMode(.large)
+                .toolbar { phoneTabToolbar }
+        }
+        .phoneNavigationDestinations(for: self)
+        .tabItem {
+            Label(localizedHomeSurfaceLabel(.more), systemImage: HomeSurface.more.iconName)
+        }
+        .tag(HomeSurface.more)
+        .accessibilityIdentifier("tab.more")
+    }
+
+    @ToolbarContentBuilder
+    var phoneTabToolbar: some ToolbarContent {
+        ToolbarItem(placement: .topBarTrailing) {
+            seasonBadge
+        }
+        .sharedBackgroundVisibility(.hidden)
     }
 
     func applyRootLifecycleHandlers(to content: some View) -> some View {
@@ -429,69 +463,87 @@ extension ContentView {
         content.appCapsuleGlass()
     }
 
-    func surfaceList(for surface: HomeSurface) -> some View {
+    var todaySurfaceList: some View {
         List {
-            surfaceSections(for: surface)
+            todaySurfaceSections
         }
         .listStyle(.insetGrouped)
         .appListBackground()
     }
 
-    func tabSurface(for surface: HomeSurface) -> some View {
-        surfaceList(for: surface)
+    var fastingDaysSurfaceList: some View {
+        List {
+            fastingDaysSurfaceSections
+        }
+        .listStyle(.insetGrouped)
+        .appListBackground()
+    }
+
+    var intermittentSurfaceList: some View {
+        List {
+            intermittentSurfaceSections
+        }
+        .listStyle(.insetGrouped)
+        .appListBackground()
+    }
+
+    var moreSurfaceList: some View {
+        List {
+            moreSurfaceSections
+        }
+        .listStyle(.insetGrouped)
+        .appListBackground()
     }
 
     @ViewBuilder
-    func surfaceSections(for surface: HomeSurface) -> some View {
-        switch surface {
-        case .today:
-            Group {
-                todayDecisionCardSection
-                dashboardQuickActionsSection
-                dashboardSacredImageSection
-                todayTenSecondSection
-                todaySection
-                setupProgressSection
-                todayRecoverySection
-                if !acceptedLegalNotice {
-                    unofficialAppNoticeSection
-                }
-                if simplifiedModeEnabled {
-                    todaySimpleSummarySection
-                } else {
-                    planningProgressSection
-                    dashboardSeasonSection
-                    dashboardHeroSection
-                    dashboardDevotionalGallerySection
-                    progressSection
-                    analyticsSection
-                    milestoneReferralSection
-                    personalInsightsSection
-                    accessibilitySupportSection
-                    dashboardHighlightsSection
-                }
-            }
-        case .fastingDays:
-            Group {
-                fastingDaysOverviewSection
-                fastingDaysHeroSection
-                fastingDaysDisplayOptionsSection
-                fastingDaysListSection
-            }
-        case .intermittent:
-            Group {
-                intermittentActiveSection
-                intermittentControlsSection
-                intermittentHeroSection
-                intermittentOverviewSection
-                intermittentAdvancedToolsSection
-            }
-        case .more:
-            Group {
-                moreHubSection
-                unofficialAppNoticeSection
-            }
+    var todaySurfaceSections: some View {
+        todayDecisionCardSection
+        dashboardQuickActionsSection
+        dashboardSacredImageSection
+        todayTenSecondSection
+        todaySection
+        setupProgressSection
+        todayRecoverySection
+        if !acceptedLegalNotice {
+            unofficialAppNoticeSection
         }
+        if simplifiedModeEnabled {
+            todaySimpleSummarySection
+        } else {
+            planningProgressSection
+            dashboardSeasonSection
+            dashboardHeroSection
+            dashboardDevotionalGallerySection
+            progressSection
+            analyticsSection
+            milestoneReferralSection
+            personalInsightsSection
+            accessibilitySupportSection
+            dashboardHighlightsSection
+        }
+    }
+
+    @ViewBuilder
+    var fastingDaysSurfaceSections: some View {
+        fastingDaysOverviewSection
+        fastingDaysHeroSection
+        fastingDaysDisplayOptionsSection
+        fastingDaysListSection
+    }
+
+    @ViewBuilder
+    var intermittentSurfaceSections: some View {
+        intermittentActiveSection
+        intermittentControlsSection
+        intermittentHeroSection
+        intermittentOverviewSection
+        intermittentAdvancedToolsSection
+    }
+
+    @ViewBuilder
+    var moreSurfaceSections: some View {
+        moreHubSection
+        unofficialAppNoticeSection
     }
 
     @ViewBuilder
@@ -519,9 +571,7 @@ extension ContentView {
 
         Section {
             ForEach(MoreHubDestination.allCases) { destination in
-                NavigationLink {
-                    moreDestinationList(for: destination)
-                } label: {
+                NavigationLink(value: destination) {
                     AppDestinationRowCard(
                         title: localizedMoreDestinationTitle(destination),
                         subtitle: localizedMoreDestinationSubtitle(destination),
@@ -655,6 +705,20 @@ extension ContentView {
                 height: 122,
                 cornerRadius: 16,
                 accessibilityIdentifier: "more.\(destination.rawValue).hero")
+        }
+    }
+}
+
+private extension View {
+    func phoneNavigationDestinations(for contentView: ContentView) -> some View {
+        navigationDestination(for: MoreHubDestination.self) { destination in
+            contentView.moreDestinationList(for: destination)
+        }
+        .navigationDestination(for: PremiumToolDestination.self) { destination in
+            contentView.premiumToolList(for: destination)
+        }
+        .navigationDestination(for: FastingHistoryArticle.self) { article in
+            contentView.fastingHistoryArticleDetail(article)
         }
     }
 }

@@ -79,9 +79,7 @@ extension ContentView {
         Section(localized("premium.tools.formation", default: "Formation Toolkit")) {
             ForEach(PremiumEntitlementSurface.allCases) { surface in
                 let destination = premiumToolDestination(for: surface)
-                NavigationLink {
-                    premiumToolList(for: destination)
-                } label: {
+                NavigationLink(value: destination) {
                     VStack(alignment: .leading, spacing: 4) {
                         Label(surface.title, systemImage: destination.iconName)
                             .font(.headline)

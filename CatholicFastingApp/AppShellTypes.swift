@@ -40,7 +40,7 @@ enum AppLayoutProfile: String {
     }
 }
 
-enum MoreHubDestination: String, CaseIterable, Identifiable {
+enum MoreHubDestination: String, CaseIterable, Hashable, Identifiable {
     case supportAndPremium
     case setupAndReminders
     case profileAndNorms
@@ -102,7 +102,7 @@ enum SupportPremiumSurface: String, CaseIterable, Identifiable {
     }
 }
 
-enum PremiumToolDestination: String, CaseIterable, Identifiable {
+enum PremiumToolDestination: String, CaseIterable, Hashable, Identifiable {
     case planner
     case reminders
     case analytics

@@ -334,9 +334,7 @@ extension ContentView {
                     }
                 }
 
-                NavigationLink {
-                    moreDestinationList(for: .guidanceAndRules)
-                } label: {
+                NavigationLink(value: MoreHubDestination.guidanceAndRules) {
                     Label(localized("today.food.open_guidance", default: "Open full food guidance"), systemImage: "book.closed")
                 }
                 .accessibilityIdentifier("today.decision.open_full_food_guidance")

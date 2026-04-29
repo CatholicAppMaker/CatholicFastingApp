@@ -15,9 +15,7 @@ extension ContentView {
     var historyOfFastingTimelineSection: some View {
         Section {
             ForEach(FastingHistoryCatalog.articles(locale: languageMode.contentLocale)) { article in
-                NavigationLink {
-                    fastingHistoryArticleDetail(article)
-                } label: {
+                NavigationLink(value: article) {
                     FastingHistoryEraRow(article: article)
                 }
                 .accessibilityIdentifier("history.article.\(article.eraID.rawValue)")
