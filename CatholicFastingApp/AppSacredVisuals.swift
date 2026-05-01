@@ -26,6 +26,12 @@ enum SacredImageryCatalog {
         SacredImageryItem(id: "pastoral-guidance", assetName: "GuidanceSacred", title: "Pastoral Guidance", subtitle: "Apply fasting guidance with clarity, prudence, and peace."),
         SacredImageryItem(id: "jerusalem-cross", assetName: "SacredJerusalemCross", title: "Jerusalem Cross", subtitle: "Let your sacrifice witness to the Gospel."),
         SacredImageryItem(id: "marian-monogram", assetName: "SacredMarianMonogram", title: "Marian Monogram", subtitle: "Fast with humility and trust in Mary's example."),
+        SacredImageryItem(id: "advent-wreath", assetName: "SacredAdventWreath", title: "Advent Wreath", subtitle: "Wait with steady hope and prayerful preparation."),
+        SacredImageryItem(id: "paschal-candle", assetName: "SacredPaschalCandle", title: "Paschal Candle", subtitle: "Let Easter light renew your discipline."),
+        SacredImageryItem(id: "lenten-path", assetName: "SacredLentenPath", title: "Lenten Path", subtitle: "Walk the penitential road with patience and trust."),
+        SacredImageryItem(id: "almsgiving-table", assetName: "SacredAlmsgivingTable", title: "Almsgiving", subtitle: "Join fasting to mercy for your neighbor."),
+        SacredImageryItem(id: "ember-days", assetName: "SacredEmberDays", title: "Ember Days", subtitle: "Offer seasonal gratitude through prayer and restraint."),
+        SacredImageryItem(id: "friday-abstinence", assetName: "SacredFridayAbstinence", title: "Friday Abstinence", subtitle: "Keep Friday penance close to the Cross."),
     ]
 }
 
@@ -222,38 +228,35 @@ private struct AccessibilityIDModifier: ViewModifier {
 
 struct SacredImageryCard: View {
     let item: SacredImageryItem
-    var width: CGFloat = 168
-    var height: CGFloat = 176
+    var width: CGFloat = 206
+    var height: CGFloat = 218
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(CatholicTheme.parchment.opacity(0.92))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 14)
-                            .fill(CatholicTheme.parchment.opacity(0.16)))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 14)
-                            .stroke(CatholicTheme.cardBorder.opacity(0.6), lineWidth: 1))
-
-                Image(item.assetName)
-                    .resizable()
-                    .scaledToFit()
-                    .padding(14)
-            }
-            .frame(height: height - 58)
-            .appRoundedGlass(cornerRadius: 14)
+        VStack(alignment: .leading, spacing: 9) {
+            Image(item.assetName)
+                .resizable()
+                .scaledToFill()
+                .frame(width: width - 20, height: 116)
+                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .stroke(CatholicTheme.cardBorder.opacity(0.48), lineWidth: 1))
+                .accessibilityHidden(true)
 
             Text(item.title)
                 .appSectionTitleStyle(serif: true)
-                .lineLimit(1)
+                .lineLimit(2)
+                .minimumScaleFactor(0.82)
 
             Text(item.subtitle)
                 .appSupportingTextStyle()
-                .lineLimit(2)
+                .lineLimit(3)
+                .minimumScaleFactor(0.86)
+                .fixedSize(horizontal: false, vertical: true)
         }
+        .padding(10)
         .frame(width: width, alignment: .leading)
+        .appSurfaceCard(.utility, cornerRadius: 16)
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(item.title). \(item.subtitle)")
     }

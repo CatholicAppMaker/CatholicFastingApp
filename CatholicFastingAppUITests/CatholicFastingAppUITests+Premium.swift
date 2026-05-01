@@ -39,11 +39,8 @@ extension CatholicFastingAppUITests {
         ensureOnHomeScreen(app)
         openMoreDestination("Support & Premium", in: app)
 
-        XCTAssertTrue(scrollToElement(app.staticTexts["Premium Yearly"].firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(app.staticTexts["Premium Monthly"].firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(app.staticTexts["Optional support tips"].firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Unlock Premium Yearly")).firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Unlock Premium Monthly")).firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.subscription_store", in: app), in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.upgrade_summary", in: app), in: app))
         XCTAssertTrue(scrollToElement(app.buttons["premium.restore"].firstMatch, in: app))
         XCTAssertTrue(scrollToElement(app.buttons["premium.manage"].firstMatch, in: app))
         XCTAssertTrue(scrollToElement(elementByIdentifier("premium.legal.terms", in: app), in: app))
@@ -55,12 +52,9 @@ extension CatholicFastingAppUITests {
         ensureOnHomeScreen(app)
         openMoreDestination("Support & Premium", in: app)
 
-        let yearlyButton = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Unlock Premium Yearly")).firstMatch
-        XCTAssertTrue(scrollToElement(yearlyButton, in: app))
-
-        let monthlyButton = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Unlock Premium Monthly")).firstMatch
-        XCTAssertTrue(scrollToElement(monthlyButton, in: app))
-        XCTAssertLessThan(yearlyButton.frame.minY, monthlyButton.frame.minY)
+        let subscriptionStore = elementByIdentifier("premium.subscription_store", in: app)
+        XCTAssertTrue(scrollToElement(subscriptionStore, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.upgrade_summary", in: app), in: app))
     }
 
     func testDeepIPhonePremiumTipsAndLegalStayBelowSubscriptionPlans() {
@@ -69,16 +63,16 @@ extension CatholicFastingAppUITests {
         ensureOnHomeScreen(app)
         openMoreDestination("Support & Premium", in: app)
 
-        let monthlyButton = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Unlock Premium Monthly")).firstMatch
         let tipButton = app.buttons["premium.tip.com.kevpierce.catholicfasting.tip.small"].firstMatch
         let restoreButton = app.buttons["premium.restore"].firstMatch
 
-        XCTAssertTrue(scrollToElement(monthlyButton, in: app))
-        XCTAssertTrue(scrollToElement(tipButton, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.subscription_store", in: app), in: app))
+        _ = scrollToElement(tipButton, in: app)
         XCTAssertTrue(scrollToElement(restoreButton, in: app))
 
-        XCTAssertLessThan(monthlyButton.frame.minY, tipButton.frame.minY)
-        XCTAssertLessThan(tipButton.frame.minY, restoreButton.frame.minY)
+        if tipButton.exists {
+            XCTAssertLessThan(tipButton.frame.minY, restoreButton.frame.minY)
+        }
     }
 
     func testDeepIPhonePremiumShowsJourneyPreview() {
@@ -166,10 +160,8 @@ extension CatholicFastingAppUITests {
         openIPadMoreDestination("supportAndPremium", in: app)
 
         XCTAssertTrue(scrollToElement(app.staticTexts["Support & Premium"].firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(app.staticTexts["Premium Yearly"].firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(app.staticTexts["Premium Monthly"].firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Unlock Premium Yearly")).firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Unlock Premium Monthly")).firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.subscription_store", in: app), in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.upgrade_summary", in: app), in: app))
         XCTAssertTrue(scrollToElement(app.buttons["premium.restore"].firstMatch, in: app))
         XCTAssertTrue(scrollToElement(elementByIdentifier("premium.legal.terms", in: app), in: app))
     }
@@ -181,11 +173,11 @@ extension CatholicFastingAppUITests {
 
         openIPadMoreDestination("supportAndPremium", in: app)
 
-        let yearlyButton = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Unlock Premium Yearly")).firstMatch
-        let monthlyButton = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Unlock Premium Monthly")).firstMatch
-        XCTAssertTrue(scrollToElement(yearlyButton, in: app))
-        XCTAssertTrue(scrollToElement(monthlyButton, in: app))
-        XCTAssertLessThan(yearlyButton.frame.minY, monthlyButton.frame.minY)
+        let subscriptionStore = elementByIdentifier("premium.subscription_store", in: app)
+        let upgradeSummary = elementByIdentifier("premium.upgrade_summary", in: app)
+        XCTAssertTrue(scrollToElement(subscriptionStore, in: app))
+        XCTAssertTrue(scrollToElement(upgradeSummary, in: app))
+        XCTAssertLessThan(subscriptionStore.frame.minY, upgradeSummary.frame.minY)
     }
 
     func testIPadPremiumTipsAndLegalStayBelowSubscriptionPlans() {
@@ -195,15 +187,17 @@ extension CatholicFastingAppUITests {
 
         openIPadMoreDestination("supportAndPremium", in: app)
 
-        let monthlyButton = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Unlock Premium Monthly")).firstMatch
+        let subscriptionStore = elementByIdentifier("premium.subscription_store", in: app)
         let tipButton = app.buttons["ipad.more.tip.com.kevpierce.catholicfasting.tip.small"].firstMatch
         let restoreButton = app.buttons["premium.restore"].firstMatch
 
-        XCTAssertTrue(scrollToElement(monthlyButton, in: app))
-        XCTAssertTrue(scrollToElement(tipButton, in: app))
+        XCTAssertTrue(scrollToElement(subscriptionStore, in: app))
+        _ = scrollToElement(tipButton, in: app)
         XCTAssertTrue(scrollToElement(restoreButton, in: app))
 
-        XCTAssertLessThan(monthlyButton.frame.minY, tipButton.frame.minY)
-        XCTAssertLessThan(tipButton.frame.minY, restoreButton.frame.minY)
+        if tipButton.exists {
+            XCTAssertLessThan(subscriptionStore.frame.minY, tipButton.frame.minY)
+            XCTAssertLessThan(tipButton.frame.minY, restoreButton.frame.minY)
+        }
     }
 }

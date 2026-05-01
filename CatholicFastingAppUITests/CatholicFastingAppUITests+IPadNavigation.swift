@@ -23,6 +23,37 @@ extension CatholicFastingAppUITests {
         }
     }
 
+    func testIPhoneMoreHubRowsOpenExpectedDestinationContent() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        let destinations = [
+            "supportAndPremium",
+            "setupAndReminders",
+            "profileAndNorms",
+            "guidanceAndRules",
+            "historyOfFasting",
+            "privacyAndData",
+        ]
+
+        for destination in destinations {
+            openSurface("More", in: app)
+
+            let row = elementByIdentifier("more.hub.\(destination)", in: app)
+            XCTAssertTrue(scrollToElement(row, in: app), "Unable to find iPhone More destination row \(destination)")
+            row.tap()
+
+            guard let title = moreDestinationTitle(for: destination) else {
+                XCTFail("Unhandled iPhone More destination \(destination)")
+                return
+            }
+            XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 4), "More destination \(title) did not open")
+            assertIPhoneMoreDestinationContent(destination, in: app)
+            returnToMoreHome(in: app)
+        }
+    }
+
     func testIPhoneMoreSupportDestinationReturnsDirectlyToMoreHome() {
         let app = makeApp()
         app.launch()
@@ -156,7 +187,7 @@ extension CatholicFastingAppUITests {
 
         XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
         XCTAssertTrue(scrollToElement(app.staticTexts["Support & Premium"].firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(app.staticTexts["Premium Yearly"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.subscription_store", in: app), in: app))
     }
 
     func testIPadTodayAndMoreCanBeVisitedRepeatedly() {
@@ -196,7 +227,7 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(openPremium, in: app))
         openPremium.tap()
         XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
-        XCTAssertTrue(scrollToElement(app.staticTexts["Premium Yearly"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.subscription_store", in: app), in: app))
     }
 
     func testIPadTodayQuickActionsRemainResponsiveAcrossRepeatedCycles() {
@@ -224,7 +255,7 @@ extension CatholicFastingAppUITests {
             XCTAssertTrue(scrollToElement(openPremium, in: app))
             openPremium.tap()
             XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
-            XCTAssertTrue(scrollToElement(app.staticTexts["Premium Yearly"].firstMatch, in: app))
+            XCTAssertTrue(scrollToElement(elementByIdentifier("premium.subscription_store", in: app), in: app))
         }
     }
 

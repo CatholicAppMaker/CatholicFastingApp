@@ -13,7 +13,7 @@ extension CatholicFastingAppUITests {
         startButton.tap()
 
         let elapsed = app.staticTexts["intermittent.active_elapsed"].firstMatch
-        XCTAssertTrue(elapsed.waitForExistence(timeout: 4))
+        XCTAssertTrue(scrollToElementPresence(elapsed, in: app))
         XCTAssertTrue(scrollToElement(app.datePickers["intermittent.start_date"].firstMatch, in: app))
 
         let cancelButton = app.buttons["intermittent.cancel_fast"].firstMatch

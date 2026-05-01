@@ -10,7 +10,6 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(continueButton.waitForExistence(timeout: 6))
         continueButton.tap()
 
-        XCTAssertTrue(app.navigationBars["Catholic Fasting"].waitForExistence(timeout: 6))
         XCTAssertTrue(app.otherElements["surface.today.ready"].waitForExistence(timeout: 6))
     }
 
@@ -44,7 +43,6 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(continueButton, in: app))
         continueButton.tap()
 
-        XCTAssertTrue(app.navigationBars["Catholic Fasting"].waitForExistence(timeout: 6))
         XCTAssertTrue(app.otherElements["surface.today.ready"].waitForExistence(timeout: 6))
     }
 
@@ -56,8 +54,10 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(continueButton.waitForExistence(timeout: 4))
         continueButton.tap()
 
-        XCTAssertTrue(app.navigationBars["Catholic Fasting"].waitForExistence(timeout: 4))
         XCTAssertTrue(app.otherElements["surface.today.ready"].waitForExistence(timeout: 4))
+        XCTAssertTrue(
+            app.navigationBars["Today"].firstMatch.waitForExistence(timeout: 4)
+                || app.staticTexts["Today"].firstMatch.waitForExistence(timeout: 4))
     }
 
     func testIPhoneOnboardingSpanishSelectionUpdatesVisibleCopy() {
@@ -161,7 +161,16 @@ extension CatholicFastingAppUITests {
         let consentToggle = app.switches["settings.quick.consent"].firstMatch
         XCTAssertTrue(scrollToElement(consentToggle, in: app))
         if switchIsOn(consentToggle) {
+            let enabledCount = progressCount(from: progress.label)
             consentToggle.tap()
+            XCTAssertTrue(
+                waitUntil(timeout: 3) {
+                    guard let enabledCount, let currentCount = progressCount(from: progress.label) else {
+                        return false
+                    }
+                    return currentCount < enabledCount
+                },
+                "Expected setup progress to refresh after disabling consent. Label now: \(progress.label)")
         }
 
         guard let beforeCount = progressCount(from: progress.label) else {

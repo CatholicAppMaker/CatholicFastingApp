@@ -465,7 +465,9 @@ extension ContentView {
 
     var todaySurfaceList: some View {
         List {
+            surfaceScrollMarker("surface.today.top")
             todaySurfaceSections
+            surfaceScrollMarker("surface.today.bottom")
         }
         .listStyle(.insetGrouped)
         .appListBackground()
@@ -473,7 +475,9 @@ extension ContentView {
 
     var fastingDaysSurfaceList: some View {
         List {
+            surfaceScrollMarker("surface.fasting_days.top")
             fastingDaysSurfaceSections
+            surfaceScrollMarker("surface.fasting_days.bottom")
         }
         .listStyle(.insetGrouped)
         .appListBackground()
@@ -481,7 +485,9 @@ extension ContentView {
 
     var intermittentSurfaceList: some View {
         List {
+            surfaceScrollMarker("surface.intermittent.top")
             intermittentSurfaceSections
+            surfaceScrollMarker("surface.intermittent.bottom")
         }
         .listStyle(.insetGrouped)
         .appListBackground()
@@ -489,10 +495,20 @@ extension ContentView {
 
     var moreSurfaceList: some View {
         List {
+            surfaceScrollMarker("surface.more.top")
             moreSurfaceSections
+            surfaceScrollMarker("surface.more.bottom")
         }
         .listStyle(.insetGrouped)
         .appListBackground()
+    }
+
+    func surfaceScrollMarker(_ identifier: String) -> some View {
+        Section {
+            Color.clear
+                .frame(width: 1, height: 1)
+                .accessibilityIdentifier(identifier)
+        }
     }
 
     @ViewBuilder
@@ -559,7 +575,9 @@ extension ContentView {
 
         Section {
             ForEach(MoreHubDestination.allCases) { destination in
-                NavigationLink(value: destination) {
+                NavigationLink {
+                    moreDestinationList(for: destination)
+                } label: {
                     AppDestinationRowCard(
                         title: localizedMoreDestinationTitle(destination),
                         subtitle: localizedMoreDestinationSubtitle(destination),
@@ -573,6 +591,7 @@ extension ContentView {
 
     func moreDestinationList(for destination: MoreHubDestination) -> some View {
         List {
+            surfaceScrollMarker("more.\(destination.rawValue).top")
             moreDestinationHeroSection(for: destination)
             switch destination {
             case .supportAndPremium:
@@ -615,6 +634,7 @@ extension ContentView {
                 backupsSection
                 dataManagementSection
             }
+            surfaceScrollMarker("more.\(destination.rawValue).bottom")
         }
         .listStyle(.insetGrouped)
         .appListBackground()

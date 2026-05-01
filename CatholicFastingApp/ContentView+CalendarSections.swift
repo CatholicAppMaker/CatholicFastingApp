@@ -56,17 +56,13 @@ enum SacredHeroImageSelector {
             title: "Marian Monogram",
             subtitle: "Ask Our Lady to steady your discipline and prayer."),
         SacredHeroArtwork(
-            assetName: "SacredConceptChiRho",
-            title: "Chi-Rho Crest",
-            subtitle: "Keep Christ first in every daily observance."),
-        SacredHeroArtwork(
-            assetName: "SacredConceptRosary",
-            title: "Rosary Emblem",
-            subtitle: "Pair fasting with patient, persevering prayer."),
-        SacredHeroArtwork(
-            assetName: "SacredConceptHeart",
-            title: "Heart of Mercy",
+            assetName: "SacredAlmsgivingTable",
+            title: "Almsgiving",
             subtitle: "Let fasting deepen mercy toward others."),
+        SacredHeroArtwork(
+            assetName: "SacredAdventWreath",
+            title: "Advent Wreath",
+            subtitle: "Practice steady hope through small faithful habits."),
     ]
 
     private static let fastingDaysArt: [SacredHeroArtwork] = [
@@ -103,15 +99,15 @@ enum SacredHeroImageSelector {
             title: "Marian Discipline",
             subtitle: "Keep fasting days simple, humble, and prayerful."),
         SacredHeroArtwork(
-            assetName: "SacredConceptChiRho",
+            assetName: "SacredFridayAbstinence",
             title: "Christ-Centered Pattern",
             subtitle: "Treat every fasting day as an offering to Christ."),
         SacredHeroArtwork(
-            assetName: "SacredConceptRosary",
+            assetName: "SacredEmberDays",
             title: "Rosary Rhythm",
             subtitle: "Let fasting days follow a stable rhythm of prayer."),
         SacredHeroArtwork(
-            assetName: "SacredConceptHeart",
+            assetName: "SacredLentenPath",
             title: "Merciful Discipline",
             subtitle: "Hold firm discipline with real charity."),
     ]
@@ -158,11 +154,11 @@ enum SacredHeroImageSelector {
             title: "Marian Steadiness",
             subtitle: "Practice optional fasting with gentleness and consistency."),
         SacredHeroArtwork(
-            assetName: "SacredConceptChiRho",
+            assetName: "SacredAlmsgivingTable",
             title: "Focused Intention",
             subtitle: "Keep optional fasts ordered to prayer and conversion."),
         SacredHeroArtwork(
-            assetName: "SacredConceptRosary",
+            assetName: "SacredEmberDays",
             title: "Prayerful Rhythm",
             subtitle: "Let each fast hour become an hour of recollection."),
     ]
@@ -209,11 +205,11 @@ enum SacredHeroImageSelector {
             title: "Marian Prudence",
             subtitle: "Follow norms faithfully with humility and peace."),
         SacredHeroArtwork(
-            assetName: "SacredConceptChiRho",
+            assetName: "SacredPaschalCandle",
             title: "Christ-Centered Rule",
             subtitle: "Read every fasting norm through the mind of Christ."),
         SacredHeroArtwork(
-            assetName: "SacredConceptHeart",
+            assetName: "SacredAdventWreath",
             title: "Mercy and Truth",
             subtitle: "Keep both fidelity to teaching and pastoral tenderness."),
     ]
@@ -448,6 +444,7 @@ extension ContentView {
                 Text(localized("fasting_days.filters.celebrations_hint", default: "Celebration days are shown for planning, not obligation."))
                     .appSupportingTextStyle()
             }
+            .accessibilityIdentifier("fasting_days.filters.customize")
 
             Text(localized("fasting_days.filters.helper", default: "Keep these as utility controls: use them to narrow the list, not to replace the day detail."))
                 .appSupportingTextStyle()

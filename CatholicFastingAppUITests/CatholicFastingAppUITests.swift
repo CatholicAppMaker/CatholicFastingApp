@@ -1,9 +1,16 @@
 import Foundation
+import UIKit
 import XCTest
 
 final class CatholicFastingAppUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
+        if name.contains("testIPad"), UIDevice.current.userInterfaceIdiom != .pad {
+            throw XCTSkip("iPad-specific UI test is skipped on non-iPad destinations.")
+        }
+        if name.contains("testIPhone"), UIDevice.current.userInterfaceIdiom == .pad {
+            throw XCTSkip("iPhone-specific UI test is skipped on iPad destinations.")
+        }
     }
 
     func makeApp(
@@ -60,9 +67,7 @@ final class CatholicFastingAppUITests: XCTestCase {
             continueButton.tap()
         }
         XCTAssertTrue(app.otherElements["home.ready"].waitForExistence(timeout: 4))
-        XCTAssertTrue(
-            app.navigationBars["Today"].firstMatch.waitForExistence(timeout: 4)
-                || app.staticTexts["Today"].firstMatch.waitForExistence(timeout: 4))
+        XCTAssertTrue(app.otherElements["surface.today.ready"].waitForExistence(timeout: 4))
     }
 
     func openSurface(_ label: String, in app: XCUIApplication) {
@@ -77,17 +82,28 @@ final class CatholicFastingAppUITests: XCTestCase {
 
     func tabButton(for label: String, in app: XCUIApplication) -> XCUIElement {
         let tabBar = app.tabBars.firstMatch
-        let direct = tabBar.buttons[label].firstMatch
-        if direct.exists {
-            return direct
-        }
-        if label == "Fasting Days" {
-            let fastingDays = tabBar.buttons["Fasting Days"].firstMatch
-            if fastingDays.exists {
-                return fastingDays
+        for candidate in tabLabels(for: label) {
+            let button = tabBar.buttons[candidate].firstMatch
+            if button.exists {
+                return button
             }
         }
-        return direct
+        return tabBar.buttons[label].firstMatch
+    }
+
+    func tabLabels(for label: String) -> [String] {
+        switch label {
+        case "Today":
+            ["Today", "Hoy", "Aujourd’hui"]
+        case "Fasting Days":
+            ["Fasting Days", "Días de ayuno", "Jours de jeûne"]
+        case "Track Fast":
+            ["Track Fast", "Registrar ayuno", "Suivi du jeûne"]
+        case "More":
+            ["More", "Más", "Plus"]
+        default:
+            [label]
+        }
     }
 
     func openMoreDestination(_ title: String, in app: XCUIApplication) {
@@ -262,7 +278,7 @@ final class CatholicFastingAppUITests: XCTestCase {
     func assertIPadMoreDestinationContent(_ rawValue: String, in app: XCUIApplication) {
         switch rawValue {
         case "supportAndPremium":
-            XCTAssertTrue(scrollToElement(app.staticTexts["Premium Yearly"].firstMatch, in: app))
+            XCTAssertTrue(scrollToElement(elementByIdentifier("premium.subscription_store", in: app), in: app))
         case "setupAndReminders":
             XCTAssertTrue(scrollToElement(app.pickers["settings.region_picker"].firstMatch, in: app))
         case "profileAndNorms":
@@ -276,6 +292,31 @@ final class CatholicFastingAppUITests: XCTestCase {
             XCTAssertTrue(app.buttons["launch.export_data"].firstMatch.waitForExistence(timeout: 4))
         default:
             XCTFail("Unhandled iPad More destination \(rawValue)")
+        }
+    }
+
+    func assertIPhoneMoreDestinationContent(_ rawValue: String, in app: XCUIApplication) {
+        let hero = elementByIdentifier("more.\(rawValue).hero", in: app)
+        XCTAssertTrue(
+            hero.waitForExistence(timeout: 4) || scrollToElement(hero, in: app),
+            "More destination \(rawValue) opened without its destination hero")
+
+        switch rawValue {
+        case "supportAndPremium":
+            XCTAssertTrue(scrollToElement(app.staticTexts["Premium Upgrade"].firstMatch, in: app))
+        case "setupAndReminders":
+            XCTAssertTrue(scrollToElementPresence(elementByIdentifier("settings.quick.language", in: app), in: app))
+            XCTAssertTrue(scrollToElementPresence(elementByIdentifier("settings.quick.reminder_actions", in: app), in: app))
+        case "profileAndNorms":
+            XCTAssertTrue(scrollToElementPresence(elementByIdentifier("settings.region_picker", in: app), in: app))
+        case "guidanceAndRules":
+            XCTAssertTrue(scrollToElementPresence(elementByIdentifier("guidance.sacred_gallery", in: app), in: app))
+        case "historyOfFasting":
+            XCTAssertTrue(scrollToElement(app.buttons["history.article.earlyChurch"].firstMatch, in: app))
+        case "privacyAndData":
+            XCTAssertTrue(scrollToElementPresence(elementByIdentifier("launch.export_data", in: app), in: app))
+        default:
+            XCTFail("Unhandled iPhone More destination \(rawValue)")
         }
     }
 
@@ -296,62 +337,91 @@ final class CatholicFastingAppUITests: XCTestCase {
         XCTAssertTrue(app.otherElements[markerID].waitForExistence(timeout: 4))
     }
 
-    func scrollToElement(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 12)
+    func scrollToElement(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 3)
         -> Bool
     {
-        if element.exists, element.isHittable {
+        if elementIsVisible(element, in: app) {
             return true
         }
 
-        let scrollContainer: XCUIElement = if app.scrollViews.firstMatch.exists {
-            app.scrollViews.firstMatch
-        } else if app.tables.firstMatch.exists {
-            app.tables.firstMatch
-        } else if app.collectionViews.firstMatch.exists {
-            app.collectionViews.firstMatch
-        } else {
-            app
-        }
+        for scrollContainer in scrollCandidates(in: app) {
+            for _ in 0 ..< maxSwipes {
+                scrollContainer.swipeUp()
+                if elementIsVisible(element, in: app) {
+                    return true
+                }
+            }
 
-        for _ in 0 ..< maxSwipes {
-            scrollContainer.swipeUp()
-            if element.exists, element.isHittable {
-                return true
+            for _ in 0 ..< maxSwipes {
+                scrollContainer.swipeDown()
+                if elementIsVisible(element, in: app) {
+                    return true
+                }
             }
         }
 
-        for _ in 0 ..< maxSwipes {
-            scrollContainer.swipeDown()
-            if element.exists, element.isHittable {
-                return true
-            }
-        }
-
-        return element.exists && element.isHittable
+        return elementIsVisible(element, in: app)
     }
 
-    func scrollToElementInApp(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 12)
+    func scrollToElementPresence(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 3)
         -> Bool
     {
-        if element.exists, element.isHittable {
+        if element.exists {
+            return true
+        }
+
+        for scrollContainer in scrollCandidates(in: app) {
+            for _ in 0 ..< maxSwipes {
+                scrollContainer.swipeUp()
+                if element.exists {
+                    return true
+                }
+            }
+
+            for _ in 0 ..< maxSwipes {
+                scrollContainer.swipeDown()
+                if element.exists {
+                    return true
+                }
+            }
+        }
+
+        return element.exists
+    }
+
+    func scrollCandidates(in app: XCUIApplication) -> [XCUIElement] {
+        [app.collectionViews.firstMatch]
+    }
+
+    func scrollToElementInApp(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 3)
+        -> Bool
+    {
+        if elementIsVisible(element, in: app) {
             return true
         }
 
         for _ in 0 ..< maxSwipes {
             app.swipeUp()
-            if element.exists, element.isHittable {
+            if elementIsVisible(element, in: app) {
                 return true
             }
         }
 
         for _ in 0 ..< maxSwipes {
             app.swipeDown()
-            if element.exists, element.isHittable {
+            if elementIsVisible(element, in: app) {
                 return true
             }
         }
 
-        return element.exists && element.isHittable
+        return elementIsVisible(element, in: app)
+    }
+
+    func elementIsVisible(_ element: XCUIElement, in app: XCUIApplication) -> Bool {
+        guard element.exists, !element.frame.isEmpty else {
+            return false
+        }
+        return app.frame.intersects(element.frame)
     }
 
     func elementByIdentifier(_ identifier: String, in app: XCUIApplication) -> XCUIElement {
@@ -364,15 +434,57 @@ final class CatholicFastingAppUITests: XCTestCase {
     }
 
     func expandDisclosureGroup(_ label: String, in app: XCUIApplication) {
+        if let identifier = disclosureIdentifier(for: label) {
+            let identified = elementByIdentifier(identifier, in: app)
+            if scrollToElement(identified, in: app) {
+                identified.tap()
+                return
+            }
+        }
+
         let button = app.buttons[label].firstMatch
         if scrollToElement(button, in: app) {
             button.tap()
             return
         }
 
-        let text = app.staticTexts[label].firstMatch
-        XCTAssertTrue(scrollToElement(text, in: app), "Unable to find disclosure group \(label)")
-        text.tap()
+        for candidate in disclosureLabels(for: label) {
+            let candidateButton = app.buttons[candidate].firstMatch
+            if scrollToElement(candidateButton, in: app) {
+                candidateButton.tap()
+                return
+            }
+
+            let candidateText = app.staticTexts[candidate].firstMatch
+            if scrollToElement(candidateText, in: app) {
+                candidateText.tap()
+                return
+            }
+        }
+
+        XCTFail("Unable to find disclosure group \(label)")
+    }
+
+    func disclosureIdentifier(for label: String) -> String? {
+        switch label {
+        case "Customize List":
+            "fasting_days.filters.customize"
+        case "Reminder Actions":
+            "settings.quick.reminder_actions"
+        default:
+            nil
+        }
+    }
+
+    func disclosureLabels(for label: String) -> [String] {
+        switch label {
+        case "Customize List":
+            ["Customize List", "Personalizar lista", "Personnaliser la liste"]
+        case "Reminder Actions":
+            ["Reminder Actions", "Acciones de recordatorios", "Actions de rappels"]
+        default:
+            [label]
+        }
     }
 
     func selectMenuPicker(_ picker: XCUIElement, option: String, in app: XCUIApplication) {

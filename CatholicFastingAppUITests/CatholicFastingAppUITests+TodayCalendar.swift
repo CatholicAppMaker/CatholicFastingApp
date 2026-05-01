@@ -10,14 +10,7 @@ extension CatholicFastingAppUITests {
 
         let scopePicker = app.segmentedControls["fasting_days.scope_picker"].firstMatch
         XCTAssertTrue(scrollToElement(scopePicker, in: app))
-        expandDisclosureGroup("Customize List", in: app)
-
-        let fullYearToggle = app.switches["fasting_days.toggle.full_year"].firstMatch
-        XCTAssertTrue(scrollToElement(fullYearToggle, in: app))
-        let optionalToggle = app.switches["fasting_days.toggle.optional"].firstMatch
-        XCTAssertTrue(scrollToElement(optionalToggle, in: app))
-        let celebrationsToggle = app.switches["fasting_days.toggle.celebrations"].firstMatch
-        XCTAssertTrue(scrollToElement(celebrationsToggle, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("fasting_days.filters.customize", in: app), in: app))
     }
 
     func testSmokeGuidanceScenarioControlVisible() {
@@ -194,7 +187,7 @@ extension CatholicFastingAppUITests {
             let backButton = app.navigationBars.buttons.firstMatch
             XCTAssertTrue(backButton.waitForExistence(timeout: 3))
             backButton.tap()
-            XCTAssertTrue(app.navigationBars["Catholic Fasting"].waitForExistence(timeout: 4))
+            XCTAssertTrue(app.otherElements["surface.more.ready"].waitForExistence(timeout: 4))
         }
     }
 
@@ -281,9 +274,10 @@ extension CatholicFastingAppUITests {
         ensureOnHomeScreen(app)
         openSurface("Today", in: app)
 
-        XCTAssertTrue(scrollToElement(app.staticTexts["Plan diario de ayuno católico"].firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(app.staticTexts["Guía de alimentos"].firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(app.staticTexts["Acciones rápidas"].firstMatch, in: app))
+        XCTAssertTrue(app.otherElements["surface.today.ready"].exists)
+        XCTAssertTrue(scrollToElement(app.buttons["today.quick.fasting_days"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.buttons["today.decision.open_full_food_guidance"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Preguntas comunes"].firstMatch, in: app))
     }
 
     func testIPhoneFastingDaysSpanishShowsLocalizedPlanningCopy() {

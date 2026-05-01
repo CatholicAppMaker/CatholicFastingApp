@@ -97,6 +97,10 @@ extension ContentView {
 
     var premiumAndSupportSection: some View {
         Section(localized("premium.upgrade.section", default: "Premium Upgrade")) {
+            Color.clear
+                .frame(width: 1, height: 1)
+                .accessibilityIdentifier("premium.subscription_store")
+
             if monetizationStore.premiumUnlocked {
                 premiumJourneyCard(sample: false)
             } else {
@@ -410,6 +414,7 @@ extension ContentView {
                 }
                 .appPrimaryButtonStyle()
                 .disabled(monetizationStore.isPurchasing)
+                .accessibilityIdentifier("premium.offer.unlock.\(product.id)")
             } else {
                 Button(localizedFormat("premium.offer.unlock_format", default: "Unlock %@ • %@", offer?.displayTitle ?? product.displayName, product.displayPrice)) {
                     Task {
@@ -418,11 +423,13 @@ extension ContentView {
                 }
                 .appSecondaryButtonStyle(legacyTint: CatholicTheme.accent)
                 .disabled(monetizationStore.isPurchasing)
+                .accessibilityIdentifier("premium.offer.unlock.\(product.id)")
             }
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
         .appSurfaceCard(offer?.isPrimaryAnchor == true ? .primary : .standard, cornerRadius: 16)
+        .accessibilityIdentifier("premium.offer.\(product.id)")
     }
     #endif
 

@@ -325,7 +325,7 @@ enum SeasonalContentPackCatalog {
         .ordinary: SeasonalContentPack(
             season: .ordinary,
             locale: .english,
-            heroAssetNames: ["SacredChiRho", "SacredRosaryCross", "SacredConceptHeart", "HeroSacred"],
+            heroAssetNames: ["SacredChiRho", "SacredRosaryCross", "SacredSacredHeart", "HeroSacred"],
             campaignTitle: "Ordinary Time Consistency",
             campaignSubtitle: "Small faithful habits form long-term discipline.",
             formationLines: [
@@ -807,7 +807,7 @@ enum SeasonalContentPackCatalog {
         .ordinary: SeasonalContentPack(
             season: .ordinary,
             locale: .frenchCanadian,
-            heroAssetNames: ["SacredChiRho", "SacredRosaryCross", "SacredConceptHeart", "HeroSacred"],
+            heroAssetNames: ["SacredChiRho", "SacredRosaryCross", "SacredSacredHeart", "HeroSacred"],
             campaignTitle: "Constance du temps ordinaire",
             campaignSubtitle: "Les petites habitudes fidèles forment une discipline durable.",
             formationLines: [
