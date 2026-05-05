@@ -149,6 +149,27 @@ extension ContentView {
         }
     }
 
+    var dashboardFastingQuoteSection: some View {
+        Section(localized("today.quote.section", default: "Daily fasting reflection")) {
+            CatholicFastingQuoteCard(quote: dashboardFastingQuote, compact: true)
+                .accessibilityIdentifier("dashboard.quote")
+        }
+    }
+
+    var fastingDaysFastingQuoteSection: some View {
+        Section(localized("fasting_days.quote.section", default: "Fasting reflection")) {
+            CatholicFastingQuoteCard(quote: fastingDaysFastingQuote, compact: true)
+                .accessibilityIdentifier("fasting_days.quote")
+        }
+    }
+
+    var intermittentFastingQuoteSection: some View {
+        Section(localized("intermittent.quote.section", default: "Fasting intention")) {
+            CatholicFastingQuoteCard(quote: intermittentFastingQuote, compact: true)
+                .accessibilityIdentifier("intermittent.quote")
+        }
+    }
+
     var todayTenSecondSection: some View {
         Section {
             VStack(alignment: .leading, spacing: 12) {

@@ -498,6 +498,7 @@ extension ContentView {
     @ViewBuilder
     var todaySurfaceSections: some View {
         dashboardSacredImageSection
+        dashboardFastingQuoteSection
         todayDecisionCardSection
         dashboardQuickActionsSection
         todayTenSecondSection
@@ -525,6 +526,7 @@ extension ContentView {
     @ViewBuilder
     var fastingDaysSurfaceSections: some View {
         fastingDaysHeroSection
+        fastingDaysFastingQuoteSection
         fastingDaysOverviewSection
         fastingDaysDisplayOptionsSection
         fastingDaysListSection
@@ -533,6 +535,7 @@ extension ContentView {
     @ViewBuilder
     var intermittentSurfaceSections: some View {
         intermittentHeroSection
+        intermittentFastingQuoteSection
         intermittentActiveSection
         intermittentControlsSection
         intermittentOverviewSection
@@ -555,6 +558,11 @@ extension ContentView {
                 imageHeight: 112,
                 cornerRadius: 16,
                 accessibilityIdentifier: "more.hub.hero")
+        }
+
+        Section(localized("more.quote.section", default: "Guidance reflection")) {
+            CatholicFastingQuoteCard(quote: guidanceFastingQuote, compact: true)
+                .accessibilityIdentifier("more.hub.quote")
         }
 
         Section {

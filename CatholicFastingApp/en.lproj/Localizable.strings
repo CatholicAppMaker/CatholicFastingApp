@@ -261,6 +261,10 @@
 "fasting_days.reminders.premium_feature" = "Daily support reminders remain a Premium feature.";
 "fasting_days.reminders.schedule_support_hint" = "Schedule support reminders after choosing a Premium reminder strategy.";
 "reminder.quote.title" = "Daily fasting reflection";
+"today.quote.section" = "Daily fasting reflection";
+"fasting_days.quote.section" = "Fasting reflection";
+"intermittent.quote.section" = "Fasting intention";
+"more.quote.section" = "Guidance reflection";
 "fasting_days.notes.section" = "Notes";
 "fasting_days.notes.history" = "Friday Notes History";
 "fasting_days.summary.full_year" = "full year";

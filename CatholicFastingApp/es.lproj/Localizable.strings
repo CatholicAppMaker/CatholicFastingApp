@@ -665,6 +665,10 @@
 "fasting_days.reminders.premium_feature" = "Los recordatorios diarios de apoyo siguen siendo una función Premium.";
 "fasting_days.reminders.schedule_support_hint" = "Programe los recordatorios de apoyo después de elegir una estrategia Premium de recordatorios.";
 "reminder.quote.title" = "Reflexión diaria sobre el ayuno";
+"today.quote.section" = "Reflexión diaria sobre el ayuno";
+"fasting_days.quote.section" = "Reflexión sobre el ayuno";
+"intermittent.quote.section" = "Intención de ayuno";
+"more.quote.section" = "Reflexión de orientación";
 "fasting_days.notes.section" = "Notas";
 "fasting_days.notes.history" = "Historial de notas de los viernes";
 "fasting_days.summary.full_year" = "año completo";

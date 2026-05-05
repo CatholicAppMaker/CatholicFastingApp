@@ -157,6 +157,27 @@ extension CatholicFastingAppUITests {
         }
     }
 
+    func testMainSurfacesShowFastingQuoteCards() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        let surfaces: [(label: String, identifier: String)] = [
+            ("Today", "dashboard.quote"),
+            ("Fasting Days", "fasting_days.quote"),
+            ("Track Fast", "intermittent.quote"),
+            ("More", "more.hub.quote"),
+        ]
+
+        for surface in surfaces {
+            openSurface(surface.label, in: app)
+            let quote = elementByIdentifier(surface.identifier, in: app)
+            XCTAssertTrue(
+                quote.waitForExistence(timeout: 4) || scrollToElement(quote, in: app),
+                "\(surface.label) did not expose its fasting quote card")
+        }
+    }
+
     func testMoreDestinationsExposeStableHeroAnchors() {
         let app = makeApp()
         app.launch()

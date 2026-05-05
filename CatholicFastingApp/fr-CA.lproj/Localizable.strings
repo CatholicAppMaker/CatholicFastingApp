@@ -665,6 +665,10 @@
 "fasting_days.reminders.premium_feature" = "Les rappels quotidiens de soutien demeurent une fonction Premium.";
 "fasting_days.reminders.schedule_support_hint" = "Planifiez les rappels de soutien après avoir choisi une stratégie Premium de rappels.";
 "reminder.quote.title" = "Réflexion quotidienne sur le jeûne";
+"today.quote.section" = "Réflexion quotidienne sur le jeûne";
+"fasting_days.quote.section" = "Réflexion sur le jeûne";
+"intermittent.quote.section" = "Intention de jeûne";
+"more.quote.section" = "Réflexion d’accompagnement";
 "fasting_days.notes.section" = "Notes";
 "fasting_days.notes.history" = "Historique des notes du vendredi";
 "fasting_days.summary.full_year" = "année complète";
