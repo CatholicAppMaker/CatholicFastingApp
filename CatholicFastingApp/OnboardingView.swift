@@ -118,7 +118,6 @@ struct OnboardingView: View {
                 }
                 .pickerStyle(.menu)
                 .accessibilityIdentifier("onboarding.region")
-
             }
 
             Section(localized("onboarding.trust.title", default: "Trust and Finish")) {
@@ -146,5 +145,4 @@ struct OnboardingView: View {
             localized("onboarding.region.other", default: option.label)
         }
     }
-
 }

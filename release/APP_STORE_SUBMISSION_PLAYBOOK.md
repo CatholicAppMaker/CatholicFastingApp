@@ -7,6 +7,7 @@
    - `swift test`
    - deterministic iPhone UI suite
    - deterministic iPad UI suite
+   - Do not run `periphery` during release or cleanup passes unless Kevin explicitly asks for it.
 2. Resolve all failures before archive.
 
 ## 2) Archive and Upload

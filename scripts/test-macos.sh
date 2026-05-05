@@ -72,8 +72,7 @@ assert_log_clean() {
   for marker in \
     "Metadata extraction skipped. No AppIntents.framework dependency found." \
     "Please use SettingsLink for opening the Settings scene." \
-    "linkd.autoShortcut"
-  do
+    "linkd.autoShortcut"; do
     if grep -Fq "$marker" "$file"; then
       printf 'Unexpected warning/noise marker found in %s:\n%s\n' "$file" "$marker" >&2
       rg -n -F "$marker" "$file" >&2 || true
@@ -96,13 +95,13 @@ run_xcodebuild_step() {
 
   reset_xcode_build_services
   printf '\n[%s]\n' "$label"
-  if ! xcodebuild "$@" 2>&1 \
-    | sed \
+  if ! xcodebuild "$@" 2>&1 |
+    sed \
       -e '/com\.apple\.linkd\.autoShortcut/d' \
       -e '/Error registering app with intents framework/d' \
       -e '/Unable to re-register with Process Instance Registry/d' \
-      -e '/Will NOT re-try to establish the connection/d' \
-    | tee "$log_file"; then
+      -e '/Will NOT re-try to establish the connection/d' |
+    tee "$log_file"; then
     rm -f "$log_file"
     exit 1
   fi
@@ -158,7 +157,8 @@ assert_asset_slot_count() {
   local expected="$3"
   local actual
 
-  actual="$(python3 - "$asset_json" "$idiom" <<'PY'
+  actual="$(
+    python3 - "$asset_json" "$idiom" <<'PY'
 import json
 import sys
 
@@ -166,7 +166,7 @@ with open(sys.argv[1], encoding="utf-8") as handle:
     payload = json.load(handle)
 print(sum(1 for image in payload.get("images", []) if image.get("idiom") == sys.argv[2]))
 PY
-)"
+  )"
 
   if [[ "$actual" != "$expected" ]]; then
     printf 'Expected %s to contain %s %s icon slot(s), got %s\n' "$asset_json" "$expected" "$idiom" "$actual" >&2
@@ -258,7 +258,7 @@ run_step "Swift package tests" swift test
 ui_log="$(mktemp)"
 reset_xcode_build_services
 if ! ui_automation_ready; then
-  if (( REQUIRE_UI )); then
+  if ((REQUIRE_UI)); then
     explain_ui_automation_blocker
     exit 1
   fi
@@ -274,24 +274,25 @@ elif xcodebuild \
   -allowProvisioningUpdates \
   -allowProvisioningDeviceRegistration \
   COMPILER_INDEX_STORE_ENABLE=NO \
-  build-for-testing 2>&1 \
-  | sed \
-      -e '/com\.apple\.linkd\.autoShortcut/d' \
-      -e '/Error registering app with intents framework/d' \
-      -e '/Unable to re-register with Process Instance Registry/d' \
-      -e '/Will NOT re-try to establish the connection/d' \
-  >"$ui_log"; then
+  build-for-testing 2>&1 |
+  sed \
+    -e '/com\.apple\.linkd\.autoShortcut/d' \
+    -e '/Error registering app with intents framework/d' \
+    -e '/Unable to re-register with Process Instance Registry/d' \
+    -e '/Will NOT re-try to establish the connection/d' \
+    >"$ui_log"; then
   assert_log_clean "$ui_log"
   rm -f "$ui_log"
   run_xcodebuild_step "macOS UI tests" \
     -project CatholicFastingApp.xcodeproj -scheme CatholicFastingMacAppUITests -destination 'platform=macOS,arch=arm64' -derivedDataPath "$UI_DERIVED_DATA" -scmProvider system COMPILER_INDEX_STORE_ENABLE=NO test-without-building
 else
-  if (( REQUIRE_UI )); then
+  if ((REQUIRE_UI)); then
     explain_ui_signing_blocker "$ui_log"
     rm -f "$ui_log"
     exit 1
   fi
   explain_ui_signing_blocker "$ui_log"
+  # shellcheck disable=SC2016
   printf '\nSkipping signed macOS UI tests. Re-run with `--require-ui` to fail hard when provisioning is unavailable.\n'
   rm -f "$ui_log"
 fi

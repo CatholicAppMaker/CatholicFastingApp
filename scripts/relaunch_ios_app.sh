@@ -26,7 +26,7 @@ find_latest_app_bundle() {
     while IFS= read -r -d '' candidate; do
       local mtime
       mtime=$(stat -f "%m" "$candidate")
-      if (( mtime > newest_mtime )); then
+      if ((mtime > newest_mtime)); then
         newest_mtime="$mtime"
         newest_path="$candidate"
       fi
