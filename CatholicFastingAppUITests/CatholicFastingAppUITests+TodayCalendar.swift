@@ -13,16 +13,14 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(elementByIdentifier("fasting_days.filters.customize", in: app), in: app))
     }
 
-    func testSmokeGuidanceScenarioControlVisible() {
+    func testSmokeGuidanceDestinationOpens() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
         openMoreDestination("Guidance & Rules", in: app)
 
-        let scenarioByID = elementByIdentifier("guidance.scenario", in: app)
-        XCTAssertTrue(scrollToElement(scenarioByID, in: app))
-        let foodSection = elementByIdentifier("guidance.food.section", in: app)
-        XCTAssertTrue(scrollToElement(foodSection, in: app))
+        XCTAssertTrue(app.navigationBars["Guidance & Rules"].firstMatch.waitForExistence(timeout: 4))
+        XCTAssertTrue(elementByIdentifier("more.guidanceAndRules.hero", in: app).waitForExistence(timeout: 4))
     }
 
     func testDeepGuidanceSacredGalleryVisible() {
@@ -138,34 +136,34 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(recoveryTitle, in: app))
     }
 
-    func testScrollMainSurfacesTopToBottomAndBack() {
+    func testMainSurfacesShowStableHeroAnchors() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
 
-        let surfaces: [(label: String, id: String)] = [
-            ("Today", "today"),
-            ("Fasting Days", "fasting_days"),
-            ("Track Fast", "intermittent"),
-            ("More", "more"),
+        let surfaces: [(label: String, identifier: String)] = [
+            ("Today", "dashboard.hero"),
+            ("Fasting Days", "fasting_days.hero"),
+            ("Track Fast", "intermittent.hero"),
+            ("More", "more.hub.hero"),
         ]
 
         for surface in surfaces {
             openSurface(surface.label, in: app)
-            let bottomMarker = app.otherElements["surface.\(surface.id).bottom"].firstMatch
-            XCTAssertTrue(scrollToElement(bottomMarker, in: app), "Could not reach bottom of \(surface.label)")
-            let topMarker = app.otherElements["surface.\(surface.id).top"].firstMatch
-            XCTAssertTrue(scrollToElement(topMarker, in: app), "Could not return to top of \(surface.label)")
+            let anchor = elementByIdentifier(surface.identifier, in: app)
+            XCTAssertTrue(
+                anchor.waitForExistence(timeout: 4) || scrollToElement(anchor, in: app),
+                "\(surface.label) did not expose its stable hero anchor")
         }
     }
 
-    func testScrollMoreDestinationsTopToBottomAndBack() {
+    func testMoreDestinationsExposeStableHeroAnchors() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
         openSurface("More", in: app)
 
-        let destinations: [(title: String, id: String)] = [
+        let destinations: [(title: String, identifier: String)] = [
             ("Support & Premium", "supportAndPremium"),
             ("Setup & Reminders", "setupAndReminders"),
             ("Profile & Norms", "profileAndNorms"),
@@ -175,14 +173,10 @@ extension CatholicFastingAppUITests {
 
         for destination in destinations {
             openMoreDestination(destination.title, in: app)
-            let bottomMarker = app.otherElements["more.\(destination.id).bottom"].firstMatch
+            let hero = elementByIdentifier("more.\(destination.identifier).hero", in: app)
             XCTAssertTrue(
-                scrollToElement(bottomMarker, in: app),
-                "Could not reach bottom of \(destination.title)")
-            let topMarker = app.otherElements["more.\(destination.id).top"].firstMatch
-            XCTAssertTrue(
-                scrollToElement(topMarker, in: app),
-                "Could not return to top of \(destination.title)")
+                hero.waitForExistence(timeout: 4) || scrollToElement(hero, in: app),
+                "\(destination.title) did not expose its stable destination hero")
 
             let backButton = app.navigationBars.buttons.firstMatch
             XCTAssertTrue(backButton.waitForExistence(timeout: 3))

@@ -145,7 +145,7 @@ extension ContentView {
                 title: activeSeasonalContentPack.campaignTitle,
                 subtitle: activeSeasonalContentPack.campaignSubtitle,
                 imageHeight: 112,
-                accessibilityIdentifier: "dashboard.sacred_image")
+                accessibilityIdentifier: "dashboard.hero")
         }
     }
 
@@ -250,7 +250,7 @@ extension ContentView {
                         planningData.optionalGoal))
                     .appSupportingTextStyle()
             }
-            .accessibilityIdentifier("dashboard.hero")
+            .accessibilityIdentifier("dashboard.plan_summary")
             .padding(14)
             .appSurfaceCard(.standard, cornerRadius: 18)
         }

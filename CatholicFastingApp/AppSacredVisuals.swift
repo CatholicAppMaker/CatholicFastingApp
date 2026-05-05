@@ -12,25 +12,23 @@ struct SacredImageryItem: Identifiable {
 
 enum SacredImageryCatalog {
     static let fastingGallery: [SacredImageryItem] = [
-        SacredImageryItem(id: "chi-rho", assetName: "SacredChiRho", title: "Chi-Rho", subtitle: "Offer each fast in Christ."),
+        SacredImageryItem(id: "chapel-altar", assetName: "HeroSacred", title: "Chapel Altar", subtitle: "Keep your fasting quiet, prayerful, and rooted in worship."),
+        SacredImageryItem(id: "crucifix-altar", assetName: "SacredCrucifixAltar", title: "Crucifix Altar", subtitle: "Bring sacrifice before Christ with humility."),
+        SacredImageryItem(id: "planning-journal", assetName: "SacredPlanningJournal", title: "Planning Journal", subtitle: "Prepare discipline with peace and intention."),
+        SacredImageryItem(id: "eucharistic-support", assetName: "SacredChaliceVine", title: "Eucharistic Support", subtitle: "Let support for discipline remain close to prayer."),
         SacredImageryItem(id: "monstrance", assetName: "SacredMonstrance", title: "Monstrance", subtitle: "Let prayer anchor discipline."),
         SacredImageryItem(id: "sacred-heart", assetName: "SacredSacredHeart", title: "Sacred Heart", subtitle: "Unite fasting to charity."),
         SacredImageryItem(id: "rosary-cross", assetName: "SacredRosaryCross", title: "Rosary Cross", subtitle: "Pray while you abstain."),
-        SacredImageryItem(id: "cathedral-light", assetName: "SacredCathedralLight", title: "Cathedral Light", subtitle: "Remember the liturgy while you fast."),
-        SacredImageryItem(id: "ash-wednesday", assetName: "SacredAshWednesday", title: "Ash Cross", subtitle: "Repentance remains the core of fasting."),
-        SacredImageryItem(id: "desert-pilgrimage", assetName: "SacredDesertPilgrimage", title: "Desert Pilgrimage", subtitle: "Keep your sacrifice steady over time."),
+        SacredImageryItem(id: "chi-rho", assetName: "SacredChiRho", title: "Chi-Rho", subtitle: "Offer each fast in Christ."),
         SacredImageryItem(id: "prayer-journal", assetName: "SacredScriptureCandle", title: "Prayer Journal", subtitle: "Keep discipline joined to reflection and prayer."),
-        SacredImageryItem(id: "palm-sunday", assetName: "SacredPalmSunday", title: "Palm Branch", subtitle: "Prepare your heart for Holy Week."),
-        SacredImageryItem(id: "chalice-vine", assetName: "SacredChaliceVine", title: "Chalice and Vine", subtitle: "Offer fasting in a Eucharistic spirit."),
-        SacredImageryItem(id: "chapel-altar", assetName: "HeroSacred", title: "Chapel Altar", subtitle: "Keep your fasting quiet, prayerful, and rooted in worship."),
-        SacredImageryItem(id: "pastoral-guidance", assetName: "GuidanceSacred", title: "Pastoral Guidance", subtitle: "Apply fasting guidance with clarity, prudence, and peace."),
         SacredImageryItem(id: "jerusalem-cross", assetName: "SacredJerusalemCross", title: "Jerusalem Cross", subtitle: "Let your sacrifice witness to the Gospel."),
-        SacredImageryItem(id: "marian-monogram", assetName: "SacredMarianMonogram", title: "Marian Monogram", subtitle: "Fast with humility and trust in Mary's example."),
+        SacredImageryItem(id: "marian-monogram", assetName: "SacredMarianMonogram", title: "Marian Chapel", subtitle: "Fast with humility and trust in Mary's example."),
         SacredImageryItem(id: "advent-wreath", assetName: "SacredAdventWreath", title: "Advent Wreath", subtitle: "Wait with steady hope and prayerful preparation."),
         SacredImageryItem(id: "paschal-candle", assetName: "SacredPaschalCandle", title: "Paschal Candle", subtitle: "Let Easter light renew your discipline."),
         SacredImageryItem(id: "lenten-path", assetName: "SacredLentenPath", title: "Lenten Path", subtitle: "Walk the penitential road with patience and trust."),
         SacredImageryItem(id: "almsgiving-table", assetName: "SacredAlmsgivingTable", title: "Almsgiving", subtitle: "Join fasting to mercy for your neighbor."),
         SacredImageryItem(id: "ember-days", assetName: "SacredEmberDays", title: "Ember Days", subtitle: "Offer seasonal gratitude through prayer and restraint."),
+        SacredImageryItem(id: "purple-veil", assetName: "SacredPurpleVeil", title: "Penitential Veil", subtitle: "Let quiet restraint make room for grace."),
         SacredImageryItem(id: "friday-abstinence", assetName: "SacredFridayAbstinence", title: "Friday Abstinence", subtitle: "Keep Friday penance close to the Cross."),
     ]
 }
@@ -229,7 +227,7 @@ private struct AccessibilityIDModifier: ViewModifier {
 struct SacredImageryCard: View {
     let item: SacredImageryItem
     var width: CGFloat = 206
-    var height: CGFloat = 218
+    var height: CGFloat = 238
 
     var body: some View {
         VStack(alignment: .leading, spacing: 9) {
@@ -255,7 +253,7 @@ struct SacredImageryCard: View {
                 .fixedSize(horizontal: false, vertical: true)
         }
         .padding(10)
-        .frame(width: width, alignment: .leading)
+        .frame(width: width, height: height, alignment: .topLeading)
         .appSurfaceCard(.utility, cornerRadius: 16)
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(item.title). \(item.subtitle)")

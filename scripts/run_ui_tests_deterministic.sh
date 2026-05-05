@@ -22,7 +22,7 @@ IPHONE_TESTS=(
   "CatholicFastingAppUITests/testDeepCanOpenFridayNotesHistory"
   "CatholicFastingAppUITests/testDeepLaunchReadinessControlsVisible"
   "CatholicFastingAppUITests/testSmokeExportsRequireLegalAcknowledgment"
-  "CatholicFastingAppUITests/testSmokeGuidanceScenarioControlVisible"
+  "CatholicFastingAppUITests/testSmokeGuidanceDestinationOpens"
   "CatholicFastingAppUITests/testDeepDashboardHeroVisible"
   "CatholicFastingAppUITests/testDeepIPhoneMoreDestinationsOpenAndReturn"
   "CatholicFastingAppUITests/testDeepIPhonePremiumScreenShowsPlansTipsAndLegal"

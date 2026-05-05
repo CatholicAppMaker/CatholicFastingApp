@@ -110,7 +110,7 @@ enum SeasonalContentPackCatalog {
         SeasonalContentPack(
             season: .ordinary,
             locale: locale,
-            heroAssetNames: ["SacredMonstrance"],
+            heroAssetNames: ["SacredMonstrance", "HeroSacred"],
             campaignTitle: "Ordinary Time",
             campaignSubtitle: "Keep prayer, fasting, and charity steady.",
             formationLines: [
@@ -131,7 +131,7 @@ enum SeasonalContentPackCatalog {
         .lent: SeasonalContentPack(
             season: .lent,
             locale: .english,
-            heroAssetNames: ["SacredAshWednesday", "SacredMonstrance", "SacredPalmSunday", "SacredDesertPilgrimage"],
+            heroAssetNames: ["SacredFridayAbstinence", "SacredLentenPath", "SacredCrucifixAltar"],
             campaignTitle: "Lenten Discipline",
             campaignSubtitle: "Pray, fast, and give alms with consistency.",
             formationLines: [
@@ -184,7 +184,7 @@ enum SeasonalContentPackCatalog {
         .advent: SeasonalContentPack(
             season: .advent,
             locale: .english,
-            heroAssetNames: ["SacredScriptureCandle", "SacredMarianMonogram", "SacredCathedralLight"],
+            heroAssetNames: ["SacredScriptureCandle", "SacredMarianMonogram", "GuidanceSacred"],
             campaignTitle: "Advent Watchfulness",
             campaignSubtitle: "Practice hopeful discipline while awaiting Christ.",
             formationLines: [
@@ -231,7 +231,7 @@ enum SeasonalContentPackCatalog {
         .christmas: SeasonalContentPack(
             season: .christmas,
             locale: .english,
-            heroAssetNames: ["SacredChaliceVine", "SacredCathedralLight", "HeroSacred"],
+            heroAssetNames: ["SacredChaliceVine", "SacredBreadRosary", "HeroSacred"],
             campaignTitle: "Christmas Sobriety and Joy",
             campaignSubtitle: "Celebrate faithfully while keeping Friday discipline.",
             formationLines: [
@@ -278,7 +278,7 @@ enum SeasonalContentPackCatalog {
         .easter: SeasonalContentPack(
             season: .easter,
             locale: .english,
-            heroAssetNames: ["SacredChaliceVine", "SacredJerusalemCross", "HeroSacred"],
+            heroAssetNames: ["SacredChaliceVine", "SacredJerusalemCross", "SacredPaschalCandle"],
             campaignTitle: "Easter Fidelity",
             campaignSubtitle: "Carry Lenten discipline into ordinary life.",
             formationLines: [
@@ -375,7 +375,7 @@ enum SeasonalContentPackCatalog {
         .lent: SeasonalContentPack(
             season: .lent,
             locale: .spanish,
-            heroAssetNames: ["SacredAshWednesday", "SacredMonstrance", "SacredPalmSunday"],
+            heroAssetNames: ["SacredFridayAbstinence", "SacredLentenPath", "SacredPaschalCandle"],
             campaignTitle: "Disciplina Cuaresmal",
             campaignSubtitle: "Orar, ayunar y dar limosna con constancia.",
             formationLines: [
@@ -422,7 +422,7 @@ enum SeasonalContentPackCatalog {
         .advent: SeasonalContentPack(
             season: .advent,
             locale: .spanish,
-            heroAssetNames: ["SacredScriptureCandle", "SacredMarianMonogram", "SacredCathedralLight"],
+            heroAssetNames: ["SacredScriptureCandle", "SacredMarianMonogram", "GuidanceSacred"],
             campaignTitle: "Vigilia de Adviento",
             campaignSubtitle: "Practique una disciplina esperanzada mientras espera a Cristo.",
             formationLines: [
@@ -469,7 +469,7 @@ enum SeasonalContentPackCatalog {
         .christmas: SeasonalContentPack(
             season: .christmas,
             locale: .spanish,
-            heroAssetNames: ["SacredChaliceVine", "SacredCathedralLight", "HeroSacred"],
+            heroAssetNames: ["SacredChaliceVine", "SacredBreadRosary", "HeroSacred"],
             campaignTitle: "Sobriedad y alegria en Navidad",
             campaignSubtitle: "Celebre con fidelidad mientras mantiene la disciplina del viernes.",
             formationLines: [
@@ -516,7 +516,7 @@ enum SeasonalContentPackCatalog {
         .easter: SeasonalContentPack(
             season: .easter,
             locale: .spanish,
-            heroAssetNames: ["SacredChaliceVine", "SacredJerusalemCross", "HeroSacred"],
+            heroAssetNames: ["SacredChaliceVine", "SacredJerusalemCross", "SacredPaschalCandle"],
             campaignTitle: "Fidelidad pascual",
             campaignSubtitle: "Lleve la disciplina cuaresmal a la vida ordinaria.",
             formationLines: [
@@ -613,7 +613,7 @@ enum SeasonalContentPackCatalog {
         .lent: SeasonalContentPack(
             season: .lent,
             locale: .frenchCanadian,
-            heroAssetNames: ["SacredAshWednesday", "SacredMonstrance", "SacredPalmSunday", "SacredDesertPilgrimage"],
+            heroAssetNames: ["SacredFridayAbstinence", "SacredLentenPath", "SacredCrucifixAltar"],
             campaignTitle: "Discipline du Carême",
             campaignSubtitle: "Priez, jeûnez et donnez l’aumône avec constance.",
             formationLines: [
@@ -666,7 +666,7 @@ enum SeasonalContentPackCatalog {
         .advent: SeasonalContentPack(
             season: .advent,
             locale: .frenchCanadian,
-            heroAssetNames: ["SacredScriptureCandle", "SacredMarianMonogram", "SacredCathedralLight"],
+            heroAssetNames: ["SacredScriptureCandle", "SacredMarianMonogram", "GuidanceSacred"],
             campaignTitle: "Veille de l’Avent",
             campaignSubtitle: "Pratiquez une discipline pleine d’espérance dans l’attente du Christ.",
             formationLines: [
@@ -713,7 +713,7 @@ enum SeasonalContentPackCatalog {
         .christmas: SeasonalContentPack(
             season: .christmas,
             locale: .frenchCanadian,
-            heroAssetNames: ["SacredChaliceVine", "SacredCathedralLight", "HeroSacred"],
+            heroAssetNames: ["SacredChaliceVine", "SacredBreadRosary", "HeroSacred"],
             campaignTitle: "Sobriété et joie de Noël",
             campaignSubtitle: "Célébrez fidèlement tout en gardant la discipline du vendredi.",
             formationLines: [
@@ -760,7 +760,7 @@ enum SeasonalContentPackCatalog {
         .easter: SeasonalContentPack(
             season: .easter,
             locale: .frenchCanadian,
-            heroAssetNames: ["SacredChaliceVine", "SacredJerusalemCross", "HeroSacred"],
+            heroAssetNames: ["SacredChaliceVine", "SacredJerusalemCross", "SacredPaschalCandle"],
             campaignTitle: "Fidélité pascale",
             campaignSubtitle: "Portez la discipline du Carême dans la vie ordinaire.",
             formationLines: [

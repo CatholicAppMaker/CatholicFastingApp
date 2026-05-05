@@ -504,11 +504,13 @@ extension ContentView {
     }
 
     func surfaceScrollMarker(_ identifier: String) -> some View {
-        Section {
-            Color.clear
-                .frame(width: 1, height: 1)
-                .accessibilityIdentifier(identifier)
-        }
+        Color.clear
+            .frame(width: 0, height: 0)
+            .accessibilityIdentifier(identifier)
+            .listRowInsets(EdgeInsets())
+            .listRowSeparator(.hidden)
+            .listRowBackground(Color.clear)
+            .environment(\.defaultMinListRowHeight, 0)
     }
 
     @ViewBuilder
@@ -700,9 +702,9 @@ extension ContentView {
         case .guidanceAndRules:
             "GuidanceSacred"
         case .historyOfFasting:
-            "HeroSacred"
+            "SacredBreadRosary"
         case .privacyAndData:
-            "SacredRosaryCross"
+            "SacredAlmsgivingTable"
         }
 
         return SacredImageryItem(

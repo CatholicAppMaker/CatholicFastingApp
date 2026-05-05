@@ -5,10 +5,10 @@ import XCTest
 final class CatholicFastingAppUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
-        if name.contains("testIPad"), UIDevice.current.userInterfaceIdiom != .pad {
+        if name.contains("IPad"), UIDevice.current.userInterfaceIdiom != .pad {
             throw XCTSkip("iPad-specific UI test is skipped on non-iPad destinations.")
         }
-        if name.contains("testIPhone"), UIDevice.current.userInterfaceIdiom == .pad {
+        if name.contains("IPhone"), UIDevice.current.userInterfaceIdiom == .pad {
             throw XCTSkip("iPhone-specific UI test is skipped on iPad destinations.")
         }
     }
@@ -337,63 +337,7 @@ final class CatholicFastingAppUITests: XCTestCase {
         XCTAssertTrue(app.otherElements[markerID].waitForExistence(timeout: 4))
     }
 
-    func scrollToElement(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 3)
-        -> Bool
-    {
-        if elementIsVisible(element, in: app) {
-            return true
-        }
-
-        for scrollContainer in scrollCandidates(in: app) {
-            for _ in 0 ..< maxSwipes {
-                scrollContainer.swipeUp()
-                if elementIsVisible(element, in: app) {
-                    return true
-                }
-            }
-
-            for _ in 0 ..< maxSwipes {
-                scrollContainer.swipeDown()
-                if elementIsVisible(element, in: app) {
-                    return true
-                }
-            }
-        }
-
-        return elementIsVisible(element, in: app)
-    }
-
-    func scrollToElementPresence(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 3)
-        -> Bool
-    {
-        if element.exists {
-            return true
-        }
-
-        for scrollContainer in scrollCandidates(in: app) {
-            for _ in 0 ..< maxSwipes {
-                scrollContainer.swipeUp()
-                if element.exists {
-                    return true
-                }
-            }
-
-            for _ in 0 ..< maxSwipes {
-                scrollContainer.swipeDown()
-                if element.exists {
-                    return true
-                }
-            }
-        }
-
-        return element.exists
-    }
-
-    func scrollCandidates(in app: XCUIApplication) -> [XCUIElement] {
-        [app.collectionViews.firstMatch]
-    }
-
-    func scrollToElementInApp(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 3)
+    func scrollToElement(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 6)
         -> Bool
     {
         if elementIsVisible(element, in: app) {
@@ -401,14 +345,62 @@ final class CatholicFastingAppUITests: XCTestCase {
         }
 
         for _ in 0 ..< maxSwipes {
-            app.swipeUp()
+            swipePageUp(in: app)
             if elementIsVisible(element, in: app) {
                 return true
             }
         }
 
         for _ in 0 ..< maxSwipes {
-            app.swipeDown()
+            swipePageDown(in: app)
+            if elementIsVisible(element, in: app) {
+                return true
+            }
+        }
+
+        return elementIsVisible(element, in: app)
+    }
+
+    func scrollToElementPresence(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 6)
+        -> Bool
+    {
+        if element.exists {
+            return true
+        }
+
+        for _ in 0 ..< maxSwipes {
+            swipePageUp(in: app)
+            if element.exists {
+                return true
+            }
+        }
+
+        for _ in 0 ..< maxSwipes {
+            swipePageDown(in: app)
+            if element.exists {
+                return true
+            }
+        }
+
+        return element.exists
+    }
+
+    func scrollToElementInApp(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 6)
+        -> Bool
+    {
+        if elementIsVisible(element, in: app) {
+            return true
+        }
+
+        for _ in 0 ..< maxSwipes {
+            swipePageUp(in: app)
+            if elementIsVisible(element, in: app) {
+                return true
+            }
+        }
+
+        for _ in 0 ..< maxSwipes {
+            swipePageDown(in: app)
             if elementIsVisible(element, in: app) {
                 return true
             }
@@ -422,6 +414,18 @@ final class CatholicFastingAppUITests: XCTestCase {
             return false
         }
         return app.frame.intersects(element.frame)
+    }
+
+    func swipePageUp(in app: XCUIApplication) {
+        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.06, dy: 0.82))
+        let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.06, dy: 0.24))
+        start.press(forDuration: 0.01, thenDragTo: end)
+    }
+
+    func swipePageDown(in app: XCUIApplication) {
+        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.06, dy: 0.24))
+        let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.06, dy: 0.82))
+        start.press(forDuration: 0.01, thenDragTo: end)
     }
 
     func elementByIdentifier(_ identifier: String, in app: XCUIApplication) -> XCUIElement {

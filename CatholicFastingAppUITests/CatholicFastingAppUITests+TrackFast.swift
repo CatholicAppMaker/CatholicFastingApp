@@ -76,7 +76,7 @@ extension CatholicFastingAppUITests {
 
         XCTAssertTrue(app.staticTexts["intermittent.no_active"].firstMatch.waitForExistence(timeout: 4))
         XCTAssertTrue(scrollToElement(app.buttons["intermittent.start_fast"].firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(app.otherElements["intermittent.advanced.disclosure"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("intermittent.advanced.disclosure", in: app), in: app))
         XCTAssertFalse(app.textFields["intermittent.schedule.name"].firstMatch.exists)
     }
 
@@ -86,7 +86,7 @@ extension CatholicFastingAppUITests {
         ensureOnHomeScreen(app)
         openSurface("Track Fast", in: app)
 
-        let disclosure = app.otherElements["intermittent.advanced.disclosure"].firstMatch
+        let disclosure = elementByIdentifier("intermittent.advanced.disclosure", in: app)
         XCTAssertTrue(scrollToElement(disclosure, in: app))
         disclosure.tap()
 

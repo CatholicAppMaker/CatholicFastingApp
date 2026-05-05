@@ -426,7 +426,7 @@ extension ContentView {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
                     ForEach(SacredImageryCatalog.fastingGallery) { item in
-                        SacredImageryCard(item: item, width: 154, height: 166)
+                        SacredImageryCard(item: item, width: 184, height: 238)
                     }
                 }
                 .padding(.vertical, 2)

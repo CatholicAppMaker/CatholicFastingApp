@@ -88,7 +88,7 @@ run_smoke_suite() {
     -only-testing:CatholicFastingAppUITests/testSmokeOnboardingCanBeCompleted
     -only-testing:CatholicFastingAppUITests/testSmokeFastingDaysControlsVisible
     -only-testing:CatholicFastingAppUITests/testSmokeExportsRequireLegalAcknowledgment
-    -only-testing:CatholicFastingAppUITests/testSmokeGuidanceScenarioControlVisible
+    -only-testing:CatholicFastingAppUITests/testSmokeGuidanceDestinationOpens
     -only-testing:CatholicFastingAppUITests/testSmokePremiumSupportControlsVisible
   )
   run_suite "smoke" "${SMOKE_TIMEOUT_SECONDS}" "${PHONE_SIMULATOR_NAME}" "${selectors[@]}"
