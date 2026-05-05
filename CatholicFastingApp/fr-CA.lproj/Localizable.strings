@@ -487,7 +487,7 @@
 "onboarding.finish" = "Terminer la configuration";
 "onboarding.language_continue" = "Continuer";
 "onboarding.language_intro.title" = "Choisissez votre langue";
-"onboarding.language_intro.detail" = "English est sélectionné par défaut. Vous pouvez le changer maintenant ou plus tard dans Profil et normes.";
+"onboarding.language_intro.detail" = "English est la langue par défaut. Vous pourrez la changer plus tard.";
 "onboarding.step1.title" = "Étape 1 sur 4 : Profil d’admissibilité";
 "onboarding.step1.intro" = "Utilisez de simples bascules d’admissibilité pour garder les indications exactes sans partager votre date de naissance.";
 "onboarding.step1.age14" = "J’ai 14 ans ou plus (âge de l’abstinence)";
@@ -498,14 +498,14 @@
 "onboarding.step2.region" = "Région";
 "onboarding.step2.friday_mode" = "Pratique du vendredi hors Carême";
 "onboarding.step2.helper" = "Vous pourrez tout modifier plus tard dans Profil et normes.";
-"onboarding.basics.title" = "Vos renseignements de base";
+"onboarding.basics.title" = "Base";
 "onboarding.basics.intro" = "Réglez les quelques éléments qui orientent les indications sur le jeûne et l’abstinence.";
 "onboarding.basics.friday_mode" = "Pratique du vendredi hors Carême";
 "onboarding.basics.helper" = "Vous pouvez les modifier plus tard dans Profil et normes.";
 "onboarding.step3.title" = "Étape 3 sur 4 : Stratégie de rappels";
 "onboarding.step3.reminder_style" = "Style de rappels";
 "onboarding.step3.helper" = "Les rappels peuvent être modifiés en tout temps dans Réglages et rappels.";
-"onboarding.reminders.title" = "Rythme des rappels";
+"onboarding.reminders.title" = "Rappels";
 "onboarding.reminders.style" = "Style de rappels";
 "onboarding.reminders.helper" = "Commencez simplement. Vous pourrez ajuster les rappels plus tard dans Réglages et rappels.";
 "onboarding.step3.quote_toggle" = "Ajouter un rappel quotidien avec citation dévotionnelle";
@@ -513,7 +513,7 @@
 "onboarding.step3.quote_helper" = "Utilisez une citation quotidienne sur le jeûne tirée des saints, des papes et des maîtres catholiques.";
 "onboarding.step4.title" = "Étape 4 sur 4 : Aperçu Premium";
 "onboarding.step4.intro" = "La version gratuite couvre les indications obligatoires sur le jeûne. Premium ajoute une Trousse de formation plus ciblée.";
-"onboarding.trust.title" = "Pourquoi c’est digne de confiance";
+"onboarding.trust.title" = "Terminer";
 "onboarding.trust.independent" = "Il s’agit d’une application de dévotion catholique indépendante avec des références citées dans l’application.";
 "onboarding.trust.sources" = "Sources : calendrier liturgique et références sur le jeûne et l’abstinence citées directement dans l’application.";
 "onboarding.trust.unofficial" = "Il s’agit d’une application de dévotion indépendante et non d’une application officielle de l’Église catholique, de la CECC, du Vatican, ni d’un diocèse ou d’une paroisse.";

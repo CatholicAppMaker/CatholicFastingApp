@@ -107,7 +107,7 @@
 "onboarding.finish" = "Finish Setup";
 "onboarding.language_continue" = "Continue";
 "onboarding.language_intro.title" = "Choose your language";
-"onboarding.language_intro.detail" = "English is selected by default. You can change this now or later in Profile & Norms.";
+"onboarding.language_intro.detail" = "English is the default. You can change it later.";
 "onboarding.step1.title" = "Step 1 of 4: Eligibility Profile";
 "onboarding.step1.intro" = "Use simple eligibility toggles to keep guidance accurate without sharing your birthday.";
 "onboarding.step1.age14" = "I am 14 or older (abstinence age)";
@@ -118,14 +118,14 @@
 "onboarding.step2.region" = "Region";
 "onboarding.step2.friday_mode" = "Friday practice outside Lent";
 "onboarding.step2.helper" = "You can change all of this later in Profile & Norms.";
-"onboarding.basics.title" = "Your Basics";
+"onboarding.basics.title" = "Basics";
 "onboarding.basics.intro" = "Set the few details that shape fasting and abstinence guidance.";
 "onboarding.basics.friday_mode" = "Friday practice outside Lent";
 "onboarding.basics.helper" = "You can change these later in Profile & Norms.";
 "onboarding.step3.title" = "Step 3 of 4: Reminder Strategy";
 "onboarding.step3.reminder_style" = "Reminder style";
 "onboarding.step3.helper" = "Reminders can be changed any time in Setup & Reminders.";
-"onboarding.reminders.title" = "Reminder Rhythm";
+"onboarding.reminders.title" = "Reminders";
 "onboarding.reminders.style" = "Reminder style";
 "onboarding.reminders.helper" = "Start simple. You can tune reminders later in Setup & Reminders.";
 "onboarding.step3.quote_toggle" = "Add one daily devotional quote reminder";
@@ -133,7 +133,7 @@
 "onboarding.step3.quote_helper" = "Use one daily fasting quote from saints, popes, and Catholic teachers.";
 "onboarding.step4.title" = "Step 4 of 4: Premium Preview";
 "onboarding.step4.intro" = "Free core gives required fasting guidance. Premium adds a focused Formation Toolkit.";
-"onboarding.trust.title" = "Why This Is Trustworthy";
+"onboarding.trust.title" = "Finish";
 "onboarding.trust.independent" = "This is an independent Catholic devotional app with cited guidance references.";
 "onboarding.trust.sources" = "Sources: liturgical calendar and fast/abstinence guidance cited in-app.";
 "onboarding.trust.unofficial" = "This is an independent devotional app and not an official app of the Catholic Church, USCCB, Vatican, or any diocese/parish.";

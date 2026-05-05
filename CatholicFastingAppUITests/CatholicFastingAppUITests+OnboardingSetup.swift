@@ -31,15 +31,11 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(app.otherElements["ipad.today.primary_card"].waitForExistence(timeout: 6))
     }
 
-    func testFreshLaunchOnboardingQuoteReminderCanBeEnabledAndStillComplete() {
+    func testFreshLaunchCompactOnboardingCanCompleteWithDefaults() {
         let app = makeFreshLaunchApp()
         app.launch()
 
         advancePastLanguageSelection(in: app)
-        turnOnOnboardingToggle("onboarding.reminder_quote_toggle", in: app)
-        let quoteTime = elementByIdentifier("onboarding.reminder_quote_time", in: app)
-        XCTAssertTrue(scrollToElement(quoteTime, in: app))
-
         acceptOnboardingNotice(in: app)
         let continueButton = app.buttons["onboarding.continue"].firstMatch
         XCTAssertTrue(scrollToElement(continueButton, in: app))
@@ -76,7 +72,7 @@ extension CatholicFastingAppUITests {
         let languageContinue = app.buttons["onboarding.language_continue"].firstMatch
         XCTAssertEqual(languageContinue.label, "Continuar")
         languageContinue.tap()
-        XCTAssertTrue(app.staticTexts["Datos básicos"].firstMatch.waitForExistence(timeout: 4))
+        XCTAssertTrue(app.staticTexts["Básicos"].firstMatch.waitForExistence(timeout: 4))
     }
 
     func testIPhoneOnboardingFrenchCanadianSelectionUpdatesVisibleCopy() {
@@ -91,7 +87,7 @@ extension CatholicFastingAppUITests {
         let languageContinue = app.buttons["onboarding.language_continue"].firstMatch
         XCTAssertEqual(languageContinue.label, "Continuer")
         languageContinue.tap()
-        XCTAssertTrue(app.staticTexts["Vos renseignements de base"].firstMatch.waitForExistence(timeout: 4))
+        XCTAssertTrue(app.staticTexts["Base"].firstMatch.waitForExistence(timeout: 4))
     }
 
     func testSmokeExportsRequireLegalAcknowledgment() {
@@ -320,7 +316,7 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(languageContinue.waitForExistence(timeout: 4))
         XCTAssertEqual(languageContinue.label, "Continuar")
         languageContinue.tap()
-        XCTAssertTrue(app.staticTexts["Datos básicos"].firstMatch.waitForExistence(timeout: 4))
+        XCTAssertTrue(app.staticTexts["Básicos"].firstMatch.waitForExistence(timeout: 4))
     }
 
     func testIPadOnboardingFrenchCanadianSelectionUpdatesVisibleCopy() {
@@ -337,7 +333,7 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(languageContinue.waitForExistence(timeout: 4))
         XCTAssertEqual(languageContinue.label, "Continuer")
         languageContinue.tap()
-        XCTAssertTrue(app.staticTexts["Vos renseignements de base"].firstMatch.waitForExistence(timeout: 4))
+        XCTAssertTrue(app.staticTexts["Base"].firstMatch.waitForExistence(timeout: 4))
     }
 
     func testIPhoneQuickSetupFrenchCanadianShowsLocalizedSetupCopy() {
@@ -384,9 +380,14 @@ extension CatholicFastingAppUITests {
         let toggle = elementByIdentifier(identifier, in: app)
         XCTAssertTrue(scrollToElement(toggle, in: app))
         if !switchIsOn(toggle) {
-            let switchTapPoint = toggle.coordinate(
-                withNormalizedOffset: CGVector(dx: 0.88, dy: 0.5))
-            switchTapPoint.tap()
+            tapOnboardingToggleControl(toggle)
+            if !waitUntil(timeout: 1, condition: { switchIsOn(toggle) }) {
+                tapOnboardingToggleControl(toggle)
+            }
         }
+    }
+
+    func tapOnboardingToggleControl(_ toggle: XCUIElement) {
+        toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.5)).tap()
     }
 }

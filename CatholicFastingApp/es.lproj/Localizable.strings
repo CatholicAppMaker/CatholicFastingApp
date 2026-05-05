@@ -453,7 +453,7 @@
 "onboarding.finish" = "Finalizar configuración";
 "onboarding.language_continue" = "Continuar";
 "onboarding.language_intro.title" = "Elija su idioma";
-"onboarding.language_intro.detail" = "English está seleccionado de forma predeterminada. Puede cambiarlo ahora o más tarde en Perfil y normas.";
+"onboarding.language_intro.detail" = "English es el idioma predeterminado. Puede cambiarlo más tarde.";
 "onboarding.step1.title" = "Paso 1 de 4: Perfil de elegibilidad";
 "onboarding.step1.intro" = "Use opciones simples de elegibilidad para mantener la guía precisa sin compartir su fecha de nacimiento.";
 "onboarding.step1.age14" = "Tengo 14 años o más (edad para la abstinencia)";
@@ -464,14 +464,14 @@
 "onboarding.step2.region" = "Región";
 "onboarding.step2.friday_mode" = "Práctica de los viernes fuera de Cuaresma";
 "onboarding.step2.helper" = "Puede cambiar todo esto más tarde en Perfil y normas.";
-"onboarding.basics.title" = "Datos básicos";
+"onboarding.basics.title" = "Básicos";
 "onboarding.basics.intro" = "Configure los pocos datos que ajustan la guía de ayuno y abstinencia.";
 "onboarding.basics.friday_mode" = "Práctica de los viernes fuera de Cuaresma";
 "onboarding.basics.helper" = "Puede cambiarlos más tarde en Perfil y normas.";
 "onboarding.step3.title" = "Paso 3 de 4: Estrategia de recordatorios";
 "onboarding.step3.reminder_style" = "Estilo de recordatorios";
 "onboarding.step3.helper" = "Puede cambiar los recordatorios en cualquier momento en Ajustes y recordatorios.";
-"onboarding.reminders.title" = "Ritmo de recordatorios";
+"onboarding.reminders.title" = "Recordatorios";
 "onboarding.reminders.style" = "Estilo de recordatorios";
 "onboarding.reminders.helper" = "Empiece simple. Puede ajustar los recordatorios más tarde en Ajustes y recordatorios.";
 "onboarding.step3.quote_toggle" = "Agregar un recordatorio diario con cita devocional";
@@ -479,7 +479,7 @@
 "onboarding.step3.quote_helper" = "Use una cita diaria sobre el ayuno tomada de santos, papas y maestros católicos.";
 "onboarding.step4.title" = "Paso 4 de 4: Vista previa de Premium";
 "onboarding.step4.intro" = "La versión gratuita ofrece la guía obligatoria de ayuno. Premium añade un kit de formación más enfocado.";
-"onboarding.trust.title" = "Por qué esto es confiable";
+"onboarding.trust.title" = "Finalizar";
 "onboarding.trust.independent" = "Esta es una aplicación devocional católica independiente con referencias citadas dentro de la aplicación.";
 "onboarding.trust.sources" = "Fuentes: calendario litúrgico y guía de ayuno/abstinencia citados dentro de la aplicación.";
 "onboarding.trust.unofficial" = "Esta es una aplicación devocional independiente y no es una aplicación oficial de la Iglesia Católica, la USCCB, el Vaticano ni de ninguna diócesis o parroquia.";
