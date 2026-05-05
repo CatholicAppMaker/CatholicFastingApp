@@ -14,178 +14,17 @@ struct OnboardingView: View {
     @Binding var dailyQuoteReminderEnabled: Bool
     @Binding var dailyQuoteReminderHour: Int
     @Binding var dailyQuoteReminderMinute: Int
+    @Binding var acceptedLegalNotice: Bool
     let onComplete: () -> Void
+    @State private var didConfirmLanguage = false
 
     var body: some View {
         NavigationStack {
-            List {
-                Section {
-                    VStack(alignment: .leading, spacing: 12) {
-                        SacredHeroCard(
-                            assetName: "HeroSacred",
-                            title: "",
-                            subtitle: "",
-                            height: 188,
-                            cornerRadius: 18,
-                            accessibilityIdentifier: "onboarding.hero")
-
-                        CatholicFastingQuoteCard(quote: onboardingQuote, compact: true)
-                            .accessibilityIdentifier("onboarding.quote")
-                    }
-                }
-
-                Section(localized("onboarding.step1.title", default: "Step 1 of 4: Eligibility Profile")) {
-                    Text(
-                        localized(
-                            "onboarding.step1.intro",
-                            default: "Use simple eligibility toggles to keep guidance accurate without sharing your birthday."))
-                        .appLeadTextStyle()
-
-                    Toggle(
-                        localized(
-                            "onboarding.step1.age14",
-                            default: "I am 14 or older (abstinence age)"),
-                        isOn: $age14OrOlderForAbstinence)
-                        .accessibilityIdentifier("onboarding.age14_toggle")
-                    Toggle(
-                        localized(
-                            "onboarding.step1.age18",
-                            default: "I am 18 or older (fasting age)"),
-                        isOn: $age18OrOlderForFasting)
-                        .accessibilityIdentifier("onboarding.age18_toggle")
-                    Toggle(
-                        localized(
-                            "onboarding.step1.dispensation",
-                            default: "Health/pastoral dispensation (if needed)"),
-                        isOn: $medicalDispensation)
-                        .accessibilityIdentifier("onboarding.dispensation")
-                }
-
-                Section(localized("onboarding.step2.title", default: "Step 2 of 4: Language and Region")) {
-                    Picker(localized("onboarding.step2.language", default: "Language"), selection: $languageModeRaw) {
-                        ForEach(LanguageMode.allCases) { option in
-                            Text(option.label).tag(option.rawValue)
-                        }
-                    }
-                    .pickerStyle(.menu)
-                    .accessibilityIdentifier("onboarding.language")
-
-                    Picker(
-                        localized("onboarding.step2.region", default: "Region"),
-                        selection: $regionProfileRaw)
-                    {
-                        ForEach(RuleSettings.RegionProfile.allCases) { option in
-                            Text(localizedRegionLabel(option)).tag(option.rawValue)
-                        }
-                    }
-                    .pickerStyle(.menu)
-                    .accessibilityIdentifier("onboarding.region")
-
-                    Picker(
-                        localized(
-                            "onboarding.step2.friday_mode",
-                            default: "Friday practice outside Lent"),
-                        selection: $fridayModeRaw)
-                    {
-                        ForEach(RuleSettings.FridayOutsideLentMode.allCases) { option in
-                            Text(localizedFridayModeLabel(option)).tag(option.rawValue)
-                        }
-                    }
-                    .pickerStyle(.menu)
-                    .accessibilityIdentifier("onboarding.friday_mode")
-                    Text(
-                        localized(
-                            "onboarding.step2.helper",
-                            default: "You can change all of this later in Profile & Norms."))
-                        .appSupportingTextStyle()
-                }
-
-                Section(localized("onboarding.step3.title", default: "Step 3 of 4: Reminder Strategy")) {
-                    Picker(localized("onboarding.step3.reminder_style", default: "Reminder style"), selection: $reminderTierRaw) {
-                        ForEach(ReminderTier.allCases) { tier in
-                            Text("\(localizedReminderTierLabel(tier)) - \(localizedReminderTierSummary(tier))").tag(tier.rawValue)
-                        }
-                    }
-                    .pickerStyle(.menu)
-                    .accessibilityIdentifier("onboarding.reminder_tier")
-                    .onChange(of: reminderTierRaw) { _, newValue in
-                        let tier = ReminderTier(rawValue: newValue) ?? .balanced
-                        dailyReminderSupportEnabled = tier.supportEnabled
-                        morningReminderEnabled = tier.morningEnabled
-                        eveningReminderEnabled = tier.eveningEnabled
-                    }
-
-                    Text(
-                        localized(
-                            "onboarding.step3.helper",
-                            default: "Reminders can be changed any time in Setup & Reminders."))
-                        .appSupportingTextStyle()
-
-                    Toggle(
-                        localized(
-                            "onboarding.step3.quote_toggle",
-                            default: "Add one daily devotional quote reminder"),
-                        isOn: $dailyQuoteReminderEnabled)
-                        .accessibilityIdentifier("onboarding.reminder_quote_toggle")
-
-                    if dailyQuoteReminderEnabled {
-                        DatePicker(
-                            localized("onboarding.step3.quote_time", default: "Quote reminder time"),
-                            selection: dailyQuoteReminderTimeBinding,
-                            displayedComponents: .hourAndMinute)
-                            .accessibilityIdentifier("onboarding.reminder_quote_time")
-
-                        Text(
-                            localized(
-                                "onboarding.step3.quote_helper",
-                                default: "Use one daily fasting quote from saints, popes, and Catholic teachers."))
-                            .appSupportingTextStyle()
-                    }
-                }
-
-                Section(localized("onboarding.step4.title", default: "Step 4 of 4: Premium Preview")) {
-                    Text(
-                        localized(
-                            "onboarding.step4.intro",
-                            default: "Free core gives required fasting guidance. Premium adds a focused Formation Toolkit."))
-                        .appLeadTextStyle()
-
-                    ForEach(SubscriptionOfferCatalog.catholicFasting.pillars) { pillar in
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text(pillar.title)
-                                .font(.headline)
-                            Text(pillar.subtitle)
-                                .appSupportingTextStyle()
-                            ForEach(pillar.outcomes, id: \.self) { outcome in
-                                Text("• \(outcome)")
-                                    .appSupportingTextStyle()
-                            }
-                        }
-                        .padding(.vertical, 2)
-                    }
-                }
-
-                Section(localized("onboarding.trust.title", default: "Why This Is Trustworthy")) {
-                    Text(
-                        localized(
-                            "onboarding.trust.independent",
-                            default: "This is an independent Catholic devotional app with cited guidance references."))
-                        .appLeadTextStyle()
-                    Text(
-                        localized(
-                            "onboarding.trust.sources",
-                            default: "Sources: USCCB liturgical calendar and fast/abstinence guidance, with in-app citation links."))
-                        .appSupportingTextStyle()
-                    Text(
-                        localized(
-                            "onboarding.trust.unofficial",
-                            default: "This is an independent devotional app and not an official app of the Catholic Church, USCCB, Vatican, or any diocese/parish."))
-                        .appSupportingTextStyle()
-                    Text(
-                        localized(
-                            "onboarding.trust.follow_guidance",
-                            default: "Always follow your pastor, local Church norms, and medical guidance."))
-                        .appSupportingTextStyle()
+            Group {
+                if didConfirmLanguage {
+                    mainOnboardingList
+                } else {
+                    languageOnboardingList
                 }
             }
             .navigationTitle(localized("onboarding.title", default: "Welcome"))
@@ -197,11 +36,212 @@ struct OnboardingView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(localized("onboarding.finish", default: "Finish Setup")) {
-                        onComplete()
+                    if didConfirmLanguage {
+                        Button(localized("onboarding.finish", default: "Finish Setup")) {
+                            onComplete()
+                        }
+                        .appPrimaryButtonStyle()
+                        .disabled(!acceptedLegalNotice)
+                        .accessibilityIdentifier("onboarding.continue")
+                    } else {
+                        Button(localized("onboarding.language_continue", default: "Continue")) {
+                            didConfirmLanguage = true
+                        }
+                        .appPrimaryButtonStyle()
+                        .accessibilityIdentifier("onboarding.language_continue")
                     }
-                    .appPrimaryButtonStyle()
-                    .accessibilityIdentifier("onboarding.continue")
+                }
+            }
+        }
+    }
+
+    private var languageOnboardingList: some View {
+        List {
+            Section {
+                VStack(alignment: .leading, spacing: 12) {
+                    SacredHeroCard(
+                        assetName: "HeroSacred",
+                        title: "",
+                        subtitle: "",
+                        height: 188,
+                        cornerRadius: 18,
+                        accessibilityIdentifier: "onboarding.hero")
+
+                    Text(localized("onboarding.language_intro.title", default: "Choose your language"))
+                        .appDisplayTitleStyle(serif: true)
+                    Text(localized("onboarding.language_intro.detail", default: "English is selected by default. You can change this now or later in Profile & Norms."))
+                        .appLeadTextStyle()
+                }
+            }
+
+            Section {
+                Picker(localized("onboarding.step2.language", default: "Language"), selection: $languageModeRaw) {
+                    ForEach(LanguageMode.allCases) { option in
+                        Text(option.label).tag(option.rawValue)
+                    }
+                }
+                .pickerStyle(.menu)
+                .accessibilityIdentifier("onboarding.language")
+            }
+        }
+    }
+
+    private var mainOnboardingList: some View {
+        List {
+            Section {
+                VStack(alignment: .leading, spacing: 12) {
+                    SacredHeroCard(
+                        assetName: "HeroSacred",
+                        title: "",
+                        subtitle: "",
+                        height: 188,
+                        cornerRadius: 18,
+                        accessibilityIdentifier: "onboarding.hero")
+
+                    CatholicFastingQuoteCard(quote: onboardingQuote, compact: true)
+                        .accessibilityIdentifier("onboarding.quote")
+                }
+            }
+
+            Section(localized("onboarding.basics.title", default: "Your Basics")) {
+                Text(
+                    localized(
+                        "onboarding.basics.intro",
+                        default: "Set the few details that shape fasting and abstinence guidance."))
+                    .appLeadTextStyle()
+
+                Toggle(
+                    localized(
+                        "onboarding.step1.age14",
+                        default: "I am 14 or older (abstinence age)"),
+                    isOn: $age14OrOlderForAbstinence)
+                    .accessibilityIdentifier("onboarding.age14_toggle")
+                Toggle(
+                    localized(
+                        "onboarding.step1.age18",
+                        default: "I am 18 or older (fasting age)"),
+                    isOn: $age18OrOlderForFasting)
+                    .accessibilityIdentifier("onboarding.age18_toggle")
+                Toggle(
+                    localized(
+                        "onboarding.step1.dispensation",
+                        default: "Health/pastoral dispensation (if needed)"),
+                    isOn: $medicalDispensation)
+                    .accessibilityIdentifier("onboarding.dispensation")
+
+                Picker(
+                    localized("onboarding.step2.region", default: "Region"),
+                    selection: $regionProfileRaw)
+                {
+                    ForEach(RuleSettings.RegionProfile.allCases) { option in
+                        Text(localizedRegionLabel(option)).tag(option.rawValue)
+                    }
+                }
+                .pickerStyle(.menu)
+                .accessibilityIdentifier("onboarding.region")
+
+                Picker(
+                    localized(
+                        "onboarding.basics.friday_mode",
+                        default: "Friday practice outside Lent"),
+                    selection: $fridayModeRaw)
+                {
+                    ForEach(RuleSettings.FridayOutsideLentMode.allCases) { option in
+                        Text(localizedFridayModeLabel(option)).tag(option.rawValue)
+                    }
+                }
+                .pickerStyle(.menu)
+                .accessibilityIdentifier("onboarding.friday_mode")
+                Text(
+                    localized(
+                        "onboarding.basics.helper",
+                        default: "You can change these later in Profile & Norms."))
+                    .appSupportingTextStyle()
+            }
+
+            Section(localized("onboarding.reminders.title", default: "Reminder Rhythm")) {
+                Picker(localized("onboarding.reminders.style", default: "Reminder style"), selection: $reminderTierRaw) {
+                    ForEach(ReminderTier.allCases) { tier in
+                        Text("\(localizedReminderTierLabel(tier)) - \(localizedReminderTierSummary(tier))").tag(tier.rawValue)
+                    }
+                }
+                .pickerStyle(.menu)
+                .accessibilityIdentifier("onboarding.reminder_tier")
+                .onChange(of: reminderTierRaw) { _, newValue in
+                    let tier = ReminderTier(rawValue: newValue) ?? .balanced
+                    dailyReminderSupportEnabled = tier.supportEnabled
+                    morningReminderEnabled = tier.morningEnabled
+                    eveningReminderEnabled = tier.eveningEnabled
+                }
+
+                Text(
+                    localized(
+                        "onboarding.reminders.helper",
+                        default: "Start simple. You can tune reminders later in Setup & Reminders."))
+                    .appSupportingTextStyle()
+
+                Toggle(
+                    localized(
+                        "onboarding.step3.quote_toggle",
+                        default: "Add one daily devotional quote reminder"),
+                    isOn: $dailyQuoteReminderEnabled)
+                    .accessibilityIdentifier("onboarding.reminder_quote_toggle")
+
+                if dailyQuoteReminderEnabled {
+                    DatePicker(
+                        localized("onboarding.step3.quote_time", default: "Quote reminder time"),
+                        selection: dailyQuoteReminderTimeBinding,
+                        displayedComponents: .hourAndMinute)
+                        .accessibilityIdentifier("onboarding.reminder_quote_time")
+
+                    Text(
+                        localized(
+                            "onboarding.step3.quote_helper",
+                            default: "Use one daily fasting quote from saints, popes, and Catholic teachers."))
+                        .appSupportingTextStyle()
+                }
+            }
+
+            Section(localized("onboarding.trust.title", default: "Trust and Finish")) {
+                Text(
+                    localized(
+                        "onboarding.trust.unofficial",
+                        default: "This is an independent devotional app and not an official app of the Catholic Church, USCCB, Vatican, or any diocese/parish."))
+                    .appLeadTextStyle()
+                Text(
+                    localized(
+                        "onboarding.trust.follow_guidance",
+                        default: "Always follow your pastor, local Church norms, and medical guidance."))
+                    .appSupportingTextStyle()
+                Text(
+                    localized(
+                        "onboarding.trust.sources",
+                        default: "Sources: liturgical calendar and fast/abstinence guidance cited in-app."))
+                    .appSupportingTextStyle()
+
+                Toggle(
+                    localized(
+                        "onboarding.trust.acknowledgement",
+                        default: "I understand this is an independent app, not an official Church authority app"),
+                    isOn: $acceptedLegalNotice)
+                    .accessibilityIdentifier("onboarding.accept_legal_notice")
+
+                DisclosureGroup(localized("onboarding.premium_preview.title", default: "What Premium adds")) {
+                    Text(
+                        localized(
+                            "onboarding.premium_preview.intro",
+                            default: "Free core includes required fasting guidance. Premium adds planning, reminders, reflection, and review tools."))
+                        .appSupportingTextStyle()
+
+                    ForEach(SubscriptionOfferCatalog.catholicFasting.pillars.prefix(3)) { pillar in
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(pillar.title)
+                                .font(.subheadline.weight(.semibold))
+                            Text(pillar.subtitle)
+                                .appSupportingTextStyle()
+                        }
+                        .padding(.vertical, 2)
+                    }
                 }
             }
         }

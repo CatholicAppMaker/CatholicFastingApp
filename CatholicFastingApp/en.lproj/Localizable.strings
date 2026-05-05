@@ -105,6 +105,9 @@
 "onboarding.hero.subtitle" = "Language, region, reminders.";
 "onboarding.title" = "Welcome";
 "onboarding.finish" = "Finish Setup";
+"onboarding.language_continue" = "Continue";
+"onboarding.language_intro.title" = "Choose your language";
+"onboarding.language_intro.detail" = "English is selected by default. You can change this now or later in Profile & Norms.";
 "onboarding.step1.title" = "Step 1 of 4: Eligibility Profile";
 "onboarding.step1.intro" = "Use simple eligibility toggles to keep guidance accurate without sharing your birthday.";
 "onboarding.step1.age14" = "I am 14 or older (abstinence age)";
@@ -115,9 +118,16 @@
 "onboarding.step2.region" = "Region";
 "onboarding.step2.friday_mode" = "Friday practice outside Lent";
 "onboarding.step2.helper" = "You can change all of this later in Profile & Norms.";
+"onboarding.basics.title" = "Your Basics";
+"onboarding.basics.intro" = "Set the few details that shape fasting and abstinence guidance.";
+"onboarding.basics.friday_mode" = "Friday practice outside Lent";
+"onboarding.basics.helper" = "You can change these later in Profile & Norms.";
 "onboarding.step3.title" = "Step 3 of 4: Reminder Strategy";
 "onboarding.step3.reminder_style" = "Reminder style";
 "onboarding.step3.helper" = "Reminders can be changed any time in Setup & Reminders.";
+"onboarding.reminders.title" = "Reminder Rhythm";
+"onboarding.reminders.style" = "Reminder style";
+"onboarding.reminders.helper" = "Start simple. You can tune reminders later in Setup & Reminders.";
 "onboarding.step3.quote_toggle" = "Add one daily devotional quote reminder";
 "onboarding.step3.quote_time" = "Quote reminder time";
 "onboarding.step3.quote_helper" = "Use one daily fasting quote from saints, popes, and Catholic teachers.";
@@ -128,6 +138,9 @@
 "onboarding.trust.sources" = "Sources: liturgical calendar and fast/abstinence guidance cited in-app.";
 "onboarding.trust.unofficial" = "This is an independent devotional app and not an official app of the Catholic Church, USCCB, Vatican, or any diocese/parish.";
 "onboarding.trust.follow_guidance" = "Always follow your pastor, local Church norms, and medical guidance.";
+"onboarding.trust.acknowledgement" = "I understand this is an independent app, not an official Church authority app";
+"onboarding.premium_preview.title" = "What Premium adds";
+"onboarding.premium_preview.intro" = "Free core includes required fasting guidance. Premium adds planning, reminders, reflection, and review tools.";
 "onboarding.region.us" = "United States";
 "onboarding.region.canada" = "Canada";
 "onboarding.region.other" = "Other";

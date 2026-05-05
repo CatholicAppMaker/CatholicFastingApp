@@ -6,19 +6,24 @@ extension CatholicFastingAppUITests {
         let app = makeFreshLaunchApp()
         app.launch()
 
+        advancePastLanguageSelection(in: app)
+        acceptOnboardingNotice(in: app)
         let continueButton = app.buttons["onboarding.continue"].firstMatch
-        XCTAssertTrue(continueButton.waitForExistence(timeout: 6))
+        XCTAssertTrue(scrollToElement(continueButton, in: app))
         continueButton.tap()
 
         XCTAssertTrue(app.otherElements["surface.today.ready"].waitForExistence(timeout: 6))
+        XCTAssertFalse(app.staticTexts["Setup progress: 2/3"].firstMatch.exists)
     }
 
     func testFreshLaunchIPadCanCompleteOnboardingAndRenderTodayWorkspace() {
         let app = makeFreshLaunchApp()
         app.launch()
 
+        advancePastLanguageSelection(in: app)
+        acceptOnboardingNotice(in: app)
         let continueButton = app.buttons["onboarding.continue"].firstMatch
-        XCTAssertTrue(continueButton.waitForExistence(timeout: 6))
+        XCTAssertTrue(scrollToElement(continueButton, in: app))
         continueButton.tap()
 
         XCTAssertTrue(app.otherElements["ipad.today.workspace"].waitForExistence(timeout: 6))
@@ -30,15 +35,12 @@ extension CatholicFastingAppUITests {
         let app = makeFreshLaunchApp()
         app.launch()
 
-        let quoteToggle = app.switches["onboarding.reminder_quote_toggle"].firstMatch
-        XCTAssertTrue(scrollToElement(quoteToggle, in: app))
-        if !switchIsOn(quoteToggle) {
-            quoteToggle.tap()
-        }
-
-        let quoteTime = app.datePickers["onboarding.reminder_quote_time"].firstMatch
+        advancePastLanguageSelection(in: app)
+        turnOnOnboardingToggle("onboarding.reminder_quote_toggle", in: app)
+        let quoteTime = elementByIdentifier("onboarding.reminder_quote_time", in: app)
         XCTAssertTrue(scrollToElement(quoteTime, in: app))
 
+        acceptOnboardingNotice(in: app)
         let continueButton = app.buttons["onboarding.continue"].firstMatch
         XCTAssertTrue(scrollToElement(continueButton, in: app))
         continueButton.tap()
@@ -50,8 +52,10 @@ extension CatholicFastingAppUITests {
         let app = makeApp(skipOnboarding: false)
         app.launch()
 
+        advancePastLanguageSelection(in: app)
+        acceptOnboardingNotice(in: app)
         let continueButton = app.buttons["onboarding.continue"]
-        XCTAssertTrue(continueButton.waitForExistence(timeout: 4))
+        XCTAssertTrue(scrollToElement(continueButton, in: app))
         continueButton.tap()
 
         XCTAssertTrue(app.otherElements["surface.today.ready"].waitForExistence(timeout: 4))
@@ -64,28 +68,30 @@ extension CatholicFastingAppUITests {
         let app = makeApp(skipOnboarding: false)
         app.launch()
 
-        let languagePicker = app.pickers["onboarding.language"].firstMatch
+        let languagePicker = elementByIdentifier("onboarding.language", in: app)
         XCTAssertTrue(scrollToElement(languagePicker, in: app))
         selectMenuPicker(languagePicker, option: "Español", in: app)
 
         XCTAssertTrue(app.navigationBars["Bienvenido"].waitForExistence(timeout: 4))
-        let continueButton = app.buttons["onboarding.continue"].firstMatch
-        XCTAssertEqual(continueButton.label, "Finalizar configuración")
-        XCTAssertTrue(app.staticTexts["Paso 2 de 4: Idioma y región"].firstMatch.waitForExistence(timeout: 4))
+        let languageContinue = app.buttons["onboarding.language_continue"].firstMatch
+        XCTAssertEqual(languageContinue.label, "Continuar")
+        languageContinue.tap()
+        XCTAssertTrue(app.staticTexts["Datos básicos"].firstMatch.waitForExistence(timeout: 4))
     }
 
     func testIPhoneOnboardingFrenchCanadianSelectionUpdatesVisibleCopy() {
         let app = makeApp(skipOnboarding: false)
         app.launch()
 
-        let languagePicker = app.pickers["onboarding.language"].firstMatch
+        let languagePicker = elementByIdentifier("onboarding.language", in: app)
         XCTAssertTrue(scrollToElement(languagePicker, in: app))
         selectMenuPicker(languagePicker, option: "Français (Canada)", in: app)
 
         XCTAssertTrue(app.navigationBars["Bienvenue"].waitForExistence(timeout: 4))
-        let continueButton = app.buttons["onboarding.continue"].firstMatch
-        XCTAssertEqual(continueButton.label, "Terminer la configuration")
-        XCTAssertTrue(app.staticTexts["Étape 2 sur 4 : Langue et région"].firstMatch.waitForExistence(timeout: 4))
+        let languageContinue = app.buttons["onboarding.language_continue"].firstMatch
+        XCTAssertEqual(languageContinue.label, "Continuer")
+        languageContinue.tap()
+        XCTAssertTrue(app.staticTexts["Vos renseignements de base"].firstMatch.waitForExistence(timeout: 4))
     }
 
     func testSmokeExportsRequireLegalAcknowledgment() {
@@ -295,40 +301,43 @@ extension CatholicFastingAppUITests {
         let app = makeApp(skipOnboarding: false)
         app.launch()
 
-        XCTAssertTrue(app.pickers["onboarding.language"].waitForExistence(timeout: 4))
-        XCTAssertTrue(app.pickers["onboarding.region"].waitForExistence(timeout: 4))
+        XCTAssertTrue(elementByIdentifier("onboarding.language", in: app).waitForExistence(timeout: 4))
+        advancePastLanguageSelection(in: app)
+        XCTAssertTrue(elementByIdentifier("onboarding.region", in: app).waitForExistence(timeout: 4))
     }
 
     func testIPadOnboardingLanguageSelectionUpdatesVisibleCopy() {
         let app = makeApp(skipOnboarding: false)
         app.launch()
 
-        let languagePicker = app.pickers["onboarding.language"].firstMatch
+        let languagePicker = elementByIdentifier("onboarding.language", in: app)
         XCTAssertTrue(scrollToElement(languagePicker, in: app))
         selectMenuPicker(languagePicker, option: "Español", in: app)
 
         XCTAssertTrue(app.navigationBars["Bienvenido"].waitForExistence(timeout: 4))
 
-        let continueButton = app.buttons["onboarding.continue"].firstMatch
-        XCTAssertTrue(continueButton.waitForExistence(timeout: 4))
-        XCTAssertEqual(continueButton.label, "Finalizar configuración")
-        XCTAssertTrue(app.staticTexts["Paso 2 de 4: Idioma y región"].firstMatch.waitForExistence(timeout: 4))
+        let languageContinue = app.buttons["onboarding.language_continue"].firstMatch
+        XCTAssertTrue(languageContinue.waitForExistence(timeout: 4))
+        XCTAssertEqual(languageContinue.label, "Continuar")
+        languageContinue.tap()
+        XCTAssertTrue(app.staticTexts["Datos básicos"].firstMatch.waitForExistence(timeout: 4))
     }
 
     func testIPadOnboardingFrenchCanadianSelectionUpdatesVisibleCopy() {
         let app = makeApp(skipOnboarding: false)
         app.launch()
 
-        let languagePicker = app.pickers["onboarding.language"].firstMatch
+        let languagePicker = elementByIdentifier("onboarding.language", in: app)
         XCTAssertTrue(scrollToElement(languagePicker, in: app))
         selectMenuPicker(languagePicker, option: "Français (Canada)", in: app)
 
         XCTAssertTrue(app.navigationBars["Bienvenue"].waitForExistence(timeout: 4))
 
-        let continueButton = app.buttons["onboarding.continue"].firstMatch
-        XCTAssertTrue(continueButton.waitForExistence(timeout: 4))
-        XCTAssertEqual(continueButton.label, "Terminer la configuration")
-        XCTAssertTrue(app.staticTexts["Étape 2 sur 4 : Langue et région"].firstMatch.waitForExistence(timeout: 4))
+        let languageContinue = app.buttons["onboarding.language_continue"].firstMatch
+        XCTAssertTrue(languageContinue.waitForExistence(timeout: 4))
+        XCTAssertEqual(languageContinue.label, "Continuer")
+        languageContinue.tap()
+        XCTAssertTrue(app.staticTexts["Vos renseignements de base"].firstMatch.waitForExistence(timeout: 4))
     }
 
     func testIPhoneQuickSetupFrenchCanadianShowsLocalizedSetupCopy() {
@@ -357,5 +366,27 @@ extension CatholicFastingAppUITests {
         XCTAssertFalse(app.switches["settings.accessibility.voice_summary"].firstMatch.exists)
         XCTAssertFalse(app.buttons["Read Voice Summary"].firstMatch.exists)
         XCTAssertFalse(app.staticTexts["Enable Voice Summary"].firstMatch.exists)
+    }
+
+    func advancePastLanguageSelection(in app: XCUIApplication) {
+        let languageContinue = app.buttons["onboarding.language_continue"].firstMatch
+        XCTAssertTrue(languageContinue.waitForExistence(timeout: 6))
+        languageContinue.tap()
+    }
+
+    func acceptOnboardingNotice(in app: XCUIApplication) {
+        turnOnOnboardingToggle("onboarding.accept_legal_notice", in: app)
+        let continueButton = app.buttons["onboarding.continue"].firstMatch
+        XCTAssertTrue(waitUntil(timeout: 2) { continueButton.isEnabled })
+    }
+
+    func turnOnOnboardingToggle(_ identifier: String, in app: XCUIApplication) {
+        let toggle = elementByIdentifier(identifier, in: app)
+        XCTAssertTrue(scrollToElement(toggle, in: app))
+        if !switchIsOn(toggle) {
+            let switchTapPoint = toggle.coordinate(
+                withNormalizedOffset: CGVector(dx: 0.88, dy: 0.5))
+            switchTapPoint.tap()
+        }
     }
 }

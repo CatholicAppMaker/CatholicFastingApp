@@ -303,7 +303,8 @@ extension ContentView {
             eveningReminderEnabled: $eveningReminderEnabled,
             dailyQuoteReminderEnabled: $dailyQuoteReminderEnabled,
             dailyQuoteReminderHour: $dailyQuoteReminderHour,
-            dailyQuoteReminderMinute: $dailyQuoteReminderMinute)
+            dailyQuoteReminderMinute: $dailyQuoteReminderMinute,
+            acceptedLegalNotice: $acceptedLegalNotice)
         {
             didCompleteOnboarding = true
             launchFunnelSnapshot.completedOnboardingAt = Date()
