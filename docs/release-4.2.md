@@ -2,13 +2,13 @@
 
 ## Version Alignment
 
-- `CatholicFastingApp`: `MARKETING_VERSION = 4.2`, `CURRENT_PROJECT_VERSION = 10`.
-- `CatholicFastingWidget`: `MARKETING_VERSION = 4.2`, `CURRENT_PROJECT_VERSION = 10`.
-- `CatholicFastingMacApp`: `MARKETING_VERSION = 4.2`, `CURRENT_PROJECT_VERSION = 10`.
-- `CatholicFastingMacWidget`: `MARKETING_VERSION = 4.2`, `CURRENT_PROJECT_VERSION = 10`.
+- `CatholicFastingApp`: `MARKETING_VERSION = 4.2`, `CURRENT_PROJECT_VERSION = 15`.
+- `CatholicFastingWidget`: `MARKETING_VERSION = 4.2`, `CURRENT_PROJECT_VERSION = 15`.
+- `CatholicFastingMacApp`: `MARKETING_VERSION = 4.2`, `CURRENT_PROJECT_VERSION = 15`.
+- `CatholicFastingMacWidget`: `MARKETING_VERSION = 4.2`, `CURRENT_PROJECT_VERSION = 15`.
 - Test bundles are kept aligned for local developer clarity, but only app and widget targets are App Store deliverables.
 
-If App Store Connect has already consumed build `10` for version `4.2`, bump every deliverable target to the same next build number before archiving.
+If App Store Connect has already consumed build `15` for version `4.2`, bump every deliverable target to the same next build number before archiving.
 
 ## Asset Catalogs
 

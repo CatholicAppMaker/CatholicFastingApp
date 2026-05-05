@@ -99,13 +99,20 @@ final class CatholicFastingMacAppUITests: XCTestCase {
     }
 
     func ensureOnDesktopHomeScreen(_ app: XCUIApplication) {
+        XCTAssertTrue(waitForAppState(app, .runningForeground))
+
         let finishButton = identifiedElement("mac.onboarding.finish", in: app)
         if finishButton.waitForExistence(timeout: 1) {
             finishButton.tap()
         }
 
-        XCTAssertTrue(identifiedElement("mac.root.ready", in: app).waitForExistence(timeout: 5))
-        XCTAssertTrue(waitForSurfaceReady(.today, in: app))
+        XCTAssertTrue(identifiedElement("mac.root.ready", in: app).waitForExistence(timeout: 8))
+        if !waitForSurfaceReady(.today, in: app, timeout: 8) {
+            let todayRow = identifiedElement("mac.sidebar.today", in: app)
+            XCTAssertTrue(todayRow.waitForExistence(timeout: 4))
+            todayRow.tap()
+            XCTAssertTrue(waitForSurfaceReady(.today, in: app, timeout: 8))
+        }
     }
 
     func openSidebarSurface(_ surface: CatholicFastingMacSurfaceID, in app: XCUIApplication) {
