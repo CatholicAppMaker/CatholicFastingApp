@@ -37,7 +37,7 @@ extension ContentView {
                         } label: {
                             HStack {
                                 Image(systemName: item.isDone ? "checkmark.circle.fill" : "circle")
-                                    .foregroundStyle(item.isDone ? .green : .secondary)
+                                    .foregroundStyle(item.isDone ? CatholicTheme.successForeground : .secondary)
                                 Text(item.title)
                                     .strikethrough(item.isDone, color: .secondary)
                             }
@@ -197,7 +197,7 @@ extension ContentView {
             Button(localized("premium.reminders.apply_smart", default: "Apply Smart Reminder Plan")) {
                 applyPremiumReminderRecommendation()
             }
-            .appPrimaryButtonStyle(legacyTint: CatholicTheme.accent)
+            .appPrimaryButtonStyle(legacyTint: CatholicTheme.accentForeground)
             .accessibilityIdentifier("premium.apply_reminder_plan")
 
             DisclosureGroup(localized("premium.reminders.advanced", default: "Advanced reminder rules")) {
@@ -336,7 +336,7 @@ extension ContentView {
             Button(localized("premium.virtue.log", default: "Log Virtue Check-in")) {
                 addPremiumVirtueLog()
             }
-            .appPrimaryButtonStyle(legacyTint: CatholicTheme.accent)
+            .appPrimaryButtonStyle(legacyTint: CatholicTheme.accentForeground)
             .disabled(newVirtueNote.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
 
             if premiumCompanion.virtueLogs.isEmpty {

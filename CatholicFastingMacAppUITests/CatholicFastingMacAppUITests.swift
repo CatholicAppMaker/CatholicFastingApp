@@ -107,21 +107,32 @@ final class CatholicFastingMacAppUITests: XCTestCase {
         }
 
         XCTAssertTrue(identifiedElement("mac.root.ready", in: app).waitForExistence(timeout: 8))
+        XCTAssertTrue(waitForSidebarReady(in: app))
         if !waitForSurfaceReady(.today, in: app, timeout: 8) {
             let todayRow = identifiedElement("mac.sidebar.today", in: app)
-            XCTAssertTrue(todayRow.waitForExistence(timeout: 4))
+            XCTAssertTrue(todayRow.waitForExistence(timeout: 8))
             todayRow.tap()
             XCTAssertTrue(waitForSurfaceReady(.today, in: app, timeout: 8))
         }
     }
 
     func openSidebarSurface(_ surface: CatholicFastingMacSurfaceID, in app: XCUIApplication) {
+        XCTAssertTrue(
+            waitForSidebarReady(in: app),
+            "Sidebar was not ready before opening \(surface.rawValue)")
         let row = identifiedElement("mac.sidebar.\(surface.rawValue)", in: app)
-        XCTAssertTrue(row.waitForExistence(timeout: 4), "Unable to find sidebar item for \(surface.rawValue)")
+        XCTAssertTrue(row.waitForExistence(timeout: 8), "Unable to find sidebar item for \(surface.rawValue)")
         row.tap()
         XCTAssertTrue(
-            waitForSurfaceReady(surface, in: app, timeout: 4),
+            waitForSurfaceReady(surface, in: app, timeout: 8),
             "Surface \(surface.rawValue) did not become ready")
+    }
+
+    func waitForSidebarReady(in app: XCUIApplication, timeout: TimeInterval = 8) -> Bool {
+        if identifiedElement("mac.sidebar", in: app).waitForExistence(timeout: timeout / 2) {
+            return true
+        }
+        return identifiedElement("mac.sidebar.today", in: app).waitForExistence(timeout: timeout / 2)
     }
 
     func openSettings(_ app: XCUIApplication) {

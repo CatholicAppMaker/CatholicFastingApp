@@ -22,7 +22,7 @@ extension ContentView {
                     localized(
                         "settings.privacy.confirm_consent",
                         default: "Please confirm consent to enable reminders and exports."))
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(CatholicTheme.warningForeground)
             } else {
                 Text(
                     localizedFormat(

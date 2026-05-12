@@ -17,20 +17,20 @@ extension ContentView {
                 subtitle: fastingDaysShowAllYearDays
                     ? localized("ipad.fasting_days.summary.required_in_view", default: "days in view")
                     : localized("ipad.fasting_days.summary.required_upcoming", default: "upcoming days"))
-            IPadSummaryMetricCard(
-                title: localized("ipad.fasting_days.summary.optional", default: "Optional"),
-                value: "\(optionalCount)",
-                subtitle: fastingDaysIncludeOptionalDays
-                    ? localized("ipad.fasting_days.summary.optional_included", default: "included now")
-                    : localized("ipad.fasting_days.summary.optional_hidden", default: "hidden from list"),
-                tint: CatholicTheme.accent)
-            IPadSummaryMetricCard(
-                title: localized("ipad.fasting_days.summary.celebrations", default: "Celebrations"),
-                value: "\(celebrationCount)",
-                subtitle: fastingDaysIncludeFeastAndHolyDays
-                    ? localized("ipad.fasting_days.summary.celebrations_shown", default: "shown now")
-                    : localized("ipad.fasting_days.summary.celebrations_hidden", default: "hidden from list"),
-                tint: .orange)
+                IPadSummaryMetricCard(
+                    title: localized("ipad.fasting_days.summary.optional", default: "Optional"),
+                    value: "\(optionalCount)",
+                    subtitle: fastingDaysIncludeOptionalDays
+                        ? localized("ipad.fasting_days.summary.optional_included", default: "included now")
+                        : localized("ipad.fasting_days.summary.optional_hidden", default: "hidden from list"),
+                    tint: CatholicTheme.accentForeground)
+                IPadSummaryMetricCard(
+                    title: localized("ipad.fasting_days.summary.celebrations", default: "Celebrations"),
+                    value: "\(celebrationCount)",
+                    subtitle: fastingDaysIncludeFeastAndHolyDays
+                        ? localized("ipad.fasting_days.summary.celebrations_shown", default: "shown now")
+                        : localized("ipad.fasting_days.summary.celebrations_hidden", default: "hidden from list"),
+                    tint: CatholicTheme.warningForeground)
         }
         .accessibilityIdentifier("ipad.fasting_days.summary_cards")
     }
@@ -162,6 +162,7 @@ extension ContentView {
                                 isSelected: selectedFastingObservanceID == observance.id)
                         }
                         .buttonStyle(.plain)
+                        .appSelectedAccessibility(selectedFastingObservanceID == observance.id)
                         .accessibilityIdentifier("ipad.fasting_days.row.\(observance.id)")
                         Divider()
                     }

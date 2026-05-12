@@ -83,6 +83,10 @@ extension View {
     func appSymbolStyle(_ role: AppSymbolRole = .standard) -> some View {
         modifier(AppSymbolModifier(role: role))
     }
+
+    func appSelectedAccessibility(_ isSelected: Bool) -> some View {
+        modifier(AppSelectedAccessibilityModifier(isSelected: isSelected))
+    }
 }
 
 enum AppSymbolRole {
@@ -118,6 +122,21 @@ private struct AppSymbolModifier: ViewModifier {
         content
             .font(role.font)
             .foregroundStyle(role.color)
+    }
+}
+
+private struct AppSelectedAccessibilityModifier: ViewModifier {
+    let isSelected: Bool
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if isSelected {
+            content
+                .accessibilityValue(Text("Selected"))
+                .accessibilityAddTraits(.isSelected)
+        } else {
+            content
+        }
     }
 }
 

@@ -31,6 +31,7 @@ extension ContentView {
                                 isSelected: selectedMoreDestination == destination)
                         }
                         .buttonStyle(.plain)
+                        .appSelectedAccessibility(selectedMoreDestination == destination)
                         .accessibilityIdentifier("ipad.more.compact.\(destination.rawValue)")
                     }
                 }
@@ -59,6 +60,7 @@ extension ContentView {
                                     isSelected: selectedMoreDestination == destination)
                             }
                             .buttonStyle(.plain)
+                            .appSelectedAccessibility(selectedMoreDestination == destination)
                             .accessibilityIdentifier("ipad.more.destination.\(destination.rawValue)")
                         }
                     }

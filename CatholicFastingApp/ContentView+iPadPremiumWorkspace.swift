@@ -38,7 +38,10 @@ extension ContentView {
                                 ipadPremiumSubscriptionCard
                                 ipadPremiumPillarRail
                             }
-                            .frame(width: compact ? 290 : 330)
+                            .frame(
+                                minWidth: compact ? 260 : 300,
+                                idealWidth: compact ? 290 : 330,
+                                maxWidth: compact ? 330 : 370)
 
                             VStack(alignment: .leading, spacing: 18) {
                                 ipadPremiumDashboardCard
@@ -99,6 +102,7 @@ extension ContentView {
                 }
                 .buttonStyle(.plain)
                 .disabled(!monetizationStore.premiumUnlocked)
+                .appSelectedAccessibility(selectedPremiumToolDestination == destination)
                 .accessibilityIdentifier("ipad.premium.tool.\(surface.rawValue)")
             }
         }
@@ -134,61 +138,62 @@ extension ContentView {
                     title: localized("premium.workspace.metrics.overall.title", default: "Overall"),
                     value: "\(analytics.overallCompletionPercent)%",
                     subtitle: localized("premium.workspace.metrics.overall.subtitle", default: "all logged observances"),
-                    tint: CatholicTheme.accent)
+                    tint: CatholicTheme.accentForeground)
                 IPadSummaryMetricCard(
                     title: localized("premium.workspace.metrics.intermittent.title", default: "Intermittent"),
                     value: "\(analytics.intermittentTargetHitPercent)%",
                     subtitle: localized(
                         "premium.workspace.metrics.intermittent.subtitle",
                         default: "recent target hit rate"),
-                    tint: .orange)
+                    tint: CatholicTheme.warningForeground)
             }
 
-            HStack(alignment: .top, spacing: 14) {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(localized("premium.workspace.journey.eyebrow", default: "Guided Journey"))
-                        .appEyebrowStyle()
-                        .textCase(.uppercase)
-                    Text(premiumGuidedJourneyWeek.title)
-                        .appSectionTitleStyle(serif: true)
-                    Text(premiumGuidedJourneyWeek.summary)
-                        .appSupportingTextStyle()
-                    Text(premiumJourneyCompletionSummary)
-                        .appSupportingTextStyle()
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(12)
-                .appSurfaceCard(.utility, cornerRadius: 16)
-
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(localized("premium.workspace.readiness.eyebrow", default: "Reminder readiness"))
-                        .appEyebrowStyle()
-                        .textCase(.uppercase)
-                    Text(reminderRecommendation.summaryLine)
-                        .appSectionTitleStyle()
-                    Text(localizedFormat("premium.workspace.readiness.tier_format", default: "Current tier: %@", localizedReminderTierLabel(reminderTier)))
-                        .appSupportingTextStyle()
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(12)
-                .appSurfaceCard(.utility, cornerRadius: 16)
-
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(localized("premium.workspace.next_step.eyebrow", default: "Next step"))
-                        .appEyebrowStyle()
-                        .textCase(.uppercase)
-                    Text(premiumGuidedJourneyNextAction?.title ?? localized("premium.workspace.next_step.complete", default: "Week complete"))
-                        .appSectionTitleStyle(serif: true)
-                    Text(
-                        premiumGuidedJourneyNextAction?.detail
+            if dynamicTypeSize.isAccessibilitySize {
+                VStack(alignment: .leading, spacing: 14) {
+                    ipadPremiumDashboardInlineSection(
+                        eyebrow: localized("premium.workspace.journey.eyebrow", default: "Guided Journey"),
+                        title: premiumGuidedJourneyWeek.title,
+                        detail: premiumGuidedJourneyWeek.summary,
+                        secondaryDetail: premiumJourneyCompletionSummary,
+                        serifTitle: true)
+                    Divider()
+                    ipadPremiumDashboardInlineSection(
+                        eyebrow: localized("premium.workspace.readiness.eyebrow", default: "Reminder readiness"),
+                        title: reminderRecommendation.summaryLine,
+                        detail: localizedFormat("premium.workspace.readiness.tier_format", default: "Current tier: %@", localizedReminderTierLabel(reminderTier)))
+                    Divider()
+                    ipadPremiumDashboardInlineSection(
+                        eyebrow: localized("premium.workspace.next_step.eyebrow", default: "Next step"),
+                        title: premiumGuidedJourneyNextAction?.title ?? localized("premium.workspace.next_step.complete", default: "Week complete"),
+                        detail: premiumGuidedJourneyNextAction?.detail
                             ?? localized(
                                 "premium.workspace.next_step.detail",
-                                default: "Use the reflection or accountability tools below to keep the rhythm steady."))
-                        .appSupportingTextStyle()
+                                default: "Use the reflection or accountability tools below to keep the rhythm steady."),
+                        serifTitle: true)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(12)
-                .appSurfaceCard(.utility, cornerRadius: 16)
+            } else {
+                HStack(alignment: .top, spacing: 14) {
+                    ipadPremiumDashboardInlineSection(
+                        eyebrow: localized("premium.workspace.journey.eyebrow", default: "Guided Journey"),
+                        title: premiumGuidedJourneyWeek.title,
+                        detail: premiumGuidedJourneyWeek.summary,
+                        secondaryDetail: premiumJourneyCompletionSummary,
+                        serifTitle: true)
+                    Divider()
+                    ipadPremiumDashboardInlineSection(
+                        eyebrow: localized("premium.workspace.readiness.eyebrow", default: "Reminder readiness"),
+                        title: reminderRecommendation.summaryLine,
+                        detail: localizedFormat("premium.workspace.readiness.tier_format", default: "Current tier: %@", localizedReminderTierLabel(reminderTier)))
+                    Divider()
+                    ipadPremiumDashboardInlineSection(
+                        eyebrow: localized("premium.workspace.next_step.eyebrow", default: "Next step"),
+                        title: premiumGuidedJourneyNextAction?.title ?? localized("premium.workspace.next_step.complete", default: "Week complete"),
+                        detail: premiumGuidedJourneyNextAction?.detail
+                            ?? localized(
+                                "premium.workspace.next_step.detail",
+                                default: "Use the reflection or accountability tools below to keep the rhythm steady."),
+                        serifTitle: true)
+                }
             }
 
             VStack(alignment: .leading, spacing: 10) {
@@ -202,7 +207,7 @@ extension ContentView {
                     } label: {
                         HStack(alignment: .top, spacing: 10) {
                             Image(systemName: isPremiumJourneyActionCompleted(action) ? "checkmark.circle.fill" : "circle")
-                                .foregroundStyle(isPremiumJourneyActionCompleted(action) ? .green : CatholicTheme.primary)
+                                .foregroundStyle(isPremiumJourneyActionCompleted(action) ? CatholicTheme.successForeground : CatholicTheme.primary)
                                 .padding(.top, 2)
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(action.category.label)
@@ -219,12 +224,37 @@ extension ContentView {
                     }
                     .buttonStyle(.plain)
                     .disabled(!monetizationStore.premiumUnlocked)
+                    .appSelectedAccessibility(isPremiumJourneyActionCompleted(action))
                 }
             }
         }
         .padding(18)
         .iPadPaneCard(.primary)
         .accessibilityIdentifier("ipad.premium.dashboard")
+    }
+
+    private func ipadPremiumDashboardInlineSection(
+        eyebrow: String,
+        title: String,
+        detail: String,
+        secondaryDetail: String? = nil,
+        serifTitle: Bool = false) -> some View
+    {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(eyebrow)
+                .appEyebrowStyle()
+                .textCase(.uppercase)
+            Text(title)
+                .appSectionTitleStyle(serif: serifTitle)
+            Text(detail)
+                .appSupportingTextStyle()
+            if let secondaryDetail {
+                Text(secondaryDetail)
+                    .appSupportingTextStyle()
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.vertical, 4)
     }
 
     private var ipadPremiumSelectedToolCard: some View {

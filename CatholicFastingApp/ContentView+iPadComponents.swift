@@ -75,10 +75,21 @@ struct IPadContextBadge: View {
         }
     }
 
+    var foregroundTint: Color {
+        switch supportLevel {
+        case .full:
+            CatholicTheme.successForeground
+        case .partial:
+            CatholicTheme.warningForeground
+        case .informational:
+            CatholicTheme.infoForeground
+        }
+    }
+
     var body: some View {
         Text(text)
             .font(.caption2.weight(.semibold))
-            .foregroundStyle(tint)
+            .foregroundStyle(foregroundTint)
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
             .background(Capsule().fill(tint.opacity(0.14)))
@@ -104,6 +115,7 @@ struct IPadKeyDateChip: View {
             .appInteractiveTileStyle(isSelected: isSelected, cornerRadius: 14)
         }
         .buttonStyle(.plain)
+        .appSelectedAccessibility(isSelected)
     }
 }
 
@@ -169,7 +181,7 @@ struct IPadWorkspaceHeroBand: View {
                         Text(regionContext.disclosureText)
                             .appSupportingTextStyle()
                     }
-                    .frame(width: 340, alignment: .leading)
+                    .frame(minWidth: 300, idealWidth: 340, maxWidth: 380, alignment: .leading)
                 }
             }
         }
@@ -237,6 +249,8 @@ struct IPadObservanceSelectionRow: View {
             }
         }
         .padding(.vertical, 4)
+        .accessibilityElement(children: .combine)
+        .appSelectedAccessibility(isSelected)
     }
 }
 

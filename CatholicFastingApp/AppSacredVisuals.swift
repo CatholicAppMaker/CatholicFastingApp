@@ -108,6 +108,7 @@ struct SacredHeroCard: View {
                 .scaledToFill()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .clipped()
+                .accessibilityHidden(true)
         } else {
             ZStack {
                 LinearGradient(
@@ -123,6 +124,7 @@ struct SacredHeroCard: View {
                         .foregroundStyle(Color.white.opacity(0.9))
                 }
             }
+            .accessibilityHidden(title.isEmpty && subtitle.isEmpty)
         }
     }
 }

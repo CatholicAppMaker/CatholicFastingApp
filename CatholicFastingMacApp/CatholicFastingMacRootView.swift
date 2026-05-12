@@ -9,7 +9,9 @@ struct CatholicFastingMacRootView: View {
     var body: some View {
         NavigationSplitView {
             List(CatholicFastingMacSurface.allCases, id: \.self, selection: $model.selectedSurface) { surface in
-                CatholicFastingMacSidebarRow(surface: surface)
+                CatholicFastingMacSidebarRow(
+                    surface: surface,
+                    isSelected: model.selectedSurface == surface)
                     .tag(surface)
                     .accessibilityIdentifier("mac.sidebar.\(surface.rawValue)")
             }
@@ -81,6 +83,7 @@ struct CatholicFastingMacRootView: View {
 
 private struct CatholicFastingMacSidebarRow: View {
     let surface: CatholicFastingMacSurface
+    let isSelected: Bool
 
     var body: some View {
         HStack(spacing: 10) {
@@ -96,6 +99,12 @@ private struct CatholicFastingMacSidebarRow: View {
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .contentShape(Rectangle())
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(surface.title)
+        .accessibilityHint(surface.subtitle)
+        .macSelectedAccessibility(isSelected)
     }
 }

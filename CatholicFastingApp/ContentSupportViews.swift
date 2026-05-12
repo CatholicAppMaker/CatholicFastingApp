@@ -93,7 +93,6 @@ struct ObservanceRowView: View {
         .overlay(
             RoundedRectangle(cornerRadius: 12)
                 .stroke(rowBorderColor, lineWidth: 1))
-        .appRoundedGlass(cornerRadius: 12)
     }
 
     private var statusIcon: String {
@@ -173,6 +172,7 @@ struct StatusTag: View {
     var body: some View {
         Text(text)
             .font(.caption)
+            .foregroundStyle(CatholicTheme.primary)
             .padding(.horizontal, 8)
             .padding(.vertical, 3)
             .background(CatholicTheme.parchment.opacity(0.88), in: Capsule())
@@ -182,7 +182,6 @@ struct StatusTag: View {
             .overlay(
                 Capsule()
                     .stroke(color.opacity(0.55), lineWidth: 0.8))
-            .appCapsuleGlass()
     }
 }
 
@@ -211,7 +210,6 @@ struct MetricTile: View {
         .padding(.horizontal, 12)
         .padding(.vertical, detail == nil ? 10 : 12)
         .appSurfaceCard(.utility, cornerRadius: 14)
-        .appRoundedGlass(cornerRadius: 14)
     }
 
     private var tileTint: Color {
@@ -221,7 +219,7 @@ struct MetricTile: View {
         case "Done":
             .green
         case "Streak":
-            CatholicTheme.accent
+            CatholicTheme.accentForeground
         default:
             CatholicTheme.primary
         }
@@ -301,6 +299,8 @@ struct AppDestinationRowCard: View {
                 .stroke((isSelected ? selectedTint : CatholicTheme.cardBorder).opacity(isSelected ? 0.18 : 0.45), lineWidth: 1)
                 .allowsHitTesting(false))
         .shadow(color: (isSelected ? selectedTint : CatholicTheme.primary).opacity(isSelected ? 0.16 : 0.05), radius: isSelected ? 16 : 8, y: isSelected ? 8 : 4)
+        .accessibilityElement(children: .combine)
+        .appSelectedAccessibility(isSelected)
     }
 }
 

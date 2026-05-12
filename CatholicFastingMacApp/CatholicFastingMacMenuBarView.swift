@@ -6,20 +6,23 @@ struct CatholicFastingMacMenuBarView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(model.menuBarTitle)
+            Text(model.menuBarTitle.macMenuBarLabel())
                 .font(.headline)
                 .lineLimit(1)
-            Text(model.menuBarSubtitle)
+                .accessibilityLabel(model.menuBarTitle)
+            Text(model.menuBarSubtitle.macMenuBarLabel())
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
+                .accessibilityLabel(model.menuBarSubtitle)
 
             if let upcoming = model.upcomingMandatoryObservance {
                 Divider()
                 Text("Next required")
                     .font(.caption.weight(.semibold))
-                Text(model.localizedObservanceTitle(upcoming.title))
+                Text(model.localizedObservanceTitle(upcoming.title).macMenuBarLabel())
                     .lineLimit(1)
+                    .accessibilityLabel(model.localizedObservanceTitle(upcoming.title))
                 Text(model.localizedDate(upcoming.date))
                     .font(.caption)
                     .foregroundStyle(.secondary)

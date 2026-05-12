@@ -24,6 +24,7 @@ struct CatholicFastingMacTodayView: View {
                     }
                     .pickerStyle(.segmented)
                     .accessibilityIdentifier("mac.today.status")
+                    .accessibilityValue(model.tracker.status(for: observance.id).label)
 
                     if observance.kind == .fridayPenance {
                         TextField("Friday penance note", text: model.noteBinding(for: observance.id))
@@ -35,14 +36,14 @@ struct CatholicFastingMacTodayView: View {
                 }
             }
 
-            HStack(alignment: .top, spacing: 16) {
+            MacAdaptiveColumns {
                 MacCard(
                     title: "Next required observance",
                     subtitle: model.upcomingMandatoryObservance.map { model.localizedDate($0.date) } ?? "Nothing upcoming")
                 {
                     Text(model.upcomingMandatoryObservance.map { model.localizedObservanceTitle($0.title) } ?? "No upcoming required observance")
                 }
-
+            } trailing: {
                 MacCard(title: "Year progress", subtitle: "Completed, substituted, or dispensed") {
                     Text(model.completionRateText)
                         .font(.system(size: 34, weight: .semibold))

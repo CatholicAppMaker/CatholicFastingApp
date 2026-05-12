@@ -6,7 +6,7 @@ import StoreKit
 extension ContentView {
     var ipadMoreWorkspace: some View {
         GeometryReader { geometry in
-            let stacked = geometry.size.width < 1200
+            let stacked = geometry.size.width < 1200 || dynamicTypeSize.isAccessibilitySize
             let destination = selectedMoreDestination ?? MoreHubDestination.allCases.first ?? .supportAndPremium
 
             Group {
@@ -24,7 +24,7 @@ extension ContentView {
                 } else {
                     HStack(alignment: .top, spacing: 20) {
                         ipadMoreDestinationRail
-                            .frame(width: 280)
+                            .frame(minWidth: 240, idealWidth: 280, maxWidth: 320)
                             .frame(maxHeight: .infinity)
 
                         Group {
@@ -136,7 +136,7 @@ extension ContentView {
                         await monetizationStore.purchase(product)
                     }
                 }
-                .appSecondaryButtonStyle(legacyTint: CatholicTheme.accent)
+                .appSecondaryButtonStyle(legacyTint: CatholicTheme.accentForeground)
                 .disabled(monetizationStore.isPurchasing)
             }
         }

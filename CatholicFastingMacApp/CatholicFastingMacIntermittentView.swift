@@ -38,7 +38,7 @@ struct CatholicFastingMacIntermittentView: View {
                 }
             }
 
-            HStack(alignment: .top, spacing: 16) {
+            MacAdaptiveColumns {
                 MacCard(title: "Schedules", subtitle: "Saved start reminders") {
                     ForEach(model.intermittentSchedules) { plan in
                         VStack(alignment: .leading, spacing: 6) {
@@ -63,7 +63,7 @@ struct CatholicFastingMacIntermittentView: View {
                         }
                     }
                 }
-
+            } trailing: {
                 MacCard(title: "New schedule", subtitle: "Weekly recurring start reminder") {
                     TextField("Schedule name", text: $scheduleName)
                         .accessibilityIdentifier("mac.intermittent.schedule_name")
@@ -123,8 +123,9 @@ struct CatholicFastingMacIntermittentView: View {
                         }
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(isSelected ? CatholicTheme.primary : .gray.opacity(0.4))
+                    .tint(isSelected ? CatholicTheme.primary : CatholicTheme.cardBorder.opacity(0.35))
                     .accessibilityIdentifier("mac.intermittent.weekday.\(day)")
+                    .macSelectedAccessibility(isSelected)
                 }
             }
         }

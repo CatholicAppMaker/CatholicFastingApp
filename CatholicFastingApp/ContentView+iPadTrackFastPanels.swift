@@ -57,7 +57,7 @@ extension ContentView {
                                     ? localized("ipad.intermittent.live.can_end", default: "You can end the fast now.")
                                     : localized("ipad.intermittent.live.keep_going", default: "Keep going to complete this target."))
                                 .appSupportingTextStyle()
-                                .foregroundStyle(progress >= 1 ? .green : .secondary)
+                                .foregroundStyle(progress >= 1 ? CatholicTheme.successForeground : .secondary)
                         }
                         Spacer(minLength: 0)
                     }
@@ -224,12 +224,12 @@ extension ContentView {
                     title: localized("ipad.intermittent.planning.plan", default: "Plan"),
                     value: intermittentWindowLabel,
                     subtitle: reminderTier.summary,
-                    tint: CatholicTheme.accent)
+                    tint: CatholicTheme.accentForeground)
                 IPadSummaryMetricCard(
                     title: localized("ipad.intermittent.planning.longest", default: "Longest"),
                     value: intermittentLongestSessionText,
                     subtitle: localized("ipad.intermittent.planning.longest_detail", default: "best recent duration"),
-                    tint: .orange)
+                    tint: CatholicTheme.warningForeground)
             }
 
             Text(

@@ -314,7 +314,7 @@ extension ContentView {
                             Button(localized("intermittent.schedules.edit", default: "Edit")) {
                                 startEditingIntermittentSchedule(plan)
                             }
-                            .appSecondaryButtonStyle(legacyTint: CatholicTheme.accent)
+                            .appSecondaryButtonStyle(legacyTint: CatholicTheme.accentForeground)
 
                             Button(localized("intermittent.schedules.delete", default: "Delete"), role: .destructive) {
                                 deleteIntermittentSchedule(plan)
@@ -373,7 +373,7 @@ extension ContentView {
         Section(localized("intermittent.recovery.section", default: "Recovery Guidance")) {
             if intermittentTracker.activeStart == nil, let latest = intermittentTracker.sessions.first, !latest.completedTarget {
                 Text(localized("intermittent.recovery.below_target", default: "Your latest session ended below target. Consider a lighter target and hydrate well."))
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(CatholicTheme.warningForeground)
             } else {
                 Text(localized("intermittent.recovery.none", default: "No immediate recovery actions needed."))
                     .foregroundStyle(.secondary)
@@ -587,7 +587,7 @@ extension ContentView {
                     .foregroundStyle(.secondary)
                 Text(countdown)
                     .font(.system(.headline, design: .rounded).monospacedDigit())
-                    .foregroundStyle(reached ? .green : CatholicTheme.primary)
+                    .foregroundStyle(reached ? CatholicTheme.successForeground : CatholicTheme.primary)
             }
             .multilineTextAlignment(.center)
         }
@@ -614,7 +614,7 @@ extension ContentView {
                     ? localized("intermittent.live.end_anytime", default: "You can end your fast at any time.")
                     : localized("intermittent.live.keep_going", default: "Keep going to complete this plan."))
                 .font(.caption)
-                .foregroundStyle(reached ? .green : .secondary)
+                .foregroundStyle(reached ? CatholicTheme.successForeground : .secondary)
         }
     }
 
@@ -688,7 +688,7 @@ extension ContentView {
                     HStack(alignment: .top, spacing: 10) {
                         Image(systemName: session.completedTarget ? "checkmark.seal.fill" : "clock.badge.xmark.fill")
                             .imageScale(.large)
-                            .foregroundStyle(session.completedTarget ? .green : .orange)
+                            .foregroundStyle(session.completedTarget ? CatholicTheme.successForeground : CatholicTheme.warningForeground)
                             .padding(.top, 2)
 
                         VStack(alignment: .leading, spacing: 4) {
@@ -712,7 +712,7 @@ extension ContentView {
                                     ? localized("intermittent.history.target_met", default: "Target met")
                                     : localized("intermittent.history.below_target", default: "Below target"))
                                 .font(.caption)
-                                .foregroundStyle(session.completedTarget ? .green : .orange)
+                                .foregroundStyle(session.completedTarget ? CatholicTheme.successForeground : CatholicTheme.warningForeground)
                         }
                         Spacer(minLength: 0)
                     }

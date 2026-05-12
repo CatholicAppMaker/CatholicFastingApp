@@ -142,7 +142,7 @@ extension ContentView {
                                 evening: dailyReminderSupportEnabled && eveningReminderEnabled)
                         }
                     }
-                    .appPrimaryButtonStyle(legacyTint: CatholicTheme.accent)
+                    .appPrimaryButtonStyle(legacyTint: CatholicTheme.accentForeground)
                     .disabled(
                         !acceptedLegalNotice || !dailyReminderSupportEnabled || !monetizationStore.premiumUnlocked)
                     .accessibilityIdentifier("settings.quick.schedule_support")
@@ -169,7 +169,7 @@ extension ContentView {
             if !acceptedLegalNotice {
                 Text(localized("settings.quick.enable_consent_hint", default: "Enable consent above to request and schedule reminders."))
                     .appEyebrowStyle()
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(CatholicTheme.warningForeground)
             }
         }
     }
@@ -367,7 +367,7 @@ extension ContentView {
                 Button(localized("settings.planning.add_commitment", default: "Add Current Season Commitment")) {
                     addSeasonCommitment()
                 }
-                .appSecondaryButtonStyle(legacyTint: CatholicTheme.accent)
+                .appSecondaryButtonStyle(legacyTint: CatholicTheme.accentForeground)
                 .disabled(!canAddSeasonCommitment)
                 .accessibilityIdentifier("settings.plan.add_commitment")
             }

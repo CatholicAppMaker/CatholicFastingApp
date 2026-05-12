@@ -14,23 +14,27 @@ struct CatholicFastingMacPremiumView: View {
         {
             subscriptionCard
 
-            HStack(alignment: .top, spacing: 16) {
+            MacAdaptiveColumns {
                 plannerCard
+            } trailing: {
                 remindersCard
             }
 
-            HStack(alignment: .top, spacing: 16) {
+            MacAdaptiveColumns {
                 analyticsCard
+            } trailing: {
                 recoveryAndReflectionCard
             }
 
-            HStack(alignment: .top, spacing: 16) {
+            MacAdaptiveColumns {
                 journeyAndChecklistCard
+            } trailing: {
                 journalAndVirtueCard
             }
 
-            HStack(alignment: .top, spacing: 16) {
+            MacAdaptiveColumns {
                 exportsCard
+            } trailing: {
                 householdShareCard
             }
         }
@@ -53,6 +57,7 @@ struct CatholicFastingMacPremiumView: View {
                     }
                 }
                 .accessibilityIdentifier("mac.premium.planner.template")
+                .accessibilityValue(model.selectedPremiumTemplate.label)
 
                 Stepper(
                     "Optional disciplines/week: \(model.premiumCompanion.optionalDisciplinesPerWeek)",
@@ -220,6 +225,7 @@ struct CatholicFastingMacPremiumView: View {
                     }
                 }
                 .accessibilityIdentifier("mac.premium.program")
+                .accessibilityValue(model.selectedPremiumSeasonProgram.label)
 
                 Button("Restart Program Week") {
                     model.restartPremiumSeasonProgram()
@@ -240,6 +246,7 @@ struct CatholicFastingMacPremiumView: View {
                         }
                     }
                     .accessibilityIdentifier("mac.premium.journey.\(action.id)")
+                    .macSelectedAccessibility(model.isJourneyActionCompleted(action.id), includeValue: false)
                 }
 
                 Divider()
@@ -257,6 +264,7 @@ struct CatholicFastingMacPremiumView: View {
                             Text(item.title)
                         }
                         .accessibilityIdentifier("mac.premium.checklist.\(item.id)")
+                        .macSelectedAccessibility(item.isDone, includeValue: false)
                     }
                 }
             }
@@ -300,6 +308,7 @@ struct CatholicFastingMacPremiumView: View {
                     }
                 }
                 .accessibilityIdentifier("mac.premium.virtue_picker")
+                .accessibilityValue(model.selectedVirtue)
 
                 TextField("Virtue note", text: $virtueNote, axis: .vertical)
                     .lineLimit(2 ... 4)

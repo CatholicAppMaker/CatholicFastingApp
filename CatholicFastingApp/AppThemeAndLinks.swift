@@ -82,6 +82,7 @@ enum CatholicTheme {
         let season: LiturgicalSeason
         let primary: Color
         let accent: Color
+        let accentForeground: Color
         let parchment: Color
         let parchmentShade: Color
         let cardBorder: Color
@@ -101,6 +102,26 @@ enum CatholicTheme {
 
     static var accent: Color {
         activePalette.accent
+    }
+
+    static var accentForeground: Color {
+        activePalette.accentForeground
+    }
+
+    static var successForeground: Color {
+        Color(red: 0.05, green: 0.36, blue: 0.13)
+    }
+
+    static var warningForeground: Color {
+        Color(red: 0.56, green: 0.28, blue: 0.03)
+    }
+
+    static var infoForeground: Color {
+        Color(red: 0.05, green: 0.28, blue: 0.58)
+    }
+
+    static var dangerForeground: Color {
+        Color(red: 0.62, green: 0.08, blue: 0.08)
     }
 
     static var parchment: Color {
@@ -142,6 +163,7 @@ enum CatholicTheme {
                 season: .ordinary,
                 primary: Color(red: 0.40, green: 0.11, blue: 0.13),
                 accent: Color(red: 0.78, green: 0.58, blue: 0.18),
+                accentForeground: Color(red: 0.40, green: 0.11, blue: 0.13),
                 parchment: Color(red: 0.98, green: 0.95, blue: 0.87),
                 parchmentShade: Color(red: 0.90, green: 0.84, blue: 0.73),
                 cardBorder: Color(red: 0.70, green: 0.56, blue: 0.29))
@@ -154,6 +176,7 @@ enum CatholicTheme {
                 season: season,
                 primary: Color(red: 0.11, green: 0.20, blue: 0.49),
                 accent: Color(red: 0.72, green: 0.33, blue: 0.58),
+                accentForeground: Color(red: 0.47, green: 0.12, blue: 0.35),
                 parchment: Color(red: 0.95, green: 0.95, blue: 0.99),
                 parchmentShade: Color(red: 0.84, green: 0.86, blue: 0.96),
                 cardBorder: Color(red: 0.40, green: 0.44, blue: 0.73))
@@ -162,6 +185,7 @@ enum CatholicTheme {
                 season: season,
                 primary: Color(red: 0.50, green: 0.29, blue: 0.07),
                 accent: Color(red: 0.85, green: 0.65, blue: 0.18),
+                accentForeground: Color(red: 0.50, green: 0.29, blue: 0.07),
                 parchment: Color(red: 1.00, green: 0.98, blue: 0.92),
                 parchmentShade: Color(red: 0.95, green: 0.91, blue: 0.78),
                 cardBorder: Color(red: 0.78, green: 0.62, blue: 0.24))
@@ -170,6 +194,7 @@ enum CatholicTheme {
                 season: season,
                 primary: Color(red: 0.30, green: 0.13, blue: 0.45),
                 accent: Color(red: 0.61, green: 0.46, blue: 0.72),
+                accentForeground: Color(red: 0.30, green: 0.13, blue: 0.45),
                 parchment: Color(red: 0.95, green: 0.91, blue: 0.95),
                 parchmentShade: Color(red: 0.84, green: 0.79, blue: 0.90),
                 cardBorder: Color(red: 0.55, green: 0.42, blue: 0.66))
@@ -178,6 +203,7 @@ enum CatholicTheme {
                 season: season,
                 primary: Color(red: 0.14, green: 0.37, blue: 0.18),
                 accent: Color(red: 0.82, green: 0.66, blue: 0.18),
+                accentForeground: Color(red: 0.14, green: 0.37, blue: 0.18),
                 parchment: Color(red: 0.99, green: 0.98, blue: 0.92),
                 parchmentShade: Color(red: 0.89, green: 0.93, blue: 0.80),
                 cardBorder: Color(red: 0.46, green: 0.66, blue: 0.40))
@@ -186,6 +212,7 @@ enum CatholicTheme {
                 season: season,
                 primary: Color(red: 0.10, green: 0.38, blue: 0.17),
                 accent: Color(red: 0.72, green: 0.56, blue: 0.15),
+                accentForeground: Color(red: 0.10, green: 0.38, blue: 0.17),
                 parchment: Color(red: 0.97, green: 0.96, blue: 0.86),
                 parchmentShade: Color(red: 0.86, green: 0.90, blue: 0.76),
                 cardBorder: Color(red: 0.38, green: 0.59, blue: 0.34))

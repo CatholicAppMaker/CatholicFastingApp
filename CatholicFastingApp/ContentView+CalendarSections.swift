@@ -100,7 +100,7 @@ extension ContentView {
 
                     Text(localizedAbbreviatedDate(nextRequired.date))
                         .font(.headline)
-                        .foregroundStyle(.red)
+                        .foregroundStyle(CatholicTheme.dangerForeground)
                 }
                 .padding(12)
                 .appSurfaceCard(.utility, cornerRadius: 16)
@@ -115,7 +115,7 @@ extension ContentView {
 
                     Text(localizedAbbreviatedDate(nextPotential.date))
                         .font(.headline)
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(CatholicTheme.warningForeground)
 
                     Text(localized("fasting_days.confirm_age", default: "Confirm your age-profile toggles in Settings if needed."))
                         .appSupportingTextStyle()

@@ -296,7 +296,7 @@ extension ContentView {
                 Label(localized("today.actions.track_fast", default: "Track Fast Now"), systemImage: "timer")
             }
             .accessibilityIdentifier("today.quick.intermittent")
-            .appSecondaryButtonStyle(legacyTint: CatholicTheme.accent)
+            .appSecondaryButtonStyle(legacyTint: CatholicTheme.accentForeground)
             #if canImport(TipKit)
                 .popoverTip(IntermittentTrackerTip(), arrowEdge: .top)
             #endif
@@ -412,7 +412,7 @@ extension ContentView {
                     logRecoverySubstituteForToday()
                 }
                 .accessibilityIdentifier("today.recovery.mark_substitute")
-                .appPrimaryButtonStyle(legacyTint: CatholicTheme.accent)
+                .appPrimaryButtonStyle(legacyTint: CatholicTheme.accentForeground)
                 .disabled(!canLogRecoverySubstituteToday)
 
                 Button(localized("today.recovery.focus", default: "Focus Required Fasting Days")) {
@@ -448,7 +448,7 @@ extension ContentView {
             HStack(alignment: .top, spacing: 10) {
                 Image(systemName: "sparkles")
                     .font(.headline.weight(.semibold))
-                    .foregroundStyle(CatholicTheme.accent)
+                    .foregroundStyle(CatholicTheme.accentForeground)
                     .padding(.top, 2)
 
                 VStack(alignment: .leading, spacing: 4) {
@@ -486,7 +486,7 @@ extension ContentView {
                         default: "Next required: %@ • %@",
                         localizedObservanceTitle(next.title),
                         localizedAbbreviatedDate(next.date)))
-                    .foregroundStyle(.red.opacity(0.85))
+                    .foregroundStyle(CatholicTheme.dangerForeground)
             } else {
                 Text(localized("today.overview.none", default: "No upcoming required observances this year."))
                     .foregroundStyle(.secondary)
@@ -500,7 +500,7 @@ extension ContentView {
                 focusFastingDaysOnUpcomingRequired()
             }
             .accessibilityIdentifier("dashboard.focus_required")
-            .appSecondaryButtonStyle(legacyTint: CatholicTheme.accent)
+            .appSecondaryButtonStyle(legacyTint: CatholicTheme.accentForeground)
         }
     }
 
@@ -517,7 +517,7 @@ extension ContentView {
                         default: "Next required: %@ • %@",
                         localizedObservanceTitle(next.title),
                         localizedAbbreviatedDate(next.date)))
-                    .foregroundStyle(.red.opacity(0.85))
+                    .foregroundStyle(CatholicTheme.dangerForeground)
             } else {
                 Text(localized("today.overview.none", default: "No upcoming required observances this year."))
                     .foregroundStyle(.secondary)
@@ -535,7 +535,7 @@ extension ContentView {
             Text(title)
         } icon: {
             Image(systemName: isComplete ? "checkmark.circle.fill" : "circle")
-                .foregroundStyle(isComplete ? Color.green : Color.secondary)
+                .foregroundStyle(isComplete ? CatholicTheme.successForeground : Color.secondary)
         }
     }
 

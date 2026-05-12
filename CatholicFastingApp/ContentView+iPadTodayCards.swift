@@ -98,20 +98,20 @@ extension ContentView {
                     ?? localized("ipad.today.metrics.none_ahead", default: "None ahead"),
                 subtitle: upcomingMandatoryObservance.map { localizedAbbreviatedDate($0.date) }
                     ?? localized("ipad.today.metrics.current_year_clear", default: "Current year clear"))
-            IPadSummaryMetricCard(
-                title: localized("ipad.today.metrics.this_week", default: "This week"),
-                value: "\(weeklyCompletedObservancesCount)/\(weeklyActionableObservanceCount)",
-                subtitle: localized("ipad.today.metrics.this_week_detail", default: "discipline days completed"),
-                tint: CatholicTheme.accent)
+                IPadSummaryMetricCard(
+                    title: localized("ipad.today.metrics.this_week", default: "This week"),
+                    value: "\(weeklyCompletedObservancesCount)/\(weeklyActionableObservanceCount)",
+                    subtitle: localized("ipad.today.metrics.this_week_detail", default: "discipline days completed"),
+                    tint: CatholicTheme.accentForeground)
             IPadSummaryMetricCard(
                 title: localized("ipad.today.metrics.current_streak", default: "Current streak"),
                 value: localizedFormat("ipad.today.metrics.current_streak_value", default: "%d days", currentStreak),
                 subtitle: streakResilienceMessage)
-            IPadSummaryMetricCard(
-                title: localized("ipad.today.metrics.this_month", default: "This month"),
-                value: "\(monthlyCompletionCount)",
-                subtitle: localized("ipad.today.metrics.this_month_detail", default: "logged observances"),
-                tint: .orange)
+                IPadSummaryMetricCard(
+                    title: localized("ipad.today.metrics.this_month", default: "This month"),
+                    value: "\(monthlyCompletionCount)",
+                    subtitle: localized("ipad.today.metrics.this_month_detail", default: "logged observances"),
+                    tint: CatholicTheme.warningForeground)
         }
         .accessibilityIdentifier("ipad.today.metrics")
     }
@@ -187,7 +187,7 @@ extension ContentView {
                     title: localized("ipad.today.planning.optional_goal", default: "Optional goal"),
                     value: "\(yearlyOptionalCompletions)/\(planningData.optionalGoal)",
                     subtitle: localized("ipad.today.planning.optional_goal_detail", default: "optional disciplines logged"),
-                    tint: CatholicTheme.accent)
+                    tint: CatholicTheme.accentForeground)
             }
 
             ProgressView(value: requirementGoalProgress)

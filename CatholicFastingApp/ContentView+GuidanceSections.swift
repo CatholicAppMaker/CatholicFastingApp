@@ -500,8 +500,8 @@ extension ContentView {
 
             foodGuidanceGroupView(snapshot.whatCountsAsMeat, icon: "xmark.circle", tint: .red)
             foodGuidanceGroupView(snapshot.generallyPermitted, icon: "checkmark.circle", tint: .green)
-            foodGuidanceGroupView(snapshot.mealPattern, icon: "fork.knife", tint: CatholicTheme.accent)
-            foodGuidanceGroupView(snapshot.extraGuidance, icon: "questionmark.circle", tint: .orange)
+            foodGuidanceGroupView(snapshot.mealPattern, icon: "fork.knife", tint: CatholicTheme.accentForeground)
+            foodGuidanceGroupView(snapshot.extraGuidance, icon: "questionmark.circle", tint: CatholicTheme.warningForeground)
 
             VStack(alignment: .leading, spacing: 8) {
                 Text(localized("guidance.food.stricter_title", default: "Stricter traditional practice"))
@@ -547,7 +547,7 @@ extension ContentView {
             HStack(alignment: .top, spacing: 10) {
                 Image(systemName: "leaf")
                     .font(.headline.weight(.semibold))
-                    .foregroundStyle(CatholicTheme.accent)
+                    .foregroundStyle(CatholicTheme.accentForeground)
                     .padding(.top, 2)
                 VStack(alignment: .leading, spacing: 4) {
                     Text(localizedFormat("guidance.seasonal.current_format", default: "Current season: %@", localizedSeasonLabel(currentLiturgicalSeason)))

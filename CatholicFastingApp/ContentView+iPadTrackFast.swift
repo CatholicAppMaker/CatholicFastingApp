@@ -4,7 +4,7 @@ extension ContentView {
     var ipadIntermittentWorkspace: some View {
         GeometryReader { geometry in
             let compact = geometry.size.width < 1360
-            let stacked = geometry.size.width < 1180
+            let stacked = geometry.size.width < 1180 || dynamicTypeSize.isAccessibilitySize
 
             ScrollView {
                 Group {
@@ -31,7 +31,11 @@ extension ContentView {
                                 ipadIntermittentAdvancedToolsCard
                                 ipadIntermittentHistoryCard
                             }
-                            .frame(width: compact ? 360 : 430, alignment: .top)
+                            .frame(
+                                minWidth: compact ? 320 : 360,
+                                idealWidth: compact ? 360 : 430,
+                                maxWidth: compact ? 400 : 470,
+                                alignment: .top)
                         }
                     }
                 }

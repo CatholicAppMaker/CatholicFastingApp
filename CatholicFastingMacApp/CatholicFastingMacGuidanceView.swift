@@ -31,7 +31,7 @@ struct CatholicFastingMacGuidanceView: View {
                     .accessibilityIdentifier("mac.guidance.rationale")
             }
 
-            HStack(alignment: .top, spacing: 16) {
+            MacAdaptiveColumns {
                 MacCard(title: "Regional Framing", subtitle: model.generalRegionalContext.authorityLabel) {
                     Text("Profile: \(model.localizedRegionLabel(model.regionProfile))")
                     Text("Support level: \(model.generalRegionalContext.supportLevel.label)")
@@ -49,7 +49,7 @@ struct CatholicFastingMacGuidanceView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
-
+            } trailing: {
                 MacCard(
                     title: "Trust & Explainability",
                     subtitle: model.currentPresentationContext?.regionalContext.classificationLabel ?? model.generalRegionalContext.classificationLabel)

@@ -10,6 +10,7 @@ struct CatholicFastingMacSettingsView: View {
                 .tabItem {
                     Label("Profile", systemImage: "person.crop.circle")
                         .accessibilityIdentifier("mac.settings.tab.profile")
+                        .macSelectedAccessibility(model.selectedSettingsPane == .profile)
                 }
                 .tag(CatholicFastingMacSettingsPane.profile)
 
@@ -17,6 +18,7 @@ struct CatholicFastingMacSettingsView: View {
                 .tabItem {
                     Label("Reminders", systemImage: "bell.badge")
                         .accessibilityIdentifier("mac.settings.tab.reminders")
+                        .macSelectedAccessibility(model.selectedSettingsPane == .reminders)
                 }
                 .tag(CatholicFastingMacSettingsPane.reminders)
 
@@ -24,10 +26,11 @@ struct CatholicFastingMacSettingsView: View {
                 .tabItem {
                     Label("Privacy", systemImage: "lock.shield")
                         .accessibilityIdentifier("mac.settings.tab.privacy")
+                        .macSelectedAccessibility(model.selectedSettingsPane == .privacy)
                 }
                 .tag(CatholicFastingMacSettingsPane.privacy)
         }
-        .frame(minWidth: 640, minHeight: 460)
+        .frame(minWidth: 560, idealWidth: 680, minHeight: 460, idealHeight: 540)
         .padding(20)
         .accessibilityIdentifier("mac.settings.ready")
     }
@@ -256,7 +259,7 @@ struct CatholicFastingMacOnboardingView: View {
             }
         }
         .padding(24)
-        .frame(minWidth: 620, minHeight: 460)
+        .frame(minWidth: 560, idealWidth: 640, minHeight: 460, idealHeight: 540)
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("mac.onboarding.ready")
     }

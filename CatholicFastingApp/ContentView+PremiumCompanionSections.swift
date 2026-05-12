@@ -215,7 +215,7 @@ extension ContentView {
             HStack(alignment: .top, spacing: 10) {
                 Image(systemName: monetizationStore.premiumUnlocked ? "checkmark.seal.fill" : "star.circle.fill")
                     .appSymbolStyle(.prominent)
-                    .foregroundStyle(monetizationStore.premiumUnlocked ? .green : CatholicTheme.primary)
+                    .foregroundStyle(monetizationStore.premiumUnlocked ? CatholicTheme.successForeground : CatholicTheme.primary)
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(monetizationStore.premiumUnlocked ? localized("premium.active.title", default: "Premium active") : premiumOfferCatalog.title)
@@ -306,7 +306,7 @@ extension ContentView {
                 ForEach(previewActions, id: \.id) { action in
                     HStack(alignment: .top, spacing: 8) {
                         Image(systemName: sample ? "circle" : (isPremiumJourneyActionCompleted(action) ? "checkmark.circle.fill" : "circle"))
-                            .foregroundStyle(sample ? CatholicTheme.primary : (isPremiumJourneyActionCompleted(action) ? .green : CatholicTheme.primary))
+                            .foregroundStyle(sample ? CatholicTheme.primary : (isPremiumJourneyActionCompleted(action) ? CatholicTheme.successForeground : CatholicTheme.primary))
                             .padding(.top, 2)
                         VStack(alignment: .leading, spacing: 2) {
                             Text(action.category.label)
@@ -359,7 +359,7 @@ extension ContentView {
                 HStack(alignment: .top, spacing: 8) {
                     Image(systemName: "circle.fill")
                         .appSymbolStyle(.subtle)
-                        .foregroundStyle(CatholicTheme.accent)
+                        .foregroundStyle(CatholicTheme.accentForeground)
                         .padding(.top, 5)
                     Text(outcome)
                         .appSupportingTextStyle()
@@ -421,7 +421,7 @@ extension ContentView {
                         await monetizationStore.purchase(product)
                     }
                 }
-                .appSecondaryButtonStyle(legacyTint: CatholicTheme.accent)
+                .appSecondaryButtonStyle(legacyTint: CatholicTheme.accentForeground)
                 .disabled(monetizationStore.isPurchasing)
                 .accessibilityIdentifier("premium.offer.unlock.\(product.id)")
             }

@@ -6,14 +6,14 @@ extension ContentView {
             let items = fastingDaysDisplayObservances
             let selected = selectedFastingObservance(from: items)
             let grouped = ipadFastingDayGroups(from: items)
-            let layout = ipadFastingDaysLayout(for: geometry.size.width)
+            let layout = ipadFastingDaysLayout(for: geometry.size.width, dynamicTypeSize: dynamicTypeSize)
 
             ScrollView {
                 switch layout {
                 case .wide:
                     HStack(alignment: .top, spacing: 20) {
                         ipadFastingDaysFilterRail
-                            .frame(width: 260)
+                            .frame(minWidth: 220, idealWidth: 260, maxWidth: 300)
 
                         VStack(alignment: .leading, spacing: 16) {
                             ipadFastingDaysHeroBand(compact: false)
@@ -24,12 +24,12 @@ extension ContentView {
                         .frame(minWidth: 0, maxWidth: .infinity, alignment: .top)
 
                         ipadFastingDaysDetailPane(selected: selected, compact: false)
-                            .frame(width: 340)
+                            .frame(minWidth: 300, idealWidth: 340, maxWidth: 390)
                     }
                 case .medium:
                     HStack(alignment: .top, spacing: 18) {
                         ipadFastingDaysFilterRail
-                            .frame(width: 250)
+                            .frame(minWidth: 220, idealWidth: 250, maxWidth: 290)
 
                         VStack(alignment: .leading, spacing: 16) {
                             ipadFastingDaysHeroBand(compact: true)
@@ -61,14 +61,18 @@ extension ContentView {
         }
     }
 
-    func ipadFastingDaysLayout(for width: CGFloat) -> IPadFastingDaysLayoutMode {
+    func ipadFastingDaysLayout(for width: CGFloat, dynamicTypeSize: DynamicTypeSize) -> IPadFastingDaysLayoutMode {
+        if dynamicTypeSize.isAccessibilitySize {
+            return .stacked
+        }
+
         switch width {
         case ..<960:
-            .stacked
+            return .stacked
         case ..<1280:
-            .medium
+            return .medium
         default:
-            .wide
+            return .wide
         }
     }
 }
