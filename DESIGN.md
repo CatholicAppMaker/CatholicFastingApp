@@ -110,6 +110,10 @@ The system rejects generic fasting apps, productivity dashboards, aggressive str
 - Sacred imagery used as a surface anchor, not as filler.
 - Clear citations, rationale, localization, and accessibility identifiers treated as product features.
 
+### Design QA Handoff
+
+Audit and polish loops may use temporary progress notes, checklists, or score tracking while work is in flight. Before final handoff or commit, that progress state must be resolved: clear active/in-progress markers, remove stale temporary status, and leave the app/repo in a stable final state with only the verified outcome reported. A finished polish pass should read as complete, not as an abandoned checklist.
+
 ## 2. Colors
 
 The palette changes by liturgical season. Each season provides a primary color, an accent, a parchment base, a parchment shade, and a card border. Ordinary Time is the neutral default, Advent shifts toward blue and rose, Christmas warms toward gold, Lent quiets into violet, and Easter returns with green and gold.
