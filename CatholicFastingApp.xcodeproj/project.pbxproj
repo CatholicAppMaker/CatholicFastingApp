@@ -84,7 +84,7 @@
 		A00000000000000000000063 /* PremiumExperienceEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000064 /* PremiumExperienceEngine.swift */; };
 		A00000000000000000000076 /* CatholicFastingWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000071 /* CatholicFastingWidgetBundle.swift */; };
 		A00000000000000000000077 /* CatholicFastingWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000072 /* CatholicFastingWidget.swift */; };
-		A00000000000000000000078 /* CatholicFastingWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A00000000000000000000070 /* CatholicFastingWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		A00000000000000000000078 /* CatholicFastingWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A00000000000000000000070 /* CatholicFastingWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A00000000000000000000091 /* IconFallbacks in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000090 /* IconFallbacks */; };
 		A00000000000000000000095 /* AppShellTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000092 /* AppShellTypes.swift */; };
 		A00000000000000000000096 /* ReminderScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000093 /* ReminderScheduler.swift */; };
@@ -167,7 +167,7 @@
 		E8AB35153BD92F4C189219FB /* CatholicFastingMacModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1804F6C9E872273CDD560EF5 /* CatholicFastingMacModel.swift */; };
 		E99401F45CA6516EB18D0E4D /* CatholicFastingMacNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B7DE4D5151901E3D166534 /* CatholicFastingMacNavigation.swift */; };
 		E9D57CE3867434AC8981677F /* FridayPenanceNotes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3CD535324F41C735415173 /* FridayPenanceNotes.swift */; };
-		EABDBC5F7B4E2A86B8FD4148 /* CatholicFastingMacWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 5F2D9B41CB589ED66F340D15 /* CatholicFastingMacWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		EABDBC5F7B4E2A86B8FD4148 /* CatholicFastingMacWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 5F2D9B41CB589ED66F340D15 /* CatholicFastingMacWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F243D0A230B7EF9986686816 /* FoundationDateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F027C22803CC1109B3B54537 /* FoundationDateExtensions.swift */; };
 		F5A500000000000000000002 /* FastingHistoryCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A500000000000000000001 /* FastingHistoryCatalog.swift */; };
 		F5A500000000000000000004 /* CatholicFastingMacPremiumSubscriptionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A500000000000000000003 /* CatholicFastingMacPremiumSubscriptionCard.swift */; };
@@ -216,26 +216,26 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		A0000000000000000000007A /* Embed App Extensions */ = {
+		A0000000000000000000007A /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				A00000000000000000000078 /* CatholicFastingWidget.appex in Embed App Extensions */,
+				A00000000000000000000078 /* CatholicFastingWidget.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D845EC3EA3BE43B1004D014F /* Embed App Extensions */ = {
+		D845EC3EA3BE43B1004D014F /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				EABDBC5F7B4E2A86B8FD4148 /* CatholicFastingMacWidget.appex in Embed App Extensions */,
+				EABDBC5F7B4E2A86B8FD4148 /* CatholicFastingMacWidget.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -857,7 +857,7 @@
 				A0000000000000000000000B /* Sources */,
 				A0000000000000000000000C /* Frameworks */,
 				A0000000000000000000000D /* Resources */,
-				A0000000000000000000007A /* Embed App Extensions */,
+				A0000000000000000000007A /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -928,7 +928,7 @@
 				483AFDBEFA14940575BFC9E4 /* Sources */,
 				C8E716F9C181CFA43839D750 /* Frameworks */,
 				BB57E06C119FABB277076AC8 /* Resources */,
-				D845EC3EA3BE43B1004D014F /* Embed App Extensions */,
+				D845EC3EA3BE43B1004D014F /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -1320,6 +1320,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = MacAppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 10;
 				ENABLE_APP_SANDBOX = YES;
@@ -1471,6 +1472,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = CatholicFastingApp/CatholicFastingApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -1509,6 +1511,7 @@
 				APP_SHORTCUTS_ENABLE_FLEXIBLE_MATCHING = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = CatholicFastingApp/CatholicFastingApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -1665,6 +1668,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = MacAppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
