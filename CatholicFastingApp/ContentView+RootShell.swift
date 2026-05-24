@@ -141,6 +141,9 @@ extension ContentView {
             .overlay(alignment: .topLeading) {
                 readinessMarkers
             }
+            .overlay(alignment: .topTrailing) {
+                uiTestSurfaceSwitcher
+            }
             .tint(CatholicTheme.primary)
     }
 
@@ -190,13 +193,16 @@ extension ContentView {
     }
 
     var morePhoneTab: some View {
-        NavigationStack {
+        NavigationStack(path: $moreNavigationPath) {
             moreSurfaceList
                 .navigationTitle(localizedHomeSurfaceLabel(.more))
                 .navigationBarTitleDisplayMode(.large)
                 .toolbar { phoneTabToolbar }
+                .onAppear {
+                    openPendingPhoneMoreDestinationIfNeeded()
+                }
+                .phoneNavigationDestinations(for: self)
         }
-        .phoneNavigationDestinations(for: self)
         .tabItem {
             Label(localizedHomeSurfaceLabel(.more), systemImage: HomeSurface.more.iconName)
         }
@@ -240,6 +246,9 @@ extension ContentView {
             .onChange(of: homeSurface) { _, newValue in
                 if newValue == .fastingDays, launchFunnelSnapshot.firstActionCompletedAt == nil {
                     launchFunnelSnapshot.firstActionCompletedAt = Date()
+                }
+                if newValue == .more {
+                    openPendingPhoneMoreDestinationIfNeeded()
                 }
                 if newValue == .more, selectedMoreDestination == .supportAndPremium {
                     Task {
@@ -304,6 +313,7 @@ extension ContentView {
             dailyQuoteReminderEnabled: $dailyQuoteReminderEnabled,
             dailyQuoteReminderHour: $dailyQuoteReminderHour,
             dailyQuoteReminderMinute: $dailyQuoteReminderMinute,
+            intermittentIntentionRaw: $intermittentIntentionRaw,
             acceptedLegalNotice: $acceptedLegalNotice)
         {
             didCompleteOnboarding = true
@@ -498,10 +508,13 @@ extension ContentView {
 
     @ViewBuilder
     var todaySurfaceSections: some View {
-        dashboardSacredImageSection
-        dashboardFastingQuoteSection
+        companionDashboardSection
+        companionLiveStateSection
+        companionFormationSection
         todayDecisionCardSection
+        dashboardSacredImageSection
         dashboardQuickActionsSection
+        dashboardFastingQuoteSection
         todayTenSecondSection
         todaySection
         setupProgressSection
@@ -535,10 +548,10 @@ extension ContentView {
 
     @ViewBuilder
     var intermittentSurfaceSections: some View {
-        intermittentHeroSection
+        companionLiveStateSection
+        intermittentControlCenterSection
         intermittentFastingQuoteSection
-        intermittentActiveSection
-        intermittentControlsSection
+        intermittentHeroSection
         intermittentOverviewSection
         intermittentAdvancedToolsSection
     }
@@ -713,6 +726,29 @@ extension ContentView {
                 imageHeight: 104,
                 cornerRadius: 16,
                 accessibilityIdentifier: "more.\(destination.rawValue).hero")
+        }
+    }
+
+    func openPendingPhoneMoreDestinationIfNeeded() {
+        guard !appLayoutProfile.usesSplitViewShell, homeSurface == .more, let destination = pendingPhoneMoreDestination else {
+            return
+        }
+        pendingPhoneMoreDestination = nil
+        moreNavigationPath = [destination]
+    }
+
+    func navigateToMoreDestination(_ destination: MoreHubDestination) {
+        selectedMoreDestination = destination
+        if appLayoutProfile.usesSplitViewShell {
+            homeSurface = .more
+            return
+        }
+
+        pendingPhoneMoreDestination = destination
+        if homeSurface == .more {
+            openPendingPhoneMoreDestinationIfNeeded()
+        } else {
+            homeSurface = .more
         }
     }
 }

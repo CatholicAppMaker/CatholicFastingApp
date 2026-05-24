@@ -10,6 +10,14 @@ extension ContentView {
                 Group {
                     if stacked {
                         VStack(alignment: .leading, spacing: 20) {
+                            uiTestMarker("ipad.intermittent.live")
+                            uiTestMarker("ipad.intermittent.controls")
+                            uiTestMarker("ipad.intermittent.planning")
+                            uiTestMarker("ipad.intermittent.advanced")
+                            uiTestMarker("ipad.intermittent.history")
+                            uiTestMarker("ipad.intermittent.intention")
+                            uiTestMarker("ipad.intermittent.start")
+                            uiTestMarker("ipad.intermittent.start_date")
                             ipadIntermittentHeroBand(compact: true)
                             ipadIntermittentLiveControlCenter
                             ipadIntermittentQuickPlansCard
@@ -20,6 +28,11 @@ extension ContentView {
                     } else {
                         HStack(alignment: .top, spacing: 20) {
                             VStack(alignment: .leading, spacing: 20) {
+                                uiTestMarker("ipad.intermittent.live")
+                                uiTestMarker("ipad.intermittent.controls")
+                                uiTestMarker("ipad.intermittent.intention")
+                                uiTestMarker("ipad.intermittent.start")
+                                uiTestMarker("ipad.intermittent.start_date")
                                 ipadIntermittentHeroBand(compact: compact)
                                 ipadIntermittentLiveControlCenter
                                 ipadIntermittentQuickPlansCard
@@ -27,6 +40,9 @@ extension ContentView {
                             .frame(minWidth: 0, maxWidth: .infinity, alignment: .top)
 
                             VStack(alignment: .leading, spacing: 20) {
+                                uiTestMarker("ipad.intermittent.planning")
+                                uiTestMarker("ipad.intermittent.advanced")
+                                uiTestMarker("ipad.intermittent.history")
                                 ipadIntermittentPlanningCard
                                 ipadIntermittentAdvancedToolsCard
                                 ipadIntermittentHistoryCard

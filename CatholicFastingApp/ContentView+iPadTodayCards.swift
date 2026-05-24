@@ -58,8 +58,7 @@ extension ContentView {
             .appSurfaceCard(.utility, cornerRadius: 16)
 
             Button {
-                selectedMoreDestination = .guidanceAndRules
-                homeSurface = .more
+                navigateToMoreDestination(.guidanceAndRules)
             } label: {
                 Label(localized("ipad.today.primary.open_guidance", default: "Open full food guidance"), systemImage: "book.closed")
             }
@@ -104,8 +103,8 @@ extension ContentView {
                     subtitle: localized("ipad.today.metrics.this_week_detail", default: "discipline days completed"),
                     tint: CatholicTheme.accentForeground)
             IPadSummaryMetricCard(
-                title: localized("ipad.today.metrics.current_streak", default: "Current streak"),
-                value: localizedFormat("ipad.today.metrics.current_streak_value", default: "%d days", currentStreak),
+                title: localized("ipad.today.metrics.current_rhythm", default: "Current rhythm"),
+                value: localizedFormat("ipad.today.metrics.current_rhythm_value", default: "%d days", currentStreak),
                 subtitle: streakResilienceMessage)
                 IPadSummaryMetricCard(
                     title: localized("ipad.today.metrics.this_month", default: "This month"),
@@ -138,8 +137,7 @@ extension ContentView {
                     primary: false,
                     accessibilityIdentifier: "ipad.today.action.open_planning")
                 {
-                    homeSurface = .more
-                    selectedMoreDestination = .profileAndNorms
+                    navigateToMoreDestination(.profileAndNorms)
                 }
             }
 
@@ -150,8 +148,7 @@ extension ContentView {
                     primary: false,
                     accessibilityIdentifier: "ipad.today.action.open_premium")
                 {
-                    homeSurface = .more
-                    selectedMoreDestination = .supportAndPremium
+                    navigateToMoreDestination(.supportAndPremium)
                 }
                 IPadWorkspaceActionButton(
                     title: localized("ipad.today.actions.open_guidance", default: "Open full food guidance"),
@@ -159,8 +156,7 @@ extension ContentView {
                     primary: false,
                     accessibilityIdentifier: "ipad.today.action.open_food_guidance")
                 {
-                    homeSurface = .more
-                    selectedMoreDestination = .guidanceAndRules
+                    navigateToMoreDestination(.guidanceAndRules)
                 }
             }
         }
@@ -174,7 +170,7 @@ extension ContentView {
             IPadWorkspaceHeader(
                 eyebrow: localized("ipad.today.planning.eyebrow", default: "Planning"),
                 title: localized("ipad.today.planning.title", default: "Year and season snapshot"),
-                detail: localized("ipad.today.planning.detail", default: "See progress without leaving the dashboard."))
+                detail: localized("ipad.today.planning.detail", default: "See the yearly rhythm without leaving the dashboard."))
 
             HStack(spacing: 10) {
                 IPadSummaryMetricCard(

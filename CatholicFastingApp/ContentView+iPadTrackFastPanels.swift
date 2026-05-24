@@ -124,12 +124,12 @@ extension ContentView {
                     } label: {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(localizedFormat("ipad.intermittent.plan_hours_format", default: "%dh", hours))
-                                .font(.headline)
+                                .font(.title3.weight(.semibold))
                             Text(intermittentPlanDescription(hours))
                                 .appSupportingTextStyle()
                                 .lineLimit(2)
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .frame(maxWidth: .infinity, minHeight: 72, alignment: .leading)
                         .appInteractiveTileStyle(isSelected: intermittentTracker.presetHours == hours)
                     }
                     .buttonStyle(.plain)
@@ -181,24 +181,49 @@ extension ContentView {
                     .appSupportingTextStyle()
             }
 
+            Picker(localized("intermittent.controls.intention", default: "Intention"), selection: $intermittentIntentionRaw) {
+                ForEach(intermittentIntentionOptions) { option in
+                    Text(option.label).tag(option.id)
+                }
+            }
+            .pickerStyle(.menu)
+            .accessibilityIdentifier("ipad.intermittent.intention")
+
+            Text(intermittentIntentionDetail)
+                .appSupportingTextStyle()
+
             HStack(spacing: 10) {
                 if intermittentTracker.activeStart == nil {
-                    Button(localized("ipad.intermittent.controls.start", default: "Start Fast")) { startIntermittentFastFromSelectedTime() }
+                    Button {
+                        startIntermittentFastFromSelectedTime()
+                    } label: {
+                        Label(localized("ipad.intermittent.controls.start", default: "Start Fast"), systemImage: "play.fill")
+                    }
                         .appPrimaryButtonStyle()
+                        .font(.headline.weight(.semibold))
+                        .frame(maxWidth: .infinity, minHeight: 58)
                         .accessibilityIdentifier("ipad.intermittent.start")
                 } else {
-                    Button(localized("ipad.intermittent.controls.end", default: "End Fast")) {
+                    Button {
                         intermittentTracker.endFast()
                         resetIntermittentManualStartToNow()
+                    } label: {
+                        Label(localized("ipad.intermittent.controls.end", default: "End Fast"), systemImage: "stop.fill")
                     }
                     .appPrimaryButtonStyle(legacyTint: .green)
+                    .font(.headline.weight(.semibold))
+                    .frame(maxWidth: .infinity, minHeight: 58)
                     .accessibilityIdentifier("ipad.intermittent.end")
 
-                    Button(localized("ipad.intermittent.controls.cancel", default: "Cancel")) {
+                    Button {
                         intermittentTracker.cancelActiveFast()
                         resetIntermittentManualStartToNow()
+                    } label: {
+                        Label(localized("ipad.intermittent.controls.cancel", default: "Cancel"), systemImage: "xmark")
                     }
                     .appSecondaryButtonStyle()
+                    .font(.headline.weight(.semibold))
+                    .frame(maxWidth: .infinity, minHeight: 58)
                     .accessibilityIdentifier("ipad.intermittent.cancel")
                 }
             }
@@ -254,24 +279,33 @@ extension ContentView {
                 eyebrow: localized("ipad.intermittent.advanced.eyebrow", default: "Advanced"),
                 title: localized("ipad.intermittent.advanced.title", default: "Schedules, milestones, and recovery"),
                 detail: localized("ipad.intermittent.advanced.detail", default: "Keep deeper tools available without letting them lead the page."))
-            DisclosureGroup(
-                isExpanded: $intermittentShowAdvanced,
-                content: {
-                    VStack(alignment: .leading, spacing: 12) {
-                        intermittentScheduleSection
-                        intermittentMilestonesSection
-                        intermittentRecoverySection
-                    }
-                },
-                label: {
+            Button {
+                intermittentShowAdvanced.toggle()
+            } label: {
+                HStack(alignment: .firstTextBaseline, spacing: 12) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(localized("ipad.intermittent.advanced.show", default: "Show advanced tools"))
                             .font(.subheadline.weight(.semibold))
                         Text(localized("ipad.intermittent.advanced.show_detail", default: "Schedules, milestone stats, and recovery guidance."))
                             .appSupportingTextStyle()
                     }
-                })
-                .accessibilityIdentifier("ipad.intermittent.advanced.disclosure")
+                    Spacer(minLength: 8)
+                    Image(systemName: intermittentShowAdvanced ? "chevron.up" : "chevron.down")
+                        .font(.caption.weight(.bold))
+                        .foregroundStyle(CatholicTheme.primary)
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("ipad.intermittent.advanced.disclosure")
+
+            if intermittentShowAdvanced {
+                VStack(alignment: .leading, spacing: 12) {
+                    intermittentScheduleSection
+                    intermittentMilestonesSection
+                    intermittentRecoverySection
+                }
+            }
 
             if !intermittentShowAdvanced {
                 Text(localized("ipad.intermittent.advanced.collapsed_hint", default: "Advanced tools stay collapsed until you need them."))

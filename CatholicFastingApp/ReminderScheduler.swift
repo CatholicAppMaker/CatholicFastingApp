@@ -240,7 +240,7 @@ enum ReminderScheduler {
                 center: center,
                 identifier: "\(supportReminderPrefix)evening",
                 title: "Evening examen",
-                body: "Mark progress and prepare for tomorrow’s observance.",
+                body: "Mark today and prepare for tomorrow’s observance.",
                 hour: 20,
                 minute: 0)
             {

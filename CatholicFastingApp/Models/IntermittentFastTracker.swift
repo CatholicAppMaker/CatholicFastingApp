@@ -46,13 +46,15 @@ final class IntermittentFastTracker: ObservableObject {
         #endif
     }
 
-    func endFast(now: Date = Date()) {
+    func endFast(now: Date = Date(), intentionID: String? = nil, note: String? = nil) {
         guard let start = activeStart, now > start else { return }
         let session = IntermittentFastSession(
             id: UUID().uuidString,
             start: start,
             end: now,
-            targetHours: presetHours)
+            targetHours: presetHours,
+            intentionID: intentionID,
+            note: note?.trimmingCharacters(in: .whitespacesAndNewlines).nilIfEmpty)
         sessions.insert(session, at: 0)
         if sessions.count > Self.maxStoredSessions {
             sessions = Array(sessions.prefix(Self.maxStoredSessions))
@@ -111,6 +113,8 @@ final class IntermittentFastTracker: ObservableObject {
                     "end": formatter.string(from: session.end),
                     "target_hours": session.targetHours,
                     "duration_hours": round((session.duration / 3600) * 100) / 100,
+                    "intention_id": session.intentionID ?? "",
+                    "note": session.note ?? "",
                 ]
             },
         ]
@@ -161,7 +165,9 @@ final class IntermittentFastTracker: ObservableObject {
         let payload = SessionPayload(
             start: Self.encodeDate(session.start),
             end: Self.encodeDate(session.end),
-            targetHours: session.targetHours)
+            targetHours: session.targetHours,
+            intentionID: session.intentionID,
+            note: session.note)
         guard
             let data = try? JSONEncoder().encode(payload),
             let text = String(data: data, encoding: .utf8)
@@ -180,13 +186,21 @@ final class IntermittentFastTracker: ObservableObject {
         else {
             return nil
         }
-        return IntermittentFastSession(id: id, start: start, end: end, targetHours: payload.targetHours)
+        return IntermittentFastSession(
+            id: id,
+            start: start,
+            end: end,
+            targetHours: payload.targetHours,
+            intentionID: payload.intentionID,
+            note: payload.note?.nilIfEmpty)
     }
 
     private struct SessionPayload: Codable {
         let start: String
         let end: String
         let targetHours: Int
+        let intentionID: String?
+        let note: String?
     }
 
     private static func makeISO8601Formatter() -> ISO8601DateFormatter {
@@ -209,3 +223,9 @@ final class IntermittentFastTracker: ObservableObject {
 }
 
 extension IntermittentFastTracker: @unchecked Sendable {}
+
+private extension String {
+    var nilIfEmpty: String? {
+        isEmpty ? nil : self
+    }
+}

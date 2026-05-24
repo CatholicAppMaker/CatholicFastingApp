@@ -303,7 +303,7 @@ extension ContentView {
     }
 
     var progressSection: some View {
-        Section(localized("fasting_days.progress.section", default: "Progress")) {
+        Section(localized("fasting_days.progress.section", default: "Year rhythm")) {
             Text(localizedFormat("fasting_days.progress.format", default: "Completed %d of %d required/optional observances", completedCount, actionableObservances.count))
                 .font(.subheadline)
         }

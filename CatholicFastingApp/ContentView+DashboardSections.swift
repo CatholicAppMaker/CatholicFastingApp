@@ -75,7 +75,7 @@ extension ContentView {
         Section(localized("today.insights.section", default: "Personal Insights (Local)")) {
             Text(localizedFormat("today.insights.completions_format", default: "This month completions: %d", monthlyCompletionCount))
             Text(localizedFormat("today.insights.hit_rate_format", default: "Recent intermittent hit-rate: %d%%", intermittentHitRatePercent))
-            Text(localizedFormat("today.insights.streak_format", default: "Current streak: %d day(s)", currentStreak))
+            Text(localizedFormat("today.insights.steady_days_format", default: "Current rhythm: %d day(s)", currentStreak))
         }
     }
 
@@ -114,7 +114,7 @@ extension ContentView {
                 Text(localized("today.setup.intro", default: "Complete these once for clearer, safer guidance."))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
-                Text(localizedFormat("today.setup.progress_format", default: "Setup progress: %d/%d", setupChecklistCompleted, setupChecklistTotal))
+                Text(localizedFormat("today.setup.progress_format", default: "Setup checklist: %d/%d", setupChecklistCompleted, setupChecklistTotal))
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(CatholicTheme.primary)
                     .accessibilityIdentifier("today.setup.progress")
@@ -130,7 +130,7 @@ extension ContentView {
                     isComplete: hasConfiguredReminderPlan)
 
                 Button(localized("today.setup.open", default: "Open Quick Setup")) {
-                    homeSurface = .more
+                    navigateToMoreDestination(.setupAndReminders)
                 }
                 .appPrimaryButtonStyle()
                 .accessibilityIdentifier("today.setup.open_quick_setup")
@@ -183,9 +183,9 @@ extension ContentView {
                 }
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(localized("today.metric.streak", default: "Streak"))
+                    Text(localized("today.metric.rhythm", default: "Current rhythm"))
                         .appEyebrowStyle()
-                    Text(localizedFormat("today.glance.streak_value_format", default: "%d day(s)", currentStreak))
+                    Text(localizedFormat("today.glance.rhythm_value_format", default: "%d day(s)", currentStreak))
                         .appSectionTitleStyle()
                     Text(streakResilienceMessage)
                         .appLeadTextStyle()
@@ -227,9 +227,93 @@ extension ContentView {
             Color.clear
                 .frame(width: 1, height: 1)
                 .accessibilityIdentifier(surfaceReadyIdentifier)
+            Color.clear
+                .frame(width: 1, height: 1)
+                .accessibilityIdentifier(ipadWorkspaceReadyIdentifier)
         }
         .allowsHitTesting(false)
-        .accessibilityHidden(true)
+        .accessibilityHidden(!isUITestMode)
+    }
+
+    var uiTestSurfaceSwitcher: some View {
+        Group {
+            if isUITestMode {
+                VStack(alignment: .trailing, spacing: 0) {
+                    HStack(spacing: 0) {
+                        ForEach(HomeSurface.primarySurfaces) { surface in
+                            Button {
+                                homeSurface = surface
+                            } label: {
+                                Color.white.opacity(0.001)
+                                    .frame(width: 44, height: 44)
+                                    .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel(Text(surface.label))
+                            .accessibilityIdentifier("uitest.surface.\(surface.rawValue)")
+                        }
+                    }
+
+                    HStack(spacing: 0) {
+                        ForEach(MoreHubDestination.allCases) { destination in
+                            Button {
+                                navigateToMoreDestination(destination)
+                            } label: {
+                                Color.white.opacity(0.001)
+                                    .frame(width: 44, height: 44)
+                                    .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel(Text(destination.title))
+                            .accessibilityIdentifier("uitest.more.destination.\(destination.rawValue)")
+                        }
+                    }
+
+                    HStack(spacing: 0) {
+                        Button {
+                            age14OrOlderForAbstinence = true
+                            age18OrOlderForFasting = true
+                        } label: {
+                            Color.white.opacity(0.001)
+                                .frame(width: 44, height: 44)
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(Text("Set fasting age eligible"))
+                        .accessibilityIdentifier("uitest.state.setAgeEligible")
+
+                        Button {
+                            let profile = HouseholdProfile(
+                                id: "uitest-underage-profile",
+                                name: "Teen Profile",
+                                isAge14OrOlderForAbstinence: false,
+                                isAge18OrOlderForFasting: false,
+                                medicalDispensation: false)
+                            householdProfiles.removeAll(where: { $0.id == profile.id })
+                            householdProfiles.append(profile)
+                            activeHouseholdProfileID = profile.id
+                        } label: {
+                            Color.white.opacity(0.001)
+                                .frame(width: 44, height: 44)
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(Text("Seed underage household profile"))
+                        .accessibilityIdentifier("uitest.household.seedUnderageProfile")
+
+                        Color.white.opacity(0.001)
+                            .frame(width: 1, height: 1)
+                            .accessibilityIdentifier(
+                                "uitest.state.age14.\(age14OrOlderForAbstinence ? "true" : "false")")
+
+                        Color.white.opacity(0.001)
+                            .frame(width: 1, height: 1)
+                            .accessibilityIdentifier(
+                                "uitest.state.age18.\(age18OrOlderForFasting ? "true" : "false")")
+                    }
+                }
+            }
+        }
     }
 
     var surfaceReadyIdentifier: String {
@@ -243,6 +327,37 @@ extension ContentView {
         case .more:
             "surface.more.ready"
         }
+    }
+
+    var ipadWorkspaceReadyIdentifier: String {
+        switch homeSurface {
+        case .today:
+            "ipad.today.workspace"
+        case .fastingDays:
+            "ipad.fasting_days.workspace"
+        case .intermittent:
+            "ipad.intermittent.workspace"
+        case .more:
+            "ipad.more.workspace"
+        }
+    }
+
+    var isUITestMode: Bool {
+        let processInfo = ProcessInfo.processInfo
+        return processInfo.environment["UITEST_MODE"] == "1"
+            || processInfo.arguments.contains("-uitest-reset")
+            || processInfo.arguments.contains("-uitest-skip-onboarding")
+            || processInfo.arguments.contains("-uitest-seed-deterministic")
+            || processInfo.arguments.contains("-uitest-seed-missed")
+            || processInfo.arguments.contains("-uitest-disable-animations")
+    }
+
+    func uiTestMarker(_ identifier: String) -> some View {
+        Color.clear
+            .frame(width: 1, height: 1)
+            .accessibilityIdentifier(identifier)
+            .accessibilityHidden(!isUITestMode)
+            .allowsHitTesting(false)
     }
 
     var dashboardHeroSection: some View {
@@ -318,13 +433,38 @@ extension ContentView {
         let decision = todayFoodDecision
         return Section {
             VStack(alignment: .leading, spacing: 14) {
-                Text(decision.obligationLine)
-                    .font(.system(.title3, design: .serif).weight(.bold))
-                    .foregroundStyle(CatholicTheme.primary)
-                    .accessibilityIdentifier("today.decision.obligation")
+                HStack(alignment: .top, spacing: 10) {
+                    Image(systemName: todayDecisionIconName)
+                        .appSymbolStyle(.prominent)
+                        .foregroundStyle(todayDecisionTint)
+                        .padding(.top, 1)
 
-                Text(decision.rationale)
-                    .appSupportingTextStyle()
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text(localized("today.decision.eyebrow", default: "Today's fasting rule"))
+                            .appEyebrowStyle()
+                            .textCase(.uppercase)
+                            .foregroundStyle(CatholicTheme.primary)
+
+                        Text(decision.obligationLine)
+                            .font(.system(.title3, design: .serif).weight(.bold))
+                            .foregroundStyle(CatholicTheme.primary)
+                            .accessibilityIdentifier("today.decision.obligation")
+
+                        Text(decision.rationale)
+                            .appSupportingTextStyle()
+                    }
+                }
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(localized("today.decision.next_action", default: "Next action"))
+                        .appEyebrowStyle()
+                        .textCase(.uppercase)
+                    Text(todayDecisionNextActionText)
+                        .appLeadTextStyle()
+                }
+                .padding(12)
+                .appSurfaceCard(.utility, cornerRadius: 16)
+                .accessibilityIdentifier("today.decision.next_action")
 
                 if !decision.avoid.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
@@ -350,7 +490,9 @@ extension ContentView {
                     }
                 }
 
-                NavigationLink(value: MoreHubDestination.guidanceAndRules) {
+                Button {
+                    navigateToMoreDestination(.guidanceAndRules)
+                } label: {
                     Label(localized("today.food.open_guidance", default: "Open full food guidance"), systemImage: "book.closed")
                 }
                 .accessibilityIdentifier("today.decision.open_full_food_guidance")
@@ -428,7 +570,7 @@ extension ContentView {
     var milestoneReferralSection: some View {
         if currentStreak >= 3 {
             Section(localized("today.share.section", default: "Share With a Friend")) {
-                Text(localizedFormat("today.share.intro_format", default: "You completed a %d-day streak. Share the app if it is helping.", currentStreak))
+                Text(localizedFormat("today.share.intro_format", default: "You kept a %d-day rhythm. Share the app if it is helping.", currentStreak))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                 ShareLink(
@@ -477,7 +619,7 @@ extension ContentView {
         Section(localized("today.overview.section", default: "Overview")) {
             Text(localizedFormat("today.overview.completion_format", default: "Completion rate: %@", completionRateText))
                 .foregroundStyle(CatholicTheme.primary)
-            Text(localizedFormat("today.overview.streak_format", default: "Current streak: %d day(s)", currentStreak))
+            Text(localizedFormat("today.overview.rhythm_format", default: "Current rhythm: %d day(s)", currentStreak))
                 .foregroundStyle(CatholicTheme.primary.opacity(0.9))
             if let next = upcomingMandatoryObservance {
                 Text(
@@ -508,7 +650,7 @@ extension ContentView {
         Section(localized("today.summary.section", default: "Today Summary")) {
             Text(localizedFormat("today.overview.completion_format", default: "Completion rate: %@", completionRateText))
                 .foregroundStyle(CatholicTheme.primary)
-            Text(localizedFormat("today.overview.streak_format", default: "Current streak: %d day(s)", currentStreak))
+            Text(localizedFormat("today.overview.rhythm_format", default: "Current rhythm: %d day(s)", currentStreak))
                 .foregroundStyle(CatholicTheme.primary.opacity(0.9))
             if let next = upcomingMandatoryObservance {
                 Text(
@@ -556,5 +698,44 @@ extension ContentView {
 
     private var weeklyDisciplineGoal: Int {
         max(1, weeklyActionableObservanceCount)
+    }
+
+    private var todayDecisionIconName: String {
+        let line = todayRawFoodDecision.obligationLine.lowercased()
+        if line.contains("dispensation") {
+            return "cross.case.fill"
+        }
+        if line.contains("fasting") || line.contains("abstinence") {
+            return "exclamationmark.circle.fill"
+        }
+        if line.contains("friday penance") {
+            return "hand.raised.fill"
+        }
+        return "checkmark.circle.fill"
+    }
+
+    private var todayDecisionTint: Color {
+        let line = todayRawFoodDecision.obligationLine.lowercased()
+        if line.contains("fasting") || line.contains("abstinence") {
+            return CatholicTheme.dangerForeground
+        }
+        if line.contains("friday penance") {
+            return CatholicTheme.warningForeground
+        }
+        return CatholicTheme.successForeground
+    }
+
+    private var todayDecisionNextActionText: String {
+        let line = todayRawFoodDecision.obligationLine.lowercased()
+        if line.contains("fasting") || line.contains("abstinence") {
+            return localized("today.decision.next_action.required", default: "Review the food guidance below, then keep the day with prayer, fasting, and charity.")
+        }
+        if line.contains("friday penance") {
+            return localized("today.decision.next_action.friday", default: "Choose today's penance now so Friday does not become an afterthought.")
+        }
+        if line.contains("dispensation") {
+            return localized("today.decision.next_action.dispensation", default: "Follow health and pastoral guidance, then choose a prudent prayer or charity substitute.")
+        }
+        return localized("today.decision.next_action.clear", default: "Normal meals are generally permitted. Keep the next required day visible and choose voluntary penance only if prudent.")
     }
 }

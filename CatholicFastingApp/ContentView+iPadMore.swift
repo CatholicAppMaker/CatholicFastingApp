@@ -45,6 +45,7 @@ extension ContentView {
     var ipadSimplePremiumWorkspace: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
+                uiTestMarker("ipad.more.premium")
                 AppSectionLeadCard(
                     eyebrow: localized("premium.section.support", default: "Support & Premium"),
                     title: localized("ipad.more.premium.title", default: "Choose a plan, then keep the journey visible"),
@@ -52,7 +53,7 @@ extension ContentView {
                     serifTitle: true,
                     style: .utility)
 
-                premiumJourneyCard(sample: !monetizationStore.premiumUnlocked)
+                ipadPremiumFormationPreviewCard
 
                 #if canImport(StoreKit)
                 VStack(alignment: .leading, spacing: 12) {
@@ -88,6 +89,37 @@ extension ContentView {
         }
         .iPadPaneCard()
         .accessibilityIdentifier("ipad.more.premium")
+    }
+
+    var ipadPremiumFormationPreviewCard: some View {
+        let journey = premiumGuidedJourneyWeek
+        let title = monetizationStore.premiumUnlocked
+            ? localized("premium.journey.current_title", default: "Your Guided Seasonal Journey")
+            : localized("premium.journey.preview_title", default: "Preview Guided Seasonal Formation")
+        let intro = monetizationStore.premiumUnlocked
+            ? localized("premium.journey.current_intro", default: "Premium keeps the current week and next faithful action visible without rebuilding the whole plan.")
+            : localized("premium.journey.preview_intro", default: "This preview shows how premium turns the current season into one weekly rhythm for fasting, prayer, mercy, and review.")
+        let week = monetizationStore.premiumUnlocked
+            ? localizedFormat("premium.journey.current_week_format", default: "Current journey week: %@", journey.title)
+            : localizedFormat("premium.journey.preview_week_format", default: "Preview journey week: %@", journey.title)
+
+        return VStack(alignment: .leading, spacing: 10) {
+            Text(title)
+                .appSectionTitleStyle(serif: true)
+            Text(intro)
+                .appSupportingTextStyle()
+            Text(week)
+                .font(.subheadline.weight(.semibold))
+            Text(journey.summary)
+                .appSupportingTextStyle()
+            if let nextAction = premiumGuidedJourneyNextAction {
+                Text(localizedFormat("premium.journey.next_step_format", default: "Next step: %@", nextAction.title))
+                    .appEyebrowStyle()
+            }
+        }
+        .padding(14)
+        .appSurfaceCard(monetizationStore.premiumUnlocked ? .primary : .standard, cornerRadius: 16)
+        .accessibilityIdentifier("premium.sample_preview")
     }
 
     #if canImport(StoreKit)

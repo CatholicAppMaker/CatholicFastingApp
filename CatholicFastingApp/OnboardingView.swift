@@ -14,6 +14,7 @@ struct OnboardingView: View {
     @Binding var dailyQuoteReminderEnabled: Bool
     @Binding var dailyQuoteReminderHour: Int
     @Binding var dailyQuoteReminderMinute: Int
+    @Binding var intermittentIntentionRaw: String
     @Binding var acceptedLegalNotice: Bool
     let onComplete: () -> Void
     @State private var didConfirmLanguage = false
@@ -120,6 +121,38 @@ struct OnboardingView: View {
                 .accessibilityIdentifier("onboarding.region")
             }
 
+            Section(localized("onboarding.rhythm.title", default: "Daily Rhythm")) {
+                Picker(localized("onboarding.rhythm.reminder_tier", default: "Reminder style"), selection: $reminderTierRaw) {
+                    ForEach(ReminderTier.allCases) { tier in
+                        Text(localizedReminderTierLabel(tier)).tag(tier.rawValue)
+                    }
+                }
+                .pickerStyle(.menu)
+                .accessibilityIdentifier("onboarding.reminder_tier")
+                .onChange(of: reminderTierRaw) { _, newValue in
+                    let tier = ReminderTier(rawValue: newValue) ?? .balanced
+                    dailyReminderSupportEnabled = tier.supportEnabled
+                    morningReminderEnabled = tier.morningEnabled
+                    eveningReminderEnabled = tier.eveningEnabled
+                }
+
+                Picker(localized("onboarding.rhythm.intention", default: "First fasting intention"), selection: $intermittentIntentionRaw) {
+                    ForEach(onboardingIntentionOptions) { option in
+                        Text(option.label).tag(option.id)
+                    }
+                }
+                .pickerStyle(.menu)
+                .accessibilityIdentifier("onboarding.intention")
+
+                Toggle(
+                    localized("onboarding.rhythm.quote_toggle", default: "Daily fasting reflection reminder"),
+                    isOn: $dailyQuoteReminderEnabled)
+                    .accessibilityIdentifier("onboarding.quote_reminder")
+
+                Text(localized("onboarding.rhythm.helper", default: "Start simple. The app will land on Today with your rule, tracker, and next action visible."))
+                    .appSupportingTextStyle()
+            }
+
             Section(localized("onboarding.trust.title", default: "Trust and Finish")) {
                 Toggle(
                     localized(
@@ -143,6 +176,38 @@ struct OnboardingView: View {
             localized("onboarding.region.canada", default: option.label)
         case .other:
             localized("onboarding.region.other", default: option.label)
+        }
+    }
+
+    private var onboardingIntentionOptions: [FastingIntentionOption] {
+        [
+            FastingIntentionOption(
+                id: "personal_discipline",
+                label: localized("intermittent.intention.discipline.label", default: "Personal discipline"),
+                detail: localized("intermittent.intention.discipline.detail", default: "Keep this fast focused on steady discipline, not pressure.")),
+            FastingIntentionOption(
+                id: "prayer",
+                label: localized("intermittent.intention.prayer.label", default: "Prayer"),
+                detail: localized("intermittent.intention.prayer.detail", default: "Offer this fast with a concrete prayer intention.")),
+            FastingIntentionOption(
+                id: "mercy",
+                label: localized("intermittent.intention.mercy.label", default: "Mercy"),
+                detail: localized("intermittent.intention.mercy.detail", default: "Pair the fast with a work of charity or mercy.")),
+            FastingIntentionOption(
+                id: "penance",
+                label: localized("intermittent.intention.penance.label", default: "Penance"),
+                detail: localized("intermittent.intention.penance.detail", default: "Use this as a voluntary penance when health and duty allow.")),
+        ]
+    }
+
+    private func localizedReminderTierLabel(_ tier: ReminderTier) -> String {
+        switch tier {
+        case .minimal:
+            localized("onboarding.reminder.minimal.label", default: tier.label)
+        case .balanced:
+            localized("onboarding.reminder.balanced.label", default: tier.label)
+        case .guided:
+            localized("onboarding.reminder.guided.label", default: tier.label)
         }
     }
 }

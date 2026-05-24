@@ -173,6 +173,8 @@ The palette changes by liturgical season. Each season provides a primary color, 
 
 **The No Shame Copy Rule.** Completion and missed-day language should remain truthful, gentle, and recoverable.
 
+**The Verified Claims Rule.** Do not state public App Store status, release version, ratings, competitor comparisons, or benchmark scores as fact unless they have been verified against a current source such as App Store Connect, live Apple metadata, or project version settings. If sources disagree or a page appears stale, say so plainly and use the local project metadata as the working baseline.
+
 ## 4. Elevation
 
 Depth is conveyed through tonal layering, 1px seasonal borders, subtle opacity changes, and SwiftUI glass effects. Shadows exist, but they are quiet: most cards use a small shadow at very low primary-color opacity, while hero imagery may use a slightly larger shadow to separate it from the parchment background.

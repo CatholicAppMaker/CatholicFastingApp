@@ -24,13 +24,13 @@ struct SubscriptionOfferCatalog {
     let offers: [Offer]
 
     static let catholicFasting = SubscriptionOfferCatalog(
-        title: "Formation Toolkit",
-        subtitle: "Premium keeps a guided seasonal journey, reminders, review, and reflection in one steady Catholic workflow.",
+        title: "Guided Seasonal Formation",
+        subtitle: "Premium keeps the current week, next faithful action, reminders, review, and reflection in one steady Catholic workflow.",
         pillars: [
             Pillar(
                 id: "planning",
-                title: "Guided Journey",
-                subtitle: "Follow one weekly seasonal path instead of guessing what to do next.",
+                title: "Seasonal Journey",
+                subtitle: "Follow one weekly pastoral rhythm instead of guessing what to do next.",
                 outcomes: [
                     "Move through Lent, Advent, and Ordinary Time with one weekly rhythm",
                     "Keep fasting, prayer, charity, and review tied together in the same plan",
@@ -39,8 +39,8 @@ struct SubscriptionOfferCatalog {
                 requiredSurface: .planning),
             Pillar(
                 id: "accountability",
-                title: "Accountability",
-                subtitle: "Recover quickly and keep momentum when discipline slips.",
+                title: "Recovery & Reminders",
+                subtitle: "Recover gently and keep the next faithful action visible.",
                 outcomes: [
                     "Turn reminders into a steadier rule of life",
                     "Spot slippage early with completion trends and recovery guidance",
@@ -64,14 +64,14 @@ struct SubscriptionOfferCatalog {
                 displayTitle: "Premium Yearly",
                 durationLabel: "1 year",
                 billingCadenceLabel: "Billed once per year",
-                outcomeSummary: "Best value for one steady rhythm through the full liturgical year.",
+                outcomeSummary: "Best value for guided seasonal formation through the full liturgical year.",
                 isPrimaryAnchor: true),
             Offer(
                 id: "com.kevpierce.catholicfasting.premium.monthly.v3",
                 displayTitle: "Premium Monthly",
                 durationLabel: "1 month",
                 billingCadenceLabel: "Billed monthly",
-                outcomeSummary: "Lower-friction way to begin premium planning and review habits.",
+                outcomeSummary: "Lower-friction way to begin the guided journey and review habits.",
                 isPrimaryAnchor: false),
         ])
 
@@ -97,9 +97,9 @@ enum PremiumEntitlementSurface: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .planning:
-            "Planning"
+            "Guided Journey"
         case .accountability:
-            "Accountability"
+            "Recovery"
         case .reflection:
             "Reflection"
         case .export:
@@ -110,9 +110,9 @@ enum PremiumEntitlementSurface: String, CaseIterable, Identifiable {
     var guidance: String {
         switch self {
         case .planning:
-            "Build a realistic discipline plan that respects feast and holy days."
+            "Keep this week's rhythm, season focus, and next faithful action visible."
         case .accountability:
-            "Stay steady with reminders, trends, and recovery guidance."
+            "Stay steady with reminders, trends, and gentle recovery guidance."
         case .reflection:
             "Reflect with guided prompts, journal entries, and virtue notes."
         case .export:

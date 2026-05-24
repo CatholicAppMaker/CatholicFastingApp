@@ -35,9 +35,8 @@ extension ContentView {
             selectedPremiumToolDestination = premiumToolDestination(for: surface)
         }
         launchFunnelSnapshot.lockedUpgradeTapCount += 1
-        selectedMoreDestination = .supportAndPremium
         supportPremiumSurfaceRaw = SupportPremiumSurface.upgrade.rawValue
-        homeSurface = .more
+        navigateToMoreDestination(.supportAndPremium)
     }
 
     var premiumSurfacePickerSection: some View {
@@ -58,15 +57,16 @@ extension ContentView {
             Text(
                 selectedSupportPremiumSurface == .upgrade
                     ? localized("premium.section.upgrade_hint", default: "Choose a plan first. Tips plus billing and legal tools stay below.")
-                    : localized("premium.section.tools_hint", default: "Open premium planning, journaling, and exports once the journey is set."))
+                    : localized("premium.section.tools_hint", default: "Open formation tools after the Guided Seasonal Journey sets the week."))
                 .appSupportingTextStyle()
         }
     }
 
     var premiumToolsLockedSection: some View {
-        Section(localized("premium.tools.section", default: "Premium Tools")) {
-            Text(localized("premium.tools.locked_hint", default: "Unlock premium to open planning, reminders, analytics, journaling, and exports."))
+        Section(localized("premium.tools.section", default: "Guided Seasonal Formation")) {
+            Text(localized("premium.tools.locked_hint", default: "Unlock premium to keep the current journey week, reminders, review, journaling, and exports together."))
                 .foregroundStyle(.secondary)
+                .accessibilityIdentifier("premium.locked_feature_preview")
             Button(localized("premium.tools.go_to_upgrade", default: "Go to Upgrade")) {
                 openPremiumUpgrade(focusingOn: .planning)
             }
@@ -76,7 +76,7 @@ extension ContentView {
     }
 
     var premiumToolsHubSection: some View {
-        Section(localized("premium.tools.formation", default: "Formation Toolkit")) {
+        Section(localized("premium.tools.formation", default: "Formation Tools")) {
             ForEach(PremiumEntitlementSurface.allCases) { surface in
                 let destination = premiumToolDestination(for: surface)
                 NavigationLink(value: destination) {
@@ -180,7 +180,7 @@ extension ContentView {
                 .appSupportingTextStyle()
                 .accessibilityIdentifier("premium.active_summary")
 
-            Button(localized("premium.active.open_tools", default: "Open Premium Tools")) {
+            Button(localized("premium.active.open_tools", default: "Open Formation Tools")) {
                 supportPremiumSurfaceRaw = SupportPremiumSurface.tools.rawValue
             }
             .appPrimaryButtonStyle()
@@ -195,11 +195,11 @@ extension ContentView {
             SacredSurfaceAnchorCard(
                 assetName: moreDestinationHeroItem(for: .supportAndPremium).assetName,
                 title: monetizationStore.premiumUnlocked
-                    ? localized("premium.hero.active_title", default: "Formation Toolkit Active")
-                    : localized("premium.hero.title", default: "Formation Toolkit"),
+                    ? localized("premium.hero.active_title", default: "Guided Formation Active")
+                    : localized("premium.hero.title", default: "Guided Seasonal Formation"),
                 subtitle: monetizationStore.premiumUnlocked
-                    ? localized("premium.hero.active_subtitle", default: "Keep planning, recovery, reflection, and review in one focused Catholic workflow.")
-                    : localized("premium.hero.subtitle", default: "Choose one clear premium path for planning, reminders, reflection, and review through the Church year."),
+                    ? localized("premium.hero.active_subtitle", default: "Keep this week's rhythm, recovery, reflection, and review in one focused Catholic workflow.")
+                    : localized("premium.hero.subtitle", default: "Keep the current season's next faithful action visible, with tools that support it."),
                 imageHeight: 112,
                 accessibilityIdentifier: "premium.hero")
 
@@ -222,21 +222,21 @@ extension ContentView {
                         .appSectionTitleStyle(serif: true)
                     Text(
                         monetizationStore.premiumUnlocked
-                            ? localized("premium.active.summary", default: "Your planning, accountability, reflection, and export tools are unlocked.")
-                            : localized("premium.locked.summary", default: "Stay steady through the Church year with one clear premium path for planning, reminders, and review."))
+                            ? localized("premium.active.summary", default: "Your guided journey, reminders, reflection, and export tools are unlocked.")
+                            : localized("premium.locked.summary", default: "Stay steady through the Church year with one weekly formation path, reminders, and review."))
                         .appLeadTextStyle()
                 }
             }
 
             if monetizationStore.premiumUnlocked {
-                Button(localized("premium.active.open_tools", default: "Open Premium Tools")) {
+                Button(localized("premium.active.open_tools", default: "Open Formation Tools")) {
                     supportPremiumSurfaceRaw = SupportPremiumSurface.tools.rawValue
                 }
                 .appPrimaryButtonStyle()
                 .accessibilityIdentifier("premium.open_tools")
             } else {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(localized("premium.locked.adds", default: "Premium adds:"))
+                    Text(localized("premium.locked.adds", default: "Guided formation adds:"))
                         .appEyebrowStyle()
                         .foregroundStyle(CatholicTheme.primary)
 
@@ -279,15 +279,17 @@ extension ContentView {
         return VStack(alignment: .leading, spacing: 10) {
             Text(
                 sample
-                    ? localized("premium.journey.preview_title", default: "See the Guided Seasonal Journey")
+                    ? localized("premium.journey.preview_title", default: "Preview Guided Seasonal Formation")
                     : localized("premium.journey.current_title", default: "Your Guided Seasonal Journey"))
                 .appSectionTitleStyle(serif: true)
+                .accessibilityIdentifier(sample ? "premium.journey.preview_title" : "premium.journey.current_title")
 
             Text(
                 sample
-                    ? localized("premium.journey.preview_intro", default: "This preview shows how premium turns the current season into one steady weekly rhythm.")
-                    : localized("premium.journey.current_intro", default: "Premium keeps the current week visible so you know what to do next without rebuilding the whole plan."))
+                    ? localized("premium.journey.preview_intro", default: "This preview shows how premium turns the current season into one weekly rhythm for fasting, prayer, mercy, and review.")
+                    : localized("premium.journey.current_intro", default: "Premium keeps the current week and next faithful action visible without rebuilding the whole plan."))
                 .appSupportingTextStyle()
+                .accessibilityIdentifier(sample ? "premium.journey.preview_intro" : "premium.journey.current_intro")
 
             VStack(alignment: .leading, spacing: 6) {
                 Text(
@@ -295,11 +297,13 @@ extension ContentView {
                         ? localizedFormat("premium.journey.preview_week_format", default: "Preview journey week: %@", journey.title)
                         : localizedFormat("premium.journey.current_week_format", default: "Current journey week: %@", journey.title))
                     .font(.subheadline.weight(.semibold))
+                    .accessibilityIdentifier(sample ? "premium.journey.preview_week" : "premium.journey.current_week")
                 Text(
                     sample
                         ? localized("premium.journey.preview_eyebrow", default: "Seasonal rhythm")
                         : localized("premium.journey.current_eyebrow", default: "Current weekly rhythm"))
                     .appEyebrowStyle()
+                    .accessibilityIdentifier(sample ? "premium.journey.preview_eyebrow" : "premium.journey.current_eyebrow")
                 Text(journey.summary)
                     .appSupportingTextStyle()
 
@@ -324,7 +328,7 @@ extension ContentView {
                 Text(
                     localized(
                         "premium.journey.preview_hint",
-                        default: "Preview only. Unlock premium below to track progress, keep the current week, and carry the journey through the season."))
+                        default: "Preview only. Unlock premium below to keep the current week, carry the journey through the season, and review the rhythm gently."))
                     .appSupportingTextStyle()
             } else {
                 Text(premiumJourneyCompletionSummary)

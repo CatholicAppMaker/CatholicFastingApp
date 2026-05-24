@@ -27,6 +27,7 @@ Three-word personality: calm, reverent, practical.
 - Do not make the app feel like a generic wellness, fasting, diet, biohacking, or productivity tracker.
 - Do not use energetic streak pressure, shame-heavy completion language, aggressive gamification, or copy that implies spiritual performance.
 - Do not obscure rule uncertainty, local variation, medical prudence, or pastoral authority behind oversimplified answers.
+- Do not claim public App Store status, current release version, ratings, or competitive standing without checking a current source. If App Store data, repo metadata, and cached search results conflict, state the conflict instead of smoothing it over.
 - Do not turn sacred imagery into decoration for decoration's sake.
 - Do not introduce broad visual rewrites that make the Mac app less native or the iOS app less readable.
 - Do not add analytics, account sync, or cloud assumptions to a local-only privacy posture.
@@ -38,6 +39,7 @@ Three-word personality: calm, reverent, practical.
 3. Transparent authority. Rules, citations, regional profiles, and rationale should remain close enough that users can inspect the source of guidance.
 4. Platform-native calm. iPhone, iPad, Mac, and widgets should respect their native navigation, control density, accessibility, and interaction patterns.
 5. Formation without pressure. Tracking, reminders, premium tools, and recovery flows should encourage steady discipline without shame or performative metrics.
+6. Truth before polish. Product claims, benchmark ratings, App Store comparisons, and release-version statements must be sourced before they are used to make design or roadmap decisions.
 
 ## Accessibility & Inclusion
 

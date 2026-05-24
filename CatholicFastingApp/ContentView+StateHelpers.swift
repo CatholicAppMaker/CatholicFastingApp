@@ -191,7 +191,7 @@ extension ContentView {
         let goalBlock =
             """
             Goals: required \(planningData.requiredGoal), optional \(planningData.optionalGoal). \
-            Progress required \(yearlyRequiredCompletions), optional \(yearlyOptionalCompletions).
+            Year rhythm required \(yearlyRequiredCompletions), optional \(yearlyOptionalCompletions).
             """
         let seasonBlock =
             currentSeasonCommitments.isEmpty
@@ -401,12 +401,10 @@ extension ContentView {
         case .surface(let surface):
             homeSurface = surface
         case .settings:
-            homeSurface = .more
-            selectedMoreDestination = .setupAndReminders
+            navigateToMoreDestination(.setupAndReminders)
         case .premium:
-            homeSurface = .more
-            selectedMoreDestination = .supportAndPremium
             supportPremiumSurfaceRaw = SupportPremiumSurface.upgrade.rawValue
+            navigateToMoreDestination(.supportAndPremium)
         }
     }
 
@@ -511,11 +509,14 @@ extension ContentView {
     }
 
     var todayFoodDecision: DailyFoodDecision {
-        let rawDecision = DailyFoodDecisionEngine.decision(
+        localizedFoodDecision(todayRawFoodDecision)
+    }
+
+    var todayRawFoodDecision: DailyFoodDecision {
+        DailyFoodDecisionEngine.decision(
             for: currentYearObservances,
             settings: settings,
             calendar: liturgicalCalendar)
-        return localizedFoodDecision(rawDecision)
     }
 
     var hasConfiguredRegionProfile: Bool {

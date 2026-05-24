@@ -42,6 +42,40 @@ extension CatholicFastingAppUITests {
         let heroByID = elementByIdentifier("dashboard.hero", in: app)
         let heroTitle = app.staticTexts["Daily Catholic Fasting Plan"].firstMatch
         XCTAssertTrue(scrollToElement(heroByID, in: app) || scrollToElement(heroTitle, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["today.decision.obligation"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("today.decision.next_action", in: app), in: app))
+    }
+
+    func testDeepCompanionCardsExposeRuleLiveFormationAndActions() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openSurface("Today", in: app)
+
+        XCTAssertTrue(scrollToElement(elementByIdentifier("companion.dashboard", in: app), in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["companion.rule.obligation"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("companion.primary_action", in: app), in: app))
+        XCTAssertTrue(scrollToElement(app.buttons["companion.primary_action.button"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("companion.rule.source", in: app), in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("companion.live_state", in: app), in: app))
+        XCTAssertTrue(scrollToElement(app.buttons["companion.live.action"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("companion.formation", in: app), in: app))
+        XCTAssertTrue(scrollToElement(app.buttons["companion.formation.action"].firstMatch, in: app))
+    }
+
+    func testDeepCompanionActiveFastPrimaryActionOpensTrackFast() {
+        let app = makeApp(seedActiveFast: true)
+        app.launch()
+        ensureOnHomeScreen(app)
+        openSurface("Today", in: app)
+
+        XCTAssertTrue(scrollToElement(elementByIdentifier("companion.live.progress", in: app), in: app))
+        let primaryAction = app.buttons["companion.primary_action.button"].firstMatch
+        XCTAssertTrue(scrollToElement(primaryAction, in: app))
+        primaryAction.tap()
+
+        XCTAssertTrue(app.otherElements["surface.intermittent.ready"].waitForExistence(timeout: 4))
+        XCTAssertTrue(scrollToElement(app.staticTexts["intermittent.active_elapsed"].firstMatch, in: app, maxSwipes: 8))
     }
 
     func testDeepUnofficialNoticeVisible() {
@@ -92,8 +126,9 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(foodShortcut, in: app))
         foodShortcut.tap()
 
+        assertMoreDestinationOpened("guidanceAndRules", title: "Guidance & Rules", in: app)
         let foodSection = elementByIdentifier("guidance.food.section", in: app)
-        XCTAssertTrue(foodSection.waitForExistence(timeout: 4))
+        XCTAssertTrue(scrollToElement(foodSection, in: app))
     }
 
     func testIPhoneCanadaModeCanMoveAcrossTodayFastingDaysAndGuidance() {
@@ -107,7 +142,8 @@ extension CatholicFastingAppUITests {
         let foodShortcut = app.buttons["today.decision.open_full_food_guidance"].firstMatch
         XCTAssertTrue(scrollToElement(foodShortcut, in: app))
         foodShortcut.tap()
-        XCTAssertTrue(scrollToElement(app.otherElements["guidance.food.section"].firstMatch, in: app))
+        assertMoreDestinationOpened("guidanceAndRules", title: "Guidance & Rules", in: app)
+        XCTAssertTrue(scrollToElement(elementByIdentifier("guidance.food.section", in: app), in: app))
 
         openSurface("Fasting Days", in: app)
         XCTAssertTrue(scrollToElement(app.staticTexts["Modeled"].firstMatch, in: app))
@@ -218,6 +254,22 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(app.otherElements["ipad.today.primary_card"].waitForExistence(timeout: 4))
         XCTAssertTrue(app.otherElements["ipad.today.metrics"].waitForExistence(timeout: 4))
         XCTAssertTrue(app.otherElements["ipad.today.actions"].waitForExistence(timeout: 4))
+    }
+
+    func testIPadCompanionTriadShowsRuleTrackerAndFormationCards() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadSurface("today", in: app)
+
+        XCTAssertTrue(app.otherElements["ipad.companion.triad"].waitForExistence(timeout: 4))
+        XCTAssertTrue(app.otherElements["companion.dashboard"].waitForExistence(timeout: 4))
+        XCTAssertTrue(app.otherElements["companion.live_state"].waitForExistence(timeout: 4))
+        XCTAssertTrue(app.otherElements["companion.formation"].waitForExistence(timeout: 4))
+        XCTAssertTrue(app.buttons["companion.primary_action.button"].firstMatch.waitForExistence(timeout: 4))
+        XCTAssertTrue(app.buttons["companion.live.action"].firstMatch.waitForExistence(timeout: 4))
+        XCTAssertTrue(app.buttons["companion.formation.action"].firstMatch.waitForExistence(timeout: 4))
     }
 
     func testIPadFastingDaysSelectionShowsDetail() {

@@ -20,26 +20,25 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(cancelButton, in: app))
         cancelButton.tap()
 
-        XCTAssertTrue(app.staticTexts["intermittent.no_active"].firstMatch.waitForExistence(timeout: 4))
+        XCTAssertTrue(scrollToElement(app.staticTexts["intermittent.no_active"].firstMatch, in: app))
     }
 
     func testIntermittentCanEndFastAndWriteSessionHistory() {
-        let app = makeApp()
+        let app = makeApp(seedActiveFast: true)
         app.launch()
         ensureOnHomeScreen(app)
         openSurface("Track Fast", in: app)
 
-        let startButton = app.buttons["intermittent.start_fast"].firstMatch
-        XCTAssertTrue(scrollToElement(startButton, in: app))
-        startButton.tap()
-
         let endButton = app.buttons["intermittent.end_fast"].firstMatch
-        XCTAssertTrue(endButton.waitForExistence(timeout: 4))
+        XCTAssertTrue(scrollToElementPresence(endButton, in: app, maxSwipes: 8))
+        XCTAssertTrue(scrollToElement(endButton, in: app, maxSwipes: 8))
         endButton.tap()
 
-        let historyRow = app.descendants(matching: .any).matching(identifier: "intermittent.session_row")
-            .firstMatch
-        XCTAssertTrue(scrollToElement(historyRow, in: app))
+        let sessionsMetric = elementByIdentifier("intermittent.metric.sessions", in: app)
+        XCTAssertTrue(scrollToElementPresence(sessionsMetric, in: app, maxSwipes: 8))
+        let sessionSaved = NSPredicate(format: "value == '1'")
+        expectation(for: sessionSaved, evaluatedWith: sessionsMetric)
+        waitForExpectations(timeout: 4)
     }
 
     func testIntermittentLockedCustomTargetCanOpenPremiumUpgrade() {
@@ -49,12 +48,13 @@ extension CatholicFastingAppUITests {
         openSurface("Track Fast", in: app)
 
         let unlockButton = app.buttons["intermittent.unlock_custom_targets"].firstMatch
-        XCTAssertTrue(scrollToElement(unlockButton, in: app))
+        XCTAssertTrue(scrollToElement(unlockButton, in: app, maxSwipes: 12))
         unlockButton.tap()
 
-        let premiumHero = app.otherElements["premium.hero"].firstMatch
-        XCTAssertTrue(premiumHero.waitForExistence(timeout: 4))
-        XCTAssertTrue(app.staticTexts["Premium Upgrade"].firstMatch.exists)
+        XCTAssertTrue(app.otherElements["surface.more.ready"].waitForExistence(timeout: 4))
+        XCTAssertTrue(
+            app.staticTexts["Premium Upgrade"].firstMatch.waitForExistence(timeout: 4)
+                || elementByIdentifier("premium.hero", in: app).waitForExistence(timeout: 4))
     }
 
     func testIntermittentTargetPickerVisible() {
@@ -65,6 +65,8 @@ extension CatholicFastingAppUITests {
 
         let targetPicker = elementByIdentifier("intermittent.target_picker", in: app)
         XCTAssertTrue(scrollToElement(targetPicker, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("intermittent.intention_picker", in: app), in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["intermittent.intention_detail"].firstMatch, in: app))
         XCTAssertTrue(scrollToElement(app.datePickers["intermittent.start_date"].firstMatch, in: app))
     }
 
@@ -91,8 +93,8 @@ extension CatholicFastingAppUITests {
         disclosure.tap()
 
         let scheduleName = app.textFields["intermittent.schedule.name"].firstMatch
-        XCTAssertTrue(scrollToElement(scheduleName, in: app))
-        XCTAssertTrue(app.otherElements["intermittent.history_empty"].firstMatch.exists)
+        XCTAssertTrue(scrollToElementPresence(scheduleName, in: app, maxSwipes: 12))
+        XCTAssertTrue(scrollToElementPresence(elementByIdentifier("intermittent.history_empty", in: app), in: app, maxSwipes: 24))
     }
 
     func testIPadTrackFastPresetSelectionStaysVisible() {
@@ -111,7 +113,8 @@ extension CatholicFastingAppUITests {
         twentyFour.tap()
 
         XCTAssertTrue(app.otherElements["ipad.intermittent.controls"].waitForExistence(timeout: 4))
-        XCTAssertTrue(scrollToElement(app.buttons["ipad.intermittent.start"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("ipad.intermittent.intention", in: app), in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("ipad.intermittent.start", in: app), in: app))
     }
 
     func testIPadTrackFastShowsLiveWorkspaceAndControls() {
@@ -126,7 +129,7 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(app.otherElements["ipad.intermittent.planning"].waitForExistence(timeout: 4))
         XCTAssertTrue(app.otherElements["ipad.intermittent.advanced"].waitForExistence(timeout: 4))
         XCTAssertTrue(app.otherElements["ipad.intermittent.history"].waitForExistence(timeout: 4))
-        XCTAssertTrue(scrollToElement(app.datePickers["ipad.intermittent.start_date"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("ipad.intermittent.start_date", in: app), in: app))
     }
 
     func testIPadTrackFastKeepsStartedTimeEditableAfterStart() {

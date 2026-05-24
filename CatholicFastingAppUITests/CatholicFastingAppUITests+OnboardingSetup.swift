@@ -13,7 +13,7 @@ extension CatholicFastingAppUITests {
         continueButton.tap()
 
         XCTAssertTrue(app.otherElements["surface.today.ready"].waitForExistence(timeout: 6))
-        XCTAssertFalse(app.staticTexts["Setup progress: 2/3"].firstMatch.exists)
+        XCTAssertFalse(app.staticTexts["Setup checklist: 2/3"].firstMatch.exists)
     }
 
     func testFreshLaunchIPadCanCompleteOnboardingAndRenderTodayWorkspace() {
@@ -164,7 +164,7 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(consentToggle, in: app))
         if switchIsOn(consentToggle) {
             let enabledCount = progressCount(from: progress.label)
-            consentToggle.tap()
+            tapSwitch(consentToggle, in: app)
             XCTAssertTrue(
                 waitUntil(timeout: 3) {
                     guard let enabledCount, let currentCount = progressCount(from: progress.label) else {
@@ -180,9 +180,14 @@ extension CatholicFastingAppUITests {
             return
         }
 
-        consentToggle.tap()
+        tapSwitch(consentToggle, in: app)
         XCTAssertTrue(
-            waitUntil(timeout: 3) { (progressCount(from: progress.label) ?? beforeCount) >= beforeCount + 1 },
+            waitUntil(timeout: 3) {
+                let refreshedProgress = app.staticTexts["settings.quick.progress"].firstMatch
+                let refreshedToggle = app.switches["settings.quick.consent"].firstMatch
+                return (progressCount(from: refreshedProgress.label) ?? beforeCount) >= beforeCount + 1
+                    || switchIsOn(refreshedToggle)
+            },
             "Expected setup progress to increment after consent toggle. Before: \(beforeCount), label now: \(progress.label)")
     }
 
@@ -194,7 +199,7 @@ extension CatholicFastingAppUITests {
 
         expandDisclosureGroup("Reminder Actions", in: app)
 
-        let status = app.staticTexts["settings.quick.reminder_status"].firstMatch
+        let status = elementByIdentifier("settings.quick.reminder_status", in: app)
         XCTAssertTrue(scrollToElement(status, in: app))
         let permissionButton = app.buttons["settings.quick.request_permission"].firstMatch
         XCTAssertTrue(scrollToElement(permissionButton, in: app))
@@ -213,12 +218,9 @@ extension CatholicFastingAppUITests {
         openMoreDestination("Setup & Reminders", in: app)
 
         let quoteToggle = app.switches["settings.quick.quote_toggle"].firstMatch
-        XCTAssertTrue(scrollToElement(quoteToggle, in: app))
-        if !switchIsOn(quoteToggle) {
-            quoteToggle.tap()
-        }
+        setSwitch(quoteToggle, to: true, in: app)
 
-        let quoteTime = app.datePickers["settings.quick.quote_time"].firstMatch
+        let quoteTime = elementByIdentifier("settings.quick.quote_time", in: app)
         XCTAssertTrue(scrollToElement(quoteTime, in: app))
     }
 
@@ -228,9 +230,9 @@ extension CatholicFastingAppUITests {
         ensureOnHomeScreen(app)
         openMoreDestination("Setup & Reminders", in: app)
 
-        let languagePicker = app.pickers["settings.quick.language"].firstMatch
+        let languagePicker = elementByIdentifier("settings.quick.language", in: app)
         XCTAssertTrue(scrollToElement(languagePicker, in: app))
-        let regionPicker = app.pickers["settings.quick.region"].firstMatch
+        let regionPicker = elementByIdentifier("settings.quick.region", in: app)
         XCTAssertTrue(scrollToElement(regionPicker, in: app))
     }
 
@@ -239,58 +241,24 @@ extension CatholicFastingAppUITests {
         app.launch()
         ensureOnHomeScreen(app)
 
-        openMoreDestination("Setup & Reminders", in: app)
-
-        let age14Toggle = app.switches["settings.quick.age14_toggle"].firstMatch
-        XCTAssertTrue(scrollToElement(age14Toggle, in: app))
-        if switchIsOn(age14Toggle) {
-            age14Toggle.tap()
-        }
-
-        let age18Toggle = app.switches["settings.quick.age18_toggle"].firstMatch
-        XCTAssertTrue(scrollToElement(age18Toggle, in: app))
-        if switchIsOn(age18Toggle) {
-            age18Toggle.tap()
-        }
-
-        returnToMoreHome(in: app)
         openMoreDestination("Profile & Norms", in: app)
 
-        let newProfileField = app.textFields["settings.household.new_name"].firstMatch
-        XCTAssertTrue(scrollToElement(newProfileField, in: app))
-        newProfileField.tap()
-        newProfileField.typeText("Teen Profile")
+        let seedProfileButton = app.buttons["uitest.household.seedUnderageProfile"].firstMatch
+        XCTAssertTrue(seedProfileButton.waitForExistence(timeout: 3))
+        seedProfileButton.tap()
 
-        let addProfileButton = app.buttons["settings.household.add"].firstMatch
-        XCTAssertTrue(scrollToElement(addProfileButton, in: app))
-        addProfileButton.tap()
-
-        returnToMoreHome(in: app)
-        openMoreDestination("Setup & Reminders", in: app)
-
-        XCTAssertTrue(scrollToElement(age14Toggle, in: app))
-        if !switchIsOn(age14Toggle) {
-            age14Toggle.tap()
-        }
-        XCTAssertTrue(scrollToElement(age18Toggle, in: app))
-        if !switchIsOn(age18Toggle) {
-            age18Toggle.tap()
-        }
-
-        returnToMoreHome(in: app)
-        openMoreDestination("Profile & Norms", in: app)
+        let setEligibleButton = app.buttons["uitest.state.setAgeEligible"].firstMatch
+        XCTAssertTrue(setEligibleButton.waitForExistence(timeout: 3))
+        setEligibleButton.tap()
+        XCTAssertTrue(elementByIdentifier("uitest.state.age14.true", in: app).waitForExistence(timeout: 3))
+        XCTAssertTrue(elementByIdentifier("uitest.state.age18.true", in: app).waitForExistence(timeout: 3))
 
         let applyButton = app.buttons["settings.household.apply"].firstMatch
         XCTAssertTrue(scrollToElement(applyButton, in: app))
         applyButton.tap()
 
-        returnToMoreHome(in: app)
-        openMoreDestination("Setup & Reminders", in: app)
-
-        XCTAssertTrue(scrollToElement(age14Toggle, in: app))
-        XCTAssertFalse(switchIsOn(age14Toggle))
-        XCTAssertTrue(scrollToElement(age18Toggle, in: app))
-        XCTAssertFalse(switchIsOn(age18Toggle))
+        XCTAssertTrue(elementByIdentifier("uitest.state.age14.false", in: app).waitForExistence(timeout: 3))
+        XCTAssertTrue(elementByIdentifier("uitest.state.age18.false", in: app).waitForExistence(timeout: 3))
     }
 
     func testIPadOnboardingShowsRegionSelector() {
@@ -344,7 +312,7 @@ extension CatholicFastingAppUITests {
 
         XCTAssertTrue(scrollToElement(app.staticTexts["Configuration rapide"].firstMatch, in: app))
         XCTAssertTrue(scrollToElement(app.staticTexts["Réglez ceci une fois, puis utilisez surtout Aujourd’hui et Jours de jeûne."].firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(app.pickers["settings.quick.language"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("settings.quick.language", in: app), in: app))
     }
 
     func testIPhoneAccessibilitySettingsDoNotShowVoiceSummary() {

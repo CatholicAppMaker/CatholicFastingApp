@@ -25,6 +25,8 @@ struct ContentView: View {
     @State var guidanceScenario: GuidanceScenario = .normalDay
     @State var homeSurface: HomeSurface = .today
     @State var selectedMoreDestination: MoreHubDestination? = .supportAndPremium
+    @State var moreNavigationPath: [MoreHubDestination] = []
+    @State var pendingPhoneMoreDestination: MoreHubDestination?
     @State var selectedPremiumToolDestination: PremiumToolDestination? = .planner
     @State var selectedFastingObservanceID = ""
     @State var didConfigureTips = false
@@ -98,6 +100,7 @@ struct ContentView: View {
     @AppStorage(StorageKeys.fastingDaysIncludeFeastAndHolyDays) var fastingDaysIncludeFeastAndHolyDays = false
     @AppStorage(StorageKeys.supportPremiumSurface) var supportPremiumSurfaceRaw = DefaultValues.supportPremiumSurface.rawValue
     @AppStorage(StorageKeys.simplifiedModeEnabled) var simplifiedModeEnabled = false
+    @AppStorage(StorageKeys.intermittentIntention) var intermittentIntentionRaw = DefaultValues.intermittentIntention
 
     var settings: RuleSettings {
         RuleSettings(

@@ -98,7 +98,7 @@ enum PremiumFastPrepGuidanceEngine {
                     default: "During: keep prayer cues tied to hunger moments."),
                 CoreLocalizer.localizedCurrent(
                     "premium.fastprep.short.refeed",
-                    default: "Refeed: break with moderate portions and protein/fiber."),
+                    default: "Refeed: break gradually with a simple, moderate meal."),
             ]
         }
 

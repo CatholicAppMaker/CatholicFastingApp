@@ -99,6 +99,8 @@ run_deep_suite() {
     -only-testing:CatholicFastingAppUITests/testDeepCanOpenFridayNotesHistory
     -only-testing:CatholicFastingAppUITests/testDeepLaunchReadinessControlsVisible
     -only-testing:CatholicFastingAppUITests/testDeepDashboardHeroVisible
+    -only-testing:CatholicFastingAppUITests/testDeepCompanionCardsExposeRuleLiveFormationAndActions
+    -only-testing:CatholicFastingAppUITests/testDeepCompanionActiveFastPrimaryActionOpensTrackFast
     -only-testing:CatholicFastingAppUITests/testDeepUnofficialNoticeVisible
     -only-testing:CatholicFastingAppUITests/testDeepDashboardOpenFastingDaysQuickAction
     -only-testing:CatholicFastingAppUITests/testDeepDashboardFocusRequiredQuickAction
@@ -120,6 +122,7 @@ run_ipad_suite() {
   local selectors=(
     -only-testing:CatholicFastingAppUITests/testIPadSidebarSwitchesPrimaryWorkspaces
     -only-testing:CatholicFastingAppUITests/testIPadTodayDashboardShowsHeroAndCoreCards
+    -only-testing:CatholicFastingAppUITests/testIPadCompanionTriadShowsRuleTrackerAndFormationCards
     -only-testing:CatholicFastingAppUITests/testIPadFastingDaysSelectionShowsDetail
     -only-testing:CatholicFastingAppUITests/testIPadFastingDaysShowsFiltersAndQuickDates
     -only-testing:CatholicFastingAppUITests/testIPadOnboardingShowsRegionSelector

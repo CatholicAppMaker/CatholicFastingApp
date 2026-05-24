@@ -5,7 +5,7 @@ extension ContentView {
         Section(localized("settings.quick.title", default: "Quick Setup")) {
             AppSectionLeadCard(
                 eyebrow: localized("settings.quick.title", default: "Quick Setup"),
-                title: localizedFormat("settings.quick.progress_format", default: "Setup progress: %d/%d", setupChecklistCompleted, setupChecklistTotal),
+                title: localizedFormat("settings.quick.progress_format", default: "Setup checklist: %d/%d", setupChecklistCompleted, setupChecklistTotal),
                 detail: localized("settings.quick.intro", default: "Set these once, then mostly use Today and Fasting Days."),
                 style: .utility)
 
@@ -76,7 +76,7 @@ extension ContentView {
                     .appSupportingTextStyle()
             }
 
-            Text(localizedFormat("settings.quick.progress_format", default: "Setup progress: %d/%d", setupChecklistCompleted, setupChecklistTotal))
+            Text(localizedFormat("settings.quick.progress_format", default: "Setup checklist: %d/%d", setupChecklistCompleted, setupChecklistTotal))
                 .appEyebrowStyle()
                 .foregroundStyle(CatholicTheme.primary)
                 .accessibilityIdentifier("settings.quick.progress")
@@ -85,7 +85,11 @@ extension ContentView {
                 .appSupportingTextStyle()
 
             if dailyReminderSupportEnabled {
-                DisclosureGroup(localized("settings.quick.reminder_actions", default: "Reminder Actions")) {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text(localized("settings.quick.reminder_actions", default: "Reminder Actions"))
+                        .appEyebrowStyle()
+                        .accessibilityIdentifier("settings.quick.reminder_actions")
+
                     if monetizationStore.premiumUnlocked {
                         Toggle(localized("settings.quick.reminder_morning", default: "Morning check-in (7:00 AM)"), isOn: $morningReminderEnabled)
                             .accessibilityIdentifier("settings.quick.reminder_morning")
@@ -163,7 +167,7 @@ extension ContentView {
                     .appSecondaryButtonStyle()
                     .accessibilityIdentifier("settings.quick.refresh_status")
                 }
-                .accessibilityIdentifier("settings.quick.reminder_actions")
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
 
             if !acceptedLegalNotice {
@@ -340,10 +344,10 @@ extension ContentView {
                     .accessibilityIdentifier("settings.plan.optional_goal")
 
                 ProgressView(value: requirementGoalProgress) {
-                    Text(localizedFormat("settings.planning.required_progress", default: "Required progress: %d/%d", yearlyRequiredCompletions, planningData.requiredGoal))
+                    Text(localizedFormat("settings.planning.required_progress", default: "Required rhythm: %d/%d", yearlyRequiredCompletions, planningData.requiredGoal))
                 }
                 ProgressView(value: optionalGoalProgress) {
-                    Text(localizedFormat("settings.planning.optional_progress", default: "Optional progress: %d/%d", yearlyOptionalCompletions, planningData.optionalGoal))
+                    Text(localizedFormat("settings.planning.optional_progress", default: "Optional rhythm: %d/%d", yearlyOptionalCompletions, planningData.optionalGoal))
                 }
 
                 if !planningData.weeklyIntentions.isEmpty {

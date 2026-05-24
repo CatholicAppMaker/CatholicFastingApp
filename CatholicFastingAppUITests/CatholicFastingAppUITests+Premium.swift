@@ -19,7 +19,7 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(manageButton, in: app))
         XCTAssertTrue(manageButton.isEnabled)
 
-        let lockedPreview = app.staticTexts["premium.locked_feature_preview"].firstMatch
+        let lockedPreview = elementByIdentifier("premium.locked_feature_preview", in: app)
         XCTAssertTrue(scrollToElement(lockedPreview, in: app))
     }
 
@@ -81,9 +81,8 @@ extension CatholicFastingAppUITests {
         ensureOnHomeScreen(app)
         openMoreDestination("Support & Premium", in: app)
 
-        let preview = app.otherElements["premium.sample_preview"].firstMatch
+        let preview = elementByIdentifier("premium.sample_preview", in: app)
         XCTAssertTrue(scrollToElement(preview, in: app))
-        XCTAssertTrue(scrollToElement(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Preview journey week:")).firstMatch, in: app))
     }
 
     func testDeepIPhonePremiumUnlockedShowsCurrentJourneyState() {
@@ -92,7 +91,7 @@ extension CatholicFastingAppUITests {
         ensureOnHomeScreen(app)
         openMoreDestination("Support & Premium", in: app)
 
-        let journeyCard = app.otherElements["premium.sample_preview"].firstMatch
+        let journeyCard = elementByIdentifier("premium.sample_preview", in: app)
         XCTAssertTrue(scrollToElement(journeyCard, in: app))
         XCTAssertTrue(scrollToElement(app.staticTexts["Your Guided Seasonal Journey"].firstMatch, in: app))
         XCTAssertTrue(scrollToElement(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Current journey week:")).firstMatch, in: app))
@@ -123,20 +122,23 @@ extension CatholicFastingAppUITests {
 
         openIPadMoreDestination("supportAndPremium", in: app)
 
-        XCTAssertTrue(app.otherElements["ipad.premium.dashboard"].waitForExistence(timeout: 4))
-        XCTAssertTrue(scrollToElement(app.staticTexts["Guided Journey"].firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(app.staticTexts["Current journey actions"].firstMatch, in: app))
+        XCTAssertTrue(app.otherElements["ipad.more.premium"].waitForExistence(timeout: 4))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Preview Guided Seasonal Formation"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.sample_preview", in: app), in: app))
     }
 
     func testIPhonePremiumSpanishShowsLocalizedJourneyAndSupportCopy() {
         let app = makeApp(languageMode: "spanish")
         app.launch()
         ensureOnHomeScreen(app)
-        openMoreDestination("Support & Premium", in: app)
+        openSurface("More", in: app)
+        let supportAndPremium = elementByIdentifier("more.hub.supportAndPremium", in: app)
+        XCTAssertTrue(scrollToElement(supportAndPremium, in: app))
+        supportAndPremium.tap()
+        XCTAssertTrue(elementByIdentifier("premium.surface_picker", in: app).waitForExistence(timeout: 4))
 
         XCTAssertTrue(scrollToElement(app.staticTexts["Apoyo y Premium"].firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(app.staticTexts["Vea el Camino estacional guiado"].firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(app.staticTexts["Propinas opcionales de apoyo"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.sample_preview", in: app), in: app))
         XCTAssertTrue(scrollToElement(app.buttons["premium.restore"].firstMatch, in: app))
     }
 
@@ -148,8 +150,8 @@ extension CatholicFastingAppUITests {
         openIPadMoreDestination("supportAndPremium", in: app)
 
         XCTAssertTrue(scrollToElement(app.staticTexts["Apoyo y Premium"].firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(app.staticTexts["Vea el Camino estacional guiado"].firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(app.staticTexts["Propinas opcionales de apoyo"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Vista previa de Formación estacional guiada"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.sample_preview", in: app), in: app))
     }
 
     func testIPadMoreCompactPremiumShowsPlansAndLegal() {

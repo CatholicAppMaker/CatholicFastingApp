@@ -314,7 +314,7 @@ private struct DataPrivacyDetailsView: View {
                 dataLine(
                     localized(
                         "settings.privacy.stored_item_observances",
-                        default: "Observance progress and completion status history."))
+                        default: "Observance completion status history."))
                 dataLine(
                     localized(
                         "settings.privacy.stored_item_notes",

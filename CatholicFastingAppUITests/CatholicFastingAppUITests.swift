@@ -16,6 +16,7 @@ final class CatholicFastingAppUITests: XCTestCase {
     func makeApp(
         skipOnboarding: Bool = true,
         seedMissed: Bool = false,
+        seedActiveFast: Bool = false,
         seedDeterministic: Bool = true,
         disableAnimations: Bool = true,
         includeUITestEnvironment: Bool = true,
@@ -36,6 +37,9 @@ final class CatholicFastingAppUITests: XCTestCase {
         }
         if seedMissed {
             args.append("-uitest-seed-missed")
+        }
+        if seedActiveFast {
+            args.append("-uitest-seed-active-fast")
         }
         app.launchArguments = args
         if includeUITestEnvironment {
@@ -71,17 +75,99 @@ final class CatholicFastingAppUITests: XCTestCase {
     }
 
     func openSurface(_ label: String, in app: XCUIApplication) {
+        if tapUITestSurfaceSwitcher(label, in: app) {
+            waitForSurfaceReady(label, in: app)
+            return
+        }
+
+        if tapTodayQuickSurfaceAction(label, in: app) {
+            XCTAssertTrue(
+                waitUntil(timeout: 3, condition: { visibleSurfaceNavigationTitle(for: label, in: app) }),
+                "Unable to select tab \(label)")
+            waitForSurfaceReady(label, in: app)
+            return
+        }
+
         let tabBar = app.tabBars.firstMatch
         XCTAssertTrue(tabBar.waitForExistence(timeout: 3))
 
-        let tab = tabButton(for: label, in: app)
-        XCTAssertTrue(tab.waitForExistence(timeout: 3), "Unable to find tab \(label)")
-        tab.tap()
+        tapTab(label, in: app)
+        if !waitUntil(timeout: 1, condition: { visibleSurfaceNavigationTitle(for: label, in: app) }) {
+            tapTab(label, in: app)
+        }
+        XCTAssertTrue(
+            waitUntil(timeout: 3, condition: { visibleSurfaceNavigationTitle(for: label, in: app) }),
+            "Unable to select tab \(label)")
         waitForSurfaceReady(label, in: app)
+    }
+
+    func tapUITestSurfaceSwitcher(_ label: String, in app: XCUIApplication) -> Bool {
+        guard let rawValue = surfaceRawValue(for: label) else {
+            return false
+        }
+
+        let button = app.buttons["uitest.surface.\(rawValue)"].firstMatch
+        guard button.exists || button.waitForExistence(timeout: 1) else {
+            return false
+        }
+        button.tap()
+        return true
+    }
+
+    func surfaceRawValue(for label: String) -> String? {
+        switch label {
+        case "Today":
+            "today"
+        case "Fasting Days":
+            "fastingDays"
+        case "Track Fast":
+            "intermittent"
+        case "More":
+            "more"
+        default:
+            nil
+        }
+    }
+
+    func tapTodayQuickSurfaceAction(_ label: String, in app: XCUIApplication) -> Bool {
+        guard let identifier = todayQuickSurfaceActionIdentifier(for: label),
+              visibleSurfaceNavigationTitle(for: "Today", in: app)
+        else {
+            return false
+        }
+
+        let button = app.buttons[identifier].firstMatch
+        guard button.exists || scrollToElementPresence(button, in: app, maxSwipes: 8) else {
+            return false
+        }
+        guard scrollToElement(button, in: app, maxSwipes: 8) else {
+            return false
+        }
+        button.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+        return true
+    }
+
+    func todayQuickSurfaceActionIdentifier(for label: String) -> String? {
+        switch label {
+        case "Fasting Days":
+            "today.quick.fasting_days"
+        case "Track Fast":
+            "today.quick.intermittent"
+        case "More":
+            "today.quick.more"
+        default:
+            nil
+        }
     }
 
     func tabButton(for label: String, in app: XCUIApplication) -> XCUIElement {
         let tabBar = app.tabBars.firstMatch
+        if let index = tabIndex(for: label) {
+            let indexedButton = tabBar.buttons.element(boundBy: index)
+            if indexedButton.exists {
+                return indexedButton
+            }
+        }
         for candidate in tabLabels(for: label) {
             let button = tabBar.buttons[candidate].firstMatch
             if button.exists {
@@ -89,6 +175,42 @@ final class CatholicFastingAppUITests: XCTestCase {
             }
         }
         return tabBar.buttons[label].firstMatch
+    }
+
+    func tabIndex(for label: String) -> Int? {
+        switch label {
+        case "Today":
+            0
+        case "Fasting Days":
+            1
+        case "Track Fast":
+            2
+        case "More":
+            3
+        default:
+            nil
+        }
+    }
+
+    func tapTab(_ label: String, in app: XCUIApplication) {
+        guard let index = tabIndex(for: label) else {
+            let tab = tabButton(for: label, in: app)
+            XCTAssertTrue(tab.waitForExistence(timeout: 3), "Unable to find tab \(label)")
+            tab.tap()
+            return
+        }
+
+        let tabBar = app.tabBars.firstMatch
+        XCTAssertTrue(tabBar.waitForExistence(timeout: 3))
+        let tabCenterX = (Double(index) + 0.5) / 4.0
+        tabBar.coordinate(withNormalizedOffset: CGVector(dx: tabCenterX, dy: 0.5)).tap()
+    }
+
+    func visibleSurfaceNavigationTitle(for label: String, in app: XCUIApplication) -> Bool {
+        tabLabels(for: label).contains { candidate in
+            let navigationBar = app.navigationBars[candidate].firstMatch
+            return elementIsVisible(navigationBar, in: app)
+        }
     }
 
     func tabLabels(for label: String) -> [String] {
@@ -107,6 +229,13 @@ final class CatholicFastingAppUITests: XCTestCase {
     }
 
     func openMoreDestination(_ title: String, in app: XCUIApplication) {
+        if let rawValue = moreDestinationRawValue(for: title),
+           tapUITestMoreDestination(rawValue, in: app)
+        {
+            assertMoreDestinationOpened(rawValue, title: title, in: app)
+            return
+        }
+
         openSurface("More", in: app)
 
         if let rawValue = moreDestinationRawValue(for: title) {
@@ -114,7 +243,7 @@ final class CatholicFastingAppUITests: XCTestCase {
             if identifiedDestination.exists || identifiedDestination.waitForExistence(timeout: 1) {
                 XCTAssertTrue(scrollToElement(identifiedDestination, in: app), "Unable to find More destination \(title)")
                 identifiedDestination.tap()
-                XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 4))
+                assertMoreDestinationOpened(rawValue, title: title, in: app)
                 return
             }
         }
@@ -123,14 +252,40 @@ final class CatholicFastingAppUITests: XCTestCase {
         if destinationButton.exists || destinationButton.waitForExistence(timeout: 1) {
             XCTAssertTrue(scrollToElement(destinationButton, in: app))
             destinationButton.tap()
-            XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 4))
+            if let rawValue = moreDestinationRawValue(for: title) {
+                assertMoreDestinationOpened(rawValue, title: title, in: app)
+            } else {
+                XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 4))
+            }
             return
         }
 
         let destinationText = app.staticTexts[title].firstMatch
         XCTAssertTrue(scrollToElement(destinationText, in: app), "Unable to find More destination \(title)")
         destinationText.tap()
-        XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 4))
+        if let rawValue = moreDestinationRawValue(for: title) {
+            assertMoreDestinationOpened(rawValue, title: title, in: app)
+        } else {
+            XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 4))
+        }
+    }
+
+    func tapUITestMoreDestination(_ rawValue: String, in app: XCUIApplication) -> Bool {
+        let button = app.buttons["uitest.more.destination.\(rawValue)"].firstMatch
+        guard button.exists || button.waitForExistence(timeout: 1) else {
+            return false
+        }
+        button.tap()
+        return true
+    }
+
+    func assertMoreDestinationOpened(_ rawValue: String, title: String, in app: XCUIApplication) {
+        let hero = elementByIdentifier("more.\(rawValue).hero", in: app)
+        XCTAssertTrue(
+            hero.waitForExistence(timeout: 4)
+                || app.navigationBars[title].waitForExistence(timeout: 2)
+                || scrollToElement(hero, in: app),
+            "Unable to open More destination \(title)")
     }
 
     func moreDestinationRawValue(for title: String) -> String? {
@@ -280,9 +435,9 @@ final class CatholicFastingAppUITests: XCTestCase {
         case "supportAndPremium":
             XCTAssertTrue(scrollToElement(elementByIdentifier("premium.subscription_store", in: app), in: app))
         case "setupAndReminders":
-            XCTAssertTrue(scrollToElement(app.pickers["settings.region_picker"].firstMatch, in: app))
+            XCTAssertTrue(scrollToElement(elementByIdentifier("settings.region_picker", in: app), in: app))
         case "profileAndNorms":
-            XCTAssertTrue(scrollToElement(app.pickers["settings.region_picker"].firstMatch, in: app))
+            XCTAssertTrue(scrollToElement(elementByIdentifier("settings.region_picker", in: app), in: app))
         case "guidanceAndRules":
             XCTAssertTrue(scrollToElement(app.otherElements["guidance.food.section"].firstMatch, in: app))
         case "historyOfFasting":
@@ -417,14 +572,14 @@ final class CatholicFastingAppUITests: XCTestCase {
     }
 
     func swipePageUp(in app: XCUIApplication) {
-        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.06, dy: 0.82))
-        let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.06, dy: 0.24))
+        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.82))
+        let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.24))
         start.press(forDuration: 0.01, thenDragTo: end)
     }
 
     func swipePageDown(in app: XCUIApplication) {
-        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.06, dy: 0.24))
-        let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.06, dy: 0.82))
+        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.24))
+        let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.82))
         start.press(forDuration: 0.01, thenDragTo: end)
     }
 
@@ -438,6 +593,12 @@ final class CatholicFastingAppUITests: XCTestCase {
     }
 
     func expandDisclosureGroup(_ label: String, in app: XCUIApplication) {
+        if label == "Reminder Actions",
+           elementByIdentifier("settings.quick.reminder_status", in: app).exists
+        {
+            return
+        }
+
         if let identifier = disclosureIdentifier(for: label) {
             let identified = elementByIdentifier(identifier, in: app)
             if scrollToElement(identified, in: app) {
@@ -511,8 +672,39 @@ final class CatholicFastingAppUITests: XCTestCase {
     }
 
     func switchIsOn(_ element: XCUIElement) -> Bool {
-        let rawValue = element.value as? String
-        return rawValue == "1" || rawValue == "On"
+        if let boolValue = element.value as? Bool {
+            return boolValue
+        }
+        if let intValue = element.value as? Int {
+            return intValue != 0
+        }
+        let rawValue = String(describing: element.value ?? "")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
+        return rawValue == "1"
+            || rawValue == "on"
+            || rawValue == "true"
+            || rawValue == "yes"
+    }
+
+    func tapSwitch(_ element: XCUIElement, in app: XCUIApplication) {
+        XCTAssertTrue(scrollToElement(element, in: app), "Unable to find switch \(element)")
+        element.coordinate(withNormalizedOffset: CGVector(dx: 0.85, dy: 0.5)).tap()
+    }
+
+    func setSwitch(_ element: XCUIElement, to targetValue: Bool, in app: XCUIApplication) {
+        XCTAssertTrue(scrollToElement(element, in: app), "Unable to find switch \(element)")
+        if switchIsOn(element) == targetValue {
+            return
+        }
+
+        tapSwitch(element, in: app)
+        XCTAssertTrue(
+            waitUntil(timeout: 3) {
+                let refreshed = app.switches[element.identifier].firstMatch
+                return refreshed.exists && switchIsOn(refreshed) == targetValue
+            },
+            "Expected switch \(element.identifier) to become \(targetValue ? "on" : "off")")
     }
 
     func progressCount(from label: String) -> Int? {

@@ -15,10 +15,10 @@ extension ContentView {
                             "ipad.hero.season_label",
                             default: "Liturgical Season: %@",
                             localizedSeasonLabel(currentLiturgicalSeason)),
-                        title: localized("premium.workspace.hero.title", default: "Premium Formation Toolkit"),
+                        title: localized("premium.workspace.hero.title", default: "Guided Seasonal Formation"),
                         subtitle: localized(
                             "premium.workspace.hero.subtitle",
-                            default: "Choose a plan, keep the Guided Seasonal Journey visible, and use the rest of premium as supporting tools."),
+                            default: "Choose a plan, keep Guided Seasonal Formation visible, and use the rest of premium as supporting tools."),
                         quote: dailySeasonalQuote,
                         regionContext: RegionalGuidanceContextFactory.generalContext(for: settings),
                         compact: compact,
@@ -82,7 +82,7 @@ extension ContentView {
             IPadWorkspaceHeader(
                 eyebrow: localized("premium.workspace.pillars.eyebrow", default: "Pillars"),
                 title: localized("premium.workspace.pillars.title", default: "Choose the workflow"),
-                detail: localized("premium.workspace.pillars.detail", default: "Planning, accountability, reflection, and exports stay grouped by outcome."))
+                detail: localized("premium.workspace.pillars.detail", default: "Journey, recovery, reflection, and exports stay grouped by outcome."))
 
             ForEach(PremiumEntitlementSurface.allCases) { surface in
                 let destination = premiumToolDestination(for: surface)

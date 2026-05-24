@@ -199,8 +199,7 @@ extension ContentView {
 
                         if [.fastAndAbstinence, .abstinence, .fridayPenance].contains(selected.kind) {
                             Button {
-                                selectedMoreDestination = .guidanceAndRules
-                                homeSurface = .more
+                                navigateToMoreDestination(.guidanceAndRules)
                             } label: {
                                 Label(localized("ipad.fasting_days.detail.open_guidance", default: "Open full food guidance"), systemImage: "book.closed")
                                     .font(.subheadline.weight(.semibold))

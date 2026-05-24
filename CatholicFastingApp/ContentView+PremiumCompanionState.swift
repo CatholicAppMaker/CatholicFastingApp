@@ -124,7 +124,7 @@ extension ContentView {
             "Week ending \(Date().formatted(date: .abbreviated, time: .omitted))",
             "",
             "Completed observances: \(completed)/\(weeklyObservances.count)",
-            "Current streak: \(currentStreak) day(s)",
+            "Current rhythm: \(currentStreak) day(s)",
             "Template: \(selectedPremiumTemplate.label)",
             "Program: \(selectedPremiumSeasonProgram.label) (Week \(premiumProgramWeek))",
             "Motivation: \(premiumMotivationLine)",

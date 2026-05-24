@@ -96,6 +96,7 @@ private enum UITestBootstrap {
                 || arguments.contains("-uitest-skip-onboarding")
                 || arguments.contains("-uitest-seed-deterministic")
                 || arguments.contains("-uitest-seed-missed")
+                || arguments.contains("-uitest-seed-active-fast")
                 || arguments.contains("-uitest-disable-animations")
                 || environment["UITEST_MODE"] == "1"
 
@@ -130,14 +131,33 @@ private enum UITestBootstrap {
                 "daily_quote_reminder_minute",
                 "daily_quote_reminder_signature",
                 "reminder_tier",
+                "haptics_enabled",
+                "intermittent_show_advanced",
+                "simplified_mode_enabled",
+                "fasting_days_show_all_year_days",
+                "fasting_days_include_optional_days",
+                "fasting_days_include_feast_and_holy_days",
+                "support_premium_surface",
                 "intermittent_fast_sessions",
                 "intermittent_fast_meta",
+                "intermittent_intention",
                 "rule_bundle_directory_override",
                 "storage_schema_version",
                 "completed_observances",
                 "observance_statuses",
                 "friday_penance_notes",
                 "last_sync_date",
+                "debug_simulator_premium_unlocked",
+                "planning_data_v1",
+                "intermittent_schedules_v1",
+                "intermittent_active_schedule_v1",
+                "household_profiles_v1",
+                "household_active_profile_v1",
+                "reflection_journal_v1",
+                "premium_checklist_v1",
+                "premium_companion_v1",
+                "devotional_favorites_v1",
+                "launch_funnel_snapshot_v1",
             ].forEach { key in
                 defaults.removeObject(forKey: key)
             }
@@ -204,6 +224,16 @@ private enum UITestBootstrap {
             if let missedTarget {
                 defaults.set([missedTarget.id: CompletionStatus.missed.rawValue], forKey: "observance_statuses")
             }
+        }
+
+        if arguments.contains("-uitest-seed-active-fast") {
+            let activeStart = ISO8601DateFormatter().string(from: Date().addingTimeInterval(-60))
+            defaults.set(
+                [
+                    "preset_hours": "16",
+                    "active_start": activeStart,
+                ],
+                forKey: "intermittent_fast_meta")
         }
 
         if arguments.contains("-uitest-skip-onboarding") {
