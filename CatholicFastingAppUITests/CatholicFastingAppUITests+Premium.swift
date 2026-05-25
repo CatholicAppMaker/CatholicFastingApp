@@ -19,6 +19,10 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(manageButton, in: app))
         XCTAssertTrue(manageButton.isEnabled)
 
+        let toolsSegment = app.buttons["Premium Tools"].firstMatch
+        XCTAssertTrue(scrollToElement(toolsSegment, in: app))
+        toolsSegment.tap()
+
         let lockedPreview = elementByIdentifier("premium.locked_feature_preview", in: app)
         XCTAssertTrue(scrollToElement(lockedPreview, in: app))
     }

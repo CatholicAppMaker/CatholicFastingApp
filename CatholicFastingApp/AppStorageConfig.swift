@@ -25,6 +25,7 @@ enum DefaultValues {
     static let hapticsEnabled = true
     static let supportPremiumSurface = SupportPremiumSurface.upgrade
     static let intermittentIntention = "personal_discipline"
+    static let intermittentTargetReminderEnabled = false
 }
 
 enum StorageKeys {
@@ -60,4 +61,5 @@ enum StorageKeys {
     static let fastingDaysIncludeFeastAndHolyDays = "fasting_days_include_feast_and_holy_days"
     static let supportPremiumSurface = "support_premium_surface"
     static let intermittentIntention = "intermittent_intention"
+    static let intermittentTargetReminderEnabled = "intermittent_target_reminder_enabled"
 }

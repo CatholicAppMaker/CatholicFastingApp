@@ -141,6 +141,7 @@ private enum UITestBootstrap {
                 "intermittent_fast_sessions",
                 "intermittent_fast_meta",
                 "intermittent_intention",
+                "intermittent_target_reminder_enabled",
                 "rule_bundle_directory_override",
                 "storage_schema_version",
                 "completed_observances",
@@ -185,6 +186,7 @@ private enum UITestBootstrap {
             defaults.set("balanced", forKey: "reminder_tier")
             defaults.set([String: String](), forKey: "intermittent_fast_sessions")
             defaults.set(["preset_hours": "16"], forKey: "intermittent_fast_meta")
+            defaults.set(false, forKey: "intermittent_target_reminder_enabled")
             defaults.set(3, forKey: "storage_schema_version")
         }
 

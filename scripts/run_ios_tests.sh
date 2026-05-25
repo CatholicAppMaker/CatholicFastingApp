@@ -66,6 +66,9 @@ run_suite() {
       -destination "platform=iOS Simulator,name=${simulator_name}"
       -derivedDataPath "${DERIVED_DATA}"
       -resultBundlePath "${result_bundle}"
+      -parallel-testing-enabled NO
+      -test-timeouts-enabled YES
+      -default-test-execution-time-allowance "${TEST_EXECUTION_TIME_ALLOWANCE:-120}"
     )
     command+=("${selectors[@]}")
     command+=(test-without-building)
@@ -85,51 +88,51 @@ run_suite() {
 
 run_smoke_suite() {
   local selectors=(
-    -only-testing:CatholicFastingAppUITests/testSmokeOnboardingCanBeCompleted
-    -only-testing:CatholicFastingAppUITests/testSmokeFastingDaysControlsVisible
-    -only-testing:CatholicFastingAppUITests/testSmokeExportsRequireLegalAcknowledgment
-    -only-testing:CatholicFastingAppUITests/testSmokeGuidanceDestinationOpens
-    -only-testing:CatholicFastingAppUITests/testSmokePremiumSupportControlsVisible
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testSmokeOnboardingCanBeCompleted
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testSmokeFastingDaysControlsVisible
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testSmokeExportsRequireLegalAcknowledgment
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testSmokeGuidanceDestinationOpens
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testSmokePremiumSupportControlsVisible
   )
   run_suite "smoke" "${SMOKE_TIMEOUT_SECONDS}" "${PHONE_SIMULATOR_NAME}" "${selectors[@]}"
 }
 
 run_deep_suite() {
   local selectors=(
-    -only-testing:CatholicFastingAppUITests/testDeepCanOpenFridayNotesHistory
-    -only-testing:CatholicFastingAppUITests/testDeepLaunchReadinessControlsVisible
-    -only-testing:CatholicFastingAppUITests/testDeepDashboardHeroVisible
-    -only-testing:CatholicFastingAppUITests/testDeepCompanionCardsExposeRuleLiveFormationAndActions
-    -only-testing:CatholicFastingAppUITests/testDeepCompanionActiveFastPrimaryActionOpensTrackFast
-    -only-testing:CatholicFastingAppUITests/testDeepUnofficialNoticeVisible
-    -only-testing:CatholicFastingAppUITests/testDeepDashboardOpenFastingDaysQuickAction
-    -only-testing:CatholicFastingAppUITests/testDeepDashboardFocusRequiredQuickAction
-    -only-testing:CatholicFastingAppUITests/testDeepFastingDaysScopePickerVisible
-    -only-testing:CatholicFastingAppUITests/testDeepRecoveryPlanVisibleWhenMissedSeeded
-    -only-testing:CatholicFastingAppUITests/testDeepGuidanceSacredGalleryVisible
-    -only-testing:CatholicFastingAppUITests/testDeepTodaySetupCardOpensQuickSetup
-    -only-testing:CatholicFastingAppUITests/testDeepQuickSetupConsentIncrementsProgress
-    -only-testing:CatholicFastingAppUITests/testDeepQuickSetupReminderActionsVisible
-    -only-testing:CatholicFastingAppUITests/testDeepHouseholdProfileCanBeCreatedAndReapplied
-    -only-testing:CatholicFastingAppUITests/testIntermittentCanStartAndCancelFast
-    -only-testing:CatholicFastingAppUITests/testIntermittentCanEndFastAndWriteSessionHistory
-    -only-testing:CatholicFastingAppUITests/testIntermittentTargetPickerVisible
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepCanOpenFridayNotesHistory
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepLaunchReadinessControlsVisible
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepDashboardHeroVisible
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepCompanionCardsExposeRuleLiveFormationAndActions
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepCompanionActiveFastPrimaryActionOpensTrackFast
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepUnofficialNoticeVisible
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepDashboardOpenFastingDaysQuickAction
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepDashboardFocusRequiredQuickAction
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepFastingDaysScopePickerVisible
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepRecoveryPlanVisibleWhenMissedSeeded
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepGuidanceSacredGalleryVisible
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepTodaySetupCardOpensQuickSetup
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepQuickSetupConsentIncrementsProgress
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepQuickSetupReminderActionsVisible
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepHouseholdProfileCanBeCreatedAndReapplied
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIntermittentCanStartAndCancelFast
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIntermittentCanEndFastAndWriteSessionHistory
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIntermittentTargetPickerVisible
   )
   run_suite "deep" "${DEEP_TIMEOUT_SECONDS}" "${PHONE_SIMULATOR_NAME}" "${selectors[@]}"
 }
 
 run_ipad_suite() {
   local selectors=(
-    -only-testing:CatholicFastingAppUITests/testIPadSidebarSwitchesPrimaryWorkspaces
-    -only-testing:CatholicFastingAppUITests/testIPadTodayDashboardShowsHeroAndCoreCards
-    -only-testing:CatholicFastingAppUITests/testIPadCompanionTriadShowsRuleTrackerAndFormationCards
-    -only-testing:CatholicFastingAppUITests/testIPadFastingDaysSelectionShowsDetail
-    -only-testing:CatholicFastingAppUITests/testIPadFastingDaysShowsFiltersAndQuickDates
-    -only-testing:CatholicFastingAppUITests/testIPadOnboardingShowsRegionSelector
-    -only-testing:CatholicFastingAppUITests/testIPadMoreProfileDestinationShowsRegionPicker
-    -only-testing:CatholicFastingAppUITests/testIPadCanadaModeShowsPartialSupportContext
-    -only-testing:CatholicFastingAppUITests/testIPadPremiumWorkspaceShowsLegalLinks
-    -only-testing:CatholicFastingAppUITests/testIPadTrackFastShowsLiveWorkspaceAndControls
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadSidebarSwitchesPrimaryWorkspaces
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadTodayDashboardShowsHeroAndCoreCards
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadCompanionTriadShowsRuleTrackerAndFormationCards
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadFastingDaysSelectionShowsDetail
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadFastingDaysShowsFiltersAndQuickDates
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadOnboardingShowsRegionSelector
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadMoreProfileDestinationShowsRegionPicker
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadCanadaModeShowsPartialSupportContext
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadPremiumWorkspaceShowsLegalLinks
+    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadTrackFastShowsLiveWorkspaceAndControls
   )
   run_suite "ipad" "${IPAD_TIMEOUT_SECONDS}" "${IPAD_SIMULATOR_NAME}" "${selectors[@]}"
 }

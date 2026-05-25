@@ -57,17 +57,17 @@ extension CatholicFastingAppUITests {
             app.launch()
             ensureOnHomeScreen(app)
             openIPadSurface("intermittent", in: app)
-            XCTAssertTrue(app.otherElements["ipad.intermittent.live"].waitForExistence(timeout: 4))
+            let workspaceReady = app.otherElements["surface.intermittent.ready"].waitForExistence(timeout: 8)
+                || app.otherElements["ipad.intermittent.live"].waitForExistence(timeout: 8)
+            XCTAssertTrue(workspaceReady)
+            XCTAssertTrue(scrollToElementPresence(elementByIdentifier("ipad.intermittent.live", in: app), in: app))
         }
 
         try captureAppStoreScreen("03-privacy") { app in
             app.launch()
             ensureOnHomeScreen(app)
-            openIPadSurface("more", in: app)
-            let workspaceReady = app.otherElements["ipad.more.workspace"].firstMatch.waitForExistence(timeout: 4)
-                || app.otherElements["surface.more.ready"].firstMatch.waitForExistence(timeout: 4)
-            XCTAssertTrue(workspaceReady)
-            _ = scrollToElementInApp(elementByIdentifier("ipad.more.destination.privacyAndData", in: app), in: app)
+            openIPadMoreDestination("privacyAndData", in: app)
+            XCTAssertTrue(scrollToElementPresence(elementByIdentifier("launch.export_data", in: app), in: app))
         }
 
         try captureAppStoreScreen("04-fasting-days") { app in
@@ -109,7 +109,7 @@ extension CatholicFastingAppUITests {
         let deviceDirectory = config.deviceDirectory.isEmpty
             ? appStoreScreenshotDeviceDirectory
             : config.deviceDirectory
-        let rawDirectory = URL(fileURLWithPath: config.outputRoot)
+        let rawDirectory = config.rawDirectoryURL ?? URL(fileURLWithPath: config.outputRoot)
             .standardizedFileURL
             .appendingPathComponent(deviceDirectory)
             .appendingPathComponent("raw")
@@ -129,6 +129,14 @@ extension CatholicFastingAppUITests {
 private struct AppStoreScreenshotConfig: Decodable {
     let outputRoot: String
     let deviceDirectory: String
+    let rawDirectory: String?
+
+    var rawDirectoryURL: URL? {
+        guard let rawDirectory, rawDirectory.isEmpty == false else {
+            return nil
+        }
+        return URL(fileURLWithPath: rawDirectory).standardizedFileURL
+    }
 
     static func load() -> Self? {
         let configURL = URL(fileURLWithPath: "/tmp/catholic-fasting-app-store-screenshot-config.json")

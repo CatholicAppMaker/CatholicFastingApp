@@ -76,8 +76,9 @@ final class CatholicFastingAppUITests: XCTestCase {
 
     func openSurface(_ label: String, in app: XCUIApplication) {
         if tapUITestSurfaceSwitcher(label, in: app) {
-            waitForSurfaceReady(label, in: app)
-            return
+            if surfaceReady(label, in: app, timeout: 4) {
+                return
+            }
         }
 
         if tapTodayQuickSurfaceAction(label, in: app) {
@@ -420,6 +421,18 @@ final class CatholicFastingAppUITests: XCTestCase {
             return
         }
 
+        if let title = moreDestinationTitle(for: rawValue) {
+            let titleText = app.staticTexts[title].firstMatch
+            if titleText.exists || titleText.waitForExistence(timeout: 1) {
+                XCTAssertTrue(
+                    scrollToElementInApp(titleText, in: app, maxSwipes: 10)
+                        || scrollToElement(titleText, in: app, maxSwipes: 10),
+                    "Unable to bring iPad More destination \(title) into view")
+                titleText.tap()
+                return
+            }
+        }
+
         XCTAssertTrue(
             scrollToElementInApp(compactDestination, in: app, maxSwipes: 10)
                 || scrollToElementInApp(destination, in: app, maxSwipes: 10),
@@ -476,6 +489,10 @@ final class CatholicFastingAppUITests: XCTestCase {
     }
 
     func waitForSurfaceReady(_ label: String, in app: XCUIApplication) {
+        XCTAssertTrue(surfaceReady(label, in: app, timeout: 4))
+    }
+
+    func surfaceReady(_ label: String, in app: XCUIApplication, timeout: TimeInterval) -> Bool {
         let markerID: String
         switch label {
         case "Today":
@@ -487,9 +504,9 @@ final class CatholicFastingAppUITests: XCTestCase {
         case "More":
             markerID = "surface.more.ready"
         default:
-            return
+            return true
         }
-        XCTAssertTrue(app.otherElements[markerID].waitForExistence(timeout: 4))
+        return app.otherElements[markerID].waitForExistence(timeout: timeout)
     }
 
     func scrollToElement(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 6)

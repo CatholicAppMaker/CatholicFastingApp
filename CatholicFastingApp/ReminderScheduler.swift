@@ -12,6 +12,7 @@ enum ReminderScheduler {
     private static let supportReminderPrefix = "habit-support-"
     private static let quoteReminderPrefix = "daily-quote-"
     private static let intermittentSchedulePrefix = "intermittent-schedule-"
+    private static let intermittentTargetPrefix = IntermittentTargetReminderPolicy.identifierPrefix
     private static let reminderCategory = "habit-reminder"
     private static let dailyQuoteSchedulingHorizon = 21
 
@@ -382,6 +383,71 @@ enum ReminderScheduler {
         #endif
     }
 
+    static func intermittentTargetReminderIdentifier(start: Date) -> String {
+        IntermittentTargetReminderPolicy.identifier(start: start)
+    }
+
+    static func scheduleIntermittentTargetReminder(
+        enabled: Bool,
+        start: Date?,
+        targetHours: Int,
+        now: Date = Date()) async -> String
+    {
+        #if canImport(UserNotifications)
+        let center = UNUserNotificationCenter.current()
+        await clearIntermittentTargetReminders(center)
+
+        guard enabled else {
+            return "Target reminder cleared"
+        }
+        guard let start else {
+            return "No active fast for target reminder"
+        }
+
+        let status = await authorizationStatus(center)
+        guard isAuthorizedStatus(status) else {
+            return "Target reminder selected. Enable notifications to receive it."
+        }
+        configureReminderActions(center)
+
+        let targetDate = start.addingTimeInterval(TimeInterval(max(1, targetHours) * 3600))
+        guard targetDate > now else {
+            return "Target already reached"
+        }
+
+        let content = UNMutableNotificationContent()
+        content.title = "Fast target reached"
+        content.body = "Your planned fast target is complete. Review it when ready."
+        content.sound = .default
+        content.categoryIdentifier = reminderCategory
+
+        let components = Calendar.gregorian.dateComponents(
+            [.year, .month, .day, .hour, .minute],
+            from: targetDate)
+        let request = UNNotificationRequest(
+            identifier: intermittentTargetReminderIdentifier(start: start),
+            content: content,
+            trigger: UNCalendarNotificationTrigger(dateMatching: components, repeats: false))
+        do {
+            try await center.add(request)
+            return "Target reminder scheduled"
+        } catch {
+            return "Target reminder failed: \(error.localizedDescription)"
+        }
+        #else
+        return "Notifications unavailable on this platform"
+        #endif
+    }
+
+    static func clearIntermittentTargetReminders() async -> String {
+        #if canImport(UserNotifications)
+        await clearIntermittentTargetReminders(UNUserNotificationCenter.current())
+        return "Target reminder cleared"
+        #else
+        return "Notifications unavailable on this platform"
+        #endif
+    }
+
     static func notificationSummary() async -> String {
         #if canImport(UserNotifications)
         let center = UNUserNotificationCenter.current()
@@ -398,12 +464,14 @@ enum ReminderScheduler {
         let supportCount = requests.map(\.identifier).count(where: { $0.hasPrefix(supportReminderPrefix) })
         let quoteCount = requests.map(\.identifier).count(where: { $0.hasPrefix(quoteReminderPrefix) })
         let intermittentCount = requests.map(\.identifier).count(where: { $0.hasPrefix(intermittentSchedulePrefix) })
+        let targetCount = requests.map(\.identifier).count(where: { $0.hasPrefix(intermittentTargetPrefix) })
 
         let summaryParts = [
             summaryPart(count: requiredCount, label: "required-day"),
             summaryPart(count: supportCount, label: "support"),
             summaryPart(count: quoteCount, label: "quote"),
             summaryPart(count: intermittentCount, label: "intermittent"),
+            summaryPart(count: targetCount, label: "target"),
         ].compactMap(\.self)
 
         if summaryParts.isEmpty {
@@ -488,6 +556,15 @@ enum ReminderScheduler {
             return true
         } catch {
             return false
+        }
+    }
+
+    private static func clearIntermittentTargetReminders(_ center: UNUserNotificationCenter) async {
+        let identifiers = await pendingRequests(center)
+            .map(\.identifier)
+            .filter { $0.hasPrefix(intermittentTargetPrefix) }
+        if !identifiers.isEmpty {
+            center.removePendingNotificationRequests(withIdentifiers: identifiers)
         }
     }
 

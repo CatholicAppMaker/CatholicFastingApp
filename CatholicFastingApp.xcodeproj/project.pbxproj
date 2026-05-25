@@ -161,6 +161,10 @@
 		C4F200000000000000000002 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000044 /* PrivacyInfo.xcprivacy */; };
 		C4F200000000000000000003 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000044 /* PrivacyInfo.xcprivacy */; };
 		C50000000000000000000001 /* CompanionSnapshotEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50000000000000000000002 /* CompanionSnapshotEngine.swift */; };
+		D50000000000000000000001 /* IntermittentHabitSummaryEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50000000000000000000003 /* IntermittentHabitSummaryEngine.swift */; };
+		D50000000000000000000002 /* IntermittentHabitSummaryEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50000000000000000000003 /* IntermittentHabitSummaryEngine.swift */; };
+		D50000000000000000000004 /* IntermittentTargetReminderPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50000000000000000000006 /* IntermittentTargetReminderPolicy.swift */; };
+		D50000000000000000000005 /* IntermittentTargetReminderPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50000000000000000000006 /* IntermittentTargetReminderPolicy.swift */; };
 		C91D6825FF3CAD853D62EAF6 /* CompletionStatusAndFastTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23170EB4059A07DAE6CDD358 /* CompletionStatusAndFastTracker.swift */; };
 		C97B48B6A475C9ADD56E89E4 /* CatholicFastingMacAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E881F846F5C380A2FD0A04FB /* CatholicFastingMacAppUITests.swift */; };
 		CB899C5389F804275147CB13 /* AppLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7793FEC713108D10B0E2FD79 /* AppLocalization.swift */; };
@@ -416,6 +420,8 @@
 		C009A99FB027665F39EA3581 /* PremiumAdaptiveRulePlanner.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PremiumAdaptiveRulePlanner.swift; path = CatholicFastingApp/Models/PremiumAdaptiveRulePlanner.swift; sourceTree = "<group>"; };
 		C5016333C0CDE946F4EAC53F /* CatholicFastingMacSurfaces.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CatholicFastingMacSurfaces.swift; path = CatholicFastingMacApp/CatholicFastingMacSurfaces.swift; sourceTree = SOURCE_ROOT; };
 		C50000000000000000000002 /* CompanionSnapshotEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CompanionSnapshotEngine.swift; path = CatholicFastingApp/Models/CompanionSnapshotEngine.swift; sourceTree = "<group>"; };
+		D50000000000000000000003 /* IntermittentHabitSummaryEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntermittentHabitSummaryEngine.swift; sourceTree = "<group>"; };
+		D50000000000000000000006 /* IntermittentTargetReminderPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntermittentTargetReminderPolicy.swift; sourceTree = "<group>"; };
 		C6584D7CD61DB4C4A59B051E /* CatholicFastingMacModel+Persistence.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CatholicFastingMacModel+Persistence.swift"; sourceTree = "<group>"; };
 		C7A11A7D18BD16FE73699ED4 /* ObservanceQueryEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ObservanceQueryEngine.swift; path = CatholicFastingApp/Models/ObservanceQueryEngine.swift; sourceTree = "<group>"; };
 		CFCAE90F694EE4878A1A7960 /* ObservanceCalculator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ObservanceCalculator.swift; path = CatholicFastingApp/Models/ObservanceCalculator.swift; sourceTree = "<group>"; };
@@ -695,6 +701,8 @@
 				A00000000000000000000135 /* SeasonalAppIconPolicy.swift */,
 				A00000000000000000000139 /* AppLaunchPolicy.swift */,
 				A00000000000000000000155 /* CompanionSnapshotEngine.swift */,
+				D50000000000000000000003 /* IntermittentHabitSummaryEngine.swift */,
+				D50000000000000000000006 /* IntermittentTargetReminderPolicy.swift */,
 				A000000000000000000000A4 /* RegionalGuidanceContext.swift */,
 			);
 			path = Models;
@@ -1104,6 +1112,8 @@
 				6FDE8514711BE2759A4516A1 /* IntermittentFastLiveActivity.swift in Sources */,
 				5DACF771E7A9B7B407A90A05 /* IntermittentFastSession.swift in Sources */,
 				367390E8A0502630170C033E /* IntermittentFastTracker.swift in Sources */,
+				D50000000000000000000002 /* IntermittentHabitSummaryEngine.swift in Sources */,
+				D50000000000000000000005 /* IntermittentTargetReminderPolicy.swift in Sources */,
 				85176E4969B13F3FEC2FCAB6 /* LiturgicalSeasonThemeEngine.swift in Sources */,
 				A0AEECC45D8510E3BEB829F5 /* MissedDayRecoveryEngine.swift in Sources */,
 				D03E68508A9E1C5CC346C7CA /* ObservanceCalculator+CalendarEntries.swift in Sources */,
@@ -1174,6 +1184,8 @@
 				A0000000000000000000004E /* IntermittentFastTracker.swift in Sources */,
 				A00000000000000000000106 /* IntermittentFastSession.swift in Sources */,
 				A00000000000000000000108 /* IntermittentFastLiveActivity.swift in Sources */,
+				D50000000000000000000001 /* IntermittentHabitSummaryEngine.swift in Sources */,
+				D50000000000000000000004 /* IntermittentTargetReminderPolicy.swift in Sources */,
 				A00000000000000000000050 /* SyncDiagnostics.swift in Sources */,
 				A00000000000000000000052 /* GuidanceEngines.swift in Sources */,
 				A000000000000000000000F2 /* GuidanceTypes.swift in Sources */,

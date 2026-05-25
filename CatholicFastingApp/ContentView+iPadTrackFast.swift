@@ -20,9 +20,9 @@ extension ContentView {
                             uiTestMarker("ipad.intermittent.start_date")
                             ipadIntermittentHeroBand(compact: true)
                             ipadIntermittentLiveControlCenter
+                            ipadIntermittentAdvancedToolsCard
                             ipadIntermittentQuickPlansCard
                             ipadIntermittentPlanningCard
-                            ipadIntermittentAdvancedToolsCard
                             ipadIntermittentHistoryCard
                         }
                     } else {

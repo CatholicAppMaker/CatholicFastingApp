@@ -9,6 +9,8 @@ IPHONE_DEVICE="${IPHONE_DEVICE:-}"
 IPAD_DEVICE="${IPAD_DEVICE:-}"
 SKIP_CAPTURE=0
 CAPTURE_ONLY=0
+CAPTURE_IPHONE=1
+CAPTURE_IPAD=1
 
 usage() {
   cat <<'USAGE'
@@ -20,6 +22,8 @@ Usage:
 Options:
   --skip-capture          Render final PNGs from existing raw screenshots only.
   --capture-only          Capture raw simulator screenshots without rendering finals.
+  --iphone-only           Capture/render only the iPhone screenshot set.
+  --ipad-only             Capture/render only the iPad screenshot set.
   --output DIR            Screenshot output root. Defaults to release/app-store-screenshots.
   --iphone-device NAME    Override the iPhone simulator name.
   --ipad-device NAME      Override the iPad simulator name.
@@ -27,6 +31,7 @@ Options:
 
 Environment overrides:
   IPHONE_DEVICE, IPAD_DEVICE
+  SCREENSHOT_RESET_SIMULATOR=0   Reuse simulator state instead of erasing before capture.
 USAGE
 }
 
@@ -38,6 +43,16 @@ while [[ $# -gt 0 ]]; do
       ;;
     --capture-only)
       CAPTURE_ONLY=1
+      shift
+      ;;
+    --iphone-only)
+      CAPTURE_IPHONE=1
+      CAPTURE_IPAD=0
+      shift
+      ;;
+    --ipad-only)
+      CAPTURE_IPHONE=0
+      CAPTURE_IPAD=1
       shift
       ;;
     --output)
@@ -69,6 +84,30 @@ require_tool() {
     echo "Missing required tool: $1" >&2
     exit 1
   fi
+}
+
+run_with_timeout() {
+  local timeout_seconds="$1"
+  shift
+  python3 - "$timeout_seconds" "$@" <<'PY'
+import subprocess
+import sys
+
+timeout_seconds = int(sys.argv[1])
+command = sys.argv[2:]
+process = subprocess.Popen(command)
+try:
+    process.wait(timeout=timeout_seconds)
+except subprocess.TimeoutExpired:
+    process.terminate()
+    try:
+        process.wait(timeout=20)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        process.wait(timeout=20)
+    sys.exit(124)
+sys.exit(process.returncode)
+PY
 }
 
 choose_file() {
@@ -117,29 +156,65 @@ run_capture() {
   local device_dir="$2"
   local test_name="$3"
   local result_bundle="$RESULTS_DIR/$device_dir.xcresult"
+  local raw_final="$OUTPUT_ROOT/$device_dir/raw"
+  local raw_tmp
 
   rm -rf "$result_bundle"
-  mkdir -p "$OUTPUT_ROOT/$device_dir/raw" "$RESULTS_DIR"
-  rm -f "$OUTPUT_ROOT/$device_dir/raw"/[0-9][0-9]-*.png
+  mkdir -p "$raw_final" "$RESULTS_DIR"
+  raw_tmp="$(mktemp -d "$RESULTS_DIR/$device_dir-raw.XXXXXX")"
 
   echo "Capturing $device_dir on $device"
-  local escaped_output="${OUTPUT_ROOT//\\/\\\\}"
-  escaped_output="${escaped_output//\"/\\\"}"
-  local escaped_device="${device_dir//\\/\\\\}"
-  escaped_device="${escaped_device//\"/\\\"}"
-  printf '{"outputRoot":"%s","deviceDirectory":"%s"}\n' \
-    "$escaped_output" "$escaped_device" > "$SCREENSHOT_CONFIG_PATH"
+  python3 - "$SCREENSHOT_CONFIG_PATH" "$OUTPUT_ROOT" "$device_dir" "$raw_tmp" <<'PY'
+import json
+import sys
+
+config_path, output_root, device_directory, raw_directory = sys.argv[1:]
+with open(config_path, "w", encoding="utf-8") as handle:
+    json.dump({
+        "outputRoot": output_root,
+        "deviceDirectory": device_directory,
+        "rawDirectory": raw_directory,
+    }, handle)
+    handle.write("\n")
+PY
+
+  if [[ "${SCREENSHOT_RESET_SIMULATOR:-1}" == "1" ]]; then
+    xcrun simctl shutdown "$device" >/dev/null 2>&1 || true
+    xcrun simctl erase "$device" >/dev/null 2>&1 || true
+  fi
 
   local capture_status=0
   OS_ACTIVITY_MODE=disable \
-    xcodebuild test \
+    run_with_timeout "${SCREENSHOT_CAPTURE_TIMEOUT_SECONDS:-900}" xcodebuild test \
       -project "$ROOT_DIR/CatholicFastingApp.xcodeproj" \
       -scheme CatholicFastingApp \
       -destination "platform=iOS Simulator,name=$device" \
+      -destination-timeout 120 \
       -only-testing:"CatholicFastingAppUITests/CatholicFastingAppUITests/$test_name" \
+      -parallel-testing-enabled NO \
+      -test-timeouts-enabled YES \
+      -default-test-execution-time-allowance "${SCREENSHOT_TEST_EXECUTION_TIME_ALLOWANCE:-180}" \
       -resultBundlePath "$result_bundle" || capture_status=$?
   rm -f "$SCREENSHOT_CONFIG_PATH"
-  return "$capture_status"
+  if [[ "$capture_status" -ne 0 ]]; then
+    rm -rf "$raw_tmp"
+    echo "Capture failed for $device_dir; existing raw screenshots were preserved in $raw_final" >&2
+    return "$capture_status"
+  fi
+
+  local shot
+  for shot in 01-today 02-track-fast 03-privacy 04-fasting-days 05-premium; do
+    if [[ ! -f "$raw_tmp/$shot.png" ]]; then
+      rm -rf "$raw_tmp"
+      echo "Capture did not produce expected raw screenshot: $shot.png" >&2
+      echo "Existing raw screenshots were preserved in $raw_final" >&2
+      return 1
+    fi
+  done
+
+  rm -f "$raw_final"/[0-9][0-9]-*.png
+  mv "$raw_tmp"/*.png "$raw_final/"
+  rmdir "$raw_tmp"
 }
 
 make_rounded_crop() {
@@ -299,13 +374,21 @@ IPHONE_DEVICE="$(choose_simulator "$IPHONE_DEVICE" "iPhone 17 Pro Max" "iPhone 1
 IPAD_DEVICE="$(choose_simulator "$IPAD_DEVICE" "iPad Pro 13-inch (M5)" "iPad Pro 13-inch (M4)" "iPad Air 13-inch (M4)")"
 
 if [[ "$SKIP_CAPTURE" -eq 0 ]]; then
-  run_capture "$IPHONE_DEVICE" "iphone-17-pro-max" "testIPhoneAppStoreScreenshots"
-  run_capture "$IPAD_DEVICE" "ipad-pro-13" "testIPadAppStoreScreenshots"
+  if [[ "$CAPTURE_IPHONE" -eq 1 ]]; then
+    run_capture "$IPHONE_DEVICE" "iphone-17-pro-max" "testIPhoneAppStoreScreenshots"
+  fi
+  if [[ "$CAPTURE_IPAD" -eq 1 ]]; then
+    run_capture "$IPAD_DEVICE" "ipad-pro-13" "testIPadAppStoreScreenshots"
+  fi
 fi
 
 if [[ "$CAPTURE_ONLY" -eq 0 ]]; then
-  render_device_set "iphone-17-pro-max" compose_phone
-  render_device_set "ipad-pro-13" compose_ipad
+  if [[ "$CAPTURE_IPHONE" -eq 1 ]]; then
+    render_device_set "iphone-17-pro-max" compose_phone
+  fi
+  if [[ "$CAPTURE_IPAD" -eq 1 ]]; then
+    render_device_set "ipad-pro-13" compose_ipad
+  fi
 fi
 
 echo "App Store screenshots are ready in $OUTPUT_ROOT"

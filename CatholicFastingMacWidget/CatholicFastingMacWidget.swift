@@ -132,7 +132,7 @@ private struct CatholicFastingMacWidgetView: View {
             Spacer(minLength: 0)
 
             HStack {
-                Text("Progress")
+                Text("Rhythm")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
                 Spacer()
@@ -164,7 +164,7 @@ struct CatholicFastingMacWidget: Widget {
             CatholicFastingMacWidgetView(entry: entry)
         }
         .configurationDisplayName("Catholic Fasting")
-        .description("See today, the next required observance, and fasting progress.")
+        .description("See today, the next required observance, and your fasting rhythm.")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
 }

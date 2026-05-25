@@ -29,11 +29,18 @@ extension CatholicFastingAppUITests {
         ensureOnHomeScreen(app)
         openSurface("Track Fast", in: app)
 
+        let noteField = app.textFields["intermittent.recap_note"].firstMatch
+        if scrollToElementPresence(noteField, in: app, maxSwipes: 8) {
+            noteField.tap()
+            noteField.typeText("Parish intention")
+        }
+
         let endButton = app.buttons["intermittent.end_fast"].firstMatch
         XCTAssertTrue(scrollToElementPresence(endButton, in: app, maxSwipes: 8))
         XCTAssertTrue(scrollToElement(endButton, in: app, maxSwipes: 8))
         endButton.tap()
 
+        XCTAssertTrue(scrollToElementPresence(elementByIdentifier("intermittent.recap_card", in: app), in: app, maxSwipes: 8))
         let sessionsMetric = elementByIdentifier("intermittent.metric.sessions", in: app)
         XCTAssertTrue(scrollToElementPresence(sessionsMetric, in: app, maxSwipes: 8))
         let sessionSaved = NSPredicate(format: "value == '1'")
@@ -67,6 +74,7 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(targetPicker, in: app))
         XCTAssertTrue(scrollToElement(elementByIdentifier("intermittent.intention_picker", in: app), in: app))
         XCTAssertTrue(scrollToElement(app.staticTexts["intermittent.intention_detail"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("intermittent.target_reminder", in: app), in: app))
         XCTAssertTrue(scrollToElement(app.datePickers["intermittent.start_date"].firstMatch, in: app))
     }
 
@@ -139,11 +147,11 @@ extension CatholicFastingAppUITests {
 
         openIPadSurface("intermittent", in: app)
 
-        let startButton = app.buttons["ipad.intermittent.start"].firstMatch
+        let startButton = elementByIdentifier("ipad.intermittent.start", in: app)
         XCTAssertTrue(scrollToElement(startButton, in: app))
         startButton.tap()
 
-        XCTAssertTrue(scrollToElement(app.datePickers["ipad.intermittent.start_date"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("ipad.intermittent.start_date", in: app), in: app))
     }
 
     func testIPadTrackFastDefaultsToLiveControlsAndCollapsedAdvancedTools() {
@@ -154,7 +162,7 @@ extension CatholicFastingAppUITests {
         openIPadSurface("intermittent", in: app)
 
         XCTAssertTrue(app.staticTexts["No active fast"].firstMatch.waitForExistence(timeout: 4))
-        XCTAssertTrue(scrollToElement(app.buttons["ipad.intermittent.start"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("ipad.intermittent.start", in: app), in: app))
         XCTAssertTrue(scrollToElement(app.otherElements["ipad.intermittent.advanced"].firstMatch, in: app))
         XCTAssertFalse(app.textFields["intermittent.schedule.name"].firstMatch.exists)
         XCTAssertTrue(scrollToElement(app.otherElements["ipad.intermittent.history"].firstMatch, in: app))
@@ -167,12 +175,15 @@ extension CatholicFastingAppUITests {
 
         openIPadSurface("intermittent", in: app)
 
-        let disclosure = app.otherElements["ipad.intermittent.advanced.disclosure"].firstMatch
-        XCTAssertTrue(scrollToElement(disclosure, in: app))
+        let identifiedDisclosure = elementByIdentifier("ipad.intermittent.advanced.disclosure", in: app)
+        let disclosure = identifiedDisclosure.exists
+            ? identifiedDisclosure
+            : app.buttons["Show advanced tools"].firstMatch
+        XCTAssertTrue(scrollToElement(disclosure, in: app, maxSwipes: 4))
         disclosure.tap()
 
-        let scheduleName = app.textFields["intermittent.schedule.name"].firstMatch
-        XCTAssertTrue(scrollToElement(scheduleName, in: app))
-        XCTAssertTrue(scrollToElement(app.otherElements["ipad.intermittent.history"].firstMatch, in: app))
+        let scheduleName = elementByIdentifier("intermittent.schedule.name", in: app)
+        XCTAssertTrue(scrollToElement(scheduleName, in: app, maxSwipes: 4))
+        XCTAssertTrue(scrollToElement(app.otherElements["ipad.intermittent.history"].firstMatch, in: app, maxSwipes: 8))
     }
 }

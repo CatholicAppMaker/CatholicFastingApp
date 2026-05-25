@@ -86,9 +86,87 @@ final class IntermittentFastCompanionTests: XCTestCase {
         XCTAssertFalse(earlyRecap.encouragement.localizedCaseInsensitiveContains("shame"))
     }
 
+    func testHabitSummaryReportsEmptyState() {
+        let now = Date(timeIntervalSince1970: 1_701_400_000)
+        let summary = IntermittentHabitSummaryEngine.summary(sessions: [], now: now, calendar: .gregorian)
+
+        XCTAssertEqual(summary.currentStreakDays, 0)
+        XCTAssertEqual(summary.bestStreakDays, 0)
+        XCTAssertEqual(summary.weeklySessionCount, 0)
+        XCTAssertEqual(summary.monthlySessionCount, 0)
+        XCTAssertEqual(summary.targetHitPercent, 0)
+        XCTAssertEqual(summary.longestDuration, 0)
+        XCTAssertNil(summary.latestSessionRecap)
+    }
+
+    func testHabitSummaryCountsStreaksWindowsAndHitRate() throws {
+        let calendar = Calendar.gregorian
+        let now = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 5, day: 24, hour: 12)))
+        let sessions = [
+            session(id: "latest", ending: now.addingTimeInterval(-2 * 3600), durationHours: 16, targetHours: 16),
+            session(id: "yesterday", ending: now.addingTimeInterval((-1 * 24 - 2) * 3600), durationHours: 14, targetHours: 16),
+            session(id: "two-days", ending: now.addingTimeInterval((-2 * 24 - 2) * 3600), durationHours: 18, targetHours: 16),
+            session(id: "gap", ending: now.addingTimeInterval((-4 * 24 - 2) * 3600), durationHours: 16, targetHours: 16),
+            session(id: "old", ending: now.addingTimeInterval((-40 * 24 - 2) * 3600), durationHours: 12, targetHours: 16),
+        ]
+
+        let summary = IntermittentHabitSummaryEngine.summary(
+            sessions: sessions,
+            now: now,
+            calendar: calendar)
+
+        XCTAssertEqual(summary.currentStreakDays, 3)
+        XCTAssertEqual(summary.bestStreakDays, 3)
+        XCTAssertEqual(summary.weeklySessionCount, 4)
+        XCTAssertEqual(summary.monthlySessionCount, 4)
+        XCTAssertEqual(summary.targetHitPercent, 60)
+        XCTAssertEqual(Int(summary.longestDuration / 3600), 18)
+        XCTAssertEqual(summary.latestSessionRecap?.sessionID, "latest")
+    }
+
+    func testHabitSummaryFindsBestStreakAfterBrokenCurrentStreak() throws {
+        let calendar = Calendar.gregorian
+        let now = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 5, day: 24, hour: 12)))
+        let sessions = [
+            session(id: "latest", ending: now, durationHours: 16, targetHours: 16),
+            session(id: "old-1", ending: now.addingTimeInterval(-3 * 24 * 3600), durationHours: 16, targetHours: 16),
+            session(id: "old-2", ending: now.addingTimeInterval(-4 * 24 * 3600), durationHours: 16, targetHours: 16),
+            session(id: "old-3", ending: now.addingTimeInterval(-5 * 24 * 3600), durationHours: 16, targetHours: 16),
+        ]
+
+        let summary = IntermittentHabitSummaryEngine.summary(
+            sessions: sessions,
+            now: now,
+            calendar: calendar)
+
+        XCTAssertEqual(summary.currentStreakDays, 1)
+        XCTAssertEqual(summary.bestStreakDays, 3)
+    }
+
+    func testIntermittentTargetReminderIdentifierIsStable() {
+        let start = Date(timeIntervalSince1970: 1_701_500_123)
+
+        XCTAssertEqual(
+            IntermittentTargetReminderPolicy.identifier(start: start),
+            "intermittent-target-1701500123")
+    }
+
     private func iso(_ date: Date) -> String {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime]
         return formatter.string(from: date)
+    }
+
+    private func session(
+        id: String,
+        ending end: Date,
+        durationHours: Int,
+        targetHours: Int) -> IntermittentFastSession
+    {
+        IntermittentFastSession(
+            id: id,
+            start: end.addingTimeInterval(TimeInterval(-durationHours * 3600)),
+            end: end,
+            targetHours: targetHours)
     }
 }

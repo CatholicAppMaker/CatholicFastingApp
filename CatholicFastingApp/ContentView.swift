@@ -41,6 +41,7 @@ struct ContentView: View {
     @State var newIntermittentScheduleStartHour = 20
     @State var newIntermittentScheduleWeekdays: Set<Int> = [2, 4, 6]
     @State var intermittentManualStart = Date()
+    @State var intermittentRecapNote = ""
     @State var lastTargetReachedHapticKey = ""
     @State var lastEatingWindowClosedHapticKey = ""
     @State var householdProfiles = LocalFeatureStore.loadProfiles()
@@ -101,6 +102,8 @@ struct ContentView: View {
     @AppStorage(StorageKeys.supportPremiumSurface) var supportPremiumSurfaceRaw = DefaultValues.supportPremiumSurface.rawValue
     @AppStorage(StorageKeys.simplifiedModeEnabled) var simplifiedModeEnabled = false
     @AppStorage(StorageKeys.intermittentIntention) var intermittentIntentionRaw = DefaultValues.intermittentIntention
+    @AppStorage(StorageKeys.intermittentTargetReminderEnabled) var intermittentTargetReminderEnabled =
+        DefaultValues.intermittentTargetReminderEnabled
 
     var settings: RuleSettings {
         RuleSettings(

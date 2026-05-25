@@ -574,8 +574,14 @@ extension ContentView {
     }
 
     var intermittentLongestSessionText: String {
-        guard let longest = intermittentTracker.sessions.map(\.duration).max() else { return "0h" }
-        return durationText(longest)
+        durationText(intermittentHabitSummary.longestDuration)
+    }
+
+    var intermittentHabitSummary: IntermittentHabitSummary {
+        IntermittentHabitSummaryEngine.summary(
+            sessions: intermittentTracker.sessions,
+            now: Date(),
+            calendar: liturgicalCalendar)
     }
 
     var intermittentWindowLabel: String {
@@ -585,7 +591,10 @@ extension ContentView {
     var intermittentPresetBinding: Binding<Int> {
         Binding(
             get: { intermittentTracker.presetHours },
-            set: { intermittentTracker.setPresetHours($0) })
+            set: { newValue in
+                intermittentTracker.setPresetHours(newValue)
+                refreshIntermittentTargetReminder()
+            })
     }
 
     var intermittentManualStartRange: ClosedRange<Date> {
@@ -601,21 +610,52 @@ extension ContentView {
                 intermittentManualStart = newValue
                 intermittentTracker.updateActiveStart(to: newValue)
                 intermittentManualStart = intermittentTracker.activeStart ?? newValue
+                refreshIntermittentTargetReminder()
             })
     }
 
     func startIntermittentFastFromSelectedTime() {
         intermittentTracker.startFast(now: intermittentManualStart)
         intermittentManualStart = intermittentTracker.activeStart ?? Date()
+        intermittentRecapNote = ""
+        refreshIntermittentTargetReminder()
+    }
+
+    func endIntermittentFastWithReview() {
+        intermittentTracker.endFast(intentionID: intermittentIntentionRaw, note: intermittentRecapNote)
+        intermittentRecapNote = ""
+        resetIntermittentManualStartToNow()
+        Task {
+            notificationStatus = await ReminderScheduler.clearIntermittentTargetReminders()
+        }
+    }
+
+    func cancelIntermittentFast() {
+        intermittentTracker.cancelActiveFast()
+        intermittentRecapNote = ""
+        resetIntermittentManualStartToNow()
+        Task {
+            notificationStatus = await ReminderScheduler.clearIntermittentTargetReminders()
+        }
     }
 
     func applyIntermittentManualStartEdit() {
         intermittentTracker.updateActiveStart(to: intermittentManualStart)
         intermittentManualStart = intermittentTracker.activeStart ?? Date()
+        refreshIntermittentTargetReminder()
     }
 
     func resetIntermittentManualStartToNow() {
         intermittentManualStart = Date()
+    }
+
+    func refreshIntermittentTargetReminder() {
+        Task {
+            notificationStatus = await ReminderScheduler.scheduleIntermittentTargetReminder(
+                enabled: intermittentTargetReminderEnabled,
+                start: intermittentTracker.activeStart,
+                targetHours: intermittentTracker.presetHours)
+        }
     }
 
     func durationText(_ duration: TimeInterval) -> String {

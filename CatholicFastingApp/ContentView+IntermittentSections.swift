@@ -128,7 +128,69 @@ extension ContentView {
                 Text(localized("intermittent.current_plan.empty", default: "Your target and recent session summary will show here after the first fast."))
                     .appSupportingTextStyle()
             }
+
+            intermittentHabitSummaryStrip
         }
+    }
+
+    private var intermittentHabitSummaryStrip: some View {
+        let summary = intermittentHabitSummary
+        return VStack(alignment: .leading, spacing: 10) {
+            Text(localized("intermittent.rhythm.title", default: "Fasting rhythm"))
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 8) {
+                    rhythmInsight(
+                        title: localized("intermittent.rhythm.current_streak", default: "Current streak"),
+                        value: localizedFormat("intermittent.rhythm.days_format", default: "%d day(s)", summary.currentStreakDays),
+                        detail: localized("intermittent.rhythm.current_streak_detail", default: "steady continuity"))
+                    rhythmInsight(
+                        title: localized("intermittent.rhythm.weekly", default: "Weekly rhythm"),
+                        value: "\(summary.weeklySessionCount)",
+                        detail: localized("intermittent.rhythm.weekly_detail", default: "sessions this week"))
+                    rhythmInsight(
+                        title: localized("intermittent.rhythm.hit_rate", default: "Target met"),
+                        value: "\(summary.targetHitPercent)%",
+                        detail: localized("intermittent.rhythm.hit_rate_detail", default: "local history"))
+                }
+                VStack(spacing: 8) {
+                    rhythmInsight(
+                        title: localized("intermittent.rhythm.current_streak", default: "Current streak"),
+                        value: localizedFormat("intermittent.rhythm.days_format", default: "%d day(s)", summary.currentStreakDays),
+                        detail: localized("intermittent.rhythm.current_streak_detail", default: "steady continuity"))
+                    rhythmInsight(
+                        title: localized("intermittent.rhythm.weekly", default: "Weekly rhythm"),
+                        value: "\(summary.weeklySessionCount)",
+                        detail: localized("intermittent.rhythm.weekly_detail", default: "sessions this week"))
+                    rhythmInsight(
+                        title: localized("intermittent.rhythm.hit_rate", default: "Target met"),
+                        value: "\(summary.targetHitPercent)%",
+                        detail: localized("intermittent.rhythm.hit_rate_detail", default: "local history"))
+                }
+            }
+            .accessibilityIdentifier("intermittent.rhythm_summary")
+        }
+    }
+
+    private func rhythmInsight(title: String, value: String, detail: String) -> some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(title)
+                .appEyebrowStyle()
+                .textCase(.uppercase)
+            Text(value)
+                .font(.system(.title3, design: .rounded).weight(.semibold))
+                .foregroundStyle(CatholicTheme.primary)
+            Text(detail)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(10)
+        .background(CatholicTheme.parchment.opacity(0.72), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .stroke(CatholicTheme.cardBorder.opacity(0.22), lineWidth: 1))
     }
 
     var intermittentControlCenterSection: some View {
@@ -144,6 +206,8 @@ extension ContentView {
                 intermittentCustomTargetControl
                 intermittentStartTimeControl
                 intermittentIntentionControl
+                intermittentRecapNoteControl
+                intermittentTargetReminderControl
             }
             .padding(4)
         }
@@ -248,6 +312,40 @@ extension ContentView {
     }
 
     @ViewBuilder
+    private var intermittentRecapNoteControl: some View {
+        if intermittentTracker.activeStart != nil {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(localized("intermittent.recap.note.label", default: "Review note"))
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                TextField(
+                    localized("intermittent.recap.note.placeholder", default: "Optional note after this fast"),
+                    text: $intermittentRecapNote,
+                    axis: .vertical)
+                    .lineLimit(2 ... 4)
+                    .textInputAutocapitalization(.sentences)
+                    .accessibilityIdentifier("intermittent.recap_note")
+                Text(localized("intermittent.recap.note.hint", default: "Saved locally with the session when you end and review."))
+                    .appSupportingTextStyle()
+            }
+        }
+    }
+
+    private var intermittentTargetReminderControl: some View {
+        Toggle(isOn: $intermittentTargetReminderEnabled) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(localized("intermittent.reminder.target.label", default: "Target reminder"))
+                Text(localized("intermittent.reminder.target.hint", default: "Notify me calmly when this fast reaches its planned target."))
+                    .appEyebrowStyle()
+            }
+        }
+        .onChange(of: intermittentTargetReminderEnabled) { _, _ in
+            refreshIntermittentTargetReminder()
+        }
+        .accessibilityIdentifier("intermittent.target_reminder")
+    }
+
+    @ViewBuilder
     private var intermittentPrimaryActionControls: some View {
         if intermittentTracker.activeStart == nil {
             Button {
@@ -262,10 +360,9 @@ extension ContentView {
         } else {
             HStack(spacing: 10) {
                 Button {
-                    intermittentTracker.endFast(intentionID: intermittentIntentionRaw)
-                    resetIntermittentManualStartToNow()
+                    endIntermittentFastWithReview()
                 } label: {
-                    Label(localized("intermittent.controls.end", default: "End Fast"), systemImage: "stop.fill")
+                    Label(localized("intermittent.controls.end_review", default: "End & Review"), systemImage: "checkmark.seal.fill")
                 }
                 .appPrimaryButtonStyle(legacyTint: .green)
                 .font(.headline.weight(.semibold))
@@ -273,8 +370,7 @@ extension ContentView {
                 .accessibilityIdentifier("intermittent.end_fast")
 
                 Button {
-                    intermittentTracker.cancelActiveFast()
-                    resetIntermittentManualStartToNow()
+                    cancelIntermittentFast()
                 } label: {
                     Label(localized("intermittent.controls.cancel", default: "Cancel"), systemImage: "xmark")
                 }
@@ -321,6 +417,10 @@ extension ContentView {
         } else if let latestSession = intermittentTracker.sessions.first {
             TimelineView(.periodic(from: .now, by: 1)) { context in
                 let now = context.date
+                let recap = IntermittentFastSessionRecap.make(
+                    session: latestSession,
+                    hasMedicalDispensation: medicalDispensation)
+                let endedRecently = now.timeIntervalSince(latestSession.end) <= 2 * 3600
                 let lastEnded = latestSession.end
                 let elapsedSinceEnd = max(0, now.timeIntervalSince(lastEnded))
                 let eatingSeconds =
@@ -332,6 +432,10 @@ extension ContentView {
                 let nextSuggestedStart = lastEnded.addingTimeInterval(eatingSeconds)
 
                 VStack(alignment: .leading, spacing: 14) {
+                    if endedRecently {
+                        intermittentRecapCard(recap: recap, session: latestSession)
+                    }
+
                     intermittentEatingLiveHeader(
                         progress: eatingProgress,
                         hasEatingWindow: hasEatingWindow,
@@ -367,6 +471,68 @@ extension ContentView {
 
     private var intermittentUsesStackedLiveLayout: Bool {
         dynamicTypeSize.isAccessibilitySize || horizontalSizeClass == .compact
+    }
+
+    func intermittentRecapCard(
+        recap: IntermittentFastSessionRecap,
+        session: IntermittentFastSession) -> some View
+    {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .top, spacing: 10) {
+                Image(systemName: recap.completedTarget ? "checkmark.seal.fill" : "arrow.clockwise.circle.fill")
+                    .imageScale(.large)
+                    .foregroundStyle(recap.completedTarget ? CatholicTheme.successForeground : CatholicTheme.warningForeground)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(recap.title)
+                        .font(.headline.weight(.semibold))
+                        .foregroundStyle(CatholicTheme.primary)
+                    Text(recap.encouragement)
+                        .appSupportingTextStyle()
+                }
+                Spacer(minLength: 0)
+            }
+
+            HStack(spacing: 8) {
+                recapMetric(
+                    title: localized("intermittent.live.elapsed", default: "Elapsed"),
+                    value: durationText(recap.duration))
+                recapMetric(
+                    title: localized("intermittent.live.target", default: "Target"),
+                    value: localizedFormat("intermittent.live.target_value_format", default: "%dh fast", recap.targetHours))
+                recapMetric(
+                    title: localized("intermittent.controls.intention", default: "Intention"),
+                    value: intermittentIntentionLabel(for: session.intentionID))
+            }
+
+            if let note = session.note, !note.isEmpty {
+                Text(localizedFormat("intermittent.recap.note.saved_format", default: "Note: %@", note))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Text(recap.suggestedNextAction)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(CatholicTheme.primary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(14)
+        .appSurfaceCard(.primary, cornerRadius: 16)
+        .accessibilityIdentifier("intermittent.recap_card")
+    }
+
+    private func recapMetric(title: String, value: String) -> some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(title)
+                .appEyebrowStyle()
+                .textCase(.uppercase)
+            Text(value)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(CatholicTheme.primary)
+                .lineLimit(2)
+                .minimumScaleFactor(0.8)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private func intermittentFastLiveHeader(
@@ -732,15 +898,14 @@ extension ContentView {
     }
 
     var intermittentMilestonesSection: some View {
-        Section(localized("intermittent.milestones.section", default: "Milestones")) {
-            let total = intermittentTracker.sessions.count
-            let completedTargets = intermittentTracker.sessions.filter(\.completedTarget).count
-            let longestHours = Int((intermittentTracker.sessions.map(\.duration).max() ?? 0) / 3600)
+        Section(localized("intermittent.milestones.section", default: "Rhythm Insights")) {
+            let summary = intermittentHabitSummary
 
-            Text(localizedFormat("intermittent.milestones.sessions_format", default: "Sessions completed: %d", total))
-            Text(localizedFormat("intermittent.milestones.targets_format", default: "Targets achieved: %d", completedTargets))
-            Text(localizedFormat("intermittent.milestones.longest_format", default: "Longest fast: %d hour(s)", longestHours))
-            Text(localizedFormat("intermittent.milestones.hit_rate_format", default: "Recent hit rate: %d%%", intermittentHitRatePercent))
+            Text(localizedFormat("intermittent.milestones.sessions_format", default: "Sessions completed: %d", intermittentTracker.sessions.count))
+            Text(localizedFormat("intermittent.milestones.current_streak_format", default: "Current streak: %d day(s)", summary.currentStreakDays))
+            Text(localizedFormat("intermittent.milestones.best_streak_format", default: "Best streak: %d day(s)", summary.bestStreakDays))
+            Text(localizedFormat("intermittent.milestones.longest_duration_format", default: "Longest fast: %@", durationText(summary.longestDuration)))
+            Text(localizedFormat("intermittent.milestones.hit_rate_format", default: "Target met rate: %d%%", summary.targetHitPercent))
                 .foregroundStyle(.secondary)
         }
     }
@@ -844,7 +1009,11 @@ extension ContentView {
     }
 
     var intermittentIntentionLabel: String {
-        intermittentIntentionOptions.first(where: { $0.id == intermittentIntentionRaw })?.label
+        intermittentIntentionLabel(for: intermittentIntentionRaw)
+    }
+
+    func intermittentIntentionLabel(for intentionID: String?) -> String {
+        intermittentIntentionOptions.first(where: { $0.id == intentionID })?.label
             ?? localized("intermittent.intention.discipline.label", default: "Personal discipline")
     }
 
@@ -952,9 +1121,17 @@ extension ContentView {
                             Text(
                                 session.completedTarget
                                     ? localized("intermittent.history.target_met", default: "Target met")
-                                    : localized("intermittent.history.below_target", default: "Below target"))
+                                    : localized("intermittent.history.below_target", default: "Re-enter gently"))
                                 .font(.caption)
                                 .foregroundStyle(session.completedTarget ? CatholicTheme.successForeground : CatholicTheme.warningForeground)
+                            Text(localizedFormat("intermittent.history.intention_format", default: "Intention: %@", intermittentIntentionLabel(for: session.intentionID)))
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                            if let note = session.note, !note.isEmpty {
+                                Label(localized("intermittent.history.note_saved", default: "Note saved"), systemImage: "note.text")
+                                    .font(.caption2.weight(.semibold))
+                                    .foregroundStyle(CatholicTheme.primary)
+                            }
                         }
                         Spacer(minLength: 0)
                     }
