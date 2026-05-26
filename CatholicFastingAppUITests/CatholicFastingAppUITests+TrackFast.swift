@@ -100,6 +100,10 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(disclosure, in: app))
         disclosure.tap()
 
+        let editorToggle = elementByIdentifier("intermittent.schedule.toggle_editor", in: app)
+        XCTAssertTrue(scrollToElement(editorToggle, in: app, maxSwipes: 12))
+        editorToggle.tap()
+
         let scheduleName = app.textFields["intermittent.schedule.name"].firstMatch
         XCTAssertTrue(scrollToElementPresence(scheduleName, in: app, maxSwipes: 12))
         XCTAssertTrue(scrollToElementPresence(elementByIdentifier("intermittent.history_empty", in: app), in: app, maxSwipes: 24))
@@ -181,6 +185,10 @@ extension CatholicFastingAppUITests {
             : app.buttons["Show advanced tools"].firstMatch
         XCTAssertTrue(scrollToElement(disclosure, in: app, maxSwipes: 4))
         disclosure.tap()
+
+        let editorToggle = elementByIdentifier("intermittent.schedule.toggle_editor", in: app)
+        XCTAssertTrue(scrollToElement(editorToggle, in: app, maxSwipes: 8))
+        editorToggle.tap()
 
         let scheduleName = elementByIdentifier("intermittent.schedule.name", in: app)
         XCTAssertTrue(scrollToElement(scheduleName, in: app, maxSwipes: 4))

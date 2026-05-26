@@ -20,7 +20,7 @@ extension CatholicFastingAppUITests {
         openMoreDestination("Guidance & Rules", in: app)
 
         XCTAssertTrue(app.navigationBars["Guidance & Rules"].firstMatch.waitForExistence(timeout: 4))
-        XCTAssertTrue(elementByIdentifier("more.guidanceAndRules.hero", in: app).waitForExistence(timeout: 4))
+        XCTAssertTrue(elementByIdentifier("guidance.sacred_gallery", in: app).waitForExistence(timeout: 4))
     }
 
     func testDeepGuidanceSacredGalleryVisible() {

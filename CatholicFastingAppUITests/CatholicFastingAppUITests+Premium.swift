@@ -8,8 +8,8 @@ extension CatholicFastingAppUITests {
         ensureOnHomeScreen(app)
         openMoreDestination("Support & Premium", in: app)
 
-        let sectionTitle = app.staticTexts["Premium Upgrade"].firstMatch
-        XCTAssertTrue(scrollToElement(sectionTitle, in: app))
+        let preview = elementByIdentifier("premium.sample_preview", in: app)
+        XCTAssertTrue(scrollToElement(preview, in: app))
 
         let restoreButton = app.buttons["premium.restore"].firstMatch
         XCTAssertTrue(scrollToElement(restoreButton, in: app))

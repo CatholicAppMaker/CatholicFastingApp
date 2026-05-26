@@ -12,42 +12,42 @@ extension ContentView {
                 switch layout {
                 case .wide:
                     HStack(alignment: .top, spacing: 20) {
-                        ipadFastingDaysFilterRail
-                            .frame(minWidth: 220, idealWidth: 260, maxWidth: 300)
+                        ipadFastingDaysDetailPane(selected: selected, compact: false)
+                            .frame(minWidth: 300, idealWidth: 340, maxWidth: 390)
 
                         VStack(alignment: .leading, spacing: 16) {
-                            ipadFastingDaysHeroBand(compact: false)
                             ipadFastingDaysSummaryCards(for: items)
                             ipadFastingDaysQuickDateStrip(from: items)
                             ipadFastingDaysGroupedList(groups: grouped)
+                            ipadFastingDaysHeroBand(compact: false)
                         }
                         .frame(minWidth: 0, maxWidth: .infinity, alignment: .top)
 
-                        ipadFastingDaysDetailPane(selected: selected, compact: false)
-                            .frame(minWidth: 300, idealWidth: 340, maxWidth: 390)
+                        ipadFastingDaysFilterRail
+                            .frame(minWidth: 220, idealWidth: 260, maxWidth: 300)
                     }
                 case .medium:
                     HStack(alignment: .top, spacing: 18) {
-                        ipadFastingDaysFilterRail
-                            .frame(minWidth: 220, idealWidth: 250, maxWidth: 290)
+                        ipadFastingDaysDetailPane(selected: selected, compact: true)
+                            .frame(minWidth: 260, idealWidth: 300, maxWidth: 340)
 
                         VStack(alignment: .leading, spacing: 16) {
-                            ipadFastingDaysHeroBand(compact: true)
                             ipadFastingDaysSummaryCards(for: items)
                             ipadFastingDaysQuickDateStrip(from: items)
-                            ipadFastingDaysDetailPane(selected: selected, compact: true)
                             ipadFastingDaysGroupedList(groups: grouped)
+                            ipadFastingDaysFilterRail
+                            ipadFastingDaysHeroBand(compact: true)
                         }
                         .frame(minWidth: 0, maxWidth: .infinity, alignment: .top)
                     }
                 case .stacked:
                     VStack(alignment: .leading, spacing: 16) {
-                        ipadFastingDaysFilterRail
-                        ipadFastingDaysHeroBand(compact: true)
+                        ipadFastingDaysDetailPane(selected: selected, compact: true)
                         ipadFastingDaysSummaryCards(for: items)
                         ipadFastingDaysQuickDateStrip(from: items)
-                        ipadFastingDaysDetailPane(selected: selected, compact: true)
                         ipadFastingDaysGroupedList(groups: grouped)
+                        ipadFastingDaysFilterRail
+                        ipadFastingDaysHeroBand(compact: true)
                     }
                 }
             }

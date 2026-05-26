@@ -37,6 +37,7 @@ struct ContentView: View {
     @State var intermittentSchedules = LocalFeatureStore.loadSchedules()
     @State var activeIntermittentScheduleID = LocalFeatureStore.loadActiveScheduleID() ?? ""
     @State var editingIntermittentScheduleID = ""
+    @State var intermittentShowScheduleEditor = false
     @State var newIntermittentScheduleName = ""
     @State var newIntermittentScheduleStartHour = 20
     @State var newIntermittentScheduleWeekdays: Set<Int> = [2, 4, 6]

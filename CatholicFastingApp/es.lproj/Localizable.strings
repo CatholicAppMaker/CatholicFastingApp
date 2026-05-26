@@ -142,9 +142,9 @@
 "intermittent.controls.end" = "Terminar ayuno";
 "intermittent.controls.cancel" = "Cancelar";
 "intermittent.advanced.title" = "Herramientas avanzadas";
-"intermittent.advanced.label_title" = "Horarios, hitos, recuperación e historial";
-"intermittent.advanced.label_detail" = "Mantenga primero el seguimiento en vivo y abra esto solo cuando necesite herramientas más profundas.";
-"intermittent.advanced.collapsed_hint" = "Los horarios guardados, las estadísticas de hitos, la guía de recuperación y el historial reciente permanecen agrupados aquí.";
+"intermittent.advanced.label_title" = "Historial, recuperación y horarios guardados";
+"intermittent.advanced.label_detail" = "Revise primero los ayunos recientes y abra los horarios solo cuando los necesite.";
+"intermittent.advanced.collapsed_hint" = "El historial reciente, la guía de recuperación y los horarios guardados permanecen agrupados aquí.";
 
 "decision.dispensation.obligation" = "Hay una dispensa médica o pastoral activada en su perfil.";
 "decision.dispensation.allowed.safe" = "Coma lo que sea prudente y médicamente seguro.";
@@ -773,10 +773,15 @@
 "intermittent.milestones.targets_format" = "Metas alcanzadas: %d";
 "intermittent.milestones.longest_format" = "Ayuno más largo: %d hora(s)";
 "intermittent.milestones.hit_rate_format" = "Tasa reciente de logro: %d%%";
+"intermittent.milestones.sessions_short_format" = "%d sesión(es)";
+"intermittent.milestones.longest_label" = "Ayuno más largo";
+"intermittent.milestones.hit_rate_short_format" = "%d%%";
 "intermittent.recovery.section" = "Guía de recuperación";
-"intermittent.recovery.below_target" = "Su sesión más reciente terminó por debajo de la meta. Considere una meta más ligera e hidrátese bien.";
+"intermittent.recovery.below_target" = "Retome con calma: elija una meta más ligera la próxima vez e hidrátese bien.";
 "intermittent.recovery.none" = "No se necesitan acciones inmediatas de recuperación.";
 "intermittent.recovery.guidance" = "Ajuste la duración del ayuno cuando la salud, el deber o la guía pastoral lo requieran.";
+"intermittent.schedules.new_schedule" = "Nuevo";
+"intermittent.schedules.hide_editor" = "Ocultar";
 "intermittent.live.section" = "Seguimiento en vivo";
 "intermittent.live.elapsed" = "Transcurrido";
 "intermittent.live.target" = "Meta";
@@ -815,7 +820,7 @@
 "intermittent.history.range_format" = "%@ → %@";
 "intermittent.history.detail_format" = "Duración: %@ • Plan: %dh";
 "intermittent.history.target_met" = "Meta alcanzada";
-"intermittent.history.below_target" = "Por debajo de la meta";
+"intermittent.history.below_target" = "Retome con calma";
 "intermittent.history.free_limit" = "La versión gratis muestra las 3 sesiones más recientes. Premium desbloquea el historial reciente completo.";
 "intermittent.history.unlock" = "Desbloquear historial completo";
 "tips.fasting_days.title" = "Enfocar los días obligatorios";
@@ -1162,6 +1167,8 @@
 "intermittent.history.intention_format" = "Intención: %@";
 "intermittent.history.note_saved" = "Nota guardada";
 "ipad.intermittent.controls.end_review" = "Terminar y revisar";
+"ipad.intermittent.controls.title_active" = "Ajustar objetivo e intención";
+"ipad.intermittent.controls.detail_active" = "Afine el ayuno actual sin alejar los controles en vivo.";
 "ipad.intermittent.planning.streak" = "Racha";
 "ipad.intermittent.planning.weekly" = "Ritmo semanal";
 "ipad.intermittent.planning.hit_rate" = "Meta alcanzada";

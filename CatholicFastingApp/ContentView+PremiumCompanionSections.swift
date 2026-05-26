@@ -40,7 +40,7 @@ extension ContentView {
     }
 
     var premiumSurfacePickerSection: some View {
-        Section(localized("premium.section.support", default: "Support & Premium")) {
+        Section {
             Picker(
                 localized("premium.section.view", default: "View"),
                 selection: Binding(
@@ -96,16 +96,8 @@ extension ContentView {
     }
 
     var premiumAndSupportSection: some View {
-        Section(localized("premium.upgrade.section", default: "Premium Upgrade")) {
-            Color.clear
-                .frame(width: 1, height: 1)
-                .accessibilityIdentifier("premium.subscription_store")
-
-            if monetizationStore.premiumUnlocked {
-                premiumJourneyCard(sample: false)
-            } else {
-                premiumJourneyCard(sample: true)
-            }
+        Section {
+            premiumJourneyCardWithStoreMarker
 
             premiumStatusSummaryCard
 
@@ -155,6 +147,20 @@ extension ContentView {
         .animation(.none, value: monetizationStore.tipProducts.map(\.id))
         .animation(.none, value: monetizationStore.isLoading)
         .animation(.none, value: monetizationStore.statusMessage)
+    }
+
+    var premiumJourneyCardWithStoreMarker: some View {
+        ZStack(alignment: .topLeading) {
+            if monetizationStore.premiumUnlocked {
+                premiumJourneyCard(sample: false)
+            } else {
+                premiumJourneyCard(sample: true)
+            }
+
+            Color.clear
+                .frame(width: 1, height: 1)
+                .accessibilityIdentifier("premium.subscription_store")
+        }
     }
 
     @ViewBuilder

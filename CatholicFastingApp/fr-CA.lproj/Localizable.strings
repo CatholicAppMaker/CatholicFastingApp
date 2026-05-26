@@ -142,9 +142,9 @@
 "intermittent.controls.end" = "Terminer le jeûne";
 "intermittent.controls.cancel" = "Annuler";
 "intermittent.advanced.title" = "Outils avancés";
-"intermittent.advanced.label_title" = "Horaires, jalons, reprise et historique";
-"intermittent.advanced.label_detail" = "Gardez le suivi en direct en premier plan et ouvrez ceci seulement lorsque vous avez besoin d’outils plus poussés.";
-"intermittent.advanced.collapsed_hint" = "Les horaires enregistrés, les statistiques de jalons, les conseils de reprise et l’historique récent restent regroupés ici.";
+"intermittent.advanced.label_title" = "Historique, reprise et horaires enregistrés";
+"intermittent.advanced.label_detail" = "Relisez d’abord les jeûnes récents, puis ouvrez les horaires seulement au besoin.";
+"intermittent.advanced.collapsed_hint" = "L’historique récent, les conseils de reprise et les horaires enregistrés restent regroupés ici.";
 
 "decision.dispensation.obligation" = "Une dispense médicale ou pastorale est activée dans votre profil.";
 "decision.dispensation.allowed.safe" = "Mangez ce qui est prudent et médicalement sûr.";
@@ -773,10 +773,15 @@
 "intermittent.milestones.targets_format" = "Cibles atteintes : %d";
 "intermittent.milestones.longest_format" = "Jeûne le plus long : %d heure(s)";
 "intermittent.milestones.hit_rate_format" = "Taux récent de réussite : %d%%";
+"intermittent.milestones.sessions_short_format" = "%d séance(s)";
+"intermittent.milestones.longest_label" = "Jeûne le plus long";
+"intermittent.milestones.hit_rate_short_format" = "%d%%";
 "intermittent.recovery.section" = "Conseils de reprise";
-"intermittent.recovery.below_target" = "Votre plus récente séance s’est terminée sous la cible. Envisagez une cible plus légère et hydratez-vous bien.";
+"intermittent.recovery.below_target" = "Reprenez doucement : choisissez une cible plus légère la prochaine fois et hydratez-vous bien.";
 "intermittent.recovery.none" = "Aucune action immédiate de reprise n’est nécessaire.";
 "intermittent.recovery.guidance" = "Ajustez la durée du jeûne lorsque la santé, le devoir ou l’accompagnement pastoral l’exigent.";
+"intermittent.schedules.new_schedule" = "Nouveau";
+"intermittent.schedules.hide_editor" = "Masquer";
 "intermittent.live.section" = "Suivi en direct";
 "intermittent.live.elapsed" = "Écoulé";
 "intermittent.live.target" = "Cible";
@@ -815,7 +820,7 @@
 "intermittent.history.range_format" = "%@ → %@";
 "intermittent.history.detail_format" = "Durée : %@ • Plan : %dh";
 "intermittent.history.target_met" = "Cible atteinte";
-"intermittent.history.below_target" = "Sous la cible";
+"intermittent.history.below_target" = "Reprendre doucement";
 "intermittent.history.free_limit" = "La version gratuite montre les 3 séances les plus récentes. Premium déverrouille l’historique complet récent.";
 "intermittent.history.unlock" = "Déverrouiller l’historique complet";
 "tips.fasting_days.title" = "Mettre l’accent sur les jours obligatoires";
@@ -956,6 +961,8 @@
 "intermittent.history.intention_format" = "Intention : %@";
 "intermittent.history.note_saved" = "Note enregistrée";
 "ipad.intermittent.controls.end_review" = "Terminer et revoir";
+"ipad.intermittent.controls.title_active" = "Ajuster l’objectif et l’intention";
+"ipad.intermittent.controls.detail_active" = "Affinez le jeûne en cours sans éloigner les commandes en direct.";
 "ipad.intermittent.planning.streak" = "Série";
 "ipad.intermittent.planning.weekly" = "Rythme hebdomadaire";
 "ipad.intermittent.planning.hit_rate" = "Cible atteinte";

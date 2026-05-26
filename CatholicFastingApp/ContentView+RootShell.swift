@@ -512,9 +512,7 @@ extension ContentView {
         companionLiveStateSection
         companionFormationSection
         todayDecisionCardSection
-        dashboardSacredImageSection
         dashboardQuickActionsSection
-        dashboardFastingQuoteSection
         todayTenSecondSection
         todaySection
         setupProgressSection
@@ -527,28 +525,29 @@ extension ContentView {
         } else {
             planningProgressSection
             dashboardSeasonSection
-            dashboardHeroSection
             progressSection
             analyticsSection
             milestoneReferralSection
             personalInsightsSection
             accessibilitySupportSection
             dashboardHighlightsSection
+            dashboardFastingQuoteSection
+            dashboardSacredImageSection
+            dashboardHeroSection
         }
     }
 
     @ViewBuilder
     var fastingDaysSurfaceSections: some View {
-        fastingDaysHeroSection
-        fastingDaysFastingQuoteSection
         fastingDaysOverviewSection
         fastingDaysDisplayOptionsSection
         fastingDaysListSection
+        fastingDaysFastingQuoteSection
+        fastingDaysHeroSection
     }
 
     @ViewBuilder
     var intermittentSurfaceSections: some View {
-        companionLiveStateSection
         intermittentControlCenterSection
         intermittentFastingQuoteSection
         intermittentHeroSection
@@ -565,21 +564,6 @@ extension ContentView {
     @ViewBuilder
     var moreHubSection: some View {
         Section {
-            SacredSurfaceAnchorCard(
-                assetName: SacredHeroImageSelector.anchorArtwork(for: .guidance).assetName,
-                title: localizedMoreHubHeroTitle(),
-                subtitle: localizedMoreHubHeroSubtitle(),
-                imageHeight: 112,
-                cornerRadius: 16,
-                accessibilityIdentifier: "more.hub.hero")
-        }
-
-        Section(localized("more.quote.section", default: "Guidance reflection")) {
-            CatholicFastingQuoteCard(quote: guidanceFastingQuote, compact: true)
-                .accessibilityIdentifier("more.hub.quote")
-        }
-
-        Section {
             ForEach(MoreHubDestination.allCases) { destination in
                 NavigationLink {
                     moreDestinationList(for: destination)
@@ -593,11 +577,25 @@ extension ContentView {
                 .accessibilityIdentifier("more.hub.\(destination.rawValue)")
             }
         }
+
+        Section(localized("more.quote.section", default: "Guidance reflection")) {
+            CatholicFastingQuoteCard(quote: guidanceFastingQuote, compact: true)
+                .accessibilityIdentifier("more.hub.quote")
+        }
+
+        Section {
+            SacredSurfaceAnchorCard(
+                assetName: SacredHeroImageSelector.anchorArtwork(for: .guidance).assetName,
+                title: localizedMoreHubHeroTitle(),
+                subtitle: localizedMoreHubHeroSubtitle(),
+                imageHeight: 88,
+                cornerRadius: 16,
+                accessibilityIdentifier: "more.hub.hero")
+        }
     }
 
     func moreDestinationList(for destination: MoreHubDestination) -> some View {
         List {
-            moreDestinationHeroSection(for: destination)
             switch destination {
             case .supportAndPremium:
                 premiumSurfacePickerSection
@@ -610,10 +608,12 @@ extension ContentView {
                         premiumToolsLockedSection
                     }
                 }
+                moreDestinationHeroSection(for: destination)
             case .setupAndReminders:
                 quickSetupSection
                 notificationsSection
                 notesSection
+                moreDestinationHeroSection(for: destination)
             case .profileAndNorms:
                 householdProfilesSection
                 profileRulesSection
@@ -621,6 +621,7 @@ extension ContentView {
                 themeSection
                 accessibilityModeSection
                 planningLayerSection
+                moreDestinationHeroSection(for: destination)
             case .guidanceAndRules:
                 guidanceDevotionalGallerySection
                 devotionalPackSection
@@ -631,13 +632,16 @@ extension ContentView {
                 pastoralGuidanceSection
                 faqSection
                 sourcesSection
+                moreDestinationHeroSection(for: destination)
             case .historyOfFasting:
                 historyOfFastingOverviewSection
                 historyOfFastingTimelineSection
+                moreDestinationHeroSection(for: destination)
             case .privacyAndData:
                 privacySection
                 backupsSection
                 dataManagementSection
+                moreDestinationHeroSection(for: destination)
             }
         }
         .listStyle(.insetGrouped)

@@ -25,9 +25,9 @@ extension ContentView {
             uiTestMarker("ipad.today.primary_card")
             uiTestMarker("ipad.today.metrics")
             uiTestMarker("ipad.today.actions")
-            ipadTodayHeroBand(regionContext: regionContext, compact: compact)
             companionIPadTriad(stacked: compact || width < 1180)
             ipadTodayWorkspaceColumns(regionContext: regionContext, width: width, compact: compact)
+            ipadTodayHeroBand(regionContext: regionContext, compact: true)
         }
         .padding(20)
     }

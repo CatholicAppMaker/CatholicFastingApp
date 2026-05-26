@@ -9,7 +9,7 @@ extension ContentView {
             title: localized("ipad.intermittent.hero.title", default: "Track Fast"),
             subtitle: intermittentTracker.activeStart == nil
                 ? localized("ipad.intermittent.hero.subtitle_idle", default: "Choose a target, set the start time if needed, then begin.")
-                : localized("ipad.intermittent.hero.subtitle_active", default: "Your live fast and next action stay here first."),
+                : localized("ipad.intermittent.hero.subtitle_active", default: "Sacred context stays nearby while the live tracker leads."),
             quote: intermittentFastingQuote,
             regionContext: RegionalGuidanceContextFactory.generalContext(for: settings),
             compact: compact,
@@ -61,6 +61,8 @@ extension ContentView {
                         }
                         Spacer(minLength: 0)
                     }
+
+                    ipadIntermittentPrimaryActionRow
                 }
                 .id(activeStart)
             } else if let latestSession = intermittentTracker.sessions.first {
@@ -115,7 +117,6 @@ extension ContentView {
         }
         .padding(18)
         .iPadPaneCard()
-        .accessibilityIdentifier("ipad.intermittent.live")
     }
 
     var ipadIntermittentQuickPlansCard: some View {
@@ -124,10 +125,16 @@ extension ContentView {
         return VStack(alignment: .leading, spacing: 16) {
             IPadWorkspaceHeader(
                 eyebrow: localized("ipad.intermittent.controls.eyebrow", default: "Controls"),
-                title: localized("ipad.intermittent.controls.title", default: "Set the target and start"),
-                detail: localized("ipad.intermittent.controls.detail", default: "Quick presets first. Adjust the start time if you already began fasting."))
+                title: intermittentTracker.activeStart == nil
+                    ? localized("ipad.intermittent.controls.title", default: "Set the target and start")
+                    : localized("ipad.intermittent.controls.title_active", default: "Adjust target and intention"),
+                detail: intermittentTracker.activeStart == nil
+                    ? localized("ipad.intermittent.controls.detail", default: "Quick presets first. Adjust the start time if you already began fasting.")
+                    : localized("ipad.intermittent.controls.detail_active", default: "Fine-tune the current fast without moving the live controls out of reach."))
 
-            ipadIntermittentPrimaryActionRow
+            if intermittentTracker.activeStart == nil {
+                ipadIntermittentPrimaryActionRow
+            }
 
             if intermittentTracker.activeStart == nil {
                 DatePicker(
@@ -334,9 +341,8 @@ extension ContentView {
 
             if intermittentShowAdvanced {
                 VStack(alignment: .leading, spacing: 12) {
-                    ipadIntermittentScheduleControls
-                    intermittentMilestonesSection
                     intermittentRecoverySection
+                    ipadIntermittentScheduleControls
                 }
             }
 
@@ -351,60 +357,77 @@ extension ContentView {
 
     var ipadIntermittentScheduleControls: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(localized("intermittent.schedules.section", default: "Custom Schedules"))
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(CatholicTheme.primary)
+            HStack(alignment: .top, spacing: 12) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(localized("intermittent.schedules.section", default: "Custom Schedules"))
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(CatholicTheme.primary)
 
-            Text(localized("intermittent.schedules.intro", default: "Save reusable plans locally on this device."))
-                .appSupportingTextStyle()
-
-            TextField(localized("intermittent.schedules.name_placeholder", default: "Schedule name (optional)"), text: $newIntermittentScheduleName)
-                .textInputAutocapitalization(.words)
-                .autocorrectionDisabled()
-                .textFieldStyle(.roundedBorder)
-                .accessibilityIdentifier("intermittent.schedule.name")
-
-            Stepper(
-                localizedFormat(
-                    "intermittent.schedules.start_hour_format",
-                    default: "Start hour: %@",
-                    String(format: "%02d:00", newIntermittentScheduleStartHour)),
-                value: $newIntermittentScheduleStartHour,
-                in: 0 ... 23)
-                .accessibilityIdentifier("intermittent.schedule.start_hour")
-
-            VStack(alignment: .leading, spacing: 8) {
-                Text(localized("intermittent.schedules.days", default: "Days"))
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(.secondary)
-                HStack(spacing: 6) {
-                    ForEach(1 ... 7, id: \.self) { weekday in
-                        let selected = newIntermittentScheduleWeekdays.contains(weekday)
-                        Button(weekdayLabel(for: weekday)) {
-                            toggleIntermittentScheduleWeekday(weekday)
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .tint(selected ? CatholicTheme.primary : .gray.opacity(0.35))
-                    }
+                    Text(localized("intermittent.schedules.intro", default: "Save reusable plans locally on this device."))
+                        .appSupportingTextStyle()
                 }
+                Spacer(minLength: 0)
+                scheduleEditorToggleButton
             }
-            .accessibilityIdentifier("intermittent.schedule.weekdays")
 
             if intermittentSchedules.isEmpty {
                 Text(localized("intermittent.schedules.empty", default: "No saved schedules yet."))
                     .appSupportingTextStyle()
+            } else {
+                ForEach(intermittentSchedules) { plan in
+                    intermittentScheduleSummaryRow(plan)
+                }
             }
 
-            Button(
-                isEditingIntermittentSchedule
-                    ? localized("intermittent.schedules.update", default: "Update Schedule")
-                    : localized("intermittent.schedules.save_current", default: "Save Current Plan as Schedule"))
-            {
-                addOrUpdateIntermittentSchedulePlan()
+            if intermittentShowScheduleEditor || isEditingIntermittentSchedule {
+                VStack(alignment: .leading, spacing: 12) {
+                    Divider()
+
+                    TextField(localized("intermittent.schedules.name_placeholder", default: "Schedule name (optional)"), text: $newIntermittentScheduleName)
+                        .textInputAutocapitalization(.words)
+                        .autocorrectionDisabled()
+                        .textFieldStyle(.roundedBorder)
+                        .accessibilityIdentifier("intermittent.schedule.name")
+
+                    Stepper(
+                        localizedFormat(
+                            "intermittent.schedules.start_hour_format",
+                            default: "Start hour: %@",
+                            String(format: "%02d:00", newIntermittentScheduleStartHour)),
+                        value: $newIntermittentScheduleStartHour,
+                        in: 0 ... 23)
+                        .accessibilityIdentifier("intermittent.schedule.start_hour")
+
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(localized("intermittent.schedules.days", default: "Days"))
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                        HStack(spacing: 6) {
+                            ForEach(1 ... 7, id: \.self) { weekday in
+                                let selected = newIntermittentScheduleWeekdays.contains(weekday)
+                                Button(weekdayLabel(for: weekday)) {
+                                    toggleIntermittentScheduleWeekday(weekday)
+                                }
+                                .buttonStyle(.borderedProminent)
+                                .tint(selected ? CatholicTheme.primary : .gray.opacity(0.35))
+                            }
+                        }
+                    }
+                    .accessibilityIdentifier("intermittent.schedule.weekdays")
+
+                    Button(
+                        isEditingIntermittentSchedule
+                            ? localized("intermittent.schedules.update", default: "Update Schedule")
+                            : localized("intermittent.schedules.save_current", default: "Save Current Plan as Schedule"))
+                    {
+                        addOrUpdateIntermittentSchedulePlan()
+                        intermittentShowScheduleEditor = false
+                    }
+                    .appPrimaryButtonStyle()
+                    .disabled(!canSaveIntermittentSchedule)
+                    .accessibilityIdentifier("intermittent.schedule.add")
+                }
             }
-            .appPrimaryButtonStyle()
-            .disabled(!canSaveIntermittentSchedule)
-            .accessibilityIdentifier("intermittent.schedule.add")
         }
         .padding(12)
         .appSurfaceCard(.utility, cornerRadius: 14)

@@ -283,8 +283,8 @@ final class CatholicFastingAppUITests: XCTestCase {
     func assertMoreDestinationOpened(_ rawValue: String, title: String, in app: XCUIApplication) {
         let hero = elementByIdentifier("more.\(rawValue).hero", in: app)
         XCTAssertTrue(
-            hero.waitForExistence(timeout: 4)
-                || app.navigationBars[title].waitForExistence(timeout: 2)
+            app.navigationBars[title].waitForExistence(timeout: 4)
+                || hero.waitForExistence(timeout: 2)
                 || scrollToElement(hero, in: app),
             "Unable to open More destination \(title)")
     }

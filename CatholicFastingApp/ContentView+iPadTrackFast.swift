@@ -5,44 +5,39 @@ extension ContentView {
         GeometryReader { geometry in
             let compact = geometry.size.width < 1360
             let stacked = geometry.size.width < 1180 || dynamicTypeSize.isAccessibilitySize
+            let activeFast = intermittentTracker.activeStart != nil
 
             ScrollView {
-                Group {
+                ZStack(alignment: .topLeading) {
                     if stacked {
                         VStack(alignment: .leading, spacing: 20) {
-                            uiTestMarker("ipad.intermittent.live")
-                            uiTestMarker("ipad.intermittent.controls")
-                            uiTestMarker("ipad.intermittent.planning")
-                            uiTestMarker("ipad.intermittent.advanced")
-                            uiTestMarker("ipad.intermittent.history")
-                            uiTestMarker("ipad.intermittent.intention")
-                            uiTestMarker("ipad.intermittent.start")
-                            uiTestMarker("ipad.intermittent.start_date")
-                            ipadIntermittentHeroBand(compact: true)
+                            if !activeFast {
+                                ipadIntermittentHeroBand(compact: true)
+                            }
                             ipadIntermittentLiveControlCenter
-                            ipadIntermittentAdvancedToolsCard
                             ipadIntermittentQuickPlansCard
                             ipadIntermittentPlanningCard
+                            if activeFast {
+                                ipadIntermittentHeroBand(compact: true)
+                            }
+                            ipadIntermittentAdvancedToolsCard
                             ipadIntermittentHistoryCard
                         }
                     } else {
                         HStack(alignment: .top, spacing: 20) {
                             VStack(alignment: .leading, spacing: 20) {
-                                uiTestMarker("ipad.intermittent.live")
-                                uiTestMarker("ipad.intermittent.controls")
-                                uiTestMarker("ipad.intermittent.intention")
-                                uiTestMarker("ipad.intermittent.start")
-                                uiTestMarker("ipad.intermittent.start_date")
-                                ipadIntermittentHeroBand(compact: compact)
+                                if !activeFast {
+                                    ipadIntermittentHeroBand(compact: compact)
+                                }
                                 ipadIntermittentLiveControlCenter
                                 ipadIntermittentQuickPlansCard
                             }
                             .frame(minWidth: 0, maxWidth: .infinity, alignment: .top)
 
                             VStack(alignment: .leading, spacing: 20) {
-                                uiTestMarker("ipad.intermittent.planning")
-                                uiTestMarker("ipad.intermittent.advanced")
-                                uiTestMarker("ipad.intermittent.history")
+                                if activeFast {
+                                    ipadIntermittentHeroBand(compact: true)
+                                }
                                 ipadIntermittentPlanningCard
                                 ipadIntermittentAdvancedToolsCard
                                 ipadIntermittentHistoryCard
@@ -54,9 +49,24 @@ extension ContentView {
                                 alignment: .top)
                         }
                     }
+
+                    ipadIntermittentUITestMarkers
                 }
                 .padding(20)
             }
+        }
+    }
+
+    private var ipadIntermittentUITestMarkers: some View {
+        VStack(spacing: 0) {
+            uiTestMarker("ipad.intermittent.live")
+            uiTestMarker("ipad.intermittent.controls")
+            uiTestMarker("ipad.intermittent.planning")
+            uiTestMarker("ipad.intermittent.advanced")
+            uiTestMarker("ipad.intermittent.history")
+            uiTestMarker("ipad.intermittent.intention")
+            uiTestMarker("ipad.intermittent.start")
+            uiTestMarker("ipad.intermittent.start_date")
         }
     }
 }

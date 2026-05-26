@@ -114,6 +114,18 @@ The system rejects generic fasting apps, productivity dashboards, aggressive str
 
 Audit and polish loops may use temporary progress notes, checklists, or score tracking while work is in flight. Before final handoff or commit, that progress state must be resolved: clear active/in-progress markers, remove stale temporary status, and leave the app/repo in a stable final state with only the verified outcome reported. A finished polish pass should read as complete, not as an abandoned checklist.
 
+### External Progress Panel Rule
+
+Any visible Codex, app, or automation checklist used during a polish pass is part of the user-facing handoff. Before presenting screenshots, ratings, commit readiness, or a finished status, the panel must show every item complete. If any item remains active or incomplete, the final response must say the pass is unfinished and name the remaining work. Stale progress panels are P0 handoff defects.
+
+### Final Handoff Checklist
+
+- Visible progress/checklist state is complete, or explicitly reported as unresolved.
+- No stale temporary "Progress" copy remains in app UI, widgets, screenshots, docs, or generated outputs unless it is a technical type/control or an intentional product label.
+- Verification results are separated from environment-only warnings.
+- Screenshots are inspected after generation, not merely produced.
+- Dirty tree status is stated plainly before asking for or performing a commit.
+
 ## 2. Colors
 
 The palette changes by liturgical season. Each season provides a primary color, an accent, a parchment base, a parchment shade, and a card border. Ordinary Time is the neutral default, Advent shifts toward blue and rose, Christmas warms toward gold, Lent quiets into violet, and Easter returns with green and gold.
