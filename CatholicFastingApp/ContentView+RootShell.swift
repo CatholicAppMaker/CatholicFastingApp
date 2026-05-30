@@ -212,6 +212,11 @@ extension ContentView {
 
     @ToolbarContentBuilder
     var phoneTabToolbar: some ToolbarContent {
+        ToolbarItem(placement: .topBarLeading) {
+            phoneBrandMark
+        }
+        .sharedBackgroundVisibility(.hidden)
+
         ToolbarItem(placement: .topBarTrailing) {
             seasonBadge
         }
@@ -472,6 +477,17 @@ extension ContentView {
                 localizedSeason))
 
         content.appCapsuleGlass()
+    }
+
+    var phoneBrandMark: some View {
+        Image("CFAMark")
+            .resizable()
+            .renderingMode(.original)
+            .scaledToFit()
+            .frame(width: 30, height: 30)
+            .allowsHitTesting(false)
+            .accessibilityIdentifier("home.brand_mark")
+            .accessibilityLabel(localized("shared.app_title", default: "Catholic Fasting"))
     }
 
     var todaySurfaceList: some View {

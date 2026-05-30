@@ -105,10 +105,19 @@ The system rejects generic fasting apps, productivity dashboards, aggressive str
 
 - Parchment-toned root backgrounds with seasonal liturgical color.
 - Native SwiftUI controls, glass buttons, platform navigation, and system type.
+- Official app mark: the D3 liturgical bookmark/ribbon direction, pairing a cross with an empty bowl/plate so the brand reads as Catholic fasting rather than generic church or generic fasting.
 - Serif titles reserved for devotional or reflective emphasis.
 - Rounded, lightly bordered surfaces with low shadow and tonal depth.
 - Sacred imagery used as a surface anchor, not as filler.
 - Clear citations, rationale, localization, and accessibility identifiers treated as product features.
+
+### Brand Mark
+
+The official app mark is the D3 direction selected on May 29, 2026: a compact liturgical bookmark or calendar-ribbon silhouette with a cross and an empty bowl/plate. It represents guided Catholic fasting across the Church year. The mark should be simple, black or single-color by default, and strong enough to remain legible at 24-32 px in an iOS toolbar.
+
+Use the mark as subtle page identity, not as a large banner or decorative header. It may sit in the top whitespace or toolbar area near the seasonal context, but it should not compete with the page title or primary action. The mark must remain compatible with changing liturgical palettes, so avoid hard-coding it to Ordinary Time green, gold, or any season-specific color unless a specific themed variant is intentionally designed.
+
+Do not replace the mark with large "CFA" letters, a generic chapel/window, a cross-only symbol, a crescent-like C form, or a fasting icon that loses Catholic specificity. If the mark is refined later, preserve the core read: Catholic calendar guidance plus fasting practice.
 
 ### Design QA Handoff
 

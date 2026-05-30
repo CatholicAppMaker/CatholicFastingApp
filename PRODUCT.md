@@ -22,6 +22,12 @@ The voice is calm, reverent, practical, and transparent. It should feel like a t
 
 Three-word personality: calm, reverent, practical.
 
+## Brand Identity
+
+The official app mark is the D3 liturgical bookmark/ribbon direction selected on May 29, 2026. It combines a cross with an empty bowl or plate so the product reads as specifically Catholic fasting, not a generic church app and not a generic fasting tracker.
+
+The mark should be used with restraint as a small identity signal in the app chrome and marketing materials. It should usually render in black or a single neutral color so it works across changing liturgical seasons. Do not substitute large "CFA" lettering, seasonal green-only marks, crescent-like C forms, generic chapel icons, or cross-only marks for the official identity.
+
 ## Anti-references
 
 - Do not make the app feel like a generic wellness, fasting, diet, biohacking, or productivity tracker.
