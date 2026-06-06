@@ -480,14 +480,17 @@ extension ContentView {
     }
 
     var phoneBrandMark: some View {
-        Image("CFAMark")
-            .resizable()
-            .renderingMode(.original)
-            .scaledToFit()
-            .frame(width: 30, height: 30)
+        Text(localized("shared.app_full_title", default: "Catholic Fasting App"))
+            .font(.system(.title3, design: .serif).weight(.heavy))
+            .foregroundStyle(.primary)
+            .kerning(0.15)
+            .lineLimit(1)
+            .minimumScaleFactor(0.72)
+            .fixedSize(horizontal: true, vertical: false)
+            .padding(.leading, 36)
             .allowsHitTesting(false)
             .accessibilityIdentifier("home.brand_mark")
-            .accessibilityLabel(localized("shared.app_title", default: "Catholic Fasting"))
+            .accessibilityLabel(localized("shared.app_full_title", default: "Catholic Fasting App"))
     }
 
     var todaySurfaceList: some View {
