@@ -1,0 +1,9 @@
+{
+  "id" : "b7437716-a007-4d90-a355-bb8b2e7d055d",
+  "targets" : [
+    {
+      "id" : "572363d2-c92c-44c7-9b74-3eef5aa9b51b",
+      "name" : "CatholicFastingApp"
+    }
+  ]
+}
