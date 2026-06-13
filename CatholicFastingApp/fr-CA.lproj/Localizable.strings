@@ -428,12 +428,6 @@
 "settings.backups.support_bundle_message" = "Diagnostic de soutien expurgé";
 "settings.backups.export_support_log" = "Exporter le journal de soutien";
 "settings.backups.export_support_hint" = "Exporte le diagnostic de synchronisation et l’état du consentement pour le soutien.";
-"settings.backups.passphrase_label" = "Phrase secrète pour la sauvegarde chiffrée";
-"settings.backups.passphrase_accessibility" = "Phrase secrète de sauvegarde";
-"settings.backups.encrypted_backup_subject" = "Sauvegarde chiffrée Catholic Fasting";
-"settings.backups.encrypted_backup_message" = "Données de sauvegarde chiffrées";
-"settings.backups.export_encrypted_backup" = "Exporter une sauvegarde chiffrée";
-"settings.backups.export_encrypted_hint" = "Exige un consentement et une phrase secrète.";
 "settings.backups.enable_consent_hint" = "Activez le consentement ci-dessus pour exporter vos données.";
 
 "settings.data_management.title" = "Gestion des données";

@@ -79,12 +79,6 @@
 "settings.backups.support_bundle_message" = "Redacted support diagnostics";
 "settings.backups.export_support_log" = "Export Support Log";
 "settings.backups.export_support_hint" = "Exports sync diagnostics and consent state for support triage.";
-"settings.backups.passphrase_label" = "Passphrase for encrypted backup";
-"settings.backups.passphrase_accessibility" = "Backup passphrase";
-"settings.backups.encrypted_backup_subject" = "Catholic Fasting Encrypted Backup";
-"settings.backups.encrypted_backup_message" = "Encrypted backup data";
-"settings.backups.export_encrypted_backup" = "Export Encrypted Backup";
-"settings.backups.export_encrypted_hint" = "Requires consent and a passphrase.";
 "settings.backups.enable_consent_hint" = "Enable consent above to export data.";
 
 "settings.data_management.title" = "Data Management";

@@ -22,9 +22,9 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
         XCTAssertTrue(audit.isVerified || !audit.warnings.isEmpty)
     }
 
-    func testBundledRuleBundleSignatureVerifies() {
+    func testBundledRuleBundleValidates() {
         let audit = ObservanceCalculator.ruleBundleAudit()
-        XCTAssertTrue(audit.isVerified, "Expected bundled signature verification to pass. Warnings: \(audit.warnings)")
+        XCTAssertTrue(audit.isVerified, "Expected bundled rule bundle validation to pass. Warnings: \(audit.warnings)")
     }
 
     func testInvalidLocalRuleBundleFallsBackToBundled() throws {
@@ -32,31 +32,9 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
             .appendingPathComponent(UUID().uuidString, isDirectory: true)
         try FileManager.default.createDirectory(at: tempDirectory, withIntermediateDirectories: true)
 
-        let localBundle = """
-        {
-          "metadata": {
-            "id": "local-test",
-            "displayName": "Local Test",
-            "version": "1.0.0",
-            "effectiveDate": "2026-01-01",
-            "reviewedDate": "2026-02-11"
-          },
-          "changes": [],
-          "signing": {
-            "key_id": "release-2026-q1",
-            "algorithm": "ed25519",
-            "signature": "AAAA"
-          }
-        }
-        """
+        let localBundle = "{ \"metadata\": { \"id\": \"local-test\" } }"
         try localBundle.write(
             to: tempDirectory.appendingPathComponent("rule-bundle.json"),
-            atomically: true,
-            encoding: .utf8)
-        try """
-        {"key_id":"release-2026-q1","algorithm":"ed25519","signature":"AAAA"}
-        """.write(
-            to: tempDirectory.appendingPathComponent("rule-bundle.sig"),
             atomically: true,
             encoding: .utf8)
 
@@ -68,7 +46,7 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
 
         let audit = ObservanceCalculator.ruleBundleAudit()
         XCTAssertEqual(audit.source, "bundled")
-        XCTAssertTrue(audit.warnings.contains { $0.localizedCaseInsensitiveContains("local rule bundle signature check failed") })
+        XCTAssertTrue(audit.warnings.contains { $0.localizedCaseInsensitiveContains("unable to decode local rule bundle") })
     }
 
     func testObservancesCarryRationaleAndCitations() throws {
@@ -109,26 +87,6 @@ final class RuleMetadataAndGuidanceTests: XCTestCase {
         let snapshot = SyncDiagnostics.snapshot()
         XCTAssertTrue(snapshot.completedObservancesCount == 0)
         XCTAssertFalse(snapshot.warnings.isEmpty)
-    }
-
-    func testDataProtectionEncryptDecryptRoundTrip() {
-        let plaintext = "{ \"hello\": \"world\" }"
-        let passphrase = "abc123"
-
-        let encrypted = DataProtectionEngine.encrypt(plaintext: plaintext, passphrase: passphrase)
-        XCTAssertNotNil(encrypted)
-
-        let decrypted = DataProtectionEngine.decrypt(base64Ciphertext: encrypted ?? "", passphrase: passphrase)
-        XCTAssertEqual(decrypted, plaintext)
-    }
-
-    func testDataProtectionDecryptFailsWithWrongPassphrase() {
-        let plaintext = "sensitive export"
-        let encrypted = DataProtectionEngine.encrypt(plaintext: plaintext, passphrase: "correct-passphrase")
-        XCTAssertNotNil(encrypted)
-
-        let decrypted = DataProtectionEngine.decrypt(base64Ciphertext: encrypted ?? "", passphrase: "wrong-passphrase")
-        XCTAssertNil(decrypted)
     }
 
     func testFoodGuidanceHeavyLaborMentionsAdjustment() {

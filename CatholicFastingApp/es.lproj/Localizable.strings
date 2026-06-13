@@ -425,12 +425,6 @@
 "settings.backups.support_bundle_message" = "Diagnósticos de soporte anonimizados";
 "settings.backups.export_support_log" = "Exportar registro de soporte";
 "settings.backups.export_support_hint" = "Exporta diagnósticos de sincronización y el estado de consentimiento para soporte.";
-"settings.backups.passphrase_label" = "Contraseña para respaldo cifrado";
-"settings.backups.passphrase_accessibility" = "Contraseña de respaldo";
-"settings.backups.encrypted_backup_subject" = "Respaldo cifrado de ayuno católico";
-"settings.backups.encrypted_backup_message" = "Datos de respaldo cifrados";
-"settings.backups.export_encrypted_backup" = "Exportar respaldo cifrado";
-"settings.backups.export_encrypted_hint" = "Requiere consentimiento y una contraseña.";
 "settings.backups.enable_consent_hint" = "Active el consentimiento arriba para exportar datos.";
 
 "settings.data_management.title" = "Gestión de datos";

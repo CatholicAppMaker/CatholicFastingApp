@@ -1,8 +1,5 @@
 @preconcurrency import Foundation
 import SwiftUI
-#if canImport(CryptoKit)
-import CryptoKit
-#endif
 
 struct RuleSettings: Hashable {
     enum RegionProfile: String, CaseIterable, Identifiable {

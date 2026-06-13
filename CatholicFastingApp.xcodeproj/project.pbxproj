@@ -75,7 +75,6 @@
 		A0000000000000000000004E /* IntermittentFastTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000004F /* IntermittentFastTracker.swift */; };
 		A00000000000000000000050 /* SyncDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000051 /* SyncDiagnostics.swift */; };
 		A00000000000000000000052 /* GuidanceEngines.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000053 /* GuidanceEngines.swift */; };
-		A00000000000000000000054 /* DataProtectionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000055 /* DataProtectionEngine.swift */; };
 		A00000000000000000000056 /* SyncStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000057 /* SyncStore.swift */; };
 		A00000000000000000000058 /* FoundationDateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000059 /* FoundationDateExtensions.swift */; };
 		A0000000000000000000005A /* LiturgicalSeasonThemeEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000005B /* LiturgicalSeasonThemeEngine.swift */; };
@@ -153,7 +152,6 @@
 		B1CC837A0B9B882D2DC40C24 /* CatholicFastingMacModel+Computed.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBAE6A8A53A950B571F3300B /* CatholicFastingMacModel+Computed.swift */; };
 		B31BF071CEE7E3DDACF338DF /* SyncDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = B046ED302D36929C87CF922A /* SyncDiagnostics.swift */; };
 		B3D696E2394ACC14EDDA16E4 /* PremiumSubscriptionHealthEvaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CFD45EC538D589CB5706F0 /* PremiumSubscriptionHealthEvaluator.swift */; };
-		B45C35C76360145C2CC4AAB3 /* DataProtectionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3348367DBCE3DFA8D1CA8D7E /* DataProtectionEngine.swift */; };
 		C2BAC214F072A2751C007C1E /* SeasonalQuoteCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D35B1144A8BE633CE79E81 /* SeasonalQuoteCatalog.swift */; };
 		C3926A7F8E6CC16F87181A7F /* ReminderScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AC0674F4B54B5FC5B87ECA /* ReminderScheduler.swift */; };
 		C3C4A799E5C7911C65BA104E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 814A0E53822CDA8707F85426 /* Cocoa.framework */; };
@@ -266,7 +264,6 @@
 		1ECED45EB3C4B871F45A07EB /* CatholicFastingMacAppUITests.Release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = CatholicFastingMacAppUITests.Release.xcconfig; sourceTree = "<group>"; };
 		23170EB4059A07DAE6CDD358 /* CompletionStatusAndFastTracker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CompletionStatusAndFastTracker.swift; path = CatholicFastingApp/Models/CompletionStatusAndFastTracker.swift; sourceTree = "<group>"; };
 		25F923CA15BA6F3079EA230C /* IntermittentFastLiveActivity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = IntermittentFastLiveActivity.swift; path = CatholicFastingApp/Models/IntermittentFastLiveActivity.swift; sourceTree = "<group>"; };
-		3348367DBCE3DFA8D1CA8D7E /* DataProtectionEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DataProtectionEngine.swift; path = CatholicFastingApp/Models/DataProtectionEngine.swift; sourceTree = "<group>"; };
 		3599C9255E87DB9D3E1B54CE /* CatholicFastingMacViewSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CatholicFastingMacViewSupport.swift; sourceTree = "<group>"; };
 		35BBCFF4986FF227CD161216 /* CatholicFastingMacGuidanceView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CatholicFastingMacGuidanceView.swift; sourceTree = "<group>"; };
 		3735756DD32DF33CDD8DD8CC /* GrowthContracts.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GrowthContracts.swift; path = CatholicFastingApp/Models/GrowthContracts.swift; sourceTree = "<group>"; };
@@ -328,7 +325,6 @@
 		A0000000000000000000004F /* IntermittentFastTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntermittentFastTracker.swift; sourceTree = "<group>"; };
 		A00000000000000000000051 /* SyncDiagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncDiagnostics.swift; sourceTree = "<group>"; };
 		A00000000000000000000053 /* GuidanceEngines.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuidanceEngines.swift; sourceTree = "<group>"; };
-		A00000000000000000000055 /* DataProtectionEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataProtectionEngine.swift; sourceTree = "<group>"; };
 		A00000000000000000000057 /* SyncStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncStore.swift; sourceTree = "<group>"; };
 		A00000000000000000000059 /* FoundationDateExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundationDateExtensions.swift; sourceTree = "<group>"; };
 		A0000000000000000000005B /* LiturgicalSeasonThemeEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiturgicalSeasonThemeEngine.swift; sourceTree = "<group>"; };
@@ -684,7 +680,6 @@
 				A000000000000000000000EF /* MissedDayRecoveryEngine.swift */,
 				A000000000000000000000F1 /* ObservanceQueryEngine.swift */,
 				A00000000000000000000037 /* RuleBundleRepository.swift */,
-				A00000000000000000000055 /* DataProtectionEngine.swift */,
 				A00000000000000000000057 /* SyncStore.swift */,
 				A00000000000000000000059 /* FoundationDateExtensions.swift */,
 				A00000000000000000000064 /* PremiumExperienceEngine.swift */,
@@ -757,7 +752,6 @@
 			children = (
 				23170EB4059A07DAE6CDD358 /* CompletionStatusAndFastTracker.swift */,
 				B969CAC681EFB71BFBF0F14D /* DailyFoodDecisionEngine.swift */,
-				3348367DBCE3DFA8D1CA8D7E /* DataProtectionEngine.swift */,
 				F027C22803CC1109B3B54537 /* FoundationDateExtensions.swift */,
 				9F3CD535324F41C735415173 /* FridayPenanceNotes.swift */,
 				C50000000000000000000002 /* CompanionSnapshotEngine.swift */,
@@ -1102,7 +1096,6 @@
 			files = (
 				C91D6825FF3CAD853D62EAF6 /* CompletionStatusAndFastTracker.swift in Sources */,
 				80A5DCAAE6E8A3F2589B687A /* DailyFoodDecisionEngine.swift in Sources */,
-				B45C35C76360145C2CC4AAB3 /* DataProtectionEngine.swift in Sources */,
 				F243D0A230B7EF9986686816 /* FoundationDateExtensions.swift in Sources */,
 				E9D57CE3867434AC8981677F /* FridayPenanceNotes.swift in Sources */,
 				C50000000000000000000001 /* CompanionSnapshotEngine.swift in Sources */,
@@ -1194,7 +1187,6 @@
 				A000000000000000000000EE /* MissedDayRecoveryEngine.swift in Sources */,
 				A000000000000000000000F0 /* ObservanceQueryEngine.swift in Sources */,
 				A00000000000000000000036 /* RuleBundleRepository.swift in Sources */,
-				A00000000000000000000054 /* DataProtectionEngine.swift in Sources */,
 				A00000000000000000000056 /* SyncStore.swift in Sources */,
 				A00000000000000000000058 /* FoundationDateExtensions.swift in Sources */,
 				A00000000000000000000063 /* PremiumExperienceEngine.swift in Sources */,
@@ -1354,7 +1346,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				ENABLE_APP_SANDBOX = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_KEY_CFBundleDisplayName = "Catholic Fasting App";
@@ -1508,7 +1500,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = CatholicFastingApp/CatholicFastingApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1546,7 +1538,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = CatholicFastingApp/CatholicFastingApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_PREVIEWS = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1578,7 +1570,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -1603,7 +1595,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -1630,7 +1622,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = CatholicFastingWidget/CatholicFastingWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -1657,7 +1649,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = CatholicFastingWidget/CatholicFastingWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -1701,7 +1693,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_APP_SANDBOX = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -1726,7 +1718,7 @@
 			baseConfigurationReference = 75C060EE0B3B0B2A326ED1A5 /* CatholicFastingMacWidget.Release.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				ENABLE_APP_SANDBOX = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1764,7 +1756,7 @@
 			baseConfigurationReference = 1BC81D51596B6DD5FDDE880B /* CatholicFastingMacWidget.Debug.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				ENABLE_APP_SANDBOX = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				LD_RUNPATH_SEARCH_PATHS = (
