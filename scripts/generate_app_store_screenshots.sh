@@ -3,10 +3,15 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OUTPUT_ROOT="$ROOT_DIR/release/app-store-screenshots"
+OUTPUT_ROOT_OVERRIDDEN=0
 RESULTS_DIR="$ROOT_DIR/build/app-store-screenshots"
 SCREENSHOT_CONFIG_PATH="/tmp/catholic-fasting-app-store-screenshot-config.json"
 IPHONE_DEVICE="${IPHONE_DEVICE:-}"
 IPAD_DEVICE="${IPAD_DEVICE:-}"
+IOS_VERSION="${SCREENSHOT_IOS_VERSION:-26.5}"
+LOCALE_ID="en-US"
+LANGUAGE_MODE=""
+REGION_PROFILE=""
 SKIP_CAPTURE=0
 CAPTURE_ONLY=0
 CAPTURE_IPHONE=1
@@ -24,6 +29,9 @@ Options:
   --capture-only          Capture raw simulator screenshots without rendering finals.
   --iphone-only           Capture/render only the iPhone screenshot set.
   --ipad-only             Capture/render only the iPad screenshot set.
+  --locale LOCALE         Locale set to generate. Supported: en-US, fr-CA.
+                          Non-English default output goes in a locale subfolder.
+  --ios-version VERSION   Simulator iOS runtime to use for capture. Defaults to 26.5.
   --output DIR            Screenshot output root. Defaults to release/app-store-screenshots.
   --iphone-device NAME    Override the iPhone simulator name.
   --ipad-device NAME      Override the iPad simulator name.
@@ -31,7 +39,10 @@ Options:
 
 Environment overrides:
   IPHONE_DEVICE, IPAD_DEVICE
+  SCREENSHOT_IOS_VERSION=26.5   Override the simulator iOS runtime.
   SCREENSHOT_RESET_SIMULATOR=0   Reuse simulator state instead of erasing before capture.
+  DEVELOPER_DIR                  Optional Xcode developer dir. If unset, the script
+                                 auto-detects /Applications/Xcode*.app for capture.
 USAGE
 }
 
@@ -57,6 +68,15 @@ while [[ $# -gt 0 ]]; do
       ;;
     --output)
       OUTPUT_ROOT="$2"
+      OUTPUT_ROOT_OVERRIDDEN=1
+      shift 2
+      ;;
+    --locale)
+      LOCALE_ID="$2"
+      shift 2
+      ;;
+    --ios-version)
+      IOS_VERSION="$2"
       shift 2
       ;;
     --iphone-device)
@@ -84,6 +104,51 @@ require_tool() {
     echo "Missing required tool: $1" >&2
     exit 1
   fi
+}
+
+configure_locale() {
+  case "$LOCALE_ID" in
+    en|en-US)
+      LOCALE_ID="en-US"
+      LANGUAGE_MODE=""
+      REGION_PROFILE=""
+      ;;
+    fr|fr-CA|fr_CA|frenchCanadian)
+      LOCALE_ID="fr-CA"
+      LANGUAGE_MODE="frenchCanadian"
+      REGION_PROFILE="canada"
+      if [[ "$OUTPUT_ROOT_OVERRIDDEN" -eq 0 ]]; then
+        OUTPUT_ROOT="$OUTPUT_ROOT/fr-CA"
+      fi
+      ;;
+    *)
+      echo "Unsupported locale: $LOCALE_ID" >&2
+      echo "Supported locales: en-US, fr-CA" >&2
+      exit 2
+      ;;
+  esac
+}
+
+configure_developer_dir_for_capture() {
+  if xcrun --find simctl >/dev/null 2>&1 && xcodebuild -version >/dev/null 2>&1; then
+    return
+  fi
+
+  if [[ -n "${DEVELOPER_DIR:-}" ]]; then
+    return
+  fi
+
+  local candidate
+  for candidate in /Applications/Xcode.app /Applications/Xcode-beta.app /Applications/Xcode*.app; do
+    if [[ -d "$candidate/Contents/Developer" ]] \
+      && DEVELOPER_DIR="$candidate/Contents/Developer" xcrun --find simctl >/dev/null 2>&1 \
+      && DEVELOPER_DIR="$candidate/Contents/Developer" xcodebuild -version >/dev/null 2>&1
+    then
+      export DEVELOPER_DIR="$candidate/Contents/Developer"
+      echo "Using DEVELOPER_DIR=$DEVELOPER_DIR"
+      return
+    fi
+  done
 }
 
 run_with_timeout() {
@@ -123,38 +188,72 @@ choose_file() {
   exit 1
 }
 
-simulator_exists() {
-  xcrun simctl list devices available | grep -F "$1 (" >/dev/null
-}
-
 choose_simulator() {
   local explicit="$1"
   shift
-  if [[ -n "$explicit" ]]; then
-    if ! simulator_exists "$explicit"; then
-      echo "Simulator '$explicit' is not available." >&2
-      exit 1
-    fi
-    printf '%s\n' "$explicit"
-    return
-  fi
 
-  local candidate
-  for candidate in "$@"; do
-    if simulator_exists "$candidate"; then
-      printf '%s\n' "$candidate"
-      return
-    fi
-  done
+  python3 - "$IOS_VERSION" "$explicit" "$@" <<'PY'
+import json
+import subprocess
+import sys
 
-  echo "None of the requested simulators are available: $*" >&2
-  exit 1
+ios_version = sys.argv[1]
+explicit = sys.argv[2]
+candidates = sys.argv[3:]
+
+payload = subprocess.check_output(
+    ["xcrun", "simctl", "list", "devices", "available", "-j"],
+    text=True,
+)
+devices_by_runtime = json.loads(payload).get("devices", {})
+
+def runtime_version(runtime_id):
+    marker = "iOS-"
+    if marker not in runtime_id:
+        return None
+    return runtime_id.split(marker, 1)[1].replace("-", ".")
+
+matches = []
+for runtime_id, devices in devices_by_runtime.items():
+    version = runtime_version(runtime_id)
+    if version != ios_version:
+        continue
+    for device in devices:
+        if not device.get("isAvailable", True):
+            continue
+        matches.append((device.get("name", ""), device.get("udid", ""), version))
+
+if explicit:
+    for name, udid, version in matches:
+        if explicit in (name, udid):
+            print(f"{name}|{udid}|iOS {version}")
+            sys.exit(0)
+    print(f"Simulator '{explicit}' is not available for iOS {ios_version}.", file=sys.stderr)
+    sys.exit(1)
+
+for candidate in candidates:
+    for name, udid, version in matches:
+        if name == candidate:
+            print(f"{name}|{udid}|iOS {version}")
+            sys.exit(0)
+
+print(
+    f"None of the requested simulators are available for iOS {ios_version}: "
+    + " ".join(candidates),
+    file=sys.stderr,
+)
+sys.exit(1)
+PY
 }
 
 run_capture() {
-  local device="$1"
+  local device_spec="$1"
   local device_dir="$2"
   local test_name="$3"
+  local device_name="${device_spec%%|*}"
+  local remainder="${device_spec#*|}"
+  local device_udid="${remainder%%|*}"
+  local device_runtime="${device_spec##*|}"
   local result_bundle="$RESULTS_DIR/$device_dir.xcresult"
   local raw_final="$OUTPUT_ROOT/$device_dir/raw"
   local raw_tmp
@@ -163,24 +262,26 @@ run_capture() {
   mkdir -p "$raw_final" "$RESULTS_DIR"
   raw_tmp="$(mktemp -d "$RESULTS_DIR/$device_dir-raw.XXXXXX")"
 
-  echo "Capturing $device_dir on $device"
-  python3 - "$SCREENSHOT_CONFIG_PATH" "$OUTPUT_ROOT" "$device_dir" "$raw_tmp" <<'PY'
+  echo "Capturing $device_dir on $device_name ($device_runtime, $device_udid)"
+  python3 - "$SCREENSHOT_CONFIG_PATH" "$OUTPUT_ROOT" "$device_dir" "$raw_tmp" "$LANGUAGE_MODE" "$REGION_PROFILE" <<'PY'
 import json
 import sys
 
-config_path, output_root, device_directory, raw_directory = sys.argv[1:]
+config_path, output_root, device_directory, raw_directory, language_mode, region_profile = sys.argv[1:]
 with open(config_path, "w", encoding="utf-8") as handle:
     json.dump({
         "outputRoot": output_root,
         "deviceDirectory": device_directory,
         "rawDirectory": raw_directory,
+        "languageMode": language_mode or None,
+        "regionProfile": region_profile or None,
     }, handle)
     handle.write("\n")
 PY
 
   if [[ "${SCREENSHOT_RESET_SIMULATOR:-1}" == "1" ]]; then
-    xcrun simctl shutdown "$device" >/dev/null 2>&1 || true
-    xcrun simctl erase "$device" >/dev/null 2>&1 || true
+    xcrun simctl shutdown "$device_udid" >/dev/null 2>&1 || true
+    xcrun simctl erase "$device_udid" >/dev/null 2>&1 || true
   fi
 
   local capture_status=0
@@ -188,7 +289,7 @@ PY
     run_with_timeout "${SCREENSHOT_CAPTURE_TIMEOUT_SECONDS:-900}" xcodebuild test \
       -project "$ROOT_DIR/CatholicFastingApp.xcodeproj" \
       -scheme CatholicFastingApp \
-      -destination "platform=iOS Simulator,name=$device" \
+      -destination "platform=iOS Simulator,id=$device_udid" \
       -destination-timeout 120 \
       -only-testing:"CatholicFastingAppUITests/CatholicFastingAppUITests/$test_name" \
       -parallel-testing-enabled NO \
@@ -308,34 +409,67 @@ compose_ipad() {
 }
 
 shot_title() {
-  case "$1" in
-    01-today) printf "%s" "Know today's fasting rule" ;;
-    02-track-fast) printf "%s" "Track a fast with intention" ;;
-    03-privacy) printf "%s" "Private by design" ;;
-    04-fasting-days) printf "%s" "Plan Lent and required days" ;;
-    05-premium) printf "%s" "Guided Seasonal Formation" ;;
-    *) echo "Unknown shot id: $1" >&2; exit 1 ;;
-  esac
+  if [[ "$LOCALE_ID" == "fr-CA" ]]; then
+    case "$1" in
+      01-today) printf "%s" "Connaître les règles du jour" ;;
+      02-track-fast) printf "%s" "Suivre un jeûne avec intention" ;;
+      03-fasting-days) printf "%s" "Planifier les jours requis" ;;
+      04-premium) printf "%s" "Bâtir un rythme plus stable" ;;
+      05-privacy) printf "%s" "Confidentialité intégrée" ;;
+      *) echo "Unknown shot id: $1" >&2; exit 1 ;;
+    esac
+  else
+    case "$1" in
+      01-today) printf "%s" "Know today's fasting rules" ;;
+      02-track-fast) printf "%s" "Track a fast with intention" ;;
+      03-fasting-days) printf "%s" "Plan required days ahead" ;;
+      04-premium) printf "%s" "Build a steadier rhythm" ;;
+      05-privacy) printf "%s" "Private by design" ;;
+      *) echo "Unknown shot id: $1" >&2; exit 1 ;;
+    esac
+  fi
 }
 
 shot_subtitle() {
-  case "$1" in
-    01-today) printf "%s" "Catholic fast days, abstinence, feasts, and Friday penance." ;;
-    02-track-fast) printf "%s" "A clear timer for prayer, mercy, penance, or discipline." ;;
-    03-privacy) printf "%s" "No account. No ads. Local-only fasting history." ;;
-    04-fasting-days) printf "%s" "See fasts, abstinence days, solemnities, and regional guidance." ;;
-    05-premium) printf "%s" "A weekly Catholic rhythm for review, recovery, and the next faithful action." ;;
-    *) echo "Unknown shot id: $1" >&2; exit 1 ;;
-  esac
+  if [[ "$LOCALE_ID" == "fr-CA" ]]; then
+    case "$1" in
+      01-today) printf "%s" "Consultez la guidance, les sources et la prochaine action fidèle." ;;
+      02-track-fast) printf "%s" "Gardez la minuterie, la cible et l'intention au même endroit." ;;
+      03-fasting-days) printf "%s" "Voyez jeûnes, abstinence, fêtes et guidance régionale." ;;
+      04-premium) printf "%s" "Premium soutient revue, récupération, rappels et formation saisonnière." ;;
+      05-privacy) printf "%s" "Aucun compte. Aucune publicité. Historique local seulement." ;;
+      *) echo "Unknown shot id: $1" >&2; exit 1 ;;
+    esac
+  else
+    case "$1" in
+      01-today) printf "%s" "See today's guidance, source context, and next faithful action." ;;
+      02-track-fast) printf "%s" "Keep the live timer, target, and intention in one calm place." ;;
+      03-fasting-days) printf "%s" "See upcoming fasts, abstinence days, feasts, and regional guidance." ;;
+      04-premium) printf "%s" "Premium supports review, recovery, reminders, and seasonal formation." ;;
+      05-privacy) printf "%s" "No account. No ads. Local-only fasting history." ;;
+      *) echo "Unknown shot id: $1" >&2; exit 1 ;;
+    esac
+  fi
 }
 
 shot_output_name() {
   case "$1" in
-    01-today) printf "%s" "01-know-todays-rule.png" ;;
+    01-today) printf "%s" "01-know-todays-fasting-rules.png" ;;
     02-track-fast) printf "%s" "02-track-fast-with-intention.png" ;;
-    03-privacy) printf "%s" "03-private-by-design.png" ;;
-    04-fasting-days) printf "%s" "04-plan-lent-and-required-days.png" ;;
-    05-premium) printf "%s" "05-guided-seasonal-formation.png" ;;
+    03-fasting-days) printf "%s" "03-plan-required-days-ahead.png" ;;
+    04-premium) printf "%s" "04-build-a-steadier-rhythm.png" ;;
+    05-privacy) printf "%s" "05-private-by-design.png" ;;
+    *) echo "Unknown shot id: $1" >&2; exit 1 ;;
+  esac
+}
+
+shot_raw_name() {
+  case "$1" in
+    01-today) printf "%s" "01-today.png" ;;
+    02-track-fast) printf "%s" "02-track-fast.png" ;;
+    03-fasting-days) printf "%s" "04-fasting-days.png" ;;
+    04-premium) printf "%s" "05-premium.png" ;;
+    05-privacy) printf "%s" "03-privacy.png" ;;
     *) echo "Unknown shot id: $1" >&2; exit 1 ;;
   esac
 }
@@ -351,8 +485,8 @@ render_device_set() {
   rm -f "$OUTPUT_ROOT/$device_dir"/[0-9][0-9]-*.png
 
   local shot raw output
-  for shot in 01-today 02-track-fast 03-privacy 04-fasting-days 05-premium; do
-    raw="$OUTPUT_ROOT/$device_dir/raw/$shot.png"
+  for shot in 01-today 02-track-fast 03-fasting-days 04-premium 05-privacy; do
+    raw="$OUTPUT_ROOT/$device_dir/raw/$(shot_raw_name "$shot")"
     output="$OUTPUT_ROOT/$device_dir/$(shot_output_name "$shot")"
     if [[ ! -f "$raw" ]]; then
       echo "Missing raw screenshot: $raw" >&2
@@ -363,17 +497,21 @@ render_device_set() {
   done
 }
 
-require_tool xcrun
-require_tool xcodebuild
+configure_locale
+
 require_tool magick
 
 FONT_BOLD="${APP_STORE_SCREENSHOT_FONT_BOLD:-$(choose_file "/Library/Fonts/SF-Pro-Display-Bold.otf" "/System/Library/Fonts/Supplemental/Arial Bold.ttf")}"
 FONT_SEMIBOLD="${APP_STORE_SCREENSHOT_FONT_SEMIBOLD:-$(choose_file "/Library/Fonts/SF-Pro-Display-Semibold.otf" "/System/Library/Fonts/Supplemental/Arial Bold.ttf")}"
 
-IPHONE_DEVICE="$(choose_simulator "$IPHONE_DEVICE" "iPhone 17 Pro Max" "iPhone 16 Pro Max" "iPhone 15 Pro Max")"
-IPAD_DEVICE="$(choose_simulator "$IPAD_DEVICE" "iPad Pro 13-inch (M5)" "iPad Pro 13-inch (M4)" "iPad Air 13-inch (M4)")"
-
 if [[ "$SKIP_CAPTURE" -eq 0 ]]; then
+  require_tool xcrun
+  require_tool xcodebuild
+  configure_developer_dir_for_capture
+
+  IPHONE_DEVICE="$(choose_simulator "$IPHONE_DEVICE" "iPhone 17 Pro Max" "iPhone 16 Pro Max" "iPhone 15 Pro Max")"
+  IPAD_DEVICE="$(choose_simulator "$IPAD_DEVICE" "iPad Pro 13-inch (M5)" "iPad Pro 13-inch (M4)" "iPad Air 13-inch (M4)")"
+
   if [[ "$CAPTURE_IPHONE" -eq 1 ]]; then
     run_capture "$IPHONE_DEVICE" "iphone-17-pro-max" "testIPhoneAppStoreScreenshots"
   fi

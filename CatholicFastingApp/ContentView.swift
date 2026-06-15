@@ -31,6 +31,7 @@ struct ContentView: View {
     @State var selectedFastingObservanceID = ""
     @State var didConfigureTips = false
     @State var didPrepareLaunchState = false
+    @State var didApplyUITestInitialNavigation = false
     @State var didRunDeferredStartup = false
     @State var didRefreshStoreCatalog = false
     @State var planningData = LocalFeatureStore.loadPlanningData()

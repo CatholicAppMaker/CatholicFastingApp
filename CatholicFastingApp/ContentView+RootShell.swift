@@ -241,6 +241,7 @@ extension ContentView {
             }
             .task {
                 prepareLocalLaunchStateIfNeeded()
+                applyUITestInitialNavigationIfNeeded()
             }
             .onChange(of: didCompleteOnboarding) { _, completed in
                 guard completed else { return }

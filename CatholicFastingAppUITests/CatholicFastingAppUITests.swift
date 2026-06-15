@@ -22,6 +22,7 @@ final class CatholicFastingAppUITests: XCTestCase {
         includeUITestEnvironment: Bool = true,
         regionProfile: String? = nil,
         languageMode: String? = nil,
+        initialMoreDestination: String? = nil,
         premiumUnlocked: Bool = false) -> XCUIApplication
     {
         let app = XCUIApplication()
@@ -50,6 +51,9 @@ final class CatholicFastingAppUITests: XCTestCase {
         }
         if let languageMode {
             app.launchEnvironment["UITEST_LANGUAGE_MODE"] = languageMode
+        }
+        if let initialMoreDestination {
+            app.launchEnvironment["UITEST_INITIAL_MORE_DESTINATION"] = initialMoreDestination
         }
         if premiumUnlocked {
             app.launchEnvironment["UITEST_PREMIUM_UNLOCKED"] = "1"
@@ -334,6 +338,11 @@ final class CatholicFastingAppUITests: XCTestCase {
     }
 
     func openIPadMoreDestination(_ rawValue: String, in app: XCUIApplication) {
+        if tapUITestMoreDestination(rawValue, in: app) {
+            XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
+            return
+        }
+
         openIPadSurface("more", in: app)
         let regularMoreReady = app.otherElements["surface.more.ready"].firstMatch.waitForExistence(timeout: 4)
         let workspaceReady = app.otherElements["ipad.more.workspace"].firstMatch.waitForExistence(timeout: 2)

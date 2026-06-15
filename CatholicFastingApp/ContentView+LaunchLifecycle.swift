@@ -28,6 +28,23 @@ extension ContentView {
         ensureActiveHouseholdProfileSelection()
     }
 
+    func applyUITestInitialNavigationIfNeeded() {
+        guard !didApplyUITestInitialNavigation else {
+            return
+        }
+        guard ProcessInfo.processInfo.environment["UITEST_MODE"] == "1" else {
+            return
+        }
+        guard let rawDestination = ProcessInfo.processInfo.environment["UITEST_INITIAL_MORE_DESTINATION"],
+              let destination = MoreHubDestination(rawValue: rawDestination)
+        else {
+            return
+        }
+
+        didApplyUITestInitialNavigation = true
+        navigateToMoreDestination(destination)
+    }
+
     @MainActor
     func runDeferredPlatformStartupIfNeeded() async {
         let policy = appLaunchPolicy

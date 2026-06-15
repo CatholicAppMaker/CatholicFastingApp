@@ -63,10 +63,10 @@ extension CatholicFastingAppUITests {
             XCTAssertTrue(scrollToElementPresence(elementByIdentifier("ipad.intermittent.live", in: app), in: app))
         }
 
-        try captureAppStoreScreen("03-privacy") { app in
+        try captureAppStoreScreen("03-privacy", initialMoreDestination: "privacyAndData") { app in
             app.launch()
-            ensureOnHomeScreen(app)
-            openIPadMoreDestination("privacyAndData", in: app)
+            XCTAssertTrue(app.otherElements["home.ready"].waitForExistence(timeout: 4))
+            XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
             XCTAssertTrue(scrollToElementPresence(elementByIdentifier("launch.export_data", in: app), in: app))
         }
 
@@ -77,10 +77,9 @@ extension CatholicFastingAppUITests {
             XCTAssertTrue(app.otherElements["surface.fasting_days.ready"].waitForExistence(timeout: 4))
         }
 
-        try captureAppStoreScreen("05-premium") { app in
+        try captureAppStoreScreen("05-premium", initialMoreDestination: "supportAndPremium") { app in
             app.launch()
-            ensureOnHomeScreen(app)
-            openIPadMoreDestination("supportAndPremium", in: app)
+            XCTAssertTrue(app.otherElements["home.ready"].waitForExistence(timeout: 4))
             XCTAssertTrue(app.otherElements["ipad.more.premium"].waitForExistence(timeout: 4))
         }
     }
@@ -229,13 +228,28 @@ extension CatholicFastingAppUITests {
     private func captureAppStoreScreen(
         _ name: String,
         seedActiveFast: Bool = false,
+        initialMoreDestination: String? = nil,
         configure: (XCUIApplication) throws -> Void) throws
     {
-        let app = makeApp(seedActiveFast: seedActiveFast, premiumUnlocked: true)
+        let config = AppStoreScreenshotConfig.load()
+        let app = makeApp(
+            seedActiveFast: seedActiveFast,
+            regionProfile: config?.regionProfile,
+            languageMode: config?.languageMode,
+            initialMoreDestination: initialMoreDestination,
+            premiumUnlocked: true)
         defer { app.terminate() }
         try configure(app)
+        dismissSystemNotificationBanner(in: app)
         waitForAppStoreScreenshotSettling()
         try writeAppStoreScreenshot(named: name)
+    }
+
+    private func dismissSystemNotificationBanner(in app: XCUIApplication) {
+        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.14))
+        let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.02))
+        start.press(forDuration: 0.05, thenDragTo: end)
+        RunLoop.current.run(until: Date().addingTimeInterval(0.2))
     }
 
     private func waitForAppStoreScreenshotSettling() {
@@ -271,6 +285,8 @@ private struct AppStoreScreenshotConfig: Decodable {
     let outputRoot: String
     let deviceDirectory: String
     let rawDirectory: String?
+    let languageMode: String?
+    let regionProfile: String?
 
     var rawDirectoryURL: URL? {
         guard let rawDirectory, rawDirectory.isEmpty == false else {
