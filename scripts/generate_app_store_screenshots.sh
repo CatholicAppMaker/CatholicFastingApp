@@ -29,7 +29,7 @@ Options:
   --capture-only          Capture raw simulator screenshots without rendering finals.
   --iphone-only           Capture/render only the iPhone screenshot set.
   --ipad-only             Capture/render only the iPad screenshot set.
-  --locale LOCALE         Locale set to generate. Supported: en-US, fr-CA.
+  --locale LOCALE         Locale set to generate. Supported: en-US, fr-CA, es-MX.
                           Non-English default output goes in a locale subfolder.
   --ios-version VERSION   Simulator iOS runtime to use for capture. Defaults to 26.5.
   --output DIR            Screenshot output root. Defaults to release/app-store-screenshots.
@@ -121,9 +121,17 @@ configure_locale() {
         OUTPUT_ROOT="$OUTPUT_ROOT/fr-CA"
       fi
       ;;
+    es|es-MX|es_MX|spanish)
+      LOCALE_ID="es-MX"
+      LANGUAGE_MODE="spanish"
+      REGION_PROFILE=""
+      if [[ "$OUTPUT_ROOT_OVERRIDDEN" -eq 0 ]]; then
+        OUTPUT_ROOT="$OUTPUT_ROOT/es-MX"
+      fi
+      ;;
     *)
       echo "Unsupported locale: $LOCALE_ID" >&2
-      echo "Supported locales: en-US, fr-CA" >&2
+      echo "Supported locales: en-US, fr-CA, es-MX" >&2
       exit 2
       ;;
   esac
@@ -375,7 +383,7 @@ compose_phone() {
       -geometry +143+790 -composite \
     "$screen" -geometry +175+822 -composite \
     -fill black -draw "roundrectangle 505,852 815,906 28,28" \
-    "$output"
+    -alpha remove -alpha off -depth 8 "PNG24:$output"
 }
 
 compose_ipad() {
@@ -405,7 +413,7 @@ compose_ipad() {
     "$brand" -geometry +432+2284 -composite \
     "$title_image" -geometry +322+2362 -composite \
     "$subtitle_image" -geometry +292+2518 -composite \
-    "$output"
+    -alpha remove -alpha off -depth 8 "PNG24:$output"
 }
 
 shot_title() {
@@ -416,6 +424,15 @@ shot_title() {
       03-fasting-days) printf "%s" "Planifier les jours requis" ;;
       04-premium) printf "%s" "Bâtir un rythme plus stable" ;;
       05-privacy) printf "%s" "Confidentialité intégrée" ;;
+      *) echo "Unknown shot id: $1" >&2; exit 1 ;;
+    esac
+  elif [[ "$LOCALE_ID" == "es-MX" ]]; then
+    case "$1" in
+      01-today) printf "%s" "Conoce las reglas de hoy" ;;
+      02-track-fast) printf "%s" "Sigue un ayuno con intención" ;;
+      03-fasting-days) printf "%s" "Planifica los días obligatorios" ;;
+      04-premium) printf "%s" "Construye un ritmo constante" ;;
+      05-privacy) printf "%s" "Privacidad integrada" ;;
       *) echo "Unknown shot id: $1" >&2; exit 1 ;;
     esac
   else
@@ -438,6 +455,15 @@ shot_subtitle() {
       03-fasting-days) printf "%s" "Voyez jeûnes, abstinence, fêtes et guidance régionale." ;;
       04-premium) printf "%s" "Premium soutient revue, récupération, rappels et formation saisonnière." ;;
       05-privacy) printf "%s" "Aucun compte. Aucune publicité. Historique local seulement." ;;
+      *) echo "Unknown shot id: $1" >&2; exit 1 ;;
+    esac
+  elif [[ "$LOCALE_ID" == "es-MX" ]]; then
+    case "$1" in
+      01-today) printf "%s" "Consulta la guía, las fuentes y la próxima acción fiel." ;;
+      02-track-fast) printf "%s" "Mantén el temporizador, la meta y la intención en un solo lugar." ;;
+      03-fasting-days) printf "%s" "Ve ayunos, abstinencia, fiestas y orientación regional." ;;
+      04-premium) printf "%s" "Premium apoya revisión, recordatorios y formación estacional." ;;
+      05-privacy) printf "%s" "Sin cuenta. Sin anuncios. Historial local solamente." ;;
       *) echo "Unknown shot id: $1" >&2; exit 1 ;;
     esac
   else
