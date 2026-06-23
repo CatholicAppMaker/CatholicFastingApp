@@ -11,7 +11,7 @@ CAPTURE_IPHONE=1
 CAPTURE_IPAD=1
 
 usage() {
-  cat <<'USAGE'
+	cat <<'USAGE'
 Capture raw Track Fast QA screenshots.
 
 Usage:
@@ -32,52 +32,52 @@ USAGE
 }
 
 while [[ $# -gt 0 ]]; do
-  case "$1" in
-    --iphone-only)
-      CAPTURE_IPHONE=1
-      CAPTURE_IPAD=0
-      shift
-      ;;
-    --ipad-only)
-      CAPTURE_IPHONE=0
-      CAPTURE_IPAD=1
-      shift
-      ;;
-    --output)
-      OUTPUT_ROOT="$2"
-      shift 2
-      ;;
-    --iphone-device)
-      IPHONE_DEVICE="$2"
-      shift 2
-      ;;
-    --ipad-device)
-      IPAD_DEVICE="$2"
-      shift 2
-      ;;
-    -h|--help)
-      usage
-      exit 0
-      ;;
-    *)
-      echo "Unknown option: $1" >&2
-      usage >&2
-      exit 2
-      ;;
-  esac
+	case "$1" in
+	--iphone-only)
+		CAPTURE_IPHONE=1
+		CAPTURE_IPAD=0
+		shift
+		;;
+	--ipad-only)
+		CAPTURE_IPHONE=0
+		CAPTURE_IPAD=1
+		shift
+		;;
+	--output)
+		OUTPUT_ROOT="$2"
+		shift 2
+		;;
+	--iphone-device)
+		IPHONE_DEVICE="$2"
+		shift 2
+		;;
+	--ipad-device)
+		IPAD_DEVICE="$2"
+		shift 2
+		;;
+	-h | --help)
+		usage
+		exit 0
+		;;
+	*)
+		echo "Unknown option: $1" >&2
+		usage >&2
+		exit 2
+		;;
+	esac
 done
 
 require_tool() {
-  if ! command -v "$1" >/dev/null 2>&1; then
-    echo "Missing required tool: $1" >&2
-    exit 1
-  fi
+	if ! command -v "$1" >/dev/null 2>&1; then
+		echo "Missing required tool: $1" >&2
+		exit 1
+	fi
 }
 
 run_with_timeout() {
-  local timeout_seconds="$1"
-  shift
-  python3 - "$timeout_seconds" "$@" <<'PY'
+	local timeout_seconds="$1"
+	shift
+	python3 - "$timeout_seconds" "$@" <<'PY'
 import subprocess
 import sys
 
@@ -99,38 +99,38 @@ PY
 }
 
 simulator_exists() {
-  xcrun simctl list devices available | grep -F "$1 (" >/dev/null
+	xcrun simctl list devices available | grep -F "$1 (" >/dev/null
 }
 
 choose_simulator() {
-  local explicit="$1"
-  shift
-  if [[ -n "$explicit" ]]; then
-    if ! simulator_exists "$explicit"; then
-      echo "Simulator '$explicit' is not available." >&2
-      exit 1
-    fi
-    printf '%s\n' "$explicit"
-    return
-  fi
+	local explicit="$1"
+	shift
+	if [[ -n "$explicit" ]]; then
+		if ! simulator_exists "$explicit"; then
+			echo "Simulator '$explicit' is not available." >&2
+			exit 1
+		fi
+		printf '%s\n' "$explicit"
+		return
+	fi
 
-  local candidate
-  for candidate in "$@"; do
-    if simulator_exists "$candidate"; then
-      printf '%s\n' "$candidate"
-      return
-    fi
-  done
+	local candidate
+	for candidate in "$@"; do
+		if simulator_exists "$candidate"; then
+			printf '%s\n' "$candidate"
+			return
+		fi
+	done
 
-  echo "None of the requested simulators are available: $*" >&2
-  exit 1
+	echo "None of the requested simulators are available: $*" >&2
+	exit 1
 }
 
 write_capture_config() {
-  local device_dir="$1"
-  local raw_tmp="$2"
+	local device_dir="$1"
+	local raw_tmp="$2"
 
-  python3 - "$SCREENSHOT_CONFIG_PATH" "$OUTPUT_ROOT" "$device_dir" "$raw_tmp" <<'PY'
+	python3 - "$SCREENSHOT_CONFIG_PATH" "$OUTPUT_ROOT" "$device_dir" "$raw_tmp" <<'PY'
 import json
 import sys
 
@@ -146,59 +146,59 @@ PY
 }
 
 run_capture() {
-  local device="$1"
-  local device_dir="$2"
-  local test_name="$3"
-  shift 3
-  local expected_shots=("$@")
-  local result_bundle="$RESULTS_DIR/$device_dir.xcresult"
-  local raw_final="$OUTPUT_ROOT/$device_dir/raw"
-  local raw_tmp
+	local device="$1"
+	local device_dir="$2"
+	local test_name="$3"
+	shift 3
+	local expected_shots=("$@")
+	local result_bundle="$RESULTS_DIR/$device_dir.xcresult"
+	local raw_final="$OUTPUT_ROOT/$device_dir/raw"
+	local raw_tmp
 
-  rm -rf "$result_bundle"
-  mkdir -p "$raw_final" "$RESULTS_DIR"
-  raw_tmp="$(mktemp -d "$RESULTS_DIR/$device_dir-raw.XXXXXX")"
+	rm -rf "$result_bundle"
+	mkdir -p "$raw_final" "$RESULTS_DIR"
+	raw_tmp="$(mktemp -d "$RESULTS_DIR/$device_dir-raw.XXXXXX")"
 
-  echo "Capturing Track Fast QA $device_dir on $device"
-  write_capture_config "$device_dir" "$raw_tmp"
+	echo "Capturing Track Fast QA $device_dir on $device"
+	write_capture_config "$device_dir" "$raw_tmp"
 
-  if [[ "${SCREENSHOT_RESET_SIMULATOR:-1}" == "1" ]]; then
-    xcrun simctl shutdown "$device" >/dev/null 2>&1 || true
-    xcrun simctl erase "$device" >/dev/null 2>&1 || true
-  fi
+	if [[ "${SCREENSHOT_RESET_SIMULATOR:-1}" == "1" ]]; then
+		xcrun simctl shutdown "$device" >/dev/null 2>&1 || true
+		xcrun simctl erase "$device" >/dev/null 2>&1 || true
+	fi
 
-  local capture_status=0
-  OS_ACTIVITY_MODE=disable \
-    run_with_timeout "${SCREENSHOT_CAPTURE_TIMEOUT_SECONDS:-900}" xcodebuild test \
-      -project "$ROOT_DIR/CatholicFastingApp.xcodeproj" \
-      -scheme CatholicFastingApp \
-      -destination "platform=iOS Simulator,name=$device" \
-      -destination-timeout 120 \
-      -only-testing:"CatholicFastingAppUITests/CatholicFastingAppUITests/$test_name" \
-      -parallel-testing-enabled NO \
-      -test-timeouts-enabled YES \
-      -default-test-execution-time-allowance "${SCREENSHOT_TEST_EXECUTION_TIME_ALLOWANCE:-180}" \
-      -resultBundlePath "$result_bundle" || capture_status=$?
-  rm -f "$SCREENSHOT_CONFIG_PATH"
-  if [[ "$capture_status" -ne 0 ]]; then
-    rm -rf "$raw_tmp"
-    echo "Capture failed for $device_dir; existing raw screenshots were preserved in $raw_final" >&2
-    return "$capture_status"
-  fi
+	local capture_status=0
+	OS_ACTIVITY_MODE=disable \
+		run_with_timeout "${SCREENSHOT_CAPTURE_TIMEOUT_SECONDS:-900}" xcodebuild test \
+		-project "$ROOT_DIR/CatholicFastingApp.xcodeproj" \
+		-scheme CatholicFastingApp \
+		-destination "platform=iOS Simulator,name=$device" \
+		-destination-timeout 120 \
+		-only-testing:"CatholicFastingAppUITests/CatholicFastingAppUITests/$test_name" \
+		-parallel-testing-enabled NO \
+		-test-timeouts-enabled YES \
+		-default-test-execution-time-allowance "${SCREENSHOT_TEST_EXECUTION_TIME_ALLOWANCE:-180}" \
+		-resultBundlePath "$result_bundle" || capture_status=$?
+	rm -f "$SCREENSHOT_CONFIG_PATH"
+	if [[ "$capture_status" -ne 0 ]]; then
+		rm -rf "$raw_tmp"
+		echo "Capture failed for $device_dir; existing raw screenshots were preserved in $raw_final" >&2
+		return "$capture_status"
+	fi
 
-  local shot
-  for shot in "${expected_shots[@]}"; do
-    if [[ ! -f "$raw_tmp/$shot.png" ]]; then
-      rm -rf "$raw_tmp"
-      echo "Capture did not produce expected raw screenshot: $shot.png" >&2
-      echo "Existing raw screenshots were preserved in $raw_final" >&2
-      return 1
-    fi
-  done
+	local shot
+	for shot in "${expected_shots[@]}"; do
+		if [[ ! -f "$raw_tmp/$shot.png" ]]; then
+			rm -rf "$raw_tmp"
+			echo "Capture did not produce expected raw screenshot: $shot.png" >&2
+			echo "Existing raw screenshots were preserved in $raw_final" >&2
+			return 1
+		fi
+	done
 
-  rm -f "$raw_final"/*.png
-  mv "$raw_tmp"/*.png "$raw_final/"
-  rmdir "$raw_tmp"
+	rm -f "$raw_final"/*.png
+	mv "$raw_tmp"/*.png "$raw_final/"
+	rmdir "$raw_tmp"
 }
 
 require_tool xcrun
@@ -208,16 +208,16 @@ IPHONE_DEVICE="$(choose_simulator "$IPHONE_DEVICE" "iPhone 17 Pro Max" "iPhone 1
 IPAD_DEVICE="$(choose_simulator "$IPAD_DEVICE" "iPad Pro 13-inch (M5)" "iPad Pro 13-inch (M4)" "iPad Air 13-inch (M4)")"
 
 if [[ "$CAPTURE_IPHONE" -eq 1 ]]; then
-  run_capture "$IPHONE_DEVICE" "iphone-17-pro-max" "testIPhoneTrackFastQAScreenshots" \
-    01-track-fast-idle \
-    02-track-fast-active \
-    03-track-fast-recap \
-    04-track-fast-history
+	run_capture "$IPHONE_DEVICE" "iphone-17-pro-max" "testIPhoneTrackFastQAScreenshots" \
+		01-track-fast-idle \
+		02-track-fast-active \
+		03-track-fast-recap \
+		04-track-fast-history
 fi
 
 if [[ "$CAPTURE_IPAD" -eq 1 ]]; then
-  run_capture "$IPAD_DEVICE" "ipad-pro-13" "testIPadTrackFastQAScreenshots" \
-    01-ipad-track-fast-workspace
+	run_capture "$IPAD_DEVICE" "ipad-pro-13" "testIPadTrackFastQAScreenshots" \
+		01-ipad-track-fast-workspace
 fi
 
 echo "Track Fast QA screenshots are ready in $OUTPUT_ROOT"

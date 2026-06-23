@@ -97,20 +97,20 @@ extension ContentView {
                     ?? localized("ipad.today.metrics.none_ahead", default: "None ahead"),
                 subtitle: upcomingMandatoryObservance.map { localizedAbbreviatedDate($0.date) }
                     ?? localized("ipad.today.metrics.current_year_clear", default: "Current year clear"))
-                IPadSummaryMetricCard(
-                    title: localized("ipad.today.metrics.this_week", default: "This week"),
-                    value: "\(weeklyCompletedObservancesCount)/\(weeklyActionableObservanceCount)",
-                    subtitle: localized("ipad.today.metrics.this_week_detail", default: "discipline days completed"),
-                    tint: CatholicTheme.accentForeground)
+            IPadSummaryMetricCard(
+                title: localized("ipad.today.metrics.this_week", default: "This week"),
+                value: "\(weeklyCompletedObservancesCount)/\(weeklyActionableObservanceCount)",
+                subtitle: localized("ipad.today.metrics.this_week_detail", default: "discipline days completed"),
+                tint: CatholicTheme.accentForeground)
             IPadSummaryMetricCard(
                 title: localized("ipad.today.metrics.current_rhythm", default: "Current rhythm"),
                 value: localizedFormat("ipad.today.metrics.current_rhythm_value", default: "%d days", currentStreak),
                 subtitle: streakResilienceMessage)
-                IPadSummaryMetricCard(
-                    title: localized("ipad.today.metrics.this_month", default: "This month"),
-                    value: "\(monthlyCompletionCount)",
-                    subtitle: localized("ipad.today.metrics.this_month_detail", default: "logged observances"),
-                    tint: CatholicTheme.warningForeground)
+            IPadSummaryMetricCard(
+                title: localized("ipad.today.metrics.this_month", default: "This month"),
+                value: "\(monthlyCompletionCount)",
+                subtitle: localized("ipad.today.metrics.this_month_detail", default: "logged observances"),
+                tint: CatholicTheme.warningForeground)
         }
         .accessibilityIdentifier("ipad.today.metrics")
     }

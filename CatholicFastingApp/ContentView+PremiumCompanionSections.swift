@@ -292,8 +292,12 @@ extension ContentView {
 
             Text(
                 sample
-                    ? localized("premium.journey.preview_intro", default: "This preview shows how premium turns the current season into one weekly rhythm for fasting, prayer, mercy, and review.")
-                    : localized("premium.journey.current_intro", default: "Premium keeps the current week and next faithful action visible without rebuilding the whole plan."))
+                    ? localized(
+                        "premium.journey.preview_intro",
+                        default: "This preview shows how premium turns the current season into one weekly rhythm for fasting, prayer, mercy, and review.")
+                    : localized(
+                        "premium.journey.current_intro",
+                        default: "Premium keeps the current week and next faithful action visible without rebuilding the whole plan."))
                 .appSupportingTextStyle()
                 .accessibilityIdentifier(sample ? "premium.journey.preview_intro" : "premium.journey.current_intro")
 

@@ -1,13 +1,14 @@
 # Catholic Fasting App 4.0 Product Plan
 
-Last reviewed: March 21, 2026
-Status: `4.0` shipped and live
+Last reviewed: March 21, 2026 Status: `4.0` shipped and live
 
-Follow-on planning now lives in `/Users/kevpierce/Desktop/CatholicFastingApp/release/ROADMAP_4_1_PLANNING_RESET.md`.
+Follow-on planning now lives in
+`/Users/kevpierce/Desktop/CatholicFastingApp/release/ROADMAP_4_1_PLANNING_RESET.md`.
 
 ## Goal
 
-Make `4.0` the first release that is meaningfully larger than the current refinement line by combining:
+Make `4.0` the first release that is meaningfully larger than the current refinement line by
+combining:
 
 - full Canada-aware support
 - deeper premium formation workflows
@@ -33,9 +34,10 @@ Optional:
 
 ## Product theme
 
-**Canada depth + multilingual onboarding + premium formation depth**
+### Canada Depth, Multilingual Onboarding, and Premium Formation Depth
 
-`4.0` should not be framed as a polish release. It should be presented as the version where the app becomes regionally deeper, more multilingual, and spiritually deeper.
+`4.0` should not be framed as a polish release. It should be presented as the version where the app
+becomes regionally deeper, more multilingual, and spiritually deeper.
 
 ## Canada track
 
@@ -85,7 +87,8 @@ Premium becomes a stronger long-term formation product, not just a better-presen
 - stronger accountability/history synthesis
 - more explicit outcome-based premium differentiation
 
-The Guided Seasonal Journey should become the clearest premium anchor feature and the strongest annual-subscription value story.
+The Guided Seasonal Journey should become the clearest premium anchor feature and the strongest
+annual-subscription value story.
 
 ### Product surfaces affected
 
@@ -98,7 +101,8 @@ The Guided Seasonal Journey should become the clearest premium anchor feature an
 
 ### Outcome
 
-The app becomes more credible across North American use by improving existing Spanish quality and adding first-class French Canadian support.
+The app becomes more credible across North American use by improving existing Spanish quality and
+adding first-class French Canadian support.
 
 ### Ship
 

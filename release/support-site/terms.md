@@ -6,7 +6,8 @@ Catholic Fasting App uses the Apple Standard EULA for in-app subscriptions.
 
 ## Scope
 
-The app is an independent devotional aid and is not an official publication of the Catholic Church, USCCB, Vatican, or diocesan authority.
+The app is an independent devotional aid and is not an official publication of the Catholic Church,
+USCCB, Vatican, or diocesan authority.
 
 ## Guidance and authority
 
@@ -27,4 +28,4 @@ Tip products are optional one-time consumables and do not gate core app function
 
 ## Legal
 
-Apple Standard EULA: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Apple Standard EULA: <https://www.apple.com/legal/internet-services/itunes/dev/stdeula/>

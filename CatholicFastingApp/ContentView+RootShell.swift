@@ -136,8 +136,6 @@ extension ContentView {
     var tabRootScaffold: some View {
         tabRootView
             .appRootBackground()
-            .toolbarBackground(.visible, for: .tabBar)
-            .toolbarBackground(CatholicTheme.parchment.opacity(0.88), for: .tabBar)
             .overlay(alignment: .topLeading) {
                 readinessMarkers
             }
@@ -500,6 +498,7 @@ extension ContentView {
         }
         .listStyle(.insetGrouped)
         .appListBackground()
+        .phoneTabBarScrollClearance()
     }
 
     var fastingDaysSurfaceList: some View {
@@ -508,6 +507,7 @@ extension ContentView {
         }
         .listStyle(.insetGrouped)
         .appListBackground()
+        .phoneTabBarScrollClearance()
     }
 
     var intermittentSurfaceList: some View {
@@ -516,6 +516,7 @@ extension ContentView {
         }
         .listStyle(.insetGrouped)
         .appListBackground()
+        .phoneTabBarScrollClearance()
     }
 
     var moreSurfaceList: some View {
@@ -524,6 +525,7 @@ extension ContentView {
         }
         .listStyle(.insetGrouped)
         .appListBackground()
+        .phoneTabBarScrollClearance()
     }
 
     @ViewBuilder
@@ -666,6 +668,7 @@ extension ContentView {
         }
         .listStyle(.insetGrouped)
         .appListBackground()
+        .phoneTabBarScrollClearance()
         .navigationTitle(localizedMoreDestinationTitle(destination))
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -713,6 +716,7 @@ extension ContentView {
         }
         .listStyle(.insetGrouped)
         .appListBackground()
+        .phoneTabBarScrollClearance()
         .navigationTitle(localizedPremiumToolTitle(destination))
         .navigationBarTitleDisplayMode(.inline)
     }

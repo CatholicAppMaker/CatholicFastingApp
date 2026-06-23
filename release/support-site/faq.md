@@ -6,7 +6,8 @@ No. It is an independent devotional app.
 
 ## What rules does it follow?
 
-Core guidance references U.S. Catholic liturgical and fasting guidance and supports region profile messaging for U.S. and Canada.
+Core guidance references U.S. Catholic liturgical and fasting guidance and supports region profile
+messaging for U.S. and Canada.
 
 ## Do I need to enter my birthday?
 

@@ -6,25 +6,30 @@
 - `CatholicFastingWidget`: `MARKETING_VERSION = 4.2`, `CURRENT_PROJECT_VERSION = 15`.
 - `CatholicFastingMacApp`: `MARKETING_VERSION = 4.2`, `CURRENT_PROJECT_VERSION = 15`.
 - `CatholicFastingMacWidget`: `MARKETING_VERSION = 4.2`, `CURRENT_PROJECT_VERSION = 15`.
-- Test bundles are kept aligned for local developer clarity, but only app and widget targets are App Store deliverables.
+- Test bundles are kept aligned for local developer clarity, but only app and widget targets are App
+  Store deliverables.
 
-If App Store Connect has already consumed build `15` for version `4.2`, bump every deliverable target to the same next build number before archiving.
+If App Store Connect has already consumed build `15` for version `4.2`, bump every deliverable
+target to the same next build number before archiving.
 
 ## Asset Catalogs
 
 - iOS app target uses `AppIcon`.
 - Native Mac app target uses `MacAppIcon`.
 - `AppIcon.appiconset` should contain only iPhone, iPad, and iOS marketing slots.
-- `MacAppIcon.appiconset` should contain the full 10-slot macOS icon set from 16x16 through 512x512 at 1x and 2x.
+- `MacAppIcon.appiconset` should contain the full 10-slot macOS icon set from 16x16 through 512x512
+  at 1x and 2x.
 
 ## App Store Connect
 
 - Add macOS as a platform on the existing Catholic Fasting app record.
 - Add macOS to the existing Catholic Fasting App Store record for universal purchase.
-- Use the existing app bundle ID for the native Mac app and a unique extension bundle ID for the Mac widget in `Release`:
+- Use the existing app bundle ID for the native Mac app and a unique extension bundle ID for the Mac
+  widget in `Release`:
   - `com.kevpierce.CatholicFastingApp`
   - `com.kevpierce.CatholicFastingApp.CatholicFastingMacWidget`
-- Keep the local `Debug` Mac IDs separate so unsigned desktop verification does not trigger iOS shortcut-registration noise:
+- Keep the local `Debug` Mac IDs separate so unsigned desktop verification does not trigger iOS
+  shortcut-registration noise:
   - `com.kevpierce.CatholicFastingApp.macdebug`
   - `com.kevpierce.CatholicFastingApp.macdebug.CatholicFastingMacWidget`
 - Keep subscriptions in the existing product family:
@@ -43,7 +48,10 @@ If App Store Connect has already consumed build `15` for version `4.2`, bump eve
 
 ## What's New Draft
 
-Catholic Fasting 4.2 adds native Mac support, including a desktop sidebar layout, native Settings window, menu bar fasting status, and a macOS widget. The Mac app includes the same core fasting calendar, today guidance, intermittent fast tracking, and high-value premium planning and review tools as the iPhone and iPad app, adapted for desktop workflows.
+Catholic Fasting 4.2 adds native Mac support, including a desktop sidebar layout, native Settings
+window, menu bar fasting status, and a macOS widget. The Mac app includes the same core fasting
+calendar, today guidance, intermittent fast tracking, and high-value premium planning and review
+tools as the iPhone and iPad app, adapted for desktop workflows.
 
 ## Screenshot Set
 
@@ -62,7 +70,9 @@ xcodebuild -project CatholicFastingApp.xcodeproj -scheme CatholicFastingMacAppTe
 ./scripts/test-macos.sh --require-ui
 ```
 
-For 4.2, App Shortcuts and App Intents remain iPhone/iPad-only. The native Mac targets explicitly disable App Intents metadata generation and App Shortcuts flexible matching in the shared Mac xcconfigs.
+For 4.2, App Shortcuts and App Intents remain iPhone/iPad-only. The native Mac targets explicitly
+disable App Intents metadata generation and App Shortcuts flexible matching in the shared Mac
+xcconfigs.
 
 ## Release Candidate Gate
 
@@ -70,8 +80,12 @@ For 4.2, App Shortcuts and App Intents remain iPhone/iPad-only. The native Mac t
   - `./scripts/run_ui_tests_deterministic.sh iphone`
   - `./scripts/run_ui_tests_deterministic.sh ipad`
 - Run signed Mac UI tests on the provisioned Mac.
-- Smoke test StoreKit sandbox on Mac: product loading, restore, manage subscription, premium-unlocked UI, and reminder gating.
+- Smoke test StoreKit sandbox on Mac: product loading, restore, manage subscription,
+  premium-unlocked UI, and reminder gating.
 - Archive iOS and macOS app targets from Xcode Organizer.
 - Validate both archives before upload.
 
-If Xcode hangs opening the project from Desktop/iCloud file coordination, copy the workspace to a local temporary directory and run the deterministic UI script there. The script resolves the project relative to its own location, so the command works from either the repo or a clean release-candidate copy.
+If Xcode hangs opening the project from Desktop/iCloud file coordination, copy the workspace to a
+local temporary directory and run the deterministic UI script there. The script resolves the project
+relative to its own location, so the command works from either the repo or a clean release-candidate
+copy.

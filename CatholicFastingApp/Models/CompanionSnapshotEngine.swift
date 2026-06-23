@@ -66,21 +66,36 @@ struct CompanionSnapshot: Hashable {
     let secondaryActions: [CompanionNextAction]
 }
 
+struct CompanionSnapshotRequest {
+    let date: Date
+    let observances: [Observance]
+    let settings: RuleSettings
+    let statusesByID: [String: CompletionStatus]
+    let activeFastStart: Date?
+    let activeFastTargetHours: Int
+    let intermittentSessions: [IntermittentFastSession]
+    let journeyWeek: GuidedSeasonalJourneyWeek
+    let journeyProgress: GuidedSeasonalJourneyProgress
+    let currentStreak: Int
+    let premiumUnlocked: Bool
+    let calendar: Calendar
+}
+
 enum CompanionSnapshotEngine {
-    static func snapshot(
-        date: Date = Date(),
-        observances: [Observance],
-        settings: RuleSettings,
-        statusesByID: [String: CompletionStatus],
-        activeFastStart: Date?,
-        activeFastTargetHours: Int,
-        intermittentSessions: [IntermittentFastSession],
-        journeyWeek: GuidedSeasonalJourneyWeek,
-        journeyProgress: GuidedSeasonalJourneyProgress,
-        currentStreak: Int,
-        premiumUnlocked: Bool,
-        calendar: Calendar = .current) -> CompanionSnapshot
-    {
+    static func snapshot(_ request: CompanionSnapshotRequest) -> CompanionSnapshot {
+        let date = request.date
+        let observances = request.observances
+        let settings = request.settings
+        let statusesByID = request.statusesByID
+        let activeFastStart = request.activeFastStart
+        let activeFastTargetHours = request.activeFastTargetHours
+        let intermittentSessions = request.intermittentSessions
+        let journeyWeek = request.journeyWeek
+        let journeyProgress = request.journeyProgress
+        let currentStreak = request.currentStreak
+        let premiumUnlocked = request.premiumUnlocked
+        let calendar = request.calendar
+
         let startOfToday = calendar.startOfDay(for: date)
         let sortedObservances = observances.sorted { $0.date < $1.date }
         let todayObservances = sortedObservances.filter {

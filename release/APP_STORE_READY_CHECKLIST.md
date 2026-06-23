@@ -1,6 +1,7 @@
 # App Store Ready Checklist (4.0)
 
 ## Engineering (Completed / Verify Again Before Archive)
+
 - [x] Unit tests pass (`swift test`)
 - [x] Simulator debug build passes
 - [x] Privacy manifest added (`CatholicFastingApp/PrivacyInfo.xcprivacy`)
@@ -9,6 +10,7 @@
 - [ ] Archive build passes from Xcode Organizer
 
 ## App Store Connect (Manual)
+
 - [ ] Set `DEVELOPMENT_TEAM` and signing profile in Xcode target settings
 - [ ] Archive with `Any iOS Device` destination and upload to App Store Connect
 - [ ] Fill version metadata from `release/APP_STORE_METADATA_DRAFT.md`
@@ -17,10 +19,12 @@
 - [ ] Confirm Privacy Policy URL uses current live link
 - [ ] Complete App Privacy form using `release/APP_STORE_PRIVACY_QUESTIONNAIRE_DRAFT.md`
 - [ ] Upload screenshots for required device sizes
-- [ ] Complete App Review notes (include Canada baseline, multilingual setup, and non-medical disclaimer)
+- [ ] Complete App Review notes (include Canada baseline, multilingual setup, and non-medical
+      disclaimer)
 - [ ] Submit first version as Manual Release
 
 ## Final Gate Before Submit
+
 - [ ] Verify in-app legal/disclaimer copy one last time
 - [ ] Verify English, Spanish, and French Canadian key screens for truncation
 - [ ] Verify `Delete All App Data` behavior on a fresh install

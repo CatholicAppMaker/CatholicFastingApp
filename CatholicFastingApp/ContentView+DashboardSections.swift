@@ -736,6 +736,8 @@ extension ContentView {
         if line.contains("dispensation") {
             return localized("today.decision.next_action.dispensation", default: "Follow health and pastoral guidance, then choose a prudent prayer or charity substitute.")
         }
-        return localized("today.decision.next_action.clear", default: "Normal meals are generally permitted. Keep the next required day visible and choose voluntary penance only if prudent.")
+        return localized(
+            "today.decision.next_action.clear",
+            default: "Normal meals are generally permitted. Keep the next required day visible and choose voluntary penance only if prudent.")
     }
 }

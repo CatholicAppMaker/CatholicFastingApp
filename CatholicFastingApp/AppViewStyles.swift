@@ -24,6 +24,10 @@ extension View {
             .background(CatholicTheme.background)
     }
 
+    func phoneTabBarScrollClearance() -> some View {
+        contentMargins(.bottom, 24, for: .scrollContent)
+    }
+
     func appRoundedGlass(cornerRadius: CGFloat) -> some View {
         glassEffect(.regular, in: RoundedRectangle(cornerRadius: min(cornerRadius, 15), style: .continuous))
     }
@@ -128,7 +132,6 @@ private struct AppSymbolModifier: ViewModifier {
 private struct AppSelectedAccessibilityModifier: ViewModifier {
     let isSelected: Bool
 
-    @ViewBuilder
     func body(content: Content) -> some View {
         if isSelected {
             content

@@ -1,6 +1,7 @@
 # Catholic Fasting App - Execution Roadmap
 
 ## Sprint 1 - Explainable Rules (Completed)
+
 - Add rule bundle metadata with version/effective/reviewed dates.
 - Add per-observance rationale and source citations.
 - Acceptance criteria:
@@ -9,6 +10,7 @@
   - Unit tests validate metadata and citation presence.
 
 ## Sprint 2 - Richer Tracking States (Completed)
+
 - Replace binary completion with statuses:
   - `notStarted`, `completed`, `substituted`, `dispensed`, `missed`
 - Keep compatibility for legacy completed IDs.
@@ -18,6 +20,7 @@
   - Migration from legacy completion storage works.
 
 ## Sprint 3 - Scenario Guidance Engine (Completed)
+
 - Add scenario-based food guidance:
   - normal day, heavy labor, travel, social meal, medical recovery.
 - Acceptance criteria:
@@ -26,6 +29,7 @@
   - Unit tests cover guidance output behavior.
 
 ## Sprint 4 - Diagnostics and Supportability (Completed)
+
 - Expand diagnostics snapshot with consistency warnings.
 - Add support bundle export for redacted troubleshooting payload.
 - Acceptance criteria:
@@ -34,6 +38,7 @@
   - Unit test covers warning generation.
 
 ## Sprint 5 - Test Expansion and Cleanup (Completed)
+
 - Add new unit tests for rule metadata/citations/guidance/diagnostics.
 - Add UI coverage for guidance scenario control.
 - Run full build and test suite; fix regressions.
@@ -42,6 +47,7 @@
   - `xcodebuild test` passes for iOS simulator and UITests.
 
 ## Sprint 6 - Launch Hardening (Completed)
+
 - Add rule-bundle provenance and change history:
   - source classification (bundled/local override)
   - digest verification
@@ -59,19 +65,25 @@
   - `swift test` and simulator build pass.
 
 ## Remaining Release Blockers
-- Stabilize UI test execution itself (runner is now deterministic and timeout-bounded, but UI XCTest still times out in this environment).
+
+- Stabilize UI test execution itself (runner is now deterministic and timeout-bounded, but UI XCTest
+  still times out in this environment).
 - Add CI lane for simulator UI tests with result bundle artifact publication.
 - Replace placeholder digest-signature flow with real signing key management + rotation policy.
 
 ## Sprint 7 - Release Hardening and Refactor (Completed)
+
 - Replaced digest-only rule verification with Ed25519 signature verification and trusted key IDs.
 - Added signing workflow tooling (`scripts/sign_rule_bundle.swift`) and release hardening docs.
-- Added deterministic UI test runner script with retries, simulator reset, xcresult outputs, and hard timeout guard.
+- Added deterministic UI test runner script with retries, simulator reset, xcresult outputs, and
+  hard timeout guard.
 - Added CI workflow for package tests + iOS UI tests with xcresult artifact upload.
 - Refactored duplicate test reset boilerplate into shared test support.
-- Fixed analytics regression: streak calculations now count `completed`, `substituted`, and `dispensed`.
+- Fixed analytics regression: streak calculations now count `completed`, `substituted`, and
+  `dispensed`.
 
 ## Sprint 8 - Home Information Architecture (Completed)
+
 - Introduced top-level surface navigation to reduce cognitive load:
   - Dashboard
   - Calendar
@@ -83,6 +95,7 @@
   - Consolidated section composition behind clear surface switches.
 
 ## Sprint 9 - Calendar Findability and Filtering (Completed)
+
 - Added calendar controls for:
   - observance filter (`all`, `required only`, `tracked only`)
   - text search across observance title/details
@@ -92,6 +105,7 @@
   - Reduced duplication in observance section rendering.
 
 ## Sprint 10 - Dashboard Utility Improvements (Completed)
+
 - Added dashboard highlights:
   - completion summary
   - streak
@@ -102,6 +116,7 @@
   - Simplified dashboard row logic and labels.
 
 ## Sprint 11 - Accessibility and UI Testability (Completed)
+
 - Added/updated accessibility identifiers for new navigation and controls:
   - `home.surface_picker`
   - `calendar.filter_picker`
@@ -113,6 +128,7 @@
   - Removed brittle assumptions that all sections are simultaneously visible.
 
 ## Sprint 12 - Validation and Stability (Completed with Known Environment Risk)
+
 - Validation executed:
   - `swift test` (pass)
   - `swift build` (pass)

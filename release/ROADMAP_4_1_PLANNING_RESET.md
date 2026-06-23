@@ -1,9 +1,10 @@
 # Catholic Fasting App 4.1 Planning Reset
 
-Last reviewed: April 2, 2026
-Current live baseline: `4.0 (20)`
+Last reviewed: April 2, 2026 Current live baseline: `4.0 (20)`
 
-This document resets product planning after the successful `4.0` launch. It is intentionally broader than a patch checklist and intentionally less specific than a build-ready feature plan, because the next release theme depends on a small set of anchor features that still need to be chosen.
+This document resets product planning after the successful `4.0` launch. It is intentionally broader
+than a patch checklist and intentionally less specific than a build-ready feature plan, because the
+next release theme depends on a small set of anchor features that still need to be chosen.
 
 ## Goal
 
@@ -26,7 +27,8 @@ Plan `4.1` as the next meaningful product step after `4.0`, not as a cleanup pat
 - Spanish quality cleanup and French Canadian support
 - a broad UI, localization, and test hardening pass
 
-That means the next release should not be defined by “more of the same” or by a grab bag of small improvements. `4.1` needs a new release story built around a few chosen product anchors.
+That means the next release should not be defined by “more of the same” or by a grab bag of small
+improvements. `4.1` needs a new release story built around a few chosen product anchors.
 
 ## 4.1 Workstreams
 
@@ -83,7 +85,8 @@ The next planning session should lock these choices explicitly:
 2. Which one is the headline feature, if any
 3. Whether each anchor is free-tier or Premium-only
 4. Whether subscription architecture stays unchanged
-5. Whether `4.1` is primarily a formation release, a refinement release, or a mixed release with one dominant narrative
+5. Whether `4.1` is primarily a formation release, a refinement release, or a mixed release with one
+   dominant narrative
 
 Until those are chosen, do not start large implementation work under the label `4.1`.
 
@@ -106,7 +109,8 @@ Unless a chosen anchor feature requires otherwise, assume:
 - subscription IDs and group structure stay stable
 - the four-tab shell remains intact
 - food guidance stays a first-class use case but not a new top-level tab
-- `4.1` should be broad and intentional, but still organized around a small number of anchor features
+- `4.1` should be broad and intentional, but still organized around a small number of anchor
+  features
 
 ## Next Planning Session Inputs
 
@@ -117,4 +121,5 @@ Come to the next `4.1` planning pass with:
 - any free vs Premium boundaries you already want
 - any trust/growth work you consider non-negotiable
 
-That is the minimum input needed to turn this planning reset into a decision-complete implementation plan.
+That is the minimum input needed to turn this planning reset into a decision-complete implementation
+plan.

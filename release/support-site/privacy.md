@@ -18,7 +18,8 @@ We do not collect personal data on our servers.
 
 ## Data sharing
 
-No automatic upload is performed. Data leaves your device only if you explicitly use an export/share action.
+No automatic upload is performed. Data leaves your device only if you explicitly use an export/share
+action.
 
 ## Third-party analytics and tracking
 
@@ -28,4 +29,4 @@ No automatic upload is performed. Data leaves your device only if you explicitly
 
 ## Contact
 
-Support: support@catholicfasting.app
+Support: <support@catholicfasting.app>

@@ -1,6 +1,8 @@
 ---
 name: Catholic Fasting
-description: Native Apple fasting guidance with seasonal sacred color, parchment surfaces, and calm devotional clarity.
+description:
+  Native Apple fasting guidance with seasonal sacred color, parchment surfaces, and calm devotional
+  clarity.
 colors:
   ordinary-primary: "#1A612B"
   ordinary-accent: "#B88F26"
@@ -93,59 +95,93 @@ components:
 
 ## 1. Overview
 
-**Creative North Star: "The Quiet Liturgical Companion"**
+### Creative North Star: "The Quiet Liturgical Companion"
 
-Catholic Fasting is a product interface, not a marketing surface. Design serves a repeated devotional workflow: checking today's guidance, planning upcoming observances, tracking a fast, understanding a rule, and returning to a steady rhythm after a missed day. The app should feel native, calm, and readable before it feels expressive.
+Catholic Fasting is a product interface, not a marketing surface. Design serves a repeated
+devotional workflow: checking today's guidance, planning upcoming observances, tracking a fast,
+understanding a rule, and returning to a steady rhythm after a missed day. The app should feel
+native, calm, and readable before it feels expressive.
 
-The visual system combines Apple platform controls with a seasonal sacred palette. Parchment backgrounds, muted ecclesial color, modest glass effects, and occasional serif titles create a devotional atmosphere without turning the app into a decorative artifact. Sacred imagery anchors major surfaces when it clarifies mood or context.
+The visual system combines Apple platform controls with a seasonal sacred palette. Parchment
+backgrounds, muted ecclesial color, modest glass effects, and occasional serif titles create a
+devotional atmosphere without turning the app into a decorative artifact. Sacred imagery anchors
+major surfaces when it clarifies mood or context.
 
-The system rejects generic fasting apps, productivity dashboards, aggressive streak mechanics, and wellness-brand polish. It also rejects sacred ornament detached from action. The user should always know what to do next, why it matters, and where to find the underlying rule context.
+The system rejects generic fasting apps, productivity dashboards, aggressive streak mechanics, and
+wellness-brand polish. It also rejects sacred ornament detached from action. The user should always
+know what to do next, why it matters, and where to find the underlying rule context.
 
 **Key Characteristics:**
 
 - Parchment-toned root backgrounds with seasonal liturgical color.
 - Native SwiftUI controls, glass buttons, platform navigation, and system type.
-- Official app mark: the D3 liturgical bookmark/ribbon direction, pairing a cross with an empty bowl/plate so the brand reads as Catholic fasting rather than generic church or generic fasting.
+- Official app mark: the D3 liturgical bookmark/ribbon direction, pairing a cross with an empty
+  bowl/plate so the brand reads as Catholic fasting rather than generic church or generic fasting.
 - Serif titles reserved for devotional or reflective emphasis.
 - Rounded, lightly bordered surfaces with low shadow and tonal depth.
 - Sacred imagery used as a surface anchor, not as filler.
-- Clear citations, rationale, localization, and accessibility identifiers treated as product features.
+- Clear citations, rationale, localization, and accessibility identifiers treated as product
+  features.
 
 ### Brand Mark
 
-The official app mark is the D3 direction selected on May 29, 2026: a compact liturgical bookmark or calendar-ribbon silhouette with a cross and an empty bowl/plate. It represents guided Catholic fasting across the Church year. The mark should be simple, black or single-color by default, and strong enough to remain legible at 24-32 px in an iOS toolbar.
+The official app mark is the D3 direction selected on May 29, 2026: a compact liturgical bookmark or
+calendar-ribbon silhouette with a cross and an empty bowl/plate. It represents guided Catholic
+fasting across the Church year. The mark should be simple, black or single-color by default, and
+strong enough to remain legible at 24-32 px in an iOS toolbar.
 
-Use the mark as subtle page identity, not as a large banner or decorative header. It may sit in the top whitespace or toolbar area near the seasonal context, but it should not compete with the page title or primary action. The mark must remain compatible with changing liturgical palettes, so avoid hard-coding it to Ordinary Time green, gold, or any season-specific color unless a specific themed variant is intentionally designed.
+Use the mark as subtle page identity, not as a large banner or decorative header. It may sit in the
+top whitespace or toolbar area near the seasonal context, but it should not compete with the page
+title or primary action. The mark must remain compatible with changing liturgical palettes, so avoid
+hard-coding it to Ordinary Time green, gold, or any season-specific color unless a specific themed
+variant is intentionally designed.
 
-Do not replace the mark with large "CFA" letters, a generic chapel/window, a cross-only symbol, a crescent-like C form, or a fasting icon that loses Catholic specificity. If the mark is refined later, preserve the core read: Catholic calendar guidance plus fasting practice.
+Do not replace the mark with large "CFA" letters, a generic chapel/window, a cross-only symbol, a
+crescent-like C form, or a fasting icon that loses Catholic specificity. If the mark is refined
+later, preserve the core read: Catholic calendar guidance plus fasting practice.
 
 ### Design QA Handoff
 
-Audit and polish loops may use temporary progress notes, checklists, or score tracking while work is in flight. Before final handoff or commit, that progress state must be resolved: clear active/in-progress markers, remove stale temporary status, and leave the app/repo in a stable final state with only the verified outcome reported. A finished polish pass should read as complete, not as an abandoned checklist.
+Audit and polish loops may use temporary progress notes, checklists, or score tracking while work is
+in flight. Before final handoff or commit, that progress state must be resolved: clear
+active/in-progress markers, remove stale temporary status, and leave the app/repo in a stable final
+state with only the verified outcome reported. A finished polish pass should read as complete, not
+as an abandoned checklist.
 
 ### External Progress Panel Rule
 
-Any visible Codex, app, or automation checklist used during a polish pass is part of the user-facing handoff. Before presenting screenshots, ratings, commit readiness, or a finished status, the panel must show every item complete. If any item remains active or incomplete, the final response must say the pass is unfinished and name the remaining work. Stale progress panels are P0 handoff defects.
+Any visible Codex, app, or automation checklist used during a polish pass is part of the user-facing
+handoff. Before presenting screenshots, ratings, commit readiness, or a finished status, the panel
+must show every item complete. If any item remains active or incomplete, the final response must say
+the pass is unfinished and name the remaining work. Stale progress panels are P0 handoff defects.
 
 ### Final Handoff Checklist
 
 - Visible progress/checklist state is complete, or explicitly reported as unresolved.
-- No stale temporary "Progress" copy remains in app UI, widgets, screenshots, docs, or generated outputs unless it is a technical type/control or an intentional product label.
+- No stale temporary "Progress" copy remains in app UI, widgets, screenshots, docs, or generated
+  outputs unless it is a technical type/control or an intentional product label.
 - Verification results are separated from environment-only warnings.
 - Screenshots are inspected after generation, not merely produced.
 - Dirty tree status is stated plainly before asking for or performing a commit.
 
 ## 2. Colors
 
-The palette changes by liturgical season. Each season provides a primary color, an accent, a parchment base, a parchment shade, and a card border. Ordinary Time is the neutral default, Advent shifts toward blue and rose, Christmas warms toward gold, Lent quiets into violet, and Easter returns with green and gold.
+The palette changes by liturgical season. Each season provides a primary color, an accent, a
+parchment base, a parchment shade, and a card border. Ordinary Time is the neutral default, Advent
+shifts toward blue and rose, Christmas warms toward gold, Lent quiets into violet, and Easter
+returns with green and gold.
 
 ### Primary
 
-- **Ordinary Green** (#1A612B): Default primary for navigation tint, section titles, selected states, and steady daily guidance.
-- **Advent Blue** (#1C337D): Seasonal primary for Advent, used with restraint so the app feels watchful and preparatory.
-- **Christmas Umber** (#804A12): Seasonal primary for Christmas, warmer and more celebratory while staying grounded.
+- **Ordinary Green** (#1A612B): Default primary for navigation tint, section titles, selected
+  states, and steady daily guidance.
+- **Advent Blue** (#1C337D): Seasonal primary for Advent, used with restraint so the app feels
+  watchful and preparatory.
+- **Christmas Umber** (#804A12): Seasonal primary for Christmas, warmer and more celebratory while
+  staying grounded.
 - **Lenten Violet** (#4D2173): Seasonal primary for Lent, penitential without becoming theatrical.
-- **Easter Green** (#245E2E): Seasonal primary for Easter, renewed and vivid enough for celebration without overpowering text.
+- **Easter Green** (#245E2E): Seasonal primary for Easter, renewed and vivid enough for celebration
+  without overpowering text.
 
 ### Secondary
 
@@ -157,87 +193,126 @@ The palette changes by liturgical season. Each season provides a primary color, 
 
 ### Neutral
 
-- **Seasonal Parchment**: The root surface family. Each season uses a light parchment base and a slightly deeper shade for gradients and list backgrounds.
-- **Seasonal Border**: Muted border color tied to the active season. Use it for 1px strokes and gentle card definition.
-- **System Secondary**: Use SwiftUI `.secondary` for subordinate text, metadata, and icon labels where platform contrast remains appropriate.
+- **Seasonal Parchment**: The root surface family. Each season uses a light parchment base and a
+  slightly deeper shade for gradients and list backgrounds.
+- **Seasonal Border**: Muted border color tied to the active season. Use it for 1px strokes and
+  gentle card definition.
+- **System Secondary**: Use SwiftUI `.secondary` for subordinate text, metadata, and icon labels
+  where platform contrast remains appropriate.
 
 ### Named Rules
 
-**The Seasonal Context Rule.** Seasonal color should orient the user in liturgical time. It should not make each season feel like a different app.
+**The Seasonal Context Rule.** Seasonal color should orient the user in liturgical time. It should
+not make each season feel like a different app.
 
-**The Parchment First Rule.** Most surfaces sit on parchment or a tonal shade. White and black are avoided unless required by platform controls, sacred imagery overlays, or accessibility.
+**The Parchment First Rule.** Most surfaces sit on parchment or a tonal shade. White and black are
+avoided unless required by platform controls, sacred imagery overlays, or accessibility.
 
-**The Obligation Color Rule.** Red, blue, gray, green, indigo, and other status colors may appear for obligation and completion semantics. They should stay functional and not become a competing theme.
+**The Obligation Color Rule.** Red, blue, gray, green, indigo, and other status colors may appear
+for obligation and completion semantics. They should stay functional and not become a competing
+theme.
 
 ## 3. Typography
 
-**Display Font:** Apple system serif for reflective titles and sacred imagery captions.
-**Body Font:** Apple system font for readable native UI.
-**Label Font:** Apple system caption styles for status tags, metadata, and compact control labels.
+**Display Font:** Apple system serif for reflective titles and sacred imagery captions. **Body
+Font:** Apple system font for readable native UI. **Label Font:** Apple system caption styles for
+status tags, metadata, and compact control labels.
 
-**Character:** Typography should feel like a native Apple app with a small devotional inflection. Serif moments are special and local. Rounded title styles give product surfaces warmth without making controls playful.
+**Character:** Typography should feel like a native Apple app with a small devotional inflection.
+Serif moments are special and local. Rounded title styles give product surfaces warmth without
+making controls playful.
 
 ### Hierarchy
 
-- **Display** (system serif, bold, title2-title3): Used for sacred hero cards, premium reflective moments, and key devotional anchors.
-- **Headline** (system rounded or serif, bold, title3): Used for section titles and workspace anchors.
-- **Title** (system rounded, bold, title3): Used for card titles, dashboard section titles, and practical product headings.
-- **Body** (system, regular, body-subheadline): Used for primary explanations, setup content, guidance, and localized paragraphs.
-- **Supporting** (system, regular, footnote): Used for details, citations, captions, and secondary explanatory text.
-- **Label** (system, semibold, caption-caption2): Used for status tags, compact metrics, tabs, toolbar badges, and short metadata.
+- **Display** (system serif, bold, title2-title3): Used for sacred hero cards, premium reflective
+  moments, and key devotional anchors.
+- **Headline** (system rounded or serif, bold, title3): Used for section titles and workspace
+  anchors.
+- **Title** (system rounded, bold, title3): Used for card titles, dashboard section titles, and
+  practical product headings.
+- **Body** (system, regular, body-subheadline): Used for primary explanations, setup content,
+  guidance, and localized paragraphs.
+- **Supporting** (system, regular, footnote): Used for details, citations, captions, and secondary
+  explanatory text.
+- **Label** (system, semibold, caption-caption2): Used for status tags, compact metrics, tabs,
+  toolbar badges, and short metadata.
 
 ### Named Rules
 
-**The Serif Reserve Rule.** Serif type signals reflection, sacred imagery, or devotional emphasis. Do not use it for every heading.
+**The Serif Reserve Rule.** Serif type signals reflection, sacred imagery, or devotional emphasis.
+Do not use it for every heading.
 
-**The Native Readability Rule.** Dynamic Type, multiline wrapping, and platform text styles matter more than fixed visual precision.
+**The Native Readability Rule.** Dynamic Type, multiline wrapping, and platform text styles matter
+more than fixed visual precision.
 
-**The No Shame Copy Rule.** Completion and missed-day language should remain truthful, gentle, and recoverable.
+**The No Shame Copy Rule.** Completion and missed-day language should remain truthful, gentle, and
+recoverable.
 
-**The Verified Claims Rule.** Do not state public App Store status, release version, ratings, competitor comparisons, or benchmark scores as fact unless they have been verified against a current source such as App Store Connect, live Apple metadata, or project version settings. If sources disagree or a page appears stale, say so plainly and use the local project metadata as the working baseline.
+**The Verified Claims Rule.** Do not state public App Store status, release version, ratings,
+competitor comparisons, or benchmark scores as fact unless they have been verified against a current
+source such as App Store Connect, live Apple metadata, or project version settings. If sources
+disagree or a page appears stale, say so plainly and use the local project metadata as the working
+baseline.
 
 ## 4. Elevation
 
-Depth is conveyed through tonal layering, 1px seasonal borders, subtle opacity changes, and SwiftUI glass effects. Shadows exist, but they are quiet: most cards use a small shadow at very low primary-color opacity, while hero imagery may use a slightly larger shadow to separate it from the parchment background.
+Depth is conveyed through tonal layering, 1px seasonal borders, subtle opacity changes, and SwiftUI
+glass effects. Shadows exist, but they are quiet: most cards use a small shadow at very low
+primary-color opacity, while hero imagery may use a slightly larger shadow to separate it from the
+parchment background.
 
 ### Shadow Vocabulary
 
-- **Utility Surface Shadow**: Primary color at roughly 0.018 opacity, radius 4, y 2. Used for low-weight utility cards.
-- **Primary Surface Shadow**: Primary color at roughly 0.055 opacity, radius 10, y 5. Used for higher-emphasis surfaces and premium anchors.
-- **Sacred Image Shadow**: Primary color at roughly 0.08 opacity, radius 12, y 6. Used for image cards that need separation from parchment.
+- **Utility Surface Shadow**: Primary color at roughly 0.018 opacity, radius 4, y 2. Used for
+  low-weight utility cards.
+- **Primary Surface Shadow**: Primary color at roughly 0.055 opacity, radius 10, y 5. Used for
+  higher-emphasis surfaces and premium anchors.
+- **Sacred Image Shadow**: Primary color at roughly 0.08 opacity, radius 12, y 6. Used for image
+  cards that need separation from parchment.
 
 ### Named Rules
 
-**The Low Shadow Rule.** Shadows should be felt more than seen. If a card looks like it floats above the app, reduce it.
+**The Low Shadow Rule.** Shadows should be felt more than seen. If a card looks like it floats above
+the app, reduce it.
 
-**The Glass With Purpose Rule.** Use `.glass`, `.glassProminent`, and `glassEffect` where the app already does: controls, rounded surfaces, and compact tags. Do not turn every container into glass.
+**The Glass With Purpose Rule.** Use `.glass`, `.glassProminent`, and `glassEffect` where the app
+already does: controls, rounded surfaces, and compact tags. Do not turn every container into glass.
 
 ## 5. Components
 
 ### Buttons
 
-- **Primary:** SwiftUI `.glassProminent`, large control size, minimum height 44, tinted with the active seasonal primary.
-- **Secondary:** SwiftUI `.glass`, large control size, minimum height 44, tinted with the active seasonal primary.
+- **Primary:** SwiftUI `.glassProminent`, large control size, minimum height 44, tinted with the
+  active seasonal primary.
+- **Secondary:** SwiftUI `.glass`, large control size, minimum height 44, tinted with the active
+  seasonal primary.
 - **Menus:** Use native `Menu` for status selection and compact option sets.
-- **Shape:** System glass controls provide platform shape. Custom rounded glass is capped around 15px.
+- **Shape:** System glass controls provide platform shape. Custom rounded glass is capped around
+  15px.
 
 ### Surface Cards
 
-- **Standard:** Parchment fill at about 0.88 opacity, low accent tint, 1px seasonal border, radius capped around 15px.
-- **Primary:** Parchment fill at about 0.94 opacity, stronger accent tint, 1px seasonal border at higher opacity, radius capped around 18px.
-- **Utility:** Parchment fill at about 0.80 opacity, faint accent tint, low border opacity, radius typically 14-16px.
-- **Rule:** Cards should group real decisions, guidance, or repeated items. Avoid nesting cards inside cards.
+- **Standard:** Parchment fill at about 0.88 opacity, low accent tint, 1px seasonal border, radius
+  capped around 15px.
+- **Primary:** Parchment fill at about 0.94 opacity, stronger accent tint, 1px seasonal border at
+  higher opacity, radius capped around 18px.
+- **Utility:** Parchment fill at about 0.80 opacity, faint accent tint, low border opacity, radius
+  typically 14-16px.
+- **Rule:** Cards should group real decisions, guidance, or repeated items. Avoid nesting cards
+  inside cards.
 
 ### Sacred Image Cards
 
-- Use actual app assets such as `HeroSacred`, `SacredCrucifixAltar`, `SacredPlanningJournal`, `SacredMonstrance`, and seasonal imagery when a surface needs devotional context.
+- Use actual app assets such as `HeroSacred`, `SacredCrucifixAltar`, `SacredPlanningJournal`,
+  `SacredMonstrance`, and seasonal imagery when a surface needs devotional context.
 - Overlay gradients may protect white text on imagery.
 - Fallbacks use a seasonal gradient plus a relevant SF Symbol, usually `cross.case.fill`.
 - Titles can use serif bold text, but supporting copy should remain concise.
 
 ### Status Tags And Metrics
 
-- Status tags use compact capsule styling, parchment fill, semantic tint overlays, and 1px semantic strokes.
+- Status tags use compact capsule styling, parchment fill, semantic tint overlays, and 1px semantic
+  strokes.
 - Metrics use rounded title values and supporting footnote text.
 - Obligation and completion colors must remain semantic and accessible.
 
@@ -245,15 +320,18 @@ Depth is conveyed through tonal layering, 1px seasonal borders, subtle opacity c
 
 - iPhone uses tabbed `NavigationStack` surfaces for Today, Fasting Days, Intermittent, and More.
 - iPad uses split-view style workspaces.
-- Mac uses native `NavigationSplitView`, sidebar rows, toolbars, Settings, commands, and menu bar surfaces.
-- Do not copy the iOS More hub into the Mac main window. Settings and desktop surfaces have separate ownership.
+- Mac uses native `NavigationSplitView`, sidebar rows, toolbars, Settings, commands, and menu bar
+  surfaces.
+- Do not copy the iOS More hub into the Mac main window. Settings and desktop surfaces have separate
+  ownership.
 
 ## 6. Do's and Don'ts
 
 Do:
 
 - Preserve the seasonal palette API in `CatholicTheme`.
-- Use app style helpers such as `appSurfaceCard`, `appRoundedGlass`, `appSectionTitleStyle`, `appSupportingTextStyle`, and `appPrimaryButtonStyle`.
+- Use app style helpers such as `appSurfaceCard`, `appRoundedGlass`, `appSectionTitleStyle`,
+  `appSupportingTextStyle`, and `appPrimaryButtonStyle`.
 - Keep rule rationale, citations, and regional profile context close to the user's decision.
 - Respect localization and test identifiers as stable contracts.
 - Use sacred imagery when it helps the user enter the right mode of attention.
@@ -262,8 +340,11 @@ Do:
 Don't:
 
 - Do not introduce a generic wellness tracker aesthetic.
-- Do not add purple-blue gradients, decorative glassmorphism, identical feature-card grids, or marketing-style hero metrics.
+- Do not add purple-blue gradients, decorative glassmorphism, identical feature-card grids, or
+  marketing-style hero metrics.
 - Do not use streak pressure, shame language, or gamified spiritual performance cues.
-- Do not remove local-only privacy assumptions or add networked analytics without an explicit product decision.
-- Do not broaden visual rewrites during release prep unless a concrete component-level issue requires it.
+- Do not remove local-only privacy assumptions or add networked analytics without an explicit
+  product decision.
+- Do not broaden visual rewrites during release prep unless a concrete component-level issue
+  requires it.
 - Do not rely on color alone for obligation, completion, or warning states.

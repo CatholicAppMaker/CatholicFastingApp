@@ -246,7 +246,6 @@ private func localized(_ key: String, default defaultValue: String) -> String {
     AppLocalizer.localizedCurrent(key, default: defaultValue)
 }
 
-
 struct CompanionCardMetric: Identifiable, Hashable {
     let id: String
     let title: String

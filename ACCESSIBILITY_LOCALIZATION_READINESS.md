@@ -1,6 +1,7 @@
 # Accessibility and Localization Readiness
 
 ## Accessibility Pass (Implemented)
+
 - Stable accessibility identifiers on critical controls:
   - consent toggle
   - export actions
@@ -10,6 +11,7 @@
 - Dynamic type compatible list-based layouts retained.
 
 ## Localization Pass (Implemented)
+
 - Added bilingual (English/Spanish) labels and messaging in Settings:
   - profile
   - regional norms
@@ -19,12 +21,14 @@
 - Added localized status strings for sync timestamps and consent copy.
 
 ## Remaining Production Tasks
+
 - [ ] Externalize strings to `Localizable.strings` for full i18n workflow.
 - [ ] Native-speaker review for Spanish phrasing.
 - [ ] VoiceOver manual QA sweep on physical device.
 - [ ] Accessibility contrast audit across all liturgical season palettes.
 
 ## QA Matrix
+
 - Devices: iPhone SE/standard/max sizes
 - Content size categories: default + accessibility large
 - Languages: English, Spanish

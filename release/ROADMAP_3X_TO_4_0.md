@@ -1,7 +1,6 @@
 # Catholic Fasting App Roadmap: 3.x to 4.0
 
-Last reviewed: March 21, 2026
-Current stable baseline: `3.2 (10)`
+Last reviewed: March 21, 2026 Current stable baseline: `3.2 (10)`
 
 This roadmap defines the approved `3.2` baseline and the major-version work now reserved for `4.0`.
 
@@ -20,7 +19,8 @@ The current app already has:
 - premium subscriptions with a coherent offering
 - partial U.S./Canada regional support
 
-That means the current refinement line is effectively complete. The previously discussed `3.3` premium/onboarding work is now absorbed into `4.0` instead of shipping as a separate point release.
+That means the current refinement line is effectively complete. The previously discussed `3.3`
+premium/onboarding work is now absorbed into `4.0` instead of shipping as a separate point release.
 
 ## 3.x release track
 
@@ -62,9 +62,10 @@ Do not put these in `3.x` unless they are bug fixes:
 
 Recommended theme:
 
-**Canada depth + multilingual onboarding + premium formation depth**
+### Canada Depth, Multilingual Onboarding, and Premium Formation Depth
 
-`4.0` should combine the already-started premium/onboarding refinements with a real Canada-aware product step and a stronger premium journey.
+`4.0` should combine the already-started premium/onboarding refinements with a real Canada-aware
+product step and a stronger premium journey.
 
 ### 4.0 Goal
 
@@ -95,7 +96,8 @@ Ship:
 - true Canada-aware rule/data handling at the model layer
 - clear separation of universal, U.S.-specific, and Canada-specific observance behavior
 - Canada-specific citations and source labeling where needed
-- food guidance, Friday guidance, and observance detail that all reflect the selected region truthfully
+- food guidance, Friday guidance, and observance detail that all reflect the selected region
+  truthfully
 - no fallback to U.S.-specific behavior unless it is explicitly labeled as informational
 
 #### 2. Guided Seasonal Journey and deeper premium formation
@@ -124,7 +126,8 @@ Ship:
 - clearer premium differentiation based on outcomes, not just tools
 - premium depth without adding a second premium tier by default
 
-The seasonal journey should become the clearest “why premium” story, especially for yearly subscribers.
+The seasonal journey should become the clearest “why premium” story, especially for yearly
+subscribers.
 
 #### 3. Optional trust-surface maturity
 
@@ -191,7 +194,8 @@ Before calling a release `4.0`:
 - new tests must cover the deeper region engine and Guided Seasonal Journey workflow layer
 - migrations and compatibility must be reviewed explicitly if region logic deepens
 - the App Store description and review notes must explain why the release is more than polish
-- manual review must include iPhone, 11-inch iPad, and 13-inch iPad for the new regional, premium, and localized flows
+- manual review must include iPhone, 11-inch iPad, and 13-inch iPad for the new regional, premium,
+  and localized flows
 
 ## Working assumptions
 
@@ -204,4 +208,5 @@ Unless product strategy changes, assume:
 - subscription tier structure stays stable through `4.0`
 - pricing changes at `4.0` launch, not earlier
 - hosted first-party support/legal pages remain optional and budget-dependent
-- `4.0` is the release where full Canada depth, Guided Seasonal Journey, Spanish cleanup, and French Canadian support land together
+- `4.0` is the release where full Canada depth, Guided Seasonal Journey, Spanish cleanup, and French
+  Canadian support land together

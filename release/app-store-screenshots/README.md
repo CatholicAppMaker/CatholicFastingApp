@@ -35,13 +35,18 @@ Outputs:
 
 - English:
   - `iphone-17-pro-max/raw/*.png` and `ipad-pro-13/raw/*.png`: direct simulator captures.
-  - `iphone-17-pro-max/[0-9][0-9]-*.png` and `ipad-pro-13/[0-9][0-9]-*.png`: framed App Store screenshots.
+  - `iphone-17-pro-max/[0-9][0-9]-*.png` and `ipad-pro-13/[0-9][0-9]-*.png`: framed App Store
+    screenshots.
 - French Canadian:
-  - `fr-CA/iphone-17-pro-max/raw/*.png` and `fr-CA/ipad-pro-13/raw/*.png`: direct simulator captures.
-  - `fr-CA/iphone-17-pro-max/[0-9][0-9]-*.png` and `fr-CA/ipad-pro-13/[0-9][0-9]-*.png`: framed App Store screenshots.
+  - `fr-CA/iphone-17-pro-max/raw/*.png` and `fr-CA/ipad-pro-13/raw/*.png`: direct simulator
+    captures.
+  - `fr-CA/iphone-17-pro-max/[0-9][0-9]-*.png` and `fr-CA/ipad-pro-13/[0-9][0-9]-*.png`: framed App
+    Store screenshots.
 - Spanish (Mexico):
-  - `es-MX/iphone-17-pro-max/raw/*.png` and `es-MX/ipad-pro-13/raw/*.png`: direct simulator captures.
-  - `es-MX/iphone-17-pro-max/[0-9][0-9]-*.png` and `es-MX/ipad-pro-13/[0-9][0-9]-*.png`: framed App Store screenshots.
+  - `es-MX/iphone-17-pro-max/raw/*.png` and `es-MX/ipad-pro-13/raw/*.png`: direct simulator
+    captures.
+  - `es-MX/iphone-17-pro-max/[0-9][0-9]-*.png` and `es-MX/ipad-pro-13/[0-9][0-9]-*.png`: framed App
+    Store screenshots.
 
 The script captures:
 
@@ -56,4 +61,5 @@ Requirements:
 - Xcode command line tools
 - ImageMagick `magick`
 - Available iPhone Pro Max and 13-inch iPad simulators
-- The capture script defaults to the iOS 26.5 simulator runtime and pins destinations by UDID. Use `--ios-version` or `SCREENSHOT_IOS_VERSION` when you intentionally need a different runtime.
+- The capture script defaults to the iOS 26.5 simulator runtime and pins destinations by UDID. Use
+  `--ios-version` or `SCREENSHOT_IOS_VERSION` when you intentionally need a different runtime.

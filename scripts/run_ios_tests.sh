@@ -12,15 +12,21 @@ DEEP_TIMEOUT_SECONDS="${DEEP_TIMEOUT_SECONDS:-900}"
 IPAD_TIMEOUT_SECONDS="${IPAD_TIMEOUT_SECONDS:-900}"
 TEST_SUITE="${TEST_SUITE:-all}"
 PHONE_SIMULATOR_NAME="${PHONE_SIMULATOR_NAME:-iPhone 17}"
+PHONE_SIMULATOR_ID="${PHONE_SIMULATOR_ID:-}"
 IPAD_SIMULATOR_NAME="${IPAD_SIMULATOR_NAME:-iPad Pro 13-inch (M5)}"
+IPAD_SIMULATOR_ID="${IPAD_SIMULATOR_ID:-}"
+
+if [[ -z "${DEVELOPER_DIR:-}" && -d "/Applications/Xcode-beta.app/Contents/Developer" ]]; then
+	export DEVELOPER_DIR="/Applications/Xcode-beta.app/Contents/Developer"
+fi
 
 mkdir -p "${RESULT_ROOT}"
 mkdir -p "${DERIVED_DATA}"
 
 run_with_timeout() {
-  local timeout_seconds="$1"
-  shift
-  python3 - "$timeout_seconds" "$@" <<'PY'
+	local timeout_seconds="$1"
+	shift
+	python3 - "$timeout_seconds" "$@" <<'PY'
 import signal
 import subprocess
 import sys
@@ -43,125 +49,132 @@ PY
 }
 
 run_suite() {
-  local suite="$1"
-  local timeout_seconds="$2"
-  local simulator_name="$3"
-  shift 3
-  local selectors=("$@")
+	local suite="$1"
+	local timeout_seconds="$2"
+	local simulator_name="$3"
+	local simulator_id="$4"
+	shift 4
+	local selectors=("$@")
+	local simulator_ref="${simulator_id:-${simulator_name}}"
+	local destination="platform=iOS Simulator,name=${simulator_name}"
 
-  for attempt in $(seq 1 "${MAX_ATTEMPTS}"); do
-    result_bundle="${RESULT_ROOT}/ui-tests-${suite}-attempt-${attempt}.xcresult"
-    rm -rf "${result_bundle}"
+	if [[ -n "${simulator_id}" ]]; then
+		destination="platform=iOS Simulator,id=${simulator_id}"
+	fi
 
-    echo "==> [${suite}] Attempt ${attempt}/${MAX_ATTEMPTS}: resetting simulator state"
-    xcrun simctl shutdown all || true
-    xcrun simctl erase all || true
-    xcrun simctl boot "${simulator_name}" || true
-    xcrun simctl bootstatus "${simulator_name}" -b
+	for attempt in $(seq 1 "${MAX_ATTEMPTS}"); do
+		result_bundle="${RESULT_ROOT}/ui-tests-${suite}-attempt-${attempt}.xcresult"
+		rm -rf "${result_bundle}"
 
-    command=(
-      xcodebuild
-      -project "${PROJECT}"
-      -scheme "${SCHEME}"
-      -destination "platform=iOS Simulator,name=${simulator_name}"
-      -derivedDataPath "${DERIVED_DATA}"
-      -resultBundlePath "${result_bundle}"
-      -parallel-testing-enabled NO
-      -test-timeouts-enabled YES
-      -default-test-execution-time-allowance "${TEST_EXECUTION_TIME_ALLOWANCE:-120}"
-    )
-    command+=("${selectors[@]}")
-    command+=(test-without-building)
+		echo "==> [${suite}] Attempt ${attempt}/${MAX_ATTEMPTS}: resetting simulator state"
+		xcrun simctl shutdown all || true
+		xcrun simctl erase all || true
+		xcrun simctl boot "${simulator_ref}" || true
+		xcrun simctl bootstatus "${simulator_ref}" -b
 
-    echo "==> [${suite}] Running UI tests (result: ${result_bundle})"
-    if run_with_timeout "${timeout_seconds}" "${command[@]}"; then
-      echo "[${suite}] UI tests passed on attempt ${attempt}."
-      return 0
-    fi
+		command=(
+			xcodebuild
+			-project "${PROJECT}"
+			-scheme "${SCHEME}"
+			-destination "${destination}"
+			-derivedDataPath "${DERIVED_DATA}"
+			-resultBundlePath "${result_bundle}"
+			-parallel-testing-enabled NO
+			-test-timeouts-enabled YES
+			-default-test-execution-time-allowance "${TEST_EXECUTION_TIME_ALLOWANCE:-120}"
+		)
+		command+=("${selectors[@]}")
+		command+=(test-without-building)
 
-    echo "[${suite}] UI tests failed or timed out on attempt ${attempt}."
-  done
+		echo "==> [${suite}] Running UI tests (result: ${result_bundle})"
+		if run_with_timeout "${timeout_seconds}" "${command[@]}"; then
+			echo "[${suite}] UI tests passed on attempt ${attempt}."
+			return 0
+		fi
 
-  echo "[${suite}] UI tests failed after ${MAX_ATTEMPTS} attempts."
-  return 1
+		echo "[${suite}] UI tests failed or timed out on attempt ${attempt}."
+	done
+
+	echo "[${suite}] UI tests failed after ${MAX_ATTEMPTS} attempts."
+	return 1
 }
 
 run_smoke_suite() {
-  local selectors=(
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testSmokeOnboardingCanBeCompleted
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testSmokeFastingDaysControlsVisible
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testSmokeExportsRequireLegalAcknowledgment
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testSmokeGuidanceDestinationOpens
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testSmokePremiumSupportControlsVisible
-  )
-  run_suite "smoke" "${SMOKE_TIMEOUT_SECONDS}" "${PHONE_SIMULATOR_NAME}" "${selectors[@]}"
+	local selectors=(
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testSmokeOnboardingCanBeCompleted
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testSmokeFastingDaysControlsVisible
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testSmokeExportsRequireLegalAcknowledgment
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testSmokeGuidanceDestinationOpens
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testSmokePremiumSupportControlsVisible
+	)
+	run_suite "smoke" "${SMOKE_TIMEOUT_SECONDS}" "${PHONE_SIMULATOR_NAME}" "${PHONE_SIMULATOR_ID}" "${selectors[@]}"
 }
 
 run_deep_suite() {
-  local selectors=(
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepCanOpenFridayNotesHistory
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepLaunchReadinessControlsVisible
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepDashboardHeroVisible
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepCompanionCardsExposeRuleLiveFormationAndActions
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepCompanionActiveFastPrimaryActionOpensTrackFast
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepUnofficialNoticeVisible
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepDashboardOpenFastingDaysQuickAction
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepDashboardFocusRequiredQuickAction
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepFastingDaysScopePickerVisible
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepRecoveryPlanVisibleWhenMissedSeeded
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepGuidanceSacredGalleryVisible
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepTodaySetupCardOpensQuickSetup
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepQuickSetupConsentIncrementsProgress
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepQuickSetupReminderActionsVisible
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepHouseholdProfileCanBeCreatedAndReapplied
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIntermittentCanStartAndCancelFast
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIntermittentCanEndFastAndWriteSessionHistory
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIntermittentTargetPickerVisible
-  )
-  run_suite "deep" "${DEEP_TIMEOUT_SECONDS}" "${PHONE_SIMULATOR_NAME}" "${selectors[@]}"
+	local selectors=(
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepCanOpenFridayNotesHistory
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepLaunchReadinessControlsVisible
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepDashboardHeroVisible
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepCompanionCardsExposeRuleLiveFormationAndActions
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepCompanionActiveFastPrimaryActionOpensTrackFast
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepUnofficialNoticeVisible
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepDashboardOpenFastingDaysQuickAction
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepDashboardFocusRequiredQuickAction
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepFastingDaysScopePickerVisible
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepRecoveryPlanVisibleWhenMissedSeeded
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepGuidanceSacredGalleryVisible
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepTodaySetupCardOpensQuickSetup
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepQuickSetupConsentIncrementsProgress
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepQuickSetupReminderActionsVisible
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepHouseholdProfileCanBeCreatedAndReapplied
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIntermittentCanStartAndCancelFast
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIntermittentCanEndFastAndWriteSessionHistory
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIntermittentTargetPickerVisible
+	)
+	run_suite "deep" "${DEEP_TIMEOUT_SECONDS}" "${PHONE_SIMULATOR_NAME}" "${PHONE_SIMULATOR_ID}" "${selectors[@]}"
 }
 
 run_ipad_suite() {
-  local selectors=(
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadSidebarSwitchesPrimaryWorkspaces
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadTodayDashboardShowsHeroAndCoreCards
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadCompanionTriadShowsRuleTrackerAndFormationCards
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadFastingDaysSelectionShowsDetail
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadFastingDaysShowsFiltersAndQuickDates
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadOnboardingShowsRegionSelector
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadMoreProfileDestinationShowsRegionPicker
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadCanadaModeShowsPartialSupportContext
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadPremiumWorkspaceShowsLegalLinks
-    -only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadTrackFastShowsLiveWorkspaceAndControls
-  )
-  run_suite "ipad" "${IPAD_TIMEOUT_SECONDS}" "${IPAD_SIMULATOR_NAME}" "${selectors[@]}"
+	local selectors=(
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadSidebarSwitchesPrimaryWorkspaces
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadTodayDashboardShowsHeroAndCoreCards
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadCompanionTriadShowsRuleTrackerAndFormationCards
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadFastingDaysSelectionShowsDetail
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadFastingDaysShowsFiltersAndQuickDates
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadOnboardingShowsRegionSelector
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadMoreProfileDestinationShowsRegionPicker
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadCanadaModeShowsPartialSupportContext
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadPremiumWorkspaceShowsLegalLinks
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadTrackFastShowsLiveWorkspaceAndControls
+	)
+	run_suite "ipad" "${IPAD_TIMEOUT_SECONDS}" "${IPAD_SIMULATOR_NAME}" "${IPAD_SIMULATOR_ID}" "${selectors[@]}"
 }
 
 echo "==> Building test artifacts"
 xcodebuild \
-  -project "${PROJECT}" \
-  -scheme "${SCHEME}" \
-  -destination "generic/platform=iOS Simulator" \
-  -derivedDataPath "${DERIVED_DATA}" \
-  build-for-testing
+	-project "${PROJECT}" \
+	-scheme "${SCHEME}" \
+	-destination "generic/platform=iOS Simulator" \
+	-derivedDataPath "${DERIVED_DATA}" \
+	build-for-testing
 
 case "${TEST_SUITE}" in
-  smoke)
-    run_smoke_suite
-    ;;
-  deep)
-    run_deep_suite
-    ;;
-  ipad)
-    run_ipad_suite
-    ;;
-  all)
-    run_smoke_suite
-    run_deep_suite
-    run_ipad_suite
-    ;;
-  *)
-    echo "Unknown TEST_SUITE='${TEST_SUITE}'. Expected smoke, deep, ipad, or all."
-    exit 2
-    ;;
+smoke)
+	run_smoke_suite
+	;;
+deep)
+	run_deep_suite
+	;;
+ipad)
+	run_ipad_suite
+	;;
+all)
+	run_smoke_suite
+	run_deep_suite
+	run_ipad_suite
+	;;
+*)
+	echo "Unknown TEST_SUITE='${TEST_SUITE}'. Expected smoke, deep, ipad, or all."
+	exit 2
+	;;
 esac

@@ -70,6 +70,7 @@
 		A00000000000000000000045 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000044 /* PrivacyInfo.xcprivacy */; };
 		A00000000000000000000046 /* ContentView+CalendarSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000047 /* ContentView+CalendarSections.swift */; };
 		A00000000000000000000048 /* ContentView+IntermittentSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000049 /* ContentView+IntermittentSections.swift */; };
+		A00000000000000000000160 /* ContentView+IntermittentPlanningSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000161 /* ContentView+IntermittentPlanningSections.swift */; };
 		A0000000000000000000004A /* ContentView+StateHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000004B /* ContentView+StateHelpers.swift */; };
 		A0000000000000000000004C /* FridayPenanceNotes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000004D /* FridayPenanceNotes.swift */; };
 		A0000000000000000000004E /* IntermittentFastTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000004F /* IntermittentFastTracker.swift */; };
@@ -320,6 +321,7 @@
 		A00000000000000000000044 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		A00000000000000000000047 /* ContentView+CalendarSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+CalendarSections.swift"; sourceTree = "<group>"; };
 		A00000000000000000000049 /* ContentView+IntermittentSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+IntermittentSections.swift"; sourceTree = "<group>"; };
+		A00000000000000000000161 /* ContentView+IntermittentPlanningSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+IntermittentPlanningSections.swift"; sourceTree = "<group>"; };
 		A0000000000000000000004B /* ContentView+StateHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+StateHelpers.swift"; sourceTree = "<group>"; };
 		A0000000000000000000004D /* FridayPenanceNotes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FridayPenanceNotes.swift; sourceTree = "<group>"; };
 		A0000000000000000000004F /* IntermittentFastTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntermittentFastTracker.swift; sourceTree = "<group>"; };
@@ -611,6 +613,7 @@
 				A0000000000000000000003B /* ContentView+DashboardSections.swift */,
 				A00000000000000000000047 /* ContentView+CalendarSections.swift */,
 				A00000000000000000000049 /* ContentView+IntermittentSections.swift */,
+				A00000000000000000000161 /* ContentView+IntermittentPlanningSections.swift */,
 				A0000000000000000000004B /* ContentView+StateHelpers.swift */,
 				A00000000000000000000137 /* ContentView+LaunchLifecycle.swift */,
 				A00000000000000000000094 /* ContentView+RootShell.swift */,
@@ -1208,6 +1211,7 @@
 				A0000000000000000000003A /* ContentView+DashboardSections.swift in Sources */,
 				A00000000000000000000046 /* ContentView+CalendarSections.swift in Sources */,
 				A00000000000000000000048 /* ContentView+IntermittentSections.swift in Sources */,
+				A00000000000000000000160 /* ContentView+IntermittentPlanningSections.swift in Sources */,
 				A0000000000000000000004A /* ContentView+StateHelpers.swift in Sources */,
 				A00000000000000000000138 /* ContentView+LaunchLifecycle.swift in Sources */,
 				A00000000000000000000097 /* ContentView+RootShell.swift in Sources */,

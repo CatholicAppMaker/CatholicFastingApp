@@ -2,7 +2,8 @@ import SwiftUI
 
 extension ContentView {
     var companionSnapshot: CompanionSnapshot {
-        CompanionSnapshotEngine.snapshot(
+        CompanionSnapshotEngine.snapshot(CompanionSnapshotRequest(
+            date: Date(),
             observances: rollingUpcomingObservances,
             settings: settings,
             statusesByID: tracker.statusesByID,
@@ -13,7 +14,7 @@ extension ContentView {
             journeyProgress: premiumJourneyProgress,
             currentStreak: currentStreak,
             premiumUnlocked: monetizationStore.premiumUnlocked,
-            calendar: liturgicalCalendar)
+            calendar: liturgicalCalendar))
     }
 
     var companionDashboardSection: some View {
@@ -128,7 +129,11 @@ extension ContentView {
                 metrics: [
                     CompanionCardMetric(title: localized("intermittent.live.elapsed", default: "Elapsed"), value: durationText(recap.duration)),
                     CompanionCardMetric(title: localized("intermittent.live.target", default: "Target"), value: "\(recap.targetHours)h"),
-                    CompanionCardMetric(title: localized("intermittent.live.status", default: "Status"), value: recap.completedTarget ? localized("fast.recap.status.completed", default: "Completed") : localized("fast.recap.status.ended", default: "Ended")),
+                    CompanionCardMetric(
+                        title: localized("intermittent.live.status", default: "Status"),
+                        value: recap.completedTarget
+                            ? localized("fast.recap.status.completed", default: "Completed")
+                            : localized("fast.recap.status.ended", default: "Ended")),
                     CompanionCardMetric(title: localized("intermittent.live.next", default: "Next"), value: localized("companion.live.recap_next", default: "Review")),
                 ],
                 actionTitle: localized("companion.live.review_recap", default: "Review Recap"),
@@ -148,10 +153,15 @@ extension ContentView {
                 stageLabel: FastStage.eatingWindow.label,
                 progress: nil,
                 metrics: [
-                    CompanionCardMetric(title: localized("intermittent.live.since_end", default: "Since End"), value: durationText(elapsedSinceEnd)),
+                    CompanionCardMetric(
+                        title: localized("intermittent.live.since_end", default: "Since End"),
+                        value: durationText(elapsedSinceEnd)),
                     CompanionCardMetric(title: localized("intermittent.live.last_fast", default: "Last Fast"), value: durationText(latestSession.duration)),
                     CompanionCardMetric(title: localized("intermittent.live.target", default: "Target"), value: "\(latestSession.targetHours)h"),
-                    CompanionCardMetric(title: localized("intermittent.live.next", default: "Next"), value: suggestedNextStart.map(localizedAbbreviatedDateTime) ?? localized("intermittent.live.status_ready_anytime", default: "Ready anytime")),
+                    CompanionCardMetric(
+                        title: localized("intermittent.live.next", default: "Next"),
+                        value: suggestedNextStart.map(localizedAbbreviatedDateTime)
+                            ?? localized("intermittent.live.status_ready_anytime", default: "Ready anytime")),
                 ],
                 actionTitle: localized("companion.live.open_tracker", default: "Open Track Fast"),
                 actionSystemImage: "timer")
@@ -166,9 +176,14 @@ extension ContentView {
                 progress: nil,
                 metrics: [
                     CompanionCardMetric(title: localized("intermittent.live.target", default: "Target"), value: "\(targetHours)h"),
-                    CompanionCardMetric(title: localized("intermittent.live.last_fast", default: "Last Fast"), value: latestSession.map { durationText($0.duration) } ?? localized("companion.live.none_yet", default: "None yet")),
+                    CompanionCardMetric(
+                        title: localized("intermittent.live.last_fast", default: "Last Fast"),
+                        value: latestSession.map { durationText($0.duration) }
+                            ?? localized("companion.live.none_yet", default: "None yet")),
                     CompanionCardMetric(title: localized("intermittent.controls.intention", default: "Intention"), value: intermittentIntentionLabel),
-                    CompanionCardMetric(title: localized("intermittent.live.next", default: "Next"), value: localized("intermittent.live.status_ready_anytime", default: "Ready anytime")),
+                    CompanionCardMetric(
+                        title: localized("intermittent.live.next", default: "Next"),
+                        value: localized("intermittent.live.status_ready_anytime", default: "Ready anytime")),
                 ],
                 actionTitle: localized("today.actions.track_fast", default: "Track Fast Now"),
                 actionSystemImage: "play.fill")

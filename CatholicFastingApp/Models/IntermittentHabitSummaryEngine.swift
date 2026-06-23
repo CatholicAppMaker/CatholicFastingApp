@@ -84,5 +84,4 @@ enum IntermittentHabitSummaryEngine {
     {
         Array(Set(sessions.map { calendar.startOfDay(for: $0.end) }))
     }
-
 }

@@ -9,7 +9,7 @@ final class CompanionSnapshotEngineTests: XCTestCase {
         let journey = GuidedSeasonalJourneyEngine.week(for: .lent, program: .lentDeepen, week: 1)
         let progress = GuidedSeasonalJourneyEngine.progress(for: journey, completedActionKeys: [])
 
-        let snapshot = CompanionSnapshotEngine.snapshot(
+        let snapshot = CompanionSnapshotEngine.snapshot(CompanionSnapshotRequest(
             date: date,
             observances: observances,
             settings: settings,
@@ -21,7 +21,7 @@ final class CompanionSnapshotEngineTests: XCTestCase {
             journeyProgress: progress,
             currentStreak: 0,
             premiumUnlocked: false,
-            calendar: .gregorian)
+            calendar: .gregorian))
 
         XCTAssertTrue(snapshot.ruleDecision.hasMandatoryObservance)
         XCTAssertEqual(snapshot.primaryAction.destination, .guidance)
@@ -36,7 +36,7 @@ final class CompanionSnapshotEngineTests: XCTestCase {
         let journey = GuidedSeasonalJourneyEngine.week(for: .ordinary, program: .liturgicalRhythm, week: 2)
         let progress = GuidedSeasonalJourneyEngine.progress(for: journey, completedActionKeys: [])
 
-        let snapshot = CompanionSnapshotEngine.snapshot(
+        let snapshot = CompanionSnapshotEngine.snapshot(CompanionSnapshotRequest(
             date: date,
             observances: ObservanceCalculator.makeCalendar(for: 2026, settings: settings),
             settings: settings,
@@ -48,7 +48,7 @@ final class CompanionSnapshotEngineTests: XCTestCase {
             journeyProgress: progress,
             currentStreak: 3,
             premiumUnlocked: true,
-            calendar: .gregorian)
+            calendar: .gregorian))
 
         XCTAssertEqual(snapshot.primaryAction.destination, .trackFast)
         XCTAssertTrue(snapshot.liveFast.progress.isActive)
@@ -63,7 +63,7 @@ final class CompanionSnapshotEngineTests: XCTestCase {
         let journey = GuidedSeasonalJourneyEngine.week(for: .ordinary, program: .liturgicalRhythm, week: 2)
         let progress = GuidedSeasonalJourneyEngine.progress(for: journey, completedActionKeys: [])
 
-        let snapshot = CompanionSnapshotEngine.snapshot(
+        let snapshot = CompanionSnapshotEngine.snapshot(CompanionSnapshotRequest(
             date: date,
             observances: ObservanceCalculator.makeCalendar(for: 2026, settings: settings),
             settings: settings,
@@ -75,7 +75,7 @@ final class CompanionSnapshotEngineTests: XCTestCase {
             journeyProgress: progress,
             currentStreak: 2,
             premiumUnlocked: false,
-            calendar: .gregorian)
+            calendar: .gregorian))
 
         XCTAssertEqual(snapshot.primaryAction.id, "active-fast")
         XCTAssertEqual(snapshot.primaryAction.destination, .trackFast)
@@ -101,7 +101,7 @@ final class CompanionSnapshotEngineTests: XCTestCase {
         let journey = GuidedSeasonalJourneyEngine.week(for: .ordinary, program: .liturgicalRhythm, week: 2)
         let progress = GuidedSeasonalJourneyEngine.progress(for: journey, completedActionKeys: [])
 
-        let snapshot = CompanionSnapshotEngine.snapshot(
+        let snapshot = CompanionSnapshotEngine.snapshot(CompanionSnapshotRequest(
             date: date,
             observances: ObservanceCalculator.makeCalendar(for: 2026, settings: settings),
             settings: settings,
@@ -113,7 +113,7 @@ final class CompanionSnapshotEngineTests: XCTestCase {
             journeyProgress: progress,
             currentStreak: 2,
             premiumUnlocked: false,
-            calendar: .gregorian)
+            calendar: .gregorian))
 
         XCTAssertNotNil(snapshot.nextRequiredObservance)
         XCTAssertEqual(snapshot.primaryAction.id, "fast-recap")
@@ -133,7 +133,7 @@ final class CompanionSnapshotEngineTests: XCTestCase {
         let journey = GuidedSeasonalJourneyEngine.week(for: .lent, program: .lentDeepen, week: 1)
         let progress = GuidedSeasonalJourneyEngine.progress(for: journey, completedActionKeys: [])
 
-        let snapshot = CompanionSnapshotEngine.snapshot(
+        let snapshot = CompanionSnapshotEngine.snapshot(CompanionSnapshotRequest(
             date: date,
             observances: observances,
             settings: settings,
@@ -145,7 +145,7 @@ final class CompanionSnapshotEngineTests: XCTestCase {
             journeyProgress: progress,
             currentStreak: 0,
             premiumUnlocked: true,
-            calendar: .gregorian)
+            calendar: .gregorian))
 
         XCTAssertEqual(snapshot.primaryAction.destination, .premium)
         XCTAssertEqual(snapshot.primaryAction.priority, .high)
@@ -158,7 +158,7 @@ final class CompanionSnapshotEngineTests: XCTestCase {
         let journey = GuidedSeasonalJourneyEngine.week(for: .lent, program: .lentDeepen, week: 1)
         let progress = GuidedSeasonalJourneyEngine.progress(for: journey, completedActionKeys: [])
 
-        let snapshot = CompanionSnapshotEngine.snapshot(
+        let snapshot = CompanionSnapshotEngine.snapshot(CompanionSnapshotRequest(
             date: date,
             observances: ObservanceCalculator.makeCalendar(for: 2026, settings: settings),
             settings: settings,
@@ -170,7 +170,7 @@ final class CompanionSnapshotEngineTests: XCTestCase {
             journeyProgress: progress,
             currentStreak: 1,
             premiumUnlocked: false,
-            calendar: .gregorian)
+            calendar: .gregorian))
 
         XCTAssertTrue(snapshot.ruleDecision.obligationLine.localizedCaseInsensitiveContains("dispensation"))
         XCTAssertEqual(snapshot.primaryAction.destination, .guidance)
@@ -183,7 +183,7 @@ final class CompanionSnapshotEngineTests: XCTestCase {
         let journey = GuidedSeasonalJourneyEngine.week(for: .christmas, program: .liturgicalRhythm, week: 1)
         let progress = GuidedSeasonalJourneyEngine.progress(for: journey, completedActionKeys: [])
 
-        let snapshot = CompanionSnapshotEngine.snapshot(
+        let snapshot = CompanionSnapshotEngine.snapshot(CompanionSnapshotRequest(
             date: date,
             observances: observances,
             settings: settings,
@@ -195,7 +195,7 @@ final class CompanionSnapshotEngineTests: XCTestCase {
             journeyProgress: progress,
             currentStreak: 0,
             premiumUnlocked: false,
-            calendar: .gregorian)
+            calendar: .gregorian))
 
         XCTAssertNil(snapshot.nextRequiredObservance)
         XCTAssertEqual(snapshot.primaryAction.destination, .trackFast)
@@ -209,7 +209,7 @@ final class CompanionSnapshotEngineTests: XCTestCase {
         let journey = GuidedSeasonalJourneyEngine.week(for: .christmas, program: .liturgicalRhythm, week: 1)
         let progress = GuidedSeasonalJourneyEngine.progress(for: journey, completedActionKeys: [])
 
-        let lockedSnapshot = CompanionSnapshotEngine.snapshot(
+        let lockedSnapshot = CompanionSnapshotEngine.snapshot(CompanionSnapshotRequest(
             date: date,
             observances: observances,
             settings: settings,
@@ -221,9 +221,9 @@ final class CompanionSnapshotEngineTests: XCTestCase {
             journeyProgress: progress,
             currentStreak: 0,
             premiumUnlocked: false,
-            calendar: .gregorian)
+            calendar: .gregorian))
 
-        let unlockedSnapshot = CompanionSnapshotEngine.snapshot(
+        let unlockedSnapshot = CompanionSnapshotEngine.snapshot(CompanionSnapshotRequest(
             date: date,
             observances: observances,
             settings: settings,
@@ -235,7 +235,7 @@ final class CompanionSnapshotEngineTests: XCTestCase {
             journeyProgress: progress,
             currentStreak: 0,
             premiumUnlocked: true,
-            calendar: .gregorian)
+            calendar: .gregorian))
 
         let lockedFormation = try XCTUnwrap(lockedSnapshot.secondaryActions.first { $0.id == "formation" })
         let unlockedFormation = try XCTUnwrap(unlockedSnapshot.secondaryActions.first { $0.id == "formation" })

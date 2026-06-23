@@ -1,8 +1,7 @@
 # App Store Connect Submission Checklist (4.0 North America Baseline)
 
-Last reviewed: March 23, 2026
-App: Catholic Fasting
-Scope: United States and Canada storefronts if released together; no EU storefront assumptions in this checklist.
+Last reviewed: March 23, 2026 App: Catholic Fasting Scope: United States and Canada storefronts if
+released together; no EU storefront assumptions in this checklist.
 
 Use this checklist in order while preparing the 4.0 App Store Connect submission.
 
@@ -26,7 +25,8 @@ Use this checklist in order while preparing the 4.0 App Store Connect submission
 
 - [ ] App Price: `Free`
 - [ ] Availability matches actual supported storefronts for 4.0
-- [ ] If Canada is enabled, confirm metadata and review notes no longer describe the app as U.S.-only
+- [ ] If Canada is enabled, confirm metadata and review notes no longer describe the app as
+      U.S.-only
 - [ ] If EU storefronts stay disabled, keep that consistent across privacy/compliance notes
 
 ## 4) App Privacy (Exact Current Posture)
@@ -89,4 +89,5 @@ Source of truth: `release/APP_STORE_METADATA_DRAFT.md`
 - [ ] `Data & Privacy` page is visible and accurate
 - [ ] Consent, export, and delete-all-data flows work end-to-end
 - [ ] English, Spanish, and French Canadian key screens show without clipping in the final build
-- [ ] No references to placeholder URLs, `3.3`, or U.S.-only framing remain in metadata or review notes unless intentionally limited by storefront scope
+- [ ] No references to placeholder URLs, `3.3`, or U.S.-only framing remain in metadata or review
+      notes unless intentionally limited by storefront scope

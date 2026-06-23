@@ -518,7 +518,7 @@ final class CatholicFastingAppUITests: XCTestCase {
         return app.otherElements[markerID].waitForExistence(timeout: timeout)
     }
 
-    func scrollToElement(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 6)
+    func scrollToElement(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 10)
         -> Bool
     {
         if elementIsVisible(element, in: app) {
@@ -542,7 +542,7 @@ final class CatholicFastingAppUITests: XCTestCase {
         return elementIsVisible(element, in: app)
     }
 
-    func scrollToElementPresence(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 6)
+    func scrollToElementPresence(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 10)
         -> Bool
     {
         if element.exists {
@@ -566,7 +566,7 @@ final class CatholicFastingAppUITests: XCTestCase {
         return element.exists
     }
 
-    func scrollToElementInApp(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 6)
+    func scrollToElementInApp(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 10)
         -> Bool
     {
         if elementIsVisible(element, in: app) {
@@ -598,14 +598,14 @@ final class CatholicFastingAppUITests: XCTestCase {
     }
 
     func swipePageUp(in app: XCUIApplication) {
-        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.82))
-        let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.24))
+        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.76))
+        let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.36))
         start.press(forDuration: 0.01, thenDragTo: end)
     }
 
     func swipePageDown(in app: XCUIApplication) {
-        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.24))
-        let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.82))
+        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.36))
+        let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.76))
         start.press(forDuration: 0.01, thenDragTo: end)
     }
 

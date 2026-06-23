@@ -1,10 +1,10 @@
 # App Store Connect Privacy Answers (4.0 Draft)
 
-Last reviewed: March 23, 2026
-App: Catholic Fasting
-Release posture: local-first app with no server-side data collection
+Last reviewed: March 23, 2026 App: Catholic Fasting Release posture: local-first app with no
+server-side data collection
 
-Use this as the current copy/paste baseline in App Store Connect. Final legal/compliance sign-off is still your responsibility.
+Use this as the current copy/paste baseline in App Store Connect. Final legal/compliance sign-off is
+still your responsibility.
 
 ## High-level selection
 
@@ -26,7 +26,8 @@ Use this as the current copy/paste baseline in App Store Connect. Final legal/co
 
 If you add any of the following, these answers likely need to change:
 
-- Remote telemetry uploads (analytics, crash reports, diagnostics) to your backend or a third-party service
+- Remote telemetry uploads (analytics, crash reports, diagnostics) to your backend or a third-party
+  service
 - Account creation, login, or cloud storage on your own backend
 - Push-token collection tied to users
 - Advertising SDKs or cross-app tracking identifiers
@@ -35,6 +36,7 @@ If you add any of the following, these answers likely need to change:
 ## In-app privacy copy alignment
 
 The in-app `Data & Privacy` page states:
+
 - what is stored in app
 - what may be transmitted (manual export or support/email actions only)
 - what is not collected (ad tracking IDs and third-party analytics SDKs)
@@ -42,4 +44,6 @@ The in-app `Data & Privacy` page states:
 
 ## Scope note
 
-This draft is intentionally based on current app behavior, not on a U.S.-only assumption. If storefront scope changes, recheck regional compliance requirements separately from these privacy answers.
+This draft is intentionally based on current app behavior, not on a U.S.-only assumption. If
+storefront scope changes, recheck regional compliance requirements separately from these privacy
+answers.

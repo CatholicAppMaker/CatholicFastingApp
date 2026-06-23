@@ -98,7 +98,9 @@ extension ContentView {
             : localized("premium.journey.preview_title", default: "Preview Guided Seasonal Formation")
         let intro = monetizationStore.premiumUnlocked
             ? localized("premium.journey.current_intro", default: "Premium keeps the current week and next faithful action visible without rebuilding the whole plan.")
-            : localized("premium.journey.preview_intro", default: "This preview shows how premium turns the current season into one weekly rhythm for fasting, prayer, mercy, and review.")
+            : localized(
+                "premium.journey.preview_intro",
+                default: "This preview shows how premium turns the current season into one weekly rhythm for fasting, prayer, mercy, and review.")
         let week = monetizationStore.premiumUnlocked
             ? localizedFormat("premium.journey.current_week_format", default: "Current journey week: %@", journey.title)
             : localizedFormat("premium.journey.preview_week_format", default: "Preview journey week: %@", journey.title)
