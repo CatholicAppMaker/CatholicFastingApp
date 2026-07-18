@@ -24,3 +24,8 @@ DerivedData/
 # Local downloads / installers
 *.dmg
 design/apple/downloads/
+
+# Local product-planning and audit artifacts
+docs/GROWTH_30_DAY_SPRINT.md
+docs/TERRA_STATIC_REVIEW.md
+docs/terra-review-screenshots/
