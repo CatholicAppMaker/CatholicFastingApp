@@ -622,7 +622,13 @@ extension ContentView {
     }
 
     func endIntermittentFastWithReview() {
+        intermittentRecapNoteFocused = false
         intermittentTracker.endFast(intentionID: intermittentIntentionRaw, note: intermittentRecapNote)
+        let didCompleteTarget = intermittentTracker.sessions.first?.completedTarget ?? false
+        let completedTargetSessionCount = intermittentTracker.sessions.count(where: \.completedTarget)
+        requestAppReviewIfEligible(
+            justCompletedTarget: didCompleteTarget,
+            completedTargetSessionCount: completedTargetSessionCount)
         intermittentRecapNote = ""
         resetIntermittentManualStartToNow()
         Task {
@@ -630,7 +636,25 @@ extension ContentView {
         }
     }
 
+    func requestAppReviewIfEligible(
+        justCompletedTarget: Bool,
+        completedTargetSessionCount: Int)
+    {
+        guard AppReviewPromptPolicy.shouldRequestReview(
+            hasRequestedReview: didRequestAppReview,
+            justCompletedTarget: justCompletedTarget,
+            completedTargetSessionCount: completedTargetSessionCount,
+            isUITest: ProcessInfo.processInfo.environment["UITEST_MODE"] == "1")
+        else {
+            return
+        }
+
+        didRequestAppReview = true
+        requestReview()
+    }
+
     func cancelIntermittentFast() {
+        intermittentRecapNoteFocused = false
         intermittentTracker.cancelActiveFast()
         intermittentRecapNote = ""
         resetIntermittentManualStartToNow()

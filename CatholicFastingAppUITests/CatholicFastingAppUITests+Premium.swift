@@ -27,14 +27,15 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(lockedPreview, in: app))
     }
 
-    func testSmokePremiumSubscriptionStoreVisible() {
+    func testSmokePremiumPlanLegalAndJourneyHierarchyVisible() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
         openMoreDestination("Support & Premium", in: app)
 
-        let nativeStore = app.otherElements["premium.subscription_store"].firstMatch
-        XCTAssertTrue(scrollToElement(nativeStore, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.plan_choice", in: app), in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.legal_actions", in: app), in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.journey", in: app), in: app))
     }
 
     func testDeepIPhonePremiumScreenShowsPlansTipsAndLegal() {
@@ -43,7 +44,7 @@ extension CatholicFastingAppUITests {
         ensureOnHomeScreen(app)
         openMoreDestination("Support & Premium", in: app)
 
-        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.subscription_store", in: app), in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.plan_choice", in: app), in: app))
         XCTAssertTrue(scrollToElement(elementByIdentifier("premium.upgrade_summary", in: app), in: app))
         XCTAssertTrue(scrollToElement(app.buttons["premium.restore"].firstMatch, in: app))
         XCTAssertTrue(scrollToElement(app.buttons["premium.manage"].firstMatch, in: app))
@@ -56,12 +57,12 @@ extension CatholicFastingAppUITests {
         ensureOnHomeScreen(app)
         openMoreDestination("Support & Premium", in: app)
 
-        let subscriptionStore = elementByIdentifier("premium.subscription_store", in: app)
-        XCTAssertTrue(scrollToElement(subscriptionStore, in: app))
+        let planChoice = elementByIdentifier("premium.plan_choice", in: app)
+        XCTAssertTrue(scrollToElement(planChoice, in: app))
         XCTAssertTrue(scrollToElement(elementByIdentifier("premium.upgrade_summary", in: app), in: app))
     }
 
-    func testDeepIPhonePremiumTipsAndLegalStayBelowSubscriptionPlans() {
+    func testDeepIPhonePremiumLegalPrecedesJourneyAndTipsRemainOptional() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
@@ -69,14 +70,13 @@ extension CatholicFastingAppUITests {
 
         let tipButton = app.buttons["premium.tip.com.kevpierce.catholicfasting.tip.small"].firstMatch
         let restoreButton = app.buttons["premium.restore"].firstMatch
+        let journey = elementByIdentifier("premium.sample_preview", in: app)
 
-        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.subscription_store", in: app), in: app))
-        _ = scrollToElement(tipButton, in: app)
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.plan_choice", in: app), in: app))
         XCTAssertTrue(scrollToElement(restoreButton, in: app))
-
-        if tipButton.exists {
-            XCTAssertLessThan(tipButton.frame.minY, restoreButton.frame.minY)
-        }
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.legal.terms", in: app), in: app))
+        XCTAssertTrue(scrollToElement(journey, in: app))
+        _ = scrollToElement(tipButton, in: app)
     }
 
     func testDeepIPhonePremiumShowsJourneyPreview() {
@@ -111,12 +111,10 @@ extension CatholicFastingAppUITests {
 
         openIPadMoreDestination("supportAndPremium", in: app)
 
-        let premiumWorkspace = app.otherElements["ipad.premium.workspace"].firstMatch
+        let premiumWorkspace = app.otherElements["ipad.more.premium"].firstMatch
         XCTAssertTrue(premiumWorkspace.waitForExistence(timeout: 4))
-        XCTAssertTrue(app.otherElements["ipad.premium.dashboard"].waitForExistence(timeout: 4))
-        XCTAssertTrue(app.otherElements["ipad.premium.legal_footer"].waitForExistence(timeout: 4))
         XCTAssertTrue(scrollToElement(elementByIdentifier("premium.legal.terms", in: app), in: app))
-        XCTAssertTrue(scrollToElement(app.links["Privacy Policy"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.legal.privacy", in: app), in: app))
     }
 
     func testIPadPremiumWorkspaceShowsJourneyOrPlanContext() {
@@ -166,44 +164,49 @@ extension CatholicFastingAppUITests {
         openIPadMoreDestination("supportAndPremium", in: app)
 
         XCTAssertTrue(scrollToElement(app.staticTexts["Support & Premium"].firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.subscription_store", in: app), in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.plan_choice", in: app), in: app))
         XCTAssertTrue(scrollToElement(elementByIdentifier("premium.upgrade_summary", in: app), in: app))
         XCTAssertTrue(scrollToElement(app.buttons["premium.restore"].firstMatch, in: app))
         XCTAssertTrue(scrollToElement(elementByIdentifier("premium.legal.terms", in: app), in: app))
     }
 
-    func testIPadPremiumYearlyAppearsBeforeMonthly() {
+    func testIPadPremiumPlanChoicePrecedesLegalAndJourney() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
 
         openIPadMoreDestination("supportAndPremium", in: app)
 
-        let subscriptionStore = elementByIdentifier("premium.subscription_store", in: app)
-        let upgradeSummary = elementByIdentifier("premium.upgrade_summary", in: app)
-        XCTAssertTrue(scrollToElement(subscriptionStore, in: app))
-        XCTAssertTrue(scrollToElement(upgradeSummary, in: app))
-        XCTAssertLessThan(subscriptionStore.frame.minY, upgradeSummary.frame.minY)
+        let planChoice = elementByIdentifier("premium.plan_choice", in: app)
+        let planState = elementByIdentifier("premium.plan_choice_state", in: app)
+        let legal = elementByIdentifier("premium.legal_actions", in: app)
+        let journey = elementByIdentifier("premium.sample_preview", in: app)
+        XCTAssertTrue(planChoice.waitForExistence(timeout: 4))
+        XCTAssertTrue(planState.waitForExistence(timeout: 4), "The plan-choice heading must never be followed by a blank state")
+        XCTAssertTrue(legal.waitForExistence(timeout: 4))
+        XCTAssertTrue(journey.waitForExistence(timeout: 4))
+        XCTAssertLessThan(planChoice.frame.minY, legal.frame.minY)
+        XCTAssertLessThan(legal.frame.minY, journey.frame.minY)
     }
 
-    func testIPadPremiumTipsAndLegalStayBelowSubscriptionPlans() {
+    func testIPadPremiumTipsRemainOptionalAfterCoreHierarchy() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
 
         openIPadMoreDestination("supportAndPremium", in: app)
 
-        let subscriptionStore = elementByIdentifier("premium.subscription_store", in: app)
+        let planChoice = elementByIdentifier("premium.plan_choice", in: app)
         let tipButton = app.buttons["ipad.more.tip.com.kevpierce.catholicfasting.tip.small"].firstMatch
-        let restoreButton = app.buttons["premium.restore"].firstMatch
+        let legal = elementByIdentifier("premium.legal_actions", in: app)
+        let journey = elementByIdentifier("premium.sample_preview", in: app)
 
-        XCTAssertTrue(scrollToElement(subscriptionStore, in: app))
-        _ = scrollToElement(tipButton, in: app)
-        XCTAssertTrue(scrollToElement(restoreButton, in: app))
+        XCTAssertTrue(planChoice.waitForExistence(timeout: 4))
+        XCTAssertTrue(legal.waitForExistence(timeout: 4))
+        XCTAssertTrue(journey.waitForExistence(timeout: 4))
 
         if tipButton.exists {
-            XCTAssertLessThan(subscriptionStore.frame.minY, tipButton.frame.minY)
-            XCTAssertLessThan(tipButton.frame.minY, restoreButton.frame.minY)
+            XCTAssertLessThan(journey.frame.minY, tipButton.frame.minY)
         }
     }
 }

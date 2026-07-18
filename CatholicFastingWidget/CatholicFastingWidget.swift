@@ -107,50 +107,71 @@ private struct Provider: TimelineProvider {
 
 private struct CatholicFastingWidgetView: View {
     let entry: FastingEntry
+    @Environment(\.widgetFamily) private var family
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text("Today")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.secondary)
-            Text(entry.todayTitle)
-                .font(.headline)
-                .lineLimit(2)
-            Text(entry.todayObligation)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-
-            Divider()
-
-            Text("Next Required")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.secondary)
-            Text(entry.nextRequiredTitle)
-                .font(.subheadline)
-                .lineLimit(2)
-
-            HStack {
-                Text("Rhythm")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-                Spacer()
-                Text("\(Int((entry.completionRate * 100).rounded()))%")
-                    .font(.caption2.weight(.semibold))
-            }
-
-            Text(entry.premiumMotivationLine)
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-                .lineLimit(2)
-
-            if entry.hasActiveIntermittentFast {
-                Label("Active intermittent fast", systemImage: "timer")
-                    .font(.caption2)
-                    .foregroundStyle(.green)
+        Group {
+            switch family {
+            case .systemMedium:
+                mediumContent
+            default:
+                smallContent
             }
         }
         .widgetURL(URL(string: "catholicfasting://today"))
         .containerBackground(.fill.tertiary, for: .widget)
+    }
+
+    private var smallContent: some View {
+        VStack(alignment: .leading, spacing: 7) {
+            Label("Today", systemImage: entry.hasActiveIntermittentFast ? "timer" : "cross.case.fill")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+                .widgetAccentable()
+            Text(entry.todayObligation)
+                .font(.system(.headline, design: .serif).weight(.bold))
+                .lineLimit(3)
+            Spacer(minLength: 0)
+            Text(entry.todayTitle)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .lineLimit(2)
+        }
+    }
+
+    private var mediumContent: some View {
+        HStack(alignment: .top, spacing: 16) {
+            VStack(alignment: .leading, spacing: 7) {
+                Text("TODAY")
+                    .font(.caption2.weight(.bold))
+                    .foregroundStyle(.secondary)
+                Text(entry.todayObligation)
+                    .font(.system(.headline, design: .serif).weight(.bold))
+                    .lineLimit(3)
+                Text(entry.todayTitle)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(2)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            Divider()
+
+            VStack(alignment: .leading, spacing: 7) {
+                Text("NEXT REQUIRED")
+                    .font(.caption2.weight(.bold))
+                    .foregroundStyle(.secondary)
+                Text(entry.nextRequiredTitle)
+                    .font(.subheadline.weight(.semibold))
+                    .lineLimit(3)
+                if let nextRequiredDate = entry.nextRequiredDate {
+                    Text(nextRequiredDate, format: .dateTime.month(.abbreviated).day())
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
     }
 }
 
@@ -162,7 +183,7 @@ struct CatholicFastingWidget: Widget {
             CatholicFastingWidgetView(entry: entry)
         }
         .configurationDisplayName("Catholic Fasting")
-        .description("See today, the next required observance, and your fasting rhythm.")
+        .description("See today's guidance and the next required observance.")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
 }

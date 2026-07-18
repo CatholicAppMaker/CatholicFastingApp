@@ -63,6 +63,7 @@ extension ContentView {
                     }
 
                     ipadIntermittentPrimaryActionRow
+                    intermittentFirstViewportContext
                 }
                 .id(activeStart)
             } else if let latestSession = intermittentTracker.sessions.first {
@@ -111,6 +112,7 @@ extension ContentView {
                         Text(localized("ipad.intermittent.live.empty_detail", default: "Choose a quick plan below, then start when ready."))
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
+                        intermittentFirstViewportContext
                     }
                 }
             }
@@ -183,6 +185,16 @@ extension ContentView {
                     axis: .vertical)
                     .lineLimit(2 ... 4)
                     .textInputAutocapitalization(.sentences)
+                    .focused($intermittentRecapNoteFocused)
+                    .toolbar {
+                        ToolbarItemGroup(placement: .keyboard) {
+                            Spacer()
+                            Button(localized("common.done", default: "Done")) {
+                                intermittentRecapNoteFocused = false
+                            }
+                            .accessibilityIdentifier("ipad.intermittent.recap_note.done")
+                        }
+                    }
                     .accessibilityIdentifier("ipad.intermittent.recap_note")
             }
 

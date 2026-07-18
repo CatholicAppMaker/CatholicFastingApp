@@ -136,16 +136,7 @@ extension CatholicFastingAppUITests {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
-        openSurface("Today", in: app)
-
-        let setupButton = app.buttons["today.setup.open_quick_setup"].firstMatch
-        XCTAssertTrue(scrollToElement(setupButton, in: app))
-        setupButton.tap()
-
-        XCTAssertTrue(app.otherElements["surface.more.ready"].waitForExistence(timeout: 4))
-        let setupDestination = app.staticTexts["Setup & Reminders"].firstMatch
-        XCTAssertTrue(scrollToElement(setupDestination, in: app))
-        setupDestination.tap()
+        openMoreDestination("Setup & Reminders", in: app)
 
         let quickProgress = app.staticTexts["settings.quick.progress"].firstMatch
         XCTAssertTrue(scrollToElement(quickProgress, in: app))

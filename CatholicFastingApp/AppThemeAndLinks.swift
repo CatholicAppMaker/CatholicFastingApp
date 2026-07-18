@@ -1,5 +1,8 @@
 import Foundation
 import SwiftUI
+#if canImport(UIKit)
+import UIKit
+#endif
 
 enum AppURLFactory {
     static func make(_ rawValue: String) -> URL {
@@ -89,15 +92,25 @@ enum CatholicTheme {
     }
 
     static var activePalette: Palette {
+        palette(seasonModeEnabled: seasonColorsEnabled, date: Date())
+    }
+
+    private static var seasonColorsEnabled: Bool {
         let enabled =
             UserDefaults.standard.object(forKey: StorageKeys.liturgicalSeasonColorsEnabled) == nil
                 ? true
                 : UserDefaults.standard.bool(forKey: StorageKeys.liturgicalSeasonColorsEnabled)
-        return palette(seasonModeEnabled: enabled, date: Date())
+        return enabled
     }
 
     static var primary: Color {
+        #if canImport(UIKit)
+        adaptiveColor(
+            light: UIColor(activePalette.primary),
+            dark: darkPrimaryColor(for: activePalette.season, seasonModeEnabled: seasonColorsEnabled))
+        #else
         activePalette.primary
+        #endif
     }
 
     static var accent: Color {
@@ -105,23 +118,53 @@ enum CatholicTheme {
     }
 
     static var accentForeground: Color {
+        #if canImport(UIKit)
+        adaptiveColor(
+            light: UIColor(activePalette.accentForeground),
+            dark: darkPrimaryColor(for: activePalette.season, seasonModeEnabled: seasonColorsEnabled))
+        #else
         activePalette.accentForeground
+        #endif
     }
 
     static var successForeground: Color {
+        #if canImport(UIKit)
+        adaptiveColor(
+            light: UIColor(red: 0.05, green: 0.36, blue: 0.13, alpha: 1),
+            dark: UIColor(red: 0.40, green: 0.84, blue: 0.50, alpha: 1))
+        #else
         Color(red: 0.05, green: 0.36, blue: 0.13)
+        #endif
     }
 
     static var warningForeground: Color {
+        #if canImport(UIKit)
+        adaptiveColor(
+            light: UIColor(red: 0.56, green: 0.28, blue: 0.03, alpha: 1),
+            dark: UIColor(red: 0.95, green: 0.70, blue: 0.38, alpha: 1))
+        #else
         Color(red: 0.56, green: 0.28, blue: 0.03)
+        #endif
     }
 
     static var infoForeground: Color {
+        #if canImport(UIKit)
+        adaptiveColor(
+            light: UIColor(red: 0.05, green: 0.28, blue: 0.58, alpha: 1),
+            dark: UIColor(red: 0.48, green: 0.70, blue: 1.00, alpha: 1))
+        #else
         Color(red: 0.05, green: 0.28, blue: 0.58)
+        #endif
     }
 
     static var dangerForeground: Color {
+        #if canImport(UIKit)
+        adaptiveColor(
+            light: UIColor(red: 0.62, green: 0.08, blue: 0.08, alpha: 1),
+            dark: UIColor(red: 1.00, green: 0.55, blue: 0.55, alpha: 1))
+        #else
         Color(red: 0.62, green: 0.08, blue: 0.08)
+        #endif
     }
 
     static var parchment: Color {
@@ -133,7 +176,14 @@ enum CatholicTheme {
     }
 
     static var cardBorder: Color {
+        #if canImport(UIKit)
+        adaptiveColor(
+            light: UIColor(activePalette.cardBorder),
+            dark: darkPrimaryColor(for: activePalette.season, seasonModeEnabled: seasonColorsEnabled)
+                .withAlphaComponent(0.72))
+        #else
         activePalette.cardBorder
+        #endif
     }
 
     static var seasonLabel: String {
@@ -156,6 +206,36 @@ enum CatholicTheme {
             startPoint: .topLeading,
             endPoint: .bottomTrailing)
     }
+
+    #if canImport(UIKit)
+    private static func adaptiveColor(light: UIColor, dark: UIColor) -> Color {
+        Color(uiColor: UIColor { traits in
+            traits.userInterfaceStyle == .dark ? dark : light
+        })
+    }
+
+    private static func darkPrimaryColor(
+        for season: LiturgicalSeason,
+        seasonModeEnabled: Bool) -> UIColor
+    {
+        guard seasonModeEnabled else {
+            return UIColor(red: 0.95, green: 0.62, blue: 0.67, alpha: 1)
+        }
+
+        return switch season {
+        case .ordinary:
+            UIColor(red: 0.43, green: 0.82, blue: 0.52, alpha: 1)
+        case .advent:
+            UIColor(red: 0.66, green: 0.71, blue: 1.00, alpha: 1)
+        case .christmas:
+            UIColor(red: 0.95, green: 0.77, blue: 0.42, alpha: 1)
+        case .lent:
+            UIColor(red: 0.80, green: 0.64, blue: 0.94, alpha: 1)
+        case .easter:
+            UIColor(red: 0.55, green: 0.83, blue: 0.61, alpha: 1)
+        }
+    }
+    #endif
 
     static func palette(seasonModeEnabled: Bool, date: Date) -> Palette {
         guard seasonModeEnabled else {

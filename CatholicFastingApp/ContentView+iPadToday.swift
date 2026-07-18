@@ -25,11 +25,23 @@ extension ContentView {
             uiTestMarker("ipad.today.primary_card")
             uiTestMarker("ipad.today.metrics")
             uiTestMarker("ipad.today.actions")
-            companionIPadTriad(stacked: compact || width < 1180)
-            ipadTodayWorkspaceColumns(regionContext: regionContext, width: width, compact: compact)
-            ipadTodayHeroBand(regionContext: regionContext, compact: true)
+            companionIPadEditorialLayout(stacked: width < 960 || dynamicTypeSize.isAccessibilitySize)
+
+            if width < 1040 {
+                VStack(alignment: .leading, spacing: 20) {
+                    ipadTodayPlanningCard
+                    ipadTodayRecoveryCard
+                    ipadTodayTrustCard(regionContext: regionContext)
+                }
+            } else {
+                HStack(alignment: .top, spacing: 24) {
+                    ipadTodayPlanningCard
+                    ipadTodayRecoveryCard
+                    ipadTodayTrustCard(regionContext: regionContext)
+                }
+            }
         }
-        .padding(20)
+        .padding(28)
     }
 
     private func ipadTodayHeroBand(regionContext: RegionalRuleContext, compact: Bool) -> some View {

@@ -6,7 +6,7 @@ import StoreKit
 extension ContentView {
     var ipadMoreWorkspace: some View {
         GeometryReader { geometry in
-            let stacked = geometry.size.width < 1200 || dynamicTypeSize.isAccessibilitySize
+            let stacked = geometry.size.width < 700 || dynamicTypeSize.isAccessibilitySize
             let destination = selectedMoreDestination ?? MoreHubDestination.allCases.first ?? .supportAndPremium
 
             Group {
@@ -38,7 +38,7 @@ extension ContentView {
                     }
                 }
             }
-            .padding(20)
+            .padding(28)
         }
     }
 
@@ -53,14 +53,12 @@ extension ContentView {
                     serifTitle: true,
                     style: .utility)
 
-                ipadPremiumFormationPreviewCard
-
                 #if canImport(StoreKit)
-                VStack(alignment: .leading, spacing: 12) {
-                    ForEach(monetizationStore.premiumProducts, id: \.id) { product in
-                        ipadCompactPremiumOfferCard(product: product, offer: premiumOfferCatalog.offer(for: product.id))
-                    }
-                }
+                ipadPremiumPlanChoiceSection
+
+                ipadCompactPremiumUtilitiesCard
+
+                ipadPremiumFormationPreviewCard
 
                 if !monetizationStore.tipProducts.isEmpty {
                     VStack(alignment: .leading, spacing: 10) {
@@ -80,16 +78,65 @@ extension ContentView {
                     }
                     .padding(14)
                     .appSurfaceCard(.utility, cornerRadius: 16)
+                    .accessibilityIdentifier("premium.optional_tips")
                 }
                 #endif
 
-                ipadCompactPremiumUtilitiesCard
             }
             .padding(18)
         }
         .iPadPaneCard()
         .accessibilityIdentifier("ipad.more.premium")
     }
+
+    #if canImport(StoreKit)
+    @ViewBuilder
+    var ipadPremiumPlanChoiceSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(localized("premium.plan_choice.title", default: "Plan choice"))
+                .appEyebrowStyle()
+                .accessibilityIdentifier("premium.plan_choice")
+
+            if monetizationStore.premiumUnlocked {
+                VStack(alignment: .leading, spacing: 8) {
+                    Label(
+                        localized("premium.active.label", default: "Premium is active."),
+                        systemImage: "checkmark.seal.fill")
+                        .appSectionTitleStyle(serif: true)
+                    Text(
+                        localized(
+                            "premium.active.summary",
+                            default: "Your guided journey, reminders, reflection, and export tools are unlocked."))
+                        .appSupportingTextStyle()
+                    Text(localized("premium.active.manage_hint", default: "Manage or restore access below whenever you need it."))
+                        .appEyebrowStyle()
+                }
+                .padding(14)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .appSurfaceCard(.primary, cornerRadius: 16)
+                .accessibilityIdentifier("premium.plan_choice_state")
+            } else if monetizationStore.isLoading {
+                HStack(spacing: 8) {
+                    ProgressView()
+                    Text(localized("premium.upgrade.loading", default: "Loading purchases…"))
+                        .appSupportingTextStyle()
+                }
+                .accessibilityIdentifier("premium.plan_choice_state")
+            } else if monetizationStore.premiumProducts.isEmpty {
+                Text(
+                    localized(
+                        "premium.upgrade.unavailable",
+                        default: "Premium plans are temporarily unavailable. Try again in a moment, then use Restore Purchases if needed."))
+                    .appSupportingTextStyle()
+                    .accessibilityIdentifier("premium.plan_choice_state")
+            } else {
+                ForEach(monetizationStore.premiumProducts, id: \.id) { product in
+                    ipadCompactPremiumOfferCard(product: product, offer: premiumOfferCatalog.offer(for: product.id))
+                }
+            }
+        }
+    }
+    #endif
 
     var ipadPremiumFormationPreviewCard: some View {
         let journey = premiumGuidedJourneyWeek
@@ -177,7 +224,7 @@ extension ContentView {
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
         .appSurfaceCard(offer?.isPrimaryAnchor == true ? .primary : .standard, cornerRadius: 16)
-        .appRoundedGlass(cornerRadius: 16)
+        .accessibilityIdentifier("premium.offer.\(product.id)")
     }
     #endif
 
@@ -219,5 +266,7 @@ extension ContentView {
         }
         .padding(14)
         .appSurfaceCard(.utility, cornerRadius: 16)
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("premium.legal_actions")
     }
 }

@@ -16,12 +16,11 @@ extension View {
     }
 
     func appRootBackground() -> some View {
-        background(CatholicTheme.background)
+        modifier(SacredEditorialBackground())
     }
 
     func appListBackground() -> some View {
-        scrollContentBackground(.hidden)
-            .background(CatholicTheme.background)
+        modifier(SacredEditorialListBackground())
     }
 
     func phoneTabBarScrollClearance() -> some View {
@@ -144,6 +143,7 @@ private struct AppSelectedAccessibilityModifier: ViewModifier {
 }
 
 private struct AppInteractiveTileModifier: ViewModifier {
+    @Environment(\.colorScheme) private var colorScheme
     let isSelected: Bool
     let cornerRadius: CGFloat
     let selectedTint: Color
@@ -155,11 +155,11 @@ private struct AppInteractiveTileModifier: ViewModifier {
             .frame(minHeight: 52)
             .background(
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .fill(isSelected ? selectedTint.opacity(0.12) : CatholicTheme.parchment.opacity(0.88))
+                    .fill(isSelected ? selectedTint.opacity(0.14) : SacredEditorialTokens.quietSurface(for: colorScheme))
                     .allowsHitTesting(false))
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .stroke(isSelected ? selectedTint : CatholicTheme.cardBorder.opacity(0.35), lineWidth: 1)
+                    .stroke(isSelected ? selectedTint.opacity(0.7) : CatholicTheme.primary.opacity(0.12), lineWidth: 1)
                     .allowsHitTesting(false))
             .shadow(color: isSelected ? selectedTint.opacity(0.10) : .clear, radius: 10, y: 4)
     }
@@ -196,6 +196,7 @@ enum AppSurfaceCardStyle {
 }
 
 struct AppSurfaceCardModifier: ViewModifier {
+    @Environment(\.colorScheme) private var colorScheme
     let style: AppSurfaceCardStyle
     let cornerRadius: CGFloat
 
@@ -205,19 +206,17 @@ struct AppSurfaceCardModifier: ViewModifier {
         content
             .background(
                 RoundedRectangle(cornerRadius: resolvedCornerRadius, style: .continuous)
-                    .fill(CatholicTheme.parchment.opacity(style.fillOpacity))
+                    .fill(
+                        style == .primary
+                            ? SacredEditorialTokens.raisedSurface(for: colorScheme)
+                            : SacredEditorialTokens.quietSurface(for: colorScheme))
                     .allowsHitTesting(false))
-            .overlay(
-                RoundedRectangle(cornerRadius: resolvedCornerRadius, style: .continuous)
-                    .fill(CatholicTheme.accent.opacity(style.tintOpacity))
-                    .allowsHitTesting(false))
-            .overlay(
-                RoundedRectangle(cornerRadius: resolvedCornerRadius, style: .continuous)
-                    .stroke(CatholicTheme.cardBorder.opacity(style.strokeOpacity), lineWidth: 1)
-                    .allowsHitTesting(false))
-            .shadow(
-                color: CatholicTheme.primary.opacity(style == .primary ? 0.055 : 0.018),
-                radius: style == .primary ? 10 : 4,
-                y: style == .primary ? 5 : 2)
+            .overlay {
+                if style == .primary {
+                    RoundedRectangle(cornerRadius: resolvedCornerRadius, style: .continuous)
+                        .stroke(CatholicTheme.primary.opacity(colorScheme == .dark ? 0.30 : 0.22), lineWidth: 1)
+                        .allowsHitTesting(false)
+                }
+            }
     }
 }

@@ -43,8 +43,8 @@
 "guidance.sources.feedback_link" = "Envoyer des commentaires";
 
 "home.surface.today" = "Aujourd’hui";
-"home.surface.fasting_days" = "Jours de jeûne";
-"home.surface.intermittent" = "Suivi du jeûne";
+"home.surface.fasting_days" = "Calendrier";
+"home.surface.intermittent" = "Jeûne";
 "home.surface.more" = "Plus";
 
 "more.destination.support.title" = "Soutien et Premium";
@@ -620,6 +620,7 @@
 "today.recovery.focus" = "Mettre l’accent sur le prochain jour obligatoire";
 "today.share.section" = "Partager le rythme";
 "today.share.intro_format" = "Vous avez complété %d jours de discipline obligatoires cette année. Partagez ce rythme avec quelqu’un qui pourrait vouloir un plan de jeûne plus paisible.";
+"today.share.message_format" = "Catholic Fasting m’aide à garder un rythme régulier grâce à des conseils quotidiens, à la planification et au suivi du jeûne. En savoir plus : %@";
 "today.share.subject" = "Catholic Fasting";
 "today.share.button" = "Partager Catholic Fasting";
 "today.season.section" = "Accent du temps";
@@ -699,6 +700,7 @@
 "premium.active.open_tools" = "Ouvrir les outils de formation";
 "premium.active.title" = "Premium actif";
 "premium.active.summary" = "Votre parcours guidé, vos rappels, vos outils de réflexion et vos exportations sont déverrouillés.";
+"premium.active.manage_hint" = "Gérez ou restaurez l’accès ci-dessous lorsque vous en avez besoin.";
 "premium.locked.summary" = "Demeurez constant tout au long de l’année liturgique grâce à un parcours hebdomadaire de formation, des rappels et une révision.";
 "premium.locked.adds" = "La formation guidée ajoute :";
 "premium.trust.title" = "Pourquoi les utilisateurs passent à Premium";
@@ -1003,3 +1005,21 @@
 "companion.next_required.none" = "Rien à venir";
 "companion.action.start_fast.title" = "Commencer un jeûne fidèle";
 "companion.action.start_fast.detail" = "Choisissez une intention et gardez le prochain rythme prudent.";
+"fasting_days.list.agenda_hint" = "Sélectionnez une observance pour consulter la règle, le contexte régional, les sources et les options de rappel.";
+"fasting_days.detail.title" = "Observance";
+"fasting_days.detail.why" = "Pourquoi ce jour compte";
+"fasting_days.detail.region" = "Application régionale";
+"fasting_days.detail.profile" = "Profil";
+"fasting_days.detail.authority" = "Autorité";
+"fasting_days.detail.support" = "Prise en charge de la règle";
+"fasting_days.detail.sources" = "Sources et transparence";
+"fasting_days.detail.open_source" = "Ouvrir les directives officielles";
+"fasting_days.detail.actions" = "Actions";
+"fasting_days.detail.status" = "État de l’observance";
+"fasting_days.detail.schedule" = "Planifier un rappel pour le jour obligatoire";
+"fasting_days.detail.reminder_settings" = "Ouvrir les réglages de rappels";
+"intermittent.live.optional_practice" = "Pratique personnelle facultative";
+"intermittent.live.intention_format" = "Intention : %@";
+"intermittent.live.prudence" = "Ce suivi ne crée pas une obligation de l’Église. Arrêtez ou adaptez le jeûne si vous vous sentez mal, et demandez un avis médical ou pastoral au besoin.";
+"common.done" = "Terminé";
+"premium.plan_choice.title" = "Choix du forfait";

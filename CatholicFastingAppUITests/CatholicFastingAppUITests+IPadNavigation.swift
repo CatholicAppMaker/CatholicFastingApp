@@ -38,7 +38,7 @@ extension CatholicFastingAppUITests {
         ]
 
         for destination in destinations {
-            openSurface("More", in: app)
+            openSurfaceThroughVisibleNavigation("More", in: app)
 
             let row = elementByIdentifier("more.hub.\(destination)", in: app)
             XCTAssertTrue(scrollToElement(row, in: app), "Unable to find iPhone More destination row \(destination)")
@@ -51,6 +51,16 @@ extension CatholicFastingAppUITests {
             XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 4), "More destination \(title) did not open")
             assertIPhoneMoreDestinationContent(destination, in: app)
             returnToMoreHome(in: app)
+        }
+    }
+
+    func testIPhoneVisibleTabBarSwitchesAllPrimarySurfaces() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        for surface in ["Fasting Days", "Track Fast", "More", "Today"] {
+            openSurfaceThroughVisibleNavigation(surface, in: app)
         }
     }
 
@@ -187,7 +197,7 @@ extension CatholicFastingAppUITests {
 
         XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
         XCTAssertTrue(scrollToElement(app.staticTexts["Support & Premium"].firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.subscription_store", in: app), in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.plan_choice", in: app), in: app))
     }
 
     func testIPadTodayAndMoreCanBeVisitedRepeatedly() {
@@ -227,7 +237,7 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(openPremium, in: app))
         openPremium.tap()
         XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
-        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.subscription_store", in: app), in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.plan_choice", in: app), in: app))
     }
 
     func testIPadTodayQuickActionsRemainResponsiveAcrossRepeatedCycles() {
@@ -255,7 +265,7 @@ extension CatholicFastingAppUITests {
             XCTAssertTrue(scrollToElement(openPremium, in: app))
             openPremium.tap()
             XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
-            XCTAssertTrue(scrollToElement(elementByIdentifier("premium.subscription_store", in: app), in: app))
+            XCTAssertTrue(scrollToElement(elementByIdentifier("premium.plan_choice", in: app), in: app))
         }
     }
 

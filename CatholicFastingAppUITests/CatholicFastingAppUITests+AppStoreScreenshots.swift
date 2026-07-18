@@ -201,6 +201,9 @@ extension CatholicFastingAppUITests {
             ensureOnHomeScreen(app)
             openIPadSurface("fastingDays", in: app)
             XCTAssertTrue(app.otherElements["ipad.fasting_days.workspace"].waitForExistence(timeout: 4))
+            let yearPicker = elementByIdentifier("ipad.fasting_days.year", in: app)
+            XCTAssertTrue(yearPicker.waitForExistence(timeout: 4))
+            XCTAssertEqual(yearPicker.value as? String, "2026", "Calendar years must render as verbatim dates without thousands separators")
         }
 
         try captureAppStoreScreen("03-ipad-track-fast", seedActiveFast: true) { app in
@@ -215,6 +218,7 @@ extension CatholicFastingAppUITests {
             ensureOnHomeScreen(app)
             openIPadMoreDestination("supportAndPremium", in: app)
             XCTAssertTrue(app.otherElements["ipad.more.premium"].waitForExistence(timeout: 4))
+            XCTAssertTrue(elementByIdentifier("premium.plan_choice_state", in: app).waitForExistence(timeout: 4))
         }
 
         try captureAppStoreScreen("05-ipad-more") { app in
@@ -246,6 +250,10 @@ extension CatholicFastingAppUITests {
     }
 
     private func dismissSystemNotificationBanner(in app: XCUIApplication) {
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        let banner = springboard.otherElements["NotificationShortLookView"].firstMatch
+        guard banner.exists else { return }
+
         let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.14))
         let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.02))
         start.press(forDuration: 0.05, thenDragTo: end)

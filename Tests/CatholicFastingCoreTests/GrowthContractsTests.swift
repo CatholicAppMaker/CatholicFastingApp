@@ -2,6 +2,33 @@
 import XCTest
 
 final class GrowthContractsTests: XCTestCase {
+
+    func testReviewPromptRequiresThirdSuccessfulFastAndOneTimeEligibility() {
+        XCTAssertFalse(
+            AppReviewPromptPolicy.shouldRequestReview(
+                hasRequestedReview: false,
+                justCompletedTarget: true,
+                completedTargetSessionCount: 2,
+                isUITest: false))
+        XCTAssertFalse(
+            AppReviewPromptPolicy.shouldRequestReview(
+                hasRequestedReview: false,
+                justCompletedTarget: false,
+                completedTargetSessionCount: 3,
+                isUITest: false))
+        XCTAssertFalse(
+            AppReviewPromptPolicy.shouldRequestReview(
+                hasRequestedReview: true,
+                justCompletedTarget: true,
+                completedTargetSessionCount: 3,
+                isUITest: false))
+        XCTAssertTrue(
+            AppReviewPromptPolicy.shouldRequestReview(
+                hasRequestedReview: false,
+                justCompletedTarget: true,
+                completedTargetSessionCount: 3,
+                isUITest: false))
+    }
     override func setUp() {
         super.setUp()
         beginStoreIsolation()

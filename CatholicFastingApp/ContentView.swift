@@ -1,4 +1,5 @@
 import SwiftUI
+import StoreKit
 #if canImport(UIKit)
 import UIKit
 #endif
@@ -14,6 +15,7 @@ struct ContentView: View {
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @Environment(\.requestReview) var requestReview
     @State var year = Calendar.current.component(.year, from: Date())
     @StateObject var tracker = FastTracker()
     @StateObject var penanceNotes = FridayPenanceNotes()
@@ -44,6 +46,7 @@ struct ContentView: View {
     @State var newIntermittentScheduleWeekdays: Set<Int> = [2, 4, 6]
     @State var intermittentManualStart = Date()
     @State var intermittentRecapNote = ""
+    @FocusState var intermittentRecapNoteFocused: Bool
     @State var lastTargetReachedHapticKey = ""
     @State var lastEatingWindowClosedHapticKey = ""
     @State var householdProfiles = LocalFeatureStore.loadProfiles()
@@ -106,6 +109,7 @@ struct ContentView: View {
     @AppStorage(StorageKeys.intermittentIntention) var intermittentIntentionRaw = DefaultValues.intermittentIntention
     @AppStorage(StorageKeys.intermittentTargetReminderEnabled) var intermittentTargetReminderEnabled =
         DefaultValues.intermittentTargetReminderEnabled
+    @AppStorage(StorageKeys.didRequestAppReview) var didRequestAppReview = false
 
     var settings: RuleSettings {
         RuleSettings(

@@ -97,13 +97,16 @@ extension ContentView {
 
     var premiumAndSupportSection: some View {
         Section {
-            premiumJourneyCardWithStoreMarker
-
             premiumStatusSummaryCard
 
             if monetizationStore.premiumUnlocked {
+                premiumLegalSupportCard
+                premiumJourneyCardWithStoreMarker
                 premiumActiveStateCard
             } else {
+                Text(localized("premium.plan_choice.title", default: "Plan choice"))
+                    .appEyebrowStyle()
+                    .accessibilityIdentifier("premium.plan_choice")
                 Text(localized("premium.upgrade.choose_plan", default: "Choose the yearly or monthly plan below."))
                     .appSupportingTextStyle()
                     .accessibilityIdentifier("premium.upgrade_summary")
@@ -128,6 +131,10 @@ extension ContentView {
                         .appSupportingTextStyle()
                 }
 
+                premiumLegalSupportCard
+
+                premiumJourneyCardWithStoreMarker
+
                 if !monetizationStore.tipProducts.isEmpty {
                     premiumTipsSupportCard
                 }
@@ -140,7 +147,6 @@ extension ContentView {
                 }
             }
 
-            premiumLegalSupportCard
             premiumStoreFeedbackSection
         }
         .animation(.none, value: monetizationStore.premiumProducts.map(\.id))
@@ -161,6 +167,8 @@ extension ContentView {
                 .frame(width: 1, height: 1)
                 .accessibilityIdentifier("premium.subscription_store")
         }
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("premium.journey")
     }
 
     @ViewBuilder
@@ -512,6 +520,8 @@ extension ContentView {
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
         .appSurfaceCard(.utility, cornerRadius: 16)
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("premium.legal_actions")
     }
 
     func premiumIconName(for surface: PremiumEntitlementSurface) -> String {

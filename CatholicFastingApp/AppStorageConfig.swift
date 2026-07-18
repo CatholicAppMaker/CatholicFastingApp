@@ -62,4 +62,5 @@ enum StorageKeys {
     static let supportPremiumSurface = "support_premium_surface"
     static let intermittentIntention = "intermittent_intention"
     static let intermittentTargetReminderEnabled = "intermittent_target_reminder_enabled"
+    static let didRequestAppReview = "did_request_app_review"
 }

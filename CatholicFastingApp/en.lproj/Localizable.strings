@@ -216,6 +216,7 @@
 "today.recovery.focus" = "Focus next required day";
 "today.share.section" = "Share the rhythm";
 "today.share.intro_format" = "You have completed %d required discipline days this year. Share the rhythm with someone who may want a calmer fasting plan.";
+"today.share.message_format" = "Catholic Fasting helps me stay steady with daily fasting guidance, planning, and tracking. Learn more: %@";
 "today.share.subject" = "Catholic Fasting";
 "today.share.button" = "Share Catholic Fasting";
 "today.season.section" = "Season focus";
@@ -295,6 +296,7 @@
 "premium.active.open_tools" = "Open Formation Tools";
 "premium.active.title" = "Premium active";
 "premium.active.summary" = "Your guided journey, reminders, reflection, and export tools are unlocked.";
+"premium.active.manage_hint" = "Manage or restore access below whenever you need it.";
 "premium.locked.summary" = "Stay steady through the Church year with one weekly formation path, reminders, and review.";
 "premium.locked.adds" = "Guided formation adds:";
 "premium.trust.title" = "Why users upgrade";
@@ -426,3 +428,21 @@
 "companion.next_required.none" = "None ahead";
 "companion.action.start_fast.title" = "Start a faithful fast";
 "companion.action.start_fast.detail" = "Choose an intention and keep the next rhythm prudent.";
+"fasting_days.list.agenda_hint" = "Select an observance to review its rule, regional context, sources, and reminder actions.";
+"fasting_days.detail.title" = "Observance";
+"fasting_days.detail.why" = "Why this day matters";
+"fasting_days.detail.region" = "Regional applicability";
+"fasting_days.detail.profile" = "Profile";
+"fasting_days.detail.authority" = "Authority";
+"fasting_days.detail.support" = "Rule support";
+"fasting_days.detail.sources" = "Sources and transparency";
+"fasting_days.detail.open_source" = "Open source guidance";
+"fasting_days.detail.actions" = "Actions";
+"fasting_days.detail.status" = "Observance status";
+"fasting_days.detail.schedule" = "Schedule required-day reminder";
+"fasting_days.detail.reminder_settings" = "Open reminder settings";
+"intermittent.live.optional_practice" = "Optional personal practice";
+"intermittent.live.intention_format" = "Intention: %@";
+"intermittent.live.prudence" = "This tracker does not create a Church obligation. Stop or adjust the fast if you feel unwell, and seek medical or pastoral guidance when needed.";
+"common.done" = "Done";
+"premium.plan_choice.title" = "Plan choice";

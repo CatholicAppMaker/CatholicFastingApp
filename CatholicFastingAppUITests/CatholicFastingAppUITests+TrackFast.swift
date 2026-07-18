@@ -14,13 +14,14 @@ extension CatholicFastingAppUITests {
 
         let elapsed = app.staticTexts["intermittent.active_elapsed"].firstMatch
         XCTAssertTrue(scrollToElementPresence(elapsed, in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("intermittent.first_viewport_context", in: app), in: app))
         XCTAssertTrue(scrollToElement(app.datePickers["intermittent.start_date"].firstMatch, in: app))
 
         let cancelButton = app.buttons["intermittent.cancel_fast"].firstMatch
         XCTAssertTrue(scrollToElement(cancelButton, in: app))
         cancelButton.tap()
 
-        XCTAssertTrue(scrollToElement(app.staticTexts["intermittent.no_active"].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.buttons["intermittent.start_fast"].firstMatch, in: app))
     }
 
     func testIntermittentCanEndFastAndWriteSessionHistory() {
@@ -30,19 +31,24 @@ extension CatholicFastingAppUITests {
         openSurface("Track Fast", in: app)
 
         let noteField = app.textFields["intermittent.recap_note"].firstMatch
-        if scrollToElementPresence(noteField, in: app, maxSwipes: 8) {
-            noteField.tap()
-            noteField.typeText("Parish intention")
-        }
+        XCTAssertTrue(scrollToElementPresence(noteField, in: app, maxSwipes: 8))
+        noteField.tap()
+        noteField.typeText("Parish intention")
+        let doneButton = app.buttons["intermittent.recap_note.done"].firstMatch
+        XCTAssertTrue(doneButton.waitForExistence(timeout: 3))
+        doneButton.tap()
+        XCTAssertTrue(waitUntil(timeout: 3, condition: { app.keyboards.count == 0 }))
 
         let endButton = app.buttons["intermittent.end_fast"].firstMatch
         XCTAssertTrue(scrollToElementPresence(endButton, in: app, maxSwipes: 8))
         XCTAssertTrue(scrollToElement(endButton, in: app, maxSwipes: 8))
         endButton.tap()
 
-        XCTAssertTrue(scrollToElementPresence(elementByIdentifier("intermittent.recap_card", in: app), in: app, maxSwipes: 8))
+        let recapCard = elementByIdentifier("intermittent.recap_card", in: app)
+        XCTAssertTrue(scrollToElementPresence(recapCard, in: app, maxSwipes: 20))
+        XCTAssertTrue(String(describing: recapCard.value).localizedCaseInsensitiveContains("Parish intention"))
         let sessionsMetric = elementByIdentifier("intermittent.metric.sessions", in: app)
-        XCTAssertTrue(scrollToElementPresence(sessionsMetric, in: app, maxSwipes: 8))
+        XCTAssertTrue(scrollToElementPresence(sessionsMetric, in: app, maxSwipes: 20))
         let sessionSaved = NSPredicate(format: "value == '1'")
         expectation(for: sessionSaved, evaluatedWith: sessionsMetric)
         waitForExpectations(timeout: 4)
@@ -85,7 +91,8 @@ extension CatholicFastingAppUITests {
         openSurface("Track Fast", in: app)
 
         XCTAssertTrue(app.staticTexts["intermittent.no_active"].firstMatch.waitForExistence(timeout: 4))
-        XCTAssertTrue(scrollToElement(app.buttons["intermittent.start_fast"].firstMatch, in: app))
+        XCTAssertTrue(elementIsVisible(app.buttons["intermittent.start_fast"].firstMatch, in: app))
+        XCTAssertTrue(elementIsVisible(elementByIdentifier("intermittent.first_viewport_context", in: app), in: app))
         XCTAssertTrue(scrollToElement(elementByIdentifier("intermittent.advanced.disclosure", in: app), in: app))
         XCTAssertFalse(app.textFields["intermittent.schedule.name"].firstMatch.exists)
     }

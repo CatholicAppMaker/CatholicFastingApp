@@ -29,6 +29,7 @@ struct OnboardingView: View {
                 }
             }
             .navigationTitle(localized("onboarding.title", default: "Welcome"))
+            .appRootBackground()
             .onAppear {
                 let tier = ReminderTier(rawValue: reminderTierRaw) ?? .balanced
                 dailyReminderSupportEnabled = tier.supportEnabled
@@ -85,10 +86,20 @@ struct OnboardingView: View {
                 .accessibilityIdentifier("onboarding.language")
             }
         }
+        .listStyle(.plain)
+        .listSectionSpacing(SacredEditorialTokens.sectionSpacing)
+        .appListBackground()
     }
 
     private var mainOnboardingList: some View {
         List {
+            Section {
+                SacredEditorialSectionHeader(
+                    eyebrow: localized("onboarding.basics.eyebrow", default: "A calm beginning"),
+                    title: localized("onboarding.basics.intro_title", default: "Set the guidance that applies to you"),
+                    detail: localized("onboarding.basics.intro_detail", default: "Your answers stay on this device and can be changed later."))
+            }
+
             Section(localized("onboarding.basics.title", default: "Your Basics")) {
                 Toggle(
                     localized(
@@ -162,6 +173,9 @@ struct OnboardingView: View {
                     .accessibilityIdentifier("onboarding.accept_legal_notice")
             }
         }
+        .listStyle(.plain)
+        .listSectionSpacing(SacredEditorialTokens.sectionSpacing)
+        .appListBackground()
     }
 
     private func localized(_ key: String, default defaultValue: String) -> String {

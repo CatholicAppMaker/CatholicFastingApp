@@ -106,6 +106,16 @@ final class CatholicFastingAppUITests: XCTestCase {
         waitForSurfaceReady(label, in: app)
     }
 
+    func openSurfaceThroughVisibleNavigation(_ label: String, in app: XCUIApplication) {
+        let tabBar = app.tabBars.firstMatch
+        XCTAssertTrue(tabBar.waitForExistence(timeout: 3), "Visible tab bar is missing")
+        tapTab(label, in: app)
+        XCTAssertTrue(
+            waitUntil(timeout: 4, condition: { visibleSurfaceNavigationTitle(for: label, in: app) }),
+            "Visible navigation did not open \(label)")
+        waitForSurfaceReady(label, in: app)
+    }
+
     func tapUITestSurfaceSwitcher(_ label: String, in app: XCUIApplication) -> Bool {
         guard let rawValue = surfaceRawValue(for: label) else {
             return false
@@ -223,9 +233,9 @@ final class CatholicFastingAppUITests: XCTestCase {
         case "Today":
             ["Today", "Hoy", "Aujourd’hui"]
         case "Fasting Days":
-            ["Fasting Days", "Días de ayuno", "Jours de jeûne"]
+            ["Calendar", "Calendario", "Calendrier", "Fasting Days", "Días de ayuno", "Jours de jeûne"]
         case "Track Fast":
-            ["Track Fast", "Registrar ayuno", "Suivi du jeûne"]
+            ["Fast", "Ayuno", "Jeûne", "Track Fast", "Registrar ayuno", "Suivi du jeûne"]
         case "More":
             ["More", "Más", "Plus"]
         default:
@@ -332,7 +342,8 @@ final class CatholicFastingAppUITests: XCTestCase {
     }
 
     func openIPadSurface(_ rawValue: String, in app: XCUIApplication) {
-        let button = app.buttons["ipad.sidebar.\(rawValue)"].firstMatch
+        let stableRawValue = rawValue == "fasting_days" ? "fastingDays" : rawValue
+        let button = app.buttons["ipad.sidebar.\(stableRawValue)"].firstMatch
         XCTAssertTrue(button.waitForExistence(timeout: 4), "Unable to find iPad sidebar surface \(rawValue)")
         button.tap()
     }
@@ -455,7 +466,7 @@ final class CatholicFastingAppUITests: XCTestCase {
     func assertIPadMoreDestinationContent(_ rawValue: String, in app: XCUIApplication) {
         switch rawValue {
         case "supportAndPremium":
-            XCTAssertTrue(scrollToElement(elementByIdentifier("premium.subscription_store", in: app), in: app))
+            XCTAssertTrue(scrollToElement(elementByIdentifier("premium.plan_choice", in: app), in: app))
         case "setupAndReminders":
             XCTAssertTrue(scrollToElement(elementByIdentifier("settings.region_picker", in: app), in: app))
         case "profileAndNorms":
@@ -473,14 +484,9 @@ final class CatholicFastingAppUITests: XCTestCase {
     }
 
     func assertIPhoneMoreDestinationContent(_ rawValue: String, in app: XCUIApplication) {
-        let hero = elementByIdentifier("more.\(rawValue).hero", in: app)
-        XCTAssertTrue(
-            hero.waitForExistence(timeout: 4) || scrollToElement(hero, in: app),
-            "More destination \(rawValue) opened without its destination hero")
-
         switch rawValue {
         case "supportAndPremium":
-            XCTAssertTrue(scrollToElement(app.staticTexts["Premium Upgrade"].firstMatch, in: app))
+            XCTAssertTrue(scrollToElementPresence(elementByIdentifier("premium.plan_choice", in: app), in: app))
         case "setupAndReminders":
             XCTAssertTrue(scrollToElementPresence(elementByIdentifier("settings.quick.language", in: app), in: app))
             XCTAssertTrue(scrollToElementPresence(elementByIdentifier("settings.quick.reminder_actions", in: app), in: app))

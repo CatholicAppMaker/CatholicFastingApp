@@ -262,7 +262,7 @@ struct AppDestinationRowCard: View {
             Image(systemName: systemImage)
                 .font(.system(size: 16, weight: .semibold))
                 .foregroundStyle(isSelected ? Color.white : selectedTint)
-                .frame(width: 34, height: 34)
+                .frame(width: 30, height: 30)
                 .background(
                     Circle()
                         .fill(isSelected ? Color.white.opacity(0.18) : selectedTint.opacity(0.10))
@@ -271,7 +271,7 @@ struct AppDestinationRowCard: View {
             VStack(alignment: .leading, spacing: 3) {
                 Text(title)
                     .font(.headline.weight(.semibold))
-                    .foregroundStyle(isSelected ? .white : CatholicTheme.primary)
+                    .foregroundStyle(isSelected ? .white : .primary)
                 Text(subtitle)
                     .appSupportingTextStyle()
                     .foregroundStyle(isSelected ? Color.white.opacity(0.84) : .secondary)
@@ -288,17 +288,15 @@ struct AppDestinationRowCard: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 12)
-        .padding(.vertical, 11)
+        .padding(.vertical, 10)
         .background(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(isSelected ? selectedTint : CatholicTheme.parchment.opacity(0.90))
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .fill(isSelected ? selectedTint : Color.clear)
                 .allowsHitTesting(false))
         .overlay(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .stroke((isSelected ? selectedTint : CatholicTheme.cardBorder).opacity(isSelected ? 0.18 : 0.45), lineWidth: 1)
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(isSelected ? Color.white.opacity(0.16) : Color.clear, lineWidth: 1)
                 .allowsHitTesting(false))
-        .shadow(color: (isSelected ? selectedTint : CatholicTheme.primary).opacity(isSelected ? 0.16 : 0.05), radius: isSelected ? 16 : 8, y: isSelected ? 8 : 4)
         .accessibilityElement(children: .combine)
         .appSelectedAccessibility(isSelected)
     }

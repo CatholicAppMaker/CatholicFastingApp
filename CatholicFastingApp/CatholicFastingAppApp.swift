@@ -15,7 +15,6 @@ struct CatholicFastingAppApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .preferredColorScheme(.light)
                 .onChange(of: scenePhase) { _, newPhase in
                     guard newPhase == .active else {
                         return
@@ -142,6 +141,7 @@ private enum UITestBootstrap {
                 "intermittent_fast_meta",
                 "intermittent_intention",
                 "intermittent_target_reminder_enabled",
+                "did_request_app_review",
                 "rule_bundle_directory_override",
                 "storage_schema_version",
                 "completed_observances",

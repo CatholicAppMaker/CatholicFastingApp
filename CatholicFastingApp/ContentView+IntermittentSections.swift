@@ -197,7 +197,6 @@ extension ContentView {
         Section(localized("intermittent.live.section", default: "Live Tracker")) {
             VStack(alignment: .leading, spacing: 16) {
                 intermittentControlCenterLiveState
-                intermittentPrimaryActionControls
 
                 Divider()
                     .overlay(CatholicTheme.cardBorder.opacity(0.35))
@@ -324,6 +323,16 @@ extension ContentView {
                     axis: .vertical)
                     .lineLimit(2 ... 4)
                     .textInputAutocapitalization(.sentences)
+                    .focused($intermittentRecapNoteFocused)
+                    .toolbar {
+                        ToolbarItemGroup(placement: .keyboard) {
+                            Spacer()
+                            Button(localized("common.done", default: "Done")) {
+                                intermittentRecapNoteFocused = false
+                            }
+                            .accessibilityIdentifier("intermittent.recap_note.done")
+                        }
+                    }
                     .accessibilityIdentifier("intermittent.recap_note")
                 Text(localized("intermittent.recap.note.hint", default: "Saved locally with the session when you end and review."))
                     .appSupportingTextStyle()
@@ -362,7 +371,9 @@ extension ContentView {
                 Button {
                     endIntermittentFastWithReview()
                 } label: {
-                    Label(localized("intermittent.controls.end_review", default: "End & Review"), systemImage: "checkmark.seal.fill")
+                    Text(localized("intermittent.controls.end_review", default: "End & Review"))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.82)
                 }
                 .appPrimaryButtonStyle(legacyTint: .green)
                 .font(.headline.weight(.semibold))
@@ -372,7 +383,9 @@ extension ContentView {
                 Button {
                     cancelIntermittentFast()
                 } label: {
-                    Label(localized("intermittent.controls.cancel", default: "Cancel"), systemImage: "xmark")
+                    Text(localized("intermittent.controls.cancel", default: "Cancel"))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.82)
                 }
                 .appSecondaryButtonStyle()
                 .font(.headline.weight(.semibold))
@@ -402,6 +415,9 @@ extension ContentView {
                         reached: progress >= 1,
                         start: start,
                         targetDate: targetDate)
+
+                    intermittentPrimaryActionControls
+                    intermittentFirstViewportContext
 
                     intermittentFastMetricChips(
                         elapsed: elapsed,
@@ -445,6 +461,9 @@ extension ContentView {
                         lastEnded: lastEnded,
                         nextSuggestedStart: nextSuggestedStart)
 
+                    intermittentPrimaryActionControls
+                    intermittentFirstViewportContext
+
                     intermittentEatingMetricChips(
                         elapsedSinceEnd: elapsedSinceEnd,
                         session: latestSession,
@@ -464,9 +483,37 @@ extension ContentView {
         } else {
             VStack(alignment: .leading, spacing: 14) {
                 intermittentReadyLiveHeader
+                intermittentPrimaryActionControls
+                intermittentFirstViewportContext
                 intermittentReadyMetricChips
             }
         }
+    }
+
+    var intermittentFirstViewportContext: some View {
+        VStack(alignment: .leading, spacing: 5) {
+            Label(
+                localized("intermittent.live.optional_practice", default: "Optional personal practice"),
+                systemImage: "person.crop.circle.badge.checkmark")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(CatholicTheme.primary)
+
+            Text(
+                localizedFormat(
+                    "intermittent.live.intention_format",
+                    default: "Intention: %@",
+                    intermittentIntentionLabel(for: intermittentIntentionRaw)))
+                .font(.subheadline.weight(.medium))
+
+            Text(
+                localized(
+                    "intermittent.live.prudence",
+                    default: "This tracker does not create a Church obligation. Stop or adjust the fast if you feel unwell, and seek medical or pastoral guidance when needed."))
+                .appSupportingTextStyle()
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("intermittent.first_viewport_context")
     }
 
     private var intermittentUsesStackedLiveLayout: Bool {
@@ -511,6 +558,7 @@ extension ContentView {
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityIdentifier("intermittent.recap_note.saved")
             }
 
             Text(recap.suggestedNextAction)
@@ -520,6 +568,7 @@ extension ContentView {
         }
         .padding(14)
         .appSurfaceCard(.primary, cornerRadius: 16)
+        .accessibilityValue(Text(session.note ?? ""))
         .accessibilityIdentifier("intermittent.recap_card")
     }
 

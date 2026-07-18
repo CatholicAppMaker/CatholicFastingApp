@@ -58,6 +58,14 @@ run_suite() {
 	local simulator_ref="${simulator_id:-${simulator_name}}"
 	local destination="platform=iOS Simulator,name=${simulator_name}"
 
+	for selector in "${selectors[@]}"; do
+		local test_name="${selector##*/}"
+		if ! rg -q "func[[:space:]]+${test_name}\\(" CatholicFastingAppUITests; then
+			echo "Unknown UI test selector: ${test_name}" >&2
+			return 2
+		fi
+	done
+
 	if [[ -n "${simulator_id}" ]]; then
 		destination="platform=iOS Simulator,id=${simulator_id}"
 	fi
@@ -114,13 +122,16 @@ run_deep_suite() {
 	local selectors=(
 		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepCanOpenFridayNotesHistory
 		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepLaunchReadinessControlsVisible
-		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepDashboardHeroVisible
-		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepCompanionCardsExposeRuleLiveFormationAndActions
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testTodayShowsDecisionActionAndAuthorityInInitialViewport
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testTodayExposesNextObservanceAndPersonalFastStatusWithoutFormationClutter
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPhoneVisibleTabBarSwitchesAllPrimarySurfaces
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPhoneMoreHubRowsOpenExpectedDestinationContent
 		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepCompanionActiveFastPrimaryActionOpensTrackFast
 		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepUnofficialNoticeVisible
 		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepDashboardOpenFastingDaysQuickAction
 		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepDashboardFocusRequiredQuickAction
 		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepFastingDaysScopePickerVisible
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepFastingDaysAgendaOpensRuleSourceAndReminderDetail
 		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepRecoveryPlanVisibleWhenMissedSeeded
 		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepGuidanceSacredGalleryVisible
 		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testDeepTodaySetupCardOpensQuickSetup
@@ -138,13 +149,15 @@ run_ipad_suite() {
 	local selectors=(
 		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadSidebarSwitchesPrimaryWorkspaces
 		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadTodayDashboardShowsHeroAndCoreCards
-		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadCompanionTriadShowsRuleTrackerAndFormationCards
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadTodayShowsDecisionActionsAndContextRail
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadTodayQuickActionsOpenTargetWorkspaces
 		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadFastingDaysSelectionShowsDetail
 		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadFastingDaysShowsFiltersAndQuickDates
 		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadOnboardingShowsRegionSelector
 		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadMoreProfileDestinationShowsRegionPicker
-		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadCanadaModeShowsPartialSupportContext
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadCanadaModeShowsModeledBaselineContext
 		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadPremiumWorkspaceShowsLegalLinks
+		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadPremiumPlanChoicePrecedesLegalAndJourney
 		-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/testIPadTrackFastShowsLiveWorkspaceAndControls
 	)
 	run_suite "ipad" "${IPAD_TIMEOUT_SECONDS}" "${IPAD_SIMULATOR_NAME}" "${IPAD_SIMULATOR_ID}" "${selectors[@]}"

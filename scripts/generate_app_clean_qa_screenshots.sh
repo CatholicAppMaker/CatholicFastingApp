@@ -102,6 +102,12 @@ simulator_exists() {
 	xcrun simctl list devices available | grep -F "$1 (" >/dev/null
 }
 
+simulator_id() {
+	xcrun simctl list devices available \
+		| sed -n "s/^[[:space:]]*$1 (\([0-9A-F-]*\)) .*/\1/p" \
+		| head -1
+}
+
 choose_simulator() {
 	local explicit="$1"
 	shift
@@ -154,6 +160,12 @@ run_capture() {
 	local result_bundle="$RESULTS_DIR/$device_dir.xcresult"
 	local raw_final="$OUTPUT_ROOT/$device_dir/raw"
 	local raw_tmp
+	local device_id
+	device_id="$(simulator_id "$device")"
+	if [[ -z "$device_id" ]]; then
+		echo "Unable to resolve simulator identifier for '$device'." >&2
+		return 1
+	fi
 
 	rm -rf "$result_bundle"
 	mkdir -p "$raw_final" "$RESULTS_DIR"
@@ -172,7 +184,7 @@ run_capture() {
 		run_with_timeout "${SCREENSHOT_CAPTURE_TIMEOUT_SECONDS:-900}" xcodebuild test \
 		-project "$ROOT_DIR/CatholicFastingApp.xcodeproj" \
 		-scheme CatholicFastingApp \
-		-destination "platform=iOS Simulator,name=$device" \
+		-destination "platform=iOS Simulator,id=$device_id" \
 		-destination-timeout 120 \
 		-only-testing:"CatholicFastingAppUITests/CatholicFastingAppUITests/$test_name" \
 		-parallel-testing-enabled NO \

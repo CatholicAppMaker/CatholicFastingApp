@@ -162,6 +162,7 @@ extension ContentView {
         }
         .padding(18)
         .iPadPaneCard()
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("ipad.today.actions")
     }
 
@@ -292,6 +293,8 @@ extension ContentView {
         }
         .padding(18)
         .iPadPaneCard()
+        .accessibilityElement(children: .contain)
+        .accessibilityValue(Text(regionContext.classificationLabel))
         .accessibilityIdentifier("ipad.today.transparency")
     }
 }

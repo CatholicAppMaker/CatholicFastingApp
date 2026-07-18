@@ -13,8 +13,8 @@ enum HomeSurface: String, CaseIterable, Identifiable {
     var label: String {
         switch self {
         case .today: "Today"
-        case .fastingDays: "Fasting Days"
-        case .intermittent: "Track Fast"
+        case .fastingDays: "Calendar"
+        case .intermittent: "Fast"
         case .more: "More"
         }
     }

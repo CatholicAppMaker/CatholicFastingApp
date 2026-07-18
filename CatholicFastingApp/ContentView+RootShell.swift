@@ -479,14 +479,12 @@ extension ContentView {
     }
 
     var phoneBrandMark: some View {
-        Text(localized("shared.app_full_title", default: "Catholic Fasting App"))
-            .font(.system(.title3, design: .serif).weight(.heavy))
-            .foregroundStyle(.primary)
-            .kerning(0.15)
-            .lineLimit(1)
-            .minimumScaleFactor(0.72)
-            .fixedSize(horizontal: true, vertical: false)
-            .padding(.leading, 36)
+        Image("CFAMark")
+            .renderingMode(.template)
+            .resizable()
+            .scaledToFit()
+            .frame(width: 26, height: 26)
+            .foregroundStyle(CatholicTheme.primary)
             .allowsHitTesting(false)
             .accessibilityIdentifier("home.brand_mark")
             .accessibilityLabel(localized("shared.app_full_title", default: "Catholic Fasting App"))
@@ -496,7 +494,8 @@ extension ContentView {
         List {
             todaySurfaceSections
         }
-        .listStyle(.insetGrouped)
+        .listStyle(.plain)
+        .listSectionSpacing(SacredEditorialTokens.sectionSpacing)
         .appListBackground()
         .phoneTabBarScrollClearance()
     }
@@ -505,7 +504,8 @@ extension ContentView {
         List {
             fastingDaysSurfaceSections
         }
-        .listStyle(.insetGrouped)
+        .listStyle(.plain)
+        .listSectionSpacing(SacredEditorialTokens.sectionSpacing)
         .appListBackground()
         .phoneTabBarScrollClearance()
     }
@@ -514,7 +514,9 @@ extension ContentView {
         List {
             intermittentSurfaceSections
         }
-        .listStyle(.insetGrouped)
+        .listStyle(.plain)
+        .listSectionSpacing(SacredEditorialTokens.sectionSpacing)
+        .scrollDismissesKeyboard(.immediately)
         .appListBackground()
         .phoneTabBarScrollClearance()
     }
@@ -523,7 +525,8 @@ extension ContentView {
         List {
             moreSurfaceSections
         }
-        .listStyle(.insetGrouped)
+        .listStyle(.plain)
+        .listSectionSpacing(SacredEditorialTokens.sectionSpacing)
         .appListBackground()
         .phoneTabBarScrollClearance()
     }
@@ -532,12 +535,8 @@ extension ContentView {
     var todaySurfaceSections: some View {
         companionDashboardSection
         companionLiveStateSection
-        companionFormationSection
         todayDecisionCardSection
-        dashboardQuickActionsSection
-        todayTenSecondSection
         todaySection
-        setupProgressSection
         todayRecoverySection
         if !acceptedLegalNotice {
             unofficialAppNoticeSection
@@ -545,7 +544,10 @@ extension ContentView {
         if simplifiedModeEnabled {
             todaySimpleSummarySection
         } else {
+            companionFormationSection
             planningProgressSection
+            setupProgressSection
+            todayTenSecondSection
             dashboardSeasonSection
             progressSection
             analyticsSection
@@ -571,10 +573,10 @@ extension ContentView {
     @ViewBuilder
     var intermittentSurfaceSections: some View {
         intermittentControlCenterSection
-        intermittentFastingQuoteSection
-        intermittentHeroSection
         intermittentOverviewSection
         intermittentAdvancedToolsSection
+        intermittentFastingQuoteSection
+        intermittentHeroSection
     }
 
     @ViewBuilder
@@ -603,16 +605,6 @@ extension ContentView {
         Section(localized("more.quote.section", default: "Guidance reflection")) {
             CatholicFastingQuoteCard(quote: guidanceFastingQuote, compact: true)
                 .accessibilityIdentifier("more.hub.quote")
-        }
-
-        Section {
-            SacredSurfaceAnchorCard(
-                assetName: SacredHeroImageSelector.anchorArtwork(for: .guidance).assetName,
-                title: localizedMoreHubHeroTitle(),
-                subtitle: localizedMoreHubHeroSubtitle(),
-                imageHeight: 88,
-                cornerRadius: 16,
-                accessibilityIdentifier: "more.hub.hero")
         }
     }
 
@@ -666,7 +658,8 @@ extension ContentView {
                 moreDestinationHeroSection(for: destination)
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(.plain)
+        .listSectionSpacing(SacredEditorialTokens.sectionSpacing)
         .appListBackground()
         .phoneTabBarScrollClearance()
         .navigationTitle(localizedMoreDestinationTitle(destination))
@@ -714,7 +707,8 @@ extension ContentView {
             premiumToolIntroSection(for: destination)
             premiumToolSections(for: destination)
         }
-        .listStyle(.insetGrouped)
+        .listStyle(.plain)
+        .listSectionSpacing(SacredEditorialTokens.sectionSpacing)
         .appListBackground()
         .phoneTabBarScrollClearance()
         .navigationTitle(localizedPremiumToolTitle(destination))

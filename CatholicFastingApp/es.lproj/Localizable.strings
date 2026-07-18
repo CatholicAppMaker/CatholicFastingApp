@@ -43,8 +43,8 @@
 "guidance.sources.feedback_link" = "Enviar comentarios";
 
 "home.surface.today" = "Hoy";
-"home.surface.fasting_days" = "Días de ayuno";
-"home.surface.intermittent" = "Registrar ayuno";
+"home.surface.fasting_days" = "Calendario";
+"home.surface.intermittent" = "Ayuno";
 "home.surface.more" = "Más";
 
 "more.destination.support.title" = "Soporte y Premium";
@@ -620,6 +620,7 @@
 "today.recovery.focus" = "Enfocar el próximo día obligatorio";
 "today.share.section" = "Compartir el ritmo";
 "today.share.intro_format" = "Ha completado %d días obligatorios de disciplina este año. Comparta el ritmo con alguien que quizá necesite un plan de ayuno más sereno.";
+"today.share.message_format" = "Catholic Fasting me ayuda a mantener un ritmo constante con orientación diaria, planificación y seguimiento del ayuno. Más información: %@";
 "today.share.subject" = "Ayuno Católico";
 "today.share.button" = "Compartir Catholic Fasting";
 "today.season.section" = "Enfoque del tiempo";
@@ -699,6 +700,7 @@
 "premium.active.open_tools" = "Abrir herramientas de formación";
 "premium.active.title" = "Premium activo";
 "premium.active.summary" = "Su camino guiado, recordatorios, reflexión y herramientas de exportación están desbloqueados.";
+"premium.active.manage_hint" = "Administre o restaure el acceso a continuación cuando lo necesite.";
 "premium.locked.summary" = "Manténgase constante durante el año litúrgico con un camino semanal de formación, recordatorios y revisión.";
 "premium.locked.adds" = "La formación guiada añade:";
 "premium.trust.title" = "Por qué los usuarios mejoran";
@@ -1226,3 +1228,21 @@
 "companion.action.fasting_days.detail" = "Revise observancias obligatorias y opcionales.";
 "companion.action.formation.title" = "Abrir formación";
 "companion.action.formation.detail" = "Mantenga el ayuno unido a oración, caridad y revisión.";
+"fasting_days.list.agenda_hint" = "Seleccione una observancia para revisar la norma, el contexto regional, las fuentes y las opciones de recordatorio.";
+"fasting_days.detail.title" = "Observancia";
+"fasting_days.detail.why" = "Por qué importa este día";
+"fasting_days.detail.region" = "Aplicación regional";
+"fasting_days.detail.profile" = "Perfil";
+"fasting_days.detail.authority" = "Autoridad";
+"fasting_days.detail.support" = "Respaldo de la norma";
+"fasting_days.detail.sources" = "Fuentes y transparencia";
+"fasting_days.detail.open_source" = "Abrir guía oficial";
+"fasting_days.detail.actions" = "Acciones";
+"fasting_days.detail.status" = "Estado de la observancia";
+"fasting_days.detail.schedule" = "Programar recordatorio del día obligatorio";
+"fasting_days.detail.reminder_settings" = "Abrir ajustes de recordatorios";
+"intermittent.live.optional_practice" = "Práctica personal opcional";
+"intermittent.live.intention_format" = "Intención: %@";
+"intermittent.live.prudence" = "Este registro no crea una obligación de la Iglesia. Detenga o ajuste el ayuno si se siente mal y busque orientación médica o pastoral cuando sea necesario.";
+"common.done" = "Listo";
+"premium.plan_choice.title" = "Elección del plan";

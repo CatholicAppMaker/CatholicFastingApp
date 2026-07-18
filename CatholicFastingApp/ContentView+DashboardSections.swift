@@ -568,14 +568,16 @@ extension ContentView {
 
     @ViewBuilder
     var milestoneReferralSection: some View {
-        if currentStreak >= 3 {
+        if yearlyRequiredCompletions >= 3 {
             Section(localized("today.share.section", default: "Share With a Friend")) {
-                Text(localizedFormat("today.share.intro_format", default: "You kept a %d-day rhythm. Share the app if it is helping.", currentStreak))
+                Text(localizedFormat("today.share.intro_format", default: "You have completed %d required discipline days this year. Share the app if it is helping.", yearlyRequiredCompletions))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                 ShareLink(
-                    item:
-                    "I have been using Catholic Fasting App for daily fasting guidance and tracking. It has helped me stay consistent.",
+                    item: localizedFormat(
+                        "today.share.message_format",
+                        default: "Catholic Fasting helps me stay steady with daily fasting guidance, planning, and tracking. Learn more: %@",
+                        UIConstants.supportSiteURL.absoluteString),
                     subject: Text(localized("today.share.subject", default: "Catholic Fasting App")))
                 {
                     Label(localized("today.share.button", default: "Share App"), systemImage: "square.and.arrow.up")

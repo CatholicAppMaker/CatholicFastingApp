@@ -127,47 +127,19 @@ extension ContentView {
                     .appSupportingTextStyle()
             }
 
-            ViewThatFits(in: .horizontal) {
-                HStack(spacing: 8) {
-                    MetricTile(
-                        title: localized("fasting_days.metric.scope", default: "Scope"),
-                        value: fastingDaysShowAllYearDays
-                            ? localized("fasting_days.scope.full_year", default: "Full Year")
-                            : localized("fasting_days.scope.upcoming", default: "Upcoming"),
-                        detail: localized("fasting_days.metric.scope_detail", default: "current list view"))
-                    MetricTile(
-                        title: localized("fasting_days.metric.showing", default: "Showing"),
-                        value: "\(fastingDaysDisplayObservances.count)",
-                        detail: localized("fasting_days.metric.showing_detail", default: "visible observances"))
-                    MetricTile(
-                        title: localized("fasting_days.metric.season", default: "Season"),
-                        value: currentLiturgicalSeason.label,
-                        detail: localized("fasting_days.metric.season_detail", default: "liturgical context"))
-                }
-                VStack(spacing: 8) {
-                    HStack(spacing: 8) {
-                        MetricTile(
-                            title: localized("fasting_days.metric.scope", default: "Scope"),
-                            value: fastingDaysShowAllYearDays
-                                ? localized("fasting_days.scope.full_year", default: "Full Year")
-                                : localized("fasting_days.scope.upcoming", default: "Upcoming"),
-                            detail: localized("fasting_days.metric.scope_detail", default: "current list view"))
-                        MetricTile(
-                            title: localized("fasting_days.metric.showing", default: "Showing"),
-                            value: "\(fastingDaysDisplayObservances.count)",
-                            detail: localized("fasting_days.metric.showing_detail", default: "visible observances"))
-                    }
-                    MetricTile(
-                        title: localized("fasting_days.metric.season", default: "Season"),
-                        value: currentLiturgicalSeason.label,
-                        detail: localized("fasting_days.metric.season_detail", default: "liturgical context"))
-                }
+            HStack(spacing: 8) {
+                Label(currentLiturgicalSeason.label, systemImage: "calendar")
+                Text("·")
+                Text(localizedFormat(
+                    "fasting_days.metric.showing_compact_format",
+                    default: "%d observances",
+                    fastingDaysDisplayObservances.count))
             }
+            .font(.footnote.weight(.medium))
+            .foregroundStyle(.secondary)
 
             Text(regionalNormSummaryLine)
                 .appSupportingTextStyle()
-
-            fastingDaysFilterTags
 
             Picker(localized("fasting_days.scope.title", default: "Scope"), selection: fastingDaysScopeSelection) {
                 Text(localized("fasting_days.scope.upcoming", default: "Upcoming")).tag(0)
@@ -176,8 +148,7 @@ extension ContentView {
             .pickerStyle(.segmented)
             .accessibilityIdentifier("fasting_days.scope_picker")
 
-            Text(fastingDaysDisplaySummaryText)
-                .appSupportingTextStyle()
+            fastingDaysFilterTags
         }
     }
 
@@ -253,53 +224,184 @@ extension ContentView {
                         ? localized("fasting_days.list.title.upcoming_all", default: "Upcoming Discipline Days (Required + Optional)")
                         : localized("fasting_days.list.title.upcoming_required", default: "Upcoming Required Discipline Days"))
         let title = fastingDaysIncludeFeastAndHolyDays ? localizedFormat("fasting_days.list.title.celebrations_format", default: "%@ + Celebration Days", baseTitle) : baseTitle
+        let monthGroups = Dictionary(grouping: displayItems) { observance in
+            localizedMonthYear(observance.date)
+        }
+        .map { title, observances in
+            (title, observances.sorted { $0.date < $1.date })
+        }
+        .sorted { lhs, rhs in
+            guard let leftDate = lhs.1.first?.date, let rightDate = rhs.1.first?.date else {
+                return lhs.0 < rhs.0
+            }
+            return leftDate < rightDate
+        }
 
-        return Section(title) {
+        return Group {
+            Section {
+                Text(localized("fasting_days.list.agenda_hint", default: "Select an observance to review its rule, regional context, sources, and reminder actions."))
+                    .appSupportingTextStyle()
+            } header: {
+                Text(title)
+            }
+
             if displayItems.isEmpty {
+                Section {
                 Text(localized("fasting_days.list.empty", default: "No observance days match the current list filters."))
                     .foregroundStyle(.secondary)
+                }
             } else {
-                ForEach(displayItems) { observance in
-                    HStack(alignment: .top) {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(localizedObservanceTitle(observance.title))
-                                .font(.headline)
-                            Text("\(observance.kind.label) • \(observanceDispositionLabel(for: observance))")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                            Text(localizedAbbreviatedDate(observance.date))
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                        }
-                        Spacer()
-                        if observance.obligation != .notApplicable {
-                            Menu {
-                                ForEach(CompletionStatus.allCases) { statusOption in
-                                    Button(statusOption.label) {
-                                        tracker.setStatus(statusOption, for: observance.id)
-                                    }
-                                }
-                            } label: {
-                                Image(systemName: statusSymbol(for: tracker.status(for: observance.id)))
-                                    .foregroundStyle(statusColor(for: tracker.status(for: observance.id)))
-                            }
-                            .buttonStyle(.plain)
+                ForEach(monthGroups, id: \.0) { monthTitle, observances in
+                    Section(monthTitle) {
+                        ForEach(observances) { observance in
+                            fastingDaysAgendaRow(observance)
                         }
                     }
-                    .padding(.vertical, 2)
                 }
 
                 if !fastingDaysShowAllYearDays, filteredByObligation.count > displayItems.count {
-                    Text(
-                        localizedFormat(
-                            "fasting_days.list.more_format",
-                            default: "Showing next %d observance days. Turn on \"Show full-year observance list\" for the full list.",
-                            displayItems.count))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    Section {
+                        Text(
+                            localizedFormat(
+                                "fasting_days.list.more_format",
+                                default: "Showing next %d observance days. Turn on \"Show full-year observance list\" for the full list.",
+                                displayItems.count))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                 }
             }
         }
+    }
+
+    private func fastingDaysAgendaRow(_ observance: Observance) -> some View {
+        HStack(alignment: .center, spacing: 10) {
+            NavigationLink {
+                fastingObservanceDetail(observance)
+            } label: {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(localizedObservanceTitle(observance.title))
+                        .font(.headline)
+                    Text("\(observance.kind.label) • \(observanceDispositionLabel(for: observance))")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Text(localizedAbbreviatedDate(observance.date))
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.vertical, 3)
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("fasting_days.detail.\(observance.id)")
+
+            if observance.obligation != .notApplicable {
+                Menu {
+                    ForEach(CompletionStatus.allCases) { statusOption in
+                        Button(statusOption.label) {
+                            tracker.setStatus(statusOption, for: observance.id)
+                        }
+                    }
+                } label: {
+                    Image(systemName: statusSymbol(for: tracker.status(for: observance.id)))
+                        .foregroundStyle(statusColor(for: tracker.status(for: observance.id)))
+                        .frame(minWidth: 44, minHeight: 44)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(localized("fasting_days.detail.status", default: "Observance status"))
+                .accessibilityIdentifier("fasting_days.status.\(observance.id)")
+            }
+        }
+    }
+
+    func fastingObservanceDetail(_ observance: Observance) -> some View {
+        let context = RegionalGuidanceContextFactory.presentationContext(for: observance, settings: settings)
+
+        return List {
+            Section {
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(localizedCompleteDate(observance.date))
+                        .appEyebrowStyle()
+                    Text(localizedObservanceTitle(observance.title))
+                        .appSectionTitleStyle(serif: true)
+                    HStack(spacing: 8) {
+                        StatusTag(text: observance.kind.label, color: observance.kind.color)
+                        StatusTag(text: observance.dispositionLabel, color: observance.obligation == .mandatory ? .red : .blue)
+                    }
+                    Text(context.nextActionText)
+                        .appLeadTextStyle()
+                        .foregroundStyle(CatholicTheme.primary)
+                }
+                .padding(.vertical, 4)
+            }
+
+            Section(localized("fasting_days.detail.why", default: "Why this day matters")) {
+                if let detail = observance.detail, !detail.isEmpty {
+                    Text(detail)
+                }
+                Text(observance.rationale)
+                    .appSupportingTextStyle()
+            }
+
+            Section(localized("fasting_days.detail.region", default: "Regional applicability")) {
+                LabeledContent(localized("fasting_days.detail.profile", default: "Profile"), value: context.regionalContext.classificationLabel)
+                LabeledContent(localized("fasting_days.detail.authority", default: "Authority"), value: context.regionalContext.authorityLabel)
+                LabeledContent(localized("fasting_days.detail.support", default: "Rule support"), value: context.regionalContext.supportLevel.label)
+                Text(context.regionalContext.disclosureText)
+                    .appSupportingTextStyle()
+            }
+
+            Section(localized("fasting_days.detail.sources", default: "Sources and transparency")) {
+                Text(context.sourceSummary)
+                    .appSupportingTextStyle()
+                ForEach(context.regionalContext.citations, id: \.self) { citation in
+                    LabeledContent(citation.shortReference, value: citation.title)
+                }
+                if let sourceURL = context.regionalContext.sourceURL {
+                    Link(localized("fasting_days.detail.open_source", default: "Open source guidance"), destination: sourceURL)
+                }
+            }
+
+            Section(localized("fasting_days.detail.actions", default: "Actions")) {
+                if observance.obligation != .notApplicable {
+                    Picker(
+                        localized("fasting_days.detail.status", default: "Observance status"),
+                        selection: Binding(
+                            get: { tracker.status(for: observance.id) },
+                            set: { tracker.setStatus($0, for: observance.id) }))
+                    {
+                        ForEach(CompletionStatus.allCases) { status in
+                            Text(status.label).tag(status)
+                        }
+                    }
+                    .accessibilityIdentifier("fasting_days.detail.status_picker")
+                }
+
+                if observance.obligation == .mandatory {
+                    Button(localized("fasting_days.detail.schedule", default: "Schedule required-day reminder")) {
+                        Task {
+                            notificationStatus = await ReminderScheduler.schedule(observances: [observance])
+                        }
+                    }
+                    .accessibilityIdentifier("fasting_days.detail.schedule_reminder")
+                }
+
+                Button(localized("fasting_days.detail.reminder_settings", default: "Open reminder settings")) {
+                    navigateToMoreDestination(.setupAndReminders)
+                }
+                .accessibilityIdentifier("fasting_days.detail.reminder_settings")
+
+                if !notificationStatus.isEmpty {
+                    Text(notificationStatus)
+                        .appSupportingTextStyle()
+                }
+            }
+        }
+        .listStyle(.insetGrouped)
+        .appListBackground()
+        .navigationTitle(localized("fasting_days.detail.title", default: "Observance"))
+        .navigationBarTitleDisplayMode(.inline)
+        .accessibilityIdentifier("fasting_days.observance_detail")
     }
 
     var progressSection: some View {

@@ -51,8 +51,7 @@ struct CompanionDashboardCard: View {
                     .lineLimit(2 ... 4)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            .padding(12)
-            .appSurfaceCard(.utility, cornerRadius: 16)
+            .padding(.top, 2)
             .accessibilityIdentifier("companion.primary_action")
 
             Button(action: onPrimaryAction) {
@@ -67,6 +66,7 @@ struct CompanionDashboardCard: View {
         }
         .padding(14)
         .appSurfaceCard(.primary, cornerRadius: 20)
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("companion.dashboard")
     }
 
@@ -140,6 +140,10 @@ struct CompanionLiveStateCard: View {
             if let progress {
                 ProgressView(value: progress)
                     .tint(CatholicTheme.primary)
+                    .accessibilityElement()
+                    .accessibilityLabel(
+                        Text(localized("companion.live.progress.label", default: "Fast progress")))
+                    .accessibilityValue(Text("\(Int((progress * 100).rounded()))%"))
                     .accessibilityIdentifier("companion.live.progress")
             }
 
@@ -162,8 +166,8 @@ struct CompanionLiveStateCard: View {
             .appSecondaryButtonStyle(legacyTint: CatholicTheme.accentForeground)
             .accessibilityIdentifier("companion.live.action")
         }
-        .padding(14)
-        .appSurfaceCard(.standard, cornerRadius: 18)
+        .padding(.vertical, 8)
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("companion.live_state")
     }
 }
@@ -202,8 +206,7 @@ struct CompanionFormationCard: View {
                 Text(formation.nextJourneyActionDetail)
                     .appSupportingTextStyle()
             }
-            .padding(12)
-            .appSurfaceCard(.utility, cornerRadius: 16)
+            .padding(.top, 2)
 
             CompanionMetricPill(
                 title: localized("companion.formation.current_rhythm", default: "Current rhythm"),
@@ -212,8 +215,7 @@ struct CompanionFormationCard: View {
             if let recoverySummary = formation.recoverySummary {
                 Text(recoverySummary)
                     .appSupportingTextStyle()
-                    .padding(12)
-                    .appSurfaceCard(.utility, cornerRadius: 16)
+                    .padding(.vertical, 4)
             }
 
             Button(action: onOpenFormation) {
@@ -226,8 +228,8 @@ struct CompanionFormationCard: View {
             .appSecondaryButtonStyle()
             .accessibilityIdentifier("companion.formation.action")
         }
-        .padding(14)
-        .appSurfaceCard(.standard, cornerRadius: 18)
+        .padding(.vertical, 8)
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("companion.formation")
     }
 
@@ -274,7 +276,11 @@ private struct CompanionMetricPill: View {
                 .minimumScaleFactor(0.82)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(10)
-        .appSurfaceCard(.utility, cornerRadius: 14)
+        .padding(.vertical, 7)
+        .overlay(alignment: .bottom) {
+            Rectangle()
+                .fill(CatholicTheme.primary.opacity(0.12))
+                .frame(height: 1)
+        }
     }
 }

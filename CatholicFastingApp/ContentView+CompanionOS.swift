@@ -64,10 +64,39 @@ extension ContentView {
                 }
             }
         }
-        .accessibilityIdentifier("ipad.companion.triad")
     }
 
-    private var companionIPadDashboardCard: some View {
+    func companionIPadEditorialLayout(stacked: Bool) -> some View {
+        Group {
+            if stacked {
+                VStack(alignment: .leading, spacing: 24) {
+                    companionIPadDashboardCard
+                    ipadTodayQuickActionsCard
+                    SacredEditorialRule()
+                    companionLiveStateCard
+                    SacredEditorialRule()
+                    companionIPadFormationCard
+                }
+            } else {
+                HStack(alignment: .top, spacing: 32) {
+                    VStack(alignment: .leading, spacing: 20) {
+                        companionIPadDashboardCard
+                        ipadTodayQuickActionsCard
+                    }
+                        .frame(maxWidth: .infinity, alignment: .top)
+
+                    VStack(alignment: .leading, spacing: 20) {
+                        companionLiveStateCard
+                        SacredEditorialRule()
+                        companionIPadFormationCard
+                    }
+                    .frame(width: 360, alignment: .top)
+                }
+            }
+        }
+    }
+
+    var companionIPadDashboardCard: some View {
         CompanionDashboardCard(
             snapshot: companionSnapshot,
             todayLabel: companionTodayLabel,
@@ -77,14 +106,14 @@ extension ContentView {
         }
     }
 
-    private var companionIPadFormationCard: some View {
+    var companionIPadFormationCard: some View {
         CompanionFormationCard(formation: companionSnapshot.formation) {
             openCompanionFormation()
         }
     }
 
     @ViewBuilder
-    private var companionLiveStateCard: some View {
+    var companionLiveStateCard: some View {
         switch companionSnapshot.liveFast.progress {
         case .active(_, let targetHours, let elapsed, let remaining, let progress, let stage):
             CompanionLiveStateCard(

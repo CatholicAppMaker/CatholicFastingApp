@@ -6,11 +6,30 @@ extension ContentView {
         let optionalCount = items.count(where: { $0.obligation == .optional })
         let celebrationCount = items.count(where: { [.holyDay, .feastDay, .memorialDay].contains($0.kind) })
 
-        return LazyVGrid(
-            columns: [GridItem(.adaptive(minimum: 150), spacing: 12, alignment: .top)],
-            alignment: .leading,
-            spacing: 12)
-        {
+        return ViewThatFits(in: .horizontal) {
+            HStack(alignment: .top, spacing: 12) {
+                ipadFastingDaysSummaryCardViews(
+                    requiredCount: requiredCount,
+                    optionalCount: optionalCount,
+                    celebrationCount: celebrationCount)
+            }
+            VStack(alignment: .leading, spacing: 12) {
+                ipadFastingDaysSummaryCardViews(
+                    requiredCount: requiredCount,
+                    optionalCount: optionalCount,
+                    celebrationCount: celebrationCount)
+            }
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("ipad.fasting_days.summary_cards")
+    }
+
+    @ViewBuilder
+    private func ipadFastingDaysSummaryCardViews(
+        requiredCount: Int,
+        optionalCount: Int,
+        celebrationCount: Int) -> some View
+    {
             IPadSummaryMetricCard(
                 title: localized("ipad.fasting_days.summary.required", default: "Required"),
                 value: "\(requiredCount)",
@@ -31,15 +50,12 @@ extension ContentView {
                     ? localized("ipad.fasting_days.summary.celebrations_shown", default: "shown now")
                     : localized("ipad.fasting_days.summary.celebrations_hidden", default: "hidden from list"),
                 tint: CatholicTheme.warningForeground)
-        }
-        .accessibilityIdentifier("ipad.fasting_days.summary_cards")
     }
 
     var ipadFastingDaysFilterRail: some View {
         let regionContext = RegionalGuidanceContextFactory.generalContext(for: settings)
 
-        return ScrollView {
-            VStack(alignment: .leading, spacing: 18) {
+        return VStack(alignment: .leading, spacing: 18) {
                 VStack(alignment: .leading, spacing: 14) {
                     IPadWorkspaceHeader(
                         eyebrow: localized("ipad.fasting_days.filters.eyebrow", default: "Filters"),
@@ -67,12 +83,24 @@ extension ContentView {
                         isOn: $fastingDaysIncludeFeastAndHolyDays)
                         .accessibilityIdentifier("ipad.fasting_days.feast_toggle")
 
-                    Picker(localized("ipad.fasting_days.filters.year", default: "Calendar year"), selection: $year) {
+                    Menu {
                         ForEach(Array(UIConstants.yearRange), id: \.self) { yearOption in
-                            Text("\(yearOption)").tag(yearOption)
+                            let yearLabel = String(yearOption)
+                            Button {
+                                year = yearOption
+                            } label: {
+                                Text(verbatim: yearLabel)
+                            }
+                        }
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text(verbatim: String(year))
+                            Image(systemName: "chevron.up.chevron.down")
+                                .font(.caption2)
                         }
                     }
-                    .pickerStyle(.menu)
+                    .accessibilityLabel(localized("ipad.fasting_days.filters.year", default: "Calendar year"))
+                    .accessibilityValue(Text(verbatim: String(year)))
                     .accessibilityIdentifier("ipad.fasting_days.year")
                 }
                 .padding(18)
@@ -100,8 +128,9 @@ extension ContentView {
                 }
                 .padding(18)
                 .iPadPaneCard()
-            }
         }
+        .accessibilityElement(children: .contain)
+        .accessibilityValue(Text("\(regionContext.classificationLabel), \(regionContext.supportLevel.label)"))
         .accessibilityIdentifier("ipad.fasting_days.filters")
     }
 
@@ -121,26 +150,21 @@ extension ContentView {
 
     func ipadFastingDaysQuickDateStrip(from items: [Observance]) -> some View {
         let quickFocus = ipadQuickFocusObservances(from: items)
-        return Group {
-            if quickFocus.isEmpty {
-                EmptyView()
-            } else {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 10) {
-                        ForEach(quickFocus) { observance in
-                            IPadKeyDateChip(
-                                title: localizedObservanceTitle(observance.title),
-                                subtitle: localizedAbbreviatedDate(observance.date),
-                                isSelected: selectedFastingObservanceID == observance.id)
-                            {
-                                selectedFastingObservanceID = observance.id
-                            }
-                        }
+        return ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 10) {
+                ForEach(quickFocus) { observance in
+                    IPadKeyDateChip(
+                        title: localizedObservanceTitle(observance.title),
+                        subtitle: localizedAbbreviatedDate(observance.date),
+                        isSelected: selectedFastingObservanceID == observance.id)
+                    {
+                        selectedFastingObservanceID = observance.id
                     }
                 }
-                .padding(.vertical, 2)
             }
         }
+        .padding(.vertical, 2)
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("ipad.fasting_days.quick_dates")
     }
 
@@ -211,6 +235,7 @@ extension ContentView {
                 }
                 .padding(18)
                 .iPadPaneCard()
+                .accessibilityElement(children: .contain)
                 .accessibilityIdentifier("ipad.fasting_days.detail")
 
                 VStack(alignment: .leading, spacing: 12) {
@@ -298,6 +323,14 @@ extension ContentView {
         for title in orderedTitles {
             if let match = items.first(where: { $0.title.contains(title) }) {
                 selected.append(match)
+            }
+        }
+
+        let fallback = items.filter { $0.obligation == .mandatory } + items
+        for observance in fallback where !selected.contains(where: { $0.id == observance.id }) {
+            selected.append(observance)
+            if selected.count == 6 {
+                break
             }
         }
         return Array(selected.prefix(6))
