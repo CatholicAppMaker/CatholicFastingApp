@@ -61,7 +61,7 @@ extension ContentView {
             SacredSurfaceAnchorCard(
                 assetName: intermittentHeroArtwork.assetName,
                 title: intermittentTracker.activeStart == nil
-                    ? localized("intermittent.hero.title_idle", default: "Track Fast")
+                    ? localized("intermittent.hero.title_idle", default: "Fast")
                     : localized("intermittent.hero.title_active", default: "Fast in progress"),
                 subtitle: intermittentTracker.activeStart == nil
                     ? localized("intermittent.hero.subtitle_idle", default: "Choose a target, then start when ready.")
@@ -194,7 +194,7 @@ extension ContentView {
     }
 
     var intermittentControlCenterSection: some View {
-        Section(localized("intermittent.live.section", default: "Live Tracker")) {
+        Section {
             VStack(alignment: .leading, spacing: 16) {
                 intermittentControlCenterLiveState
 
@@ -209,6 +209,24 @@ extension ContentView {
                 intermittentTargetReminderControl
             }
             .padding(4)
+        } header: {
+            HStack(alignment: .center, spacing: 12) {
+                SacredIdentityThumbnail(
+                    assetName: intermittentHeroArtwork.assetName,
+                    statusSymbol: "cross.fill",
+                    statusTint: CatholicTheme.primary,
+                    imageSize: 48)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(localized("intermittent.live.section", default: "Live Tracker"))
+                        .font(.headline.weight(.semibold))
+                        .foregroundStyle(.primary)
+                    Text(localized("intermittent.live.optional_practice", default: "Optional personal practice"))
+                        .appEyebrowStyle()
+                        .textCase(nil)
+                }
+            }
+            .textCase(nil)
         }
     }
 
@@ -431,7 +449,7 @@ extension ContentView {
             }
             .id(activeStart)
         } else if let latestSession = intermittentTracker.sessions.first {
-            TimelineView(.periodic(from: .now, by: 1)) { context in
+            TimelineView(.periodic(from: .now, by: 60)) { context in
                 let now = context.date
                 let recap = IntermittentFastSessionRecap.make(
                     session: latestSession,

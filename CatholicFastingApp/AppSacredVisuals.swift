@@ -43,6 +43,97 @@ enum SacredImageAssetResolver {
     }
 }
 
+struct SacredIdentityThumbnail: View {
+    @Environment(\.colorScheme) private var colorScheme
+
+    let assetName: String
+    let statusSymbol: String
+    let statusTint: Color
+    var imageSize: CGFloat = 68
+
+    var body: some View {
+        let badgeSize = max(20, imageSize * 0.37)
+
+        ZStack(alignment: .bottomTrailing) {
+            Group {
+                if SacredImageAssetResolver.hasAsset(named: assetName) {
+                    Image(assetName)
+                        .resizable()
+                        .scaledToFill()
+                } else {
+                    ZStack {
+                        SacredEditorialTokens.raisedSurface(for: colorScheme)
+                        Image(systemName: "cross.fill")
+                            .font(.title2.weight(.semibold))
+                            .foregroundStyle(CatholicTheme.primary)
+                    }
+                }
+            }
+            .frame(width: imageSize, height: imageSize)
+            .clipShape(RoundedRectangle(cornerRadius: min(15, imageSize * 0.22), style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: min(15, imageSize * 0.22), style: .continuous)
+                    .stroke(CatholicTheme.cardBorder.opacity(0.48), lineWidth: 1)
+            }
+
+            Image(systemName: statusSymbol)
+                .font(.caption.weight(.bold))
+                .foregroundStyle(statusTint)
+                .frame(width: badgeSize, height: badgeSize)
+                .background(SacredEditorialTokens.raisedSurface(for: colorScheme), in: Circle())
+                .overlay(Circle().stroke(CatholicTheme.cardBorder.opacity(0.38), lineWidth: 1))
+                .offset(x: 4, y: 4)
+        }
+        .frame(width: imageSize + 6, height: imageSize + 6, alignment: .topLeading)
+        .accessibilityHidden(true)
+    }
+}
+
+struct SacredMasthead: View {
+    let assetName: String
+    let seasonLabel: String
+    var height: CGFloat = 92
+    var accessibilityIdentifier: String?
+
+    var body: some View {
+        ZStack(alignment: .bottom) {
+            Group {
+                if SacredImageAssetResolver.hasAsset(named: assetName) {
+                    Image(assetName)
+                        .resizable()
+                        .scaledToFill()
+                } else {
+                    LinearGradient(
+                        colors: [CatholicTheme.action, CatholicTheme.accent],
+                        startPoint: .leading,
+                        endPoint: .trailing)
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .clipped()
+
+            LinearGradient(
+                colors: [Color.clear, CatholicTheme.action.opacity(0.20)],
+                startPoint: .bottom,
+                endPoint: .top)
+
+            Rectangle()
+                .fill(CatholicTheme.action.opacity(0.72))
+                .frame(height: 2)
+        }
+        .frame(height: height)
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(CatholicTheme.accent.opacity(0.44), lineWidth: 1)
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(
+            "\(AppLocalizer.localizedCurrent("shared.app_title", default: "Catholic Fasting")), \(seasonLabel)")
+        .modifier(AccessibilityIDModifier(id: accessibilityIdentifier))
+    }
+}
+
 struct SacredHeroCard: View {
     let assetName: String
     let title: String
@@ -157,8 +248,7 @@ struct SacredSurfaceAnchorCard: View {
                 if !title.isEmpty {
                     Text(title)
                         .appSectionTitleStyle(serif: true)
-                        .lineLimit(2)
-                        .minimumScaleFactor(0.82)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
 
                 if !subtitle.isEmpty {

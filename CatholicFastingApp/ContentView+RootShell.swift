@@ -139,9 +139,6 @@ extension ContentView {
             .overlay(alignment: .topLeading) {
                 readinessMarkers
             }
-            .overlay(alignment: .topTrailing) {
-                uiTestSurfaceSwitcher
-            }
             .tint(CatholicTheme.primary)
     }
 
@@ -286,13 +283,16 @@ extension ContentView {
                 if unlocked, launchFunnelSnapshot.premiumUnlockedAt == nil {
                     launchFunnelSnapshot.premiumUnlockedAt = Date()
                 }
+                if unlocked {
+                    supportPremiumSurfaceRaw = SupportPremiumSurface.tools.rawValue
+                }
             }
             .onChange(of: scenePhase) { _, newValue in
                 if newValue == .active {
                     Task {
                         prepareLocalLaunchStateIfNeeded()
                         await runDeferredPlatformStartupIfNeeded()
-                        if didRunDeferredStartup {
+                        if launchExecutionState.hasRunDeferredStartup {
                             await refreshReminderIntegrationsIfNeeded()
                         }
                     }
@@ -454,12 +454,12 @@ extension ContentView {
         let localizedSeason = localizedSeasonLabel(currentLiturgicalSeason)
         let content = HStack(spacing: 6) {
             Image(systemName: "cross.case.fill")
-                .foregroundStyle(CatholicTheme.primary)
+                .foregroundStyle(CatholicTheme.seasonAccent)
                 .accessibilityHidden(true)
             if liturgicalSeasonColorsEnabled, !dynamicTypeSize.isAccessibilitySize {
                 Text(localizedSeason)
                     .font(.caption2.weight(.bold))
-                    .foregroundStyle(CatholicTheme.primary)
+                    .foregroundStyle(CatholicTheme.seasonAccent)
                     .lineLimit(1)
                     .fixedSize(horizontal: true, vertical: false)
             }
@@ -556,7 +556,6 @@ extension ContentView {
             accessibilitySupportSection
             dashboardHighlightsSection
             dashboardFastingQuoteSection
-            dashboardSacredImageSection
             dashboardHeroSection
         }
     }
@@ -564,25 +563,38 @@ extension ContentView {
     @ViewBuilder
     var fastingDaysSurfaceSections: some View {
         fastingDaysOverviewSection
+        fastingDaysHeroSection
         fastingDaysDisplayOptionsSection
         fastingDaysListSection
         fastingDaysFastingQuoteSection
-        fastingDaysHeroSection
     }
 
     @ViewBuilder
     var intermittentSurfaceSections: some View {
         intermittentControlCenterSection
+        intermittentHeroSection
         intermittentOverviewSection
         intermittentAdvancedToolsSection
         intermittentFastingQuoteSection
-        intermittentHeroSection
     }
 
     @ViewBuilder
     var moreSurfaceSections: some View {
+        moreHubSacredAnchorSection
         moreHubSection
         unofficialAppNoticeSection
+    }
+
+    var moreHubSacredAnchorSection: some View {
+        Section {
+            SacredSurfaceAnchorCard(
+                assetName: "GuidanceSacred",
+                title: localizedMoreHubHeroTitle(),
+                subtitle: localizedMoreHubHeroSubtitle(),
+                imageHeight: 88,
+                cornerRadius: 16,
+                accessibilityIdentifier: "more.hub.hero")
+        }
     }
 
     @ViewBuilder

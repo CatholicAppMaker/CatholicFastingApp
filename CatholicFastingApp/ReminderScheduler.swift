@@ -106,7 +106,7 @@ enum ReminderScheduler {
             }
 
             let content = UNMutableNotificationContent()
-            content.title = observance.title
+            content.title = ObservanceContentLocalizer.localizedCurrentTitle(observance.title)
             content.body = "Required observance today. Open Catholic Fasting to mark completion."
             content.sound = .default
             content.categoryIdentifier = reminderCategory
@@ -181,7 +181,7 @@ enum ReminderScheduler {
             }
 
             let content = UNMutableNotificationContent()
-            content.title = observance.title
+            content.title = ObservanceContentLocalizer.localizedCurrentTitle(observance.title)
             content.body = "Required observance today. Open Catholic Fasting to mark completion."
             content.sound = .default
             content.categoryIdentifier = reminderCategory

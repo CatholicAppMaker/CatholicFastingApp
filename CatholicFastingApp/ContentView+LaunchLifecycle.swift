@@ -11,14 +11,11 @@ extension ContentView {
     }
 
     func prepareLocalLaunchStateIfNeeded() {
+        migrateFastingAgeEligibilityIfNeeded()
         guard appLaunchPolicy.shouldPrepareLocalLaunchState else {
             return
         }
-        guard !didPrepareLaunchState else {
-            return
-        }
-
-        didPrepareLaunchState = true
+        guard launchExecutionState.beginLocalPreparation() else { return }
         if launchFunnelSnapshot.completedOnboardingAt == nil {
             launchFunnelSnapshot.startedAt = Date()
         }
@@ -28,10 +25,19 @@ extension ContentView {
         ensureActiveHouseholdProfileSelection()
     }
 
-    func applyUITestInitialNavigationIfNeeded() {
-        guard !didApplyUITestInitialNavigation else {
+    private func migrateFastingAgeEligibilityIfNeeded() {
+        let defaults = UserDefaults.standard
+        guard defaults.integer(forKey: StorageKeys.fastingAgeEligibilityContractVersion) < 2 else {
             return
         }
+
+        // The former question meant “18 or older” and could not distinguish people 60+.
+        // Reset only that ambiguous answer so every user explicitly confirms the canonical 18–59 band.
+        age18OrOlderForFasting = false
+        defaults.set(2, forKey: StorageKeys.fastingAgeEligibilityContractVersion)
+    }
+
+    func applyUITestInitialNavigationIfNeeded() {
         guard ProcessInfo.processInfo.environment["UITEST_MODE"] == "1" else {
             return
         }
@@ -41,7 +47,7 @@ extension ContentView {
             return
         }
 
-        didApplyUITestInitialNavigation = true
+        guard launchExecutionState.beginUITestInitialNavigation() else { return }
         navigateToMoreDestination(destination)
     }
 
@@ -51,22 +57,18 @@ extension ContentView {
         guard policy.shouldRunDeferredPlatformStartup else {
             return
         }
-        guard !didRunDeferredStartup else {
-            return
-        }
-
-        didRunDeferredStartup = true
+        guard launchExecutionState.beginDeferredStartup() else { return }
 
         if policy.shouldDelayInitialPlatformStartup {
             try? await Task.sleep(for: .milliseconds(750))
         }
 
         #if canImport(TipKit)
-        if policy.shouldConfigureTips, !didConfigureTips {
+        if policy.shouldConfigureTips, !launchExecutionState.hasConfiguredTips {
             try? Tips.configure([
                 .displayFrequency(.daily),
             ])
-            didConfigureTips = true
+            launchExecutionState.markTipsConfigured()
         }
         #endif
 
@@ -80,11 +82,7 @@ extension ContentView {
         guard force || appLaunchPolicy.shouldRefreshStoreCatalog else {
             return
         }
-        guard force || !didRefreshStoreCatalog else {
-            return
-        }
-
-        didRefreshStoreCatalog = true
+        guard launchExecutionState.beginStoreCatalogRefresh(force: force) else { return }
         await monetizationStore.refreshCatalogAndEntitlements()
     }
 

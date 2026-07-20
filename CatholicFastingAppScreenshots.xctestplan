@@ -1,0 +1,37 @@
+{
+  "configurations" : [
+    {
+      "id" : "B6000000-0000-0000-0000-000000000102",
+      "name" : "Screenshot Capture",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:CatholicFastingApp.xcodeproj",
+      "identifier" : "A00000000000000000000006",
+      "name" : "CatholicFastingApp"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : false,
+      "selectedTests" : [
+        "CatholicFastingAppUITests/testIPhoneAppCleanQAScreenshots",
+        "CatholicFastingAppUITests/testIPhoneAppStoreScreenshots",
+        "CatholicFastingAppUITests/testIPhoneTrackFastQAScreenshots",
+        "CatholicFastingAppUITests/testIPadAppCleanQAScreenshots",
+        "CatholicFastingAppUITests/testIPadAppStoreScreenshots",
+        "CatholicFastingAppUITests/testIPadTrackFastQAScreenshots"
+      ],
+      "target" : {
+        "containerPath" : "container:CatholicFastingApp.xcodeproj",
+        "identifier" : "A00000000000000000000027",
+        "name" : "CatholicFastingAppUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

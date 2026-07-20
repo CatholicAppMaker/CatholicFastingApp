@@ -15,6 +15,7 @@ struct CatholicFastingAppApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .preferredColorScheme(.light)
                 .onChange(of: scenePhase) { _, newPhase in
                     guard newPhase == .active else {
                         return
@@ -111,6 +112,7 @@ private enum UITestBootstrap {
                 "birth_day",
                 "age_14_or_older_for_abstinence",
                 "age_18_or_older_for_fasting",
+                "fasting_age_eligibility_contract_version",
                 "medical_dispensation",
                 "ascension_observance",
                 "friday_outside_lent_mode",
@@ -170,6 +172,7 @@ private enum UITestBootstrap {
             defaults.set(0, forKey: "birth_day")
             defaults.set(true, forKey: "age_14_or_older_for_abstinence")
             defaults.set(true, forKey: "age_18_or_older_for_fasting")
+            defaults.set(2, forKey: "fasting_age_eligibility_contract_version")
             defaults.set(false, forKey: "medical_dispensation")
             defaults.set("sunday", forKey: "ascension_observance")
             defaults.set("substitutePenance", forKey: "friday_outside_lent_mode")
@@ -196,6 +199,15 @@ private enum UITestBootstrap {
 
         if let languageOverride = environment["UITEST_LANGUAGE_MODE"], !languageOverride.isEmpty {
             defaults.set(languageOverride, forKey: "language_mode")
+        }
+
+        if let abstinenceOverride = environment["UITEST_ABSTINENCE_AGE_ELIGIBLE"] {
+            defaults.set(abstinenceOverride == "1", forKey: "age_14_or_older_for_abstinence")
+        }
+
+        if let fastingOverride = environment["UITEST_FASTING_AGE_ELIGIBLE"] {
+            defaults.set(fastingOverride == "1", forKey: "age_18_or_older_for_fasting")
+            defaults.set(2, forKey: "fasting_age_eligibility_contract_version")
         }
 
         if let premiumUnlockedOverride = environment["UITEST_PREMIUM_UNLOCKED"], !premiumUnlockedOverride.isEmpty {

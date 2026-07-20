@@ -6,13 +6,18 @@ extension ContentView {
             AppSectionLeadCard(
                 eyebrow: localized("settings.quick.title", default: "Quick Setup"),
                 title: localizedFormat("settings.quick.progress_format", default: "Setup checklist: %d/%d", setupChecklistCompleted, setupChecklistTotal),
-                detail: localized("settings.quick.intro", default: "Set these once, then mostly use Today and Fasting Days."),
+                detail: localized("settings.quick.intro", default: "Set these once, then mostly use Today and Calendar."),
                 style: .utility)
 
             Toggle(localized("settings.quick.age14", default: "I am 14 or older (abstinence age)"), isOn: $age14OrOlderForAbstinence)
                 .accessibilityIdentifier("settings.quick.age14_toggle")
-            Toggle(localized("settings.quick.age18", default: "I am 18 or older (fasting age)"), isOn: $age18OrOlderForFasting)
+            Toggle(localized("settings.quick.age18", default: "I am between 18 and 59 (fasting age)"), isOn: $age18OrOlderForFasting)
                 .accessibilityIdentifier("settings.quick.age18_toggle")
+
+            Text(localized(
+                "settings.quick.age_helper",
+                default: "People 60 and older should leave the fasting-age option off while keeping abstinence eligibility on."))
+                .appSupportingTextStyle()
 
             Picker(localized("settings.quick.region", default: "Region profile"), selection: $regionProfileRaw) {
                 ForEach(RuleSettings.RegionProfile.allCases) { option in

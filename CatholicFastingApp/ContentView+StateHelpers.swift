@@ -2,7 +2,27 @@ import SwiftUI
 
 extension ContentView {
     func localizedObservanceTitle(_ title: String) -> String {
-        ObservanceTitleLocalizer.localizedCurrent(title)
+        ObservanceContentLocalizer.localizedTitle(title, languageCode: languageModeRaw)
+    }
+
+    func localizedObservanceDetail(_ observance: Observance) -> String? {
+        ObservanceContentLocalizer.localizedDetail(observance.detail, languageCode: languageModeRaw)
+    }
+
+    func localizedObservanceRationale(_ observance: Observance) -> String {
+        ObservanceContentLocalizer.localizedRationale(observance, languageCode: languageModeRaw)
+    }
+
+    func localizedObservanceKindLabel(_ kind: Observance.Kind) -> String {
+        ObservancePresentationLocalizer.kindLabel(kind, languageCode: languageModeRaw)
+    }
+
+    func localizedObservanceDispositionLabel(_ observance: Observance) -> String {
+        ObservancePresentationLocalizer.dispositionLabel(observance, languageCode: languageModeRaw)
+    }
+
+    func localizedCompletionStatusLabel(_ status: CompletionStatus) -> String {
+        ObservancePresentationLocalizer.completionLabel(status, languageCode: languageModeRaw)
     }
 
     var liturgicalCalendar: Calendar {
@@ -50,7 +70,7 @@ extension ContentView {
     var dailySeasonalFormationLine: String {
         let lines = activeSeasonalContentPack.formationLines
         guard !lines.isEmpty else { return "Offer today's discipline with prayer and charity." }
-        let day = liturgicalCalendar.ordinality(of: .day, in: .year, for: Date()) ?? 1
+        let day = liturgicalCalendar.ordinality(of: .day, in: .year, for: AppClock.now()) ?? 1
         return lines[(day - 1) % lines.count]
     }
 
@@ -58,7 +78,7 @@ extension ContentView {
         CatholicFastingQuoteSelector.seasonalQuote(
             locale: languageMode.contentLocale,
             season: currentLiturgicalSeason,
-            date: Date())
+            date: AppClock.now())
     }
 
     var dailyQuoteReminderTimeBinding: Binding<Date> {
@@ -94,7 +114,7 @@ extension ContentView {
             observances: currentYearObservances,
             statusesByID: tracker.statusesByID,
             sessions: intermittentTracker.sessions,
-            now: Date(),
+            now: AppClock.now(),
             calendar: liturgicalCalendar)
     }
 
@@ -161,8 +181,9 @@ extension ContentView {
     }
 
     var weeklyActionableObservances: [Observance] {
-        let weekStart = liturgicalCalendar.date(byAdding: .day, value: -6, to: Date()) ?? Date()
-        return currentYearObservances.filter { $0.date >= weekStart && $0.date <= Date() && $0.obligation != .notApplicable }
+        let now = AppClock.now()
+        let weekStart = liturgicalCalendar.date(byAdding: .day, value: -6, to: now) ?? now
+        return currentYearObservances.filter { $0.date >= weekStart && $0.date <= now && $0.obligation != .notApplicable }
     }
 
     var weeklyActionableObservanceCount: Int {
@@ -422,21 +443,27 @@ extension ContentView {
     }
 
     var widgetSnapshot: WidgetSnapshot {
-        let today = liturgicalCalendar.startOfDay(for: Date())
+        let now = AppClock.now()
+        let today = liturgicalCalendar.startOfDay(for: now)
         let todayObservance = currentYearObservances.first {
             liturgicalCalendar.isDate($0.date, inSameDayAs: today)
         }
         return WidgetSnapshot(
-            generatedAt: Date(),
-            todayTitle: todayObservance.map { localizedObservanceTitle($0.title) } ?? "No observance today",
-            todayObligation: todayObservance?.dispositionLabel ?? "No obligation",
-            nextRequiredTitle: upcomingMandatoryObservance.map { localizedObservanceTitle($0.title) } ?? "No upcoming required observance",
+            generatedAt: now,
+            todayTitle: todayObservance.map { localizedObservanceTitle($0.title) }
+                ?? CoreLocalizer.localizedCurrent("widget.fallback.today.title", default: "No observance today"),
+            todayObligation: todayObservance?.dispositionLabel
+                ?? CoreLocalizer.localizedCurrent("widget.fallback.today.obligation", default: "No obligation"),
+            nextRequiredTitle: upcomingMandatoryObservance.map { localizedObservanceTitle($0.title) }
+                ?? CoreLocalizer.localizedCurrent(
+                    "widget.fallback.next_required", default: "No upcoming required observance"),
             nextRequiredDate: upcomingMandatoryObservance?.date,
             completionRate: completionRateValue,
             hasActiveIntermittentFast: intermittentTracker.activeStart != nil,
             activeIntermittentFastStart: intermittentTracker.activeStart,
             activeIntermittentTargetHours: intermittentTracker.presetHours,
-            premiumMotivationLine: premiumMotivationLine)
+            premiumMotivationLine: premiumMotivationLine,
+            localizationCode: CoreLocalizer.currentLocalizationCode())
     }
 
     func persistWidgetSnapshot() {
@@ -456,18 +483,21 @@ extension ContentView {
     }
 
     var observancesForToday: [Observance] {
-        currentYearObservances.filter { liturgicalCalendar.isDate($0.date, inSameDayAs: Date()) }
+        currentYearObservances.filter { liturgicalCalendar.isDate($0.date, inSameDayAs: AppClock.now()) }
     }
 
     var rollingUpcomingObservances: [Observance] {
-        let currentYear = liturgicalCalendar.component(.year, from: Date())
+        let today = liturgicalCalendar.startOfDay(for: AppClock.now())
+        let currentYear = liturgicalCalendar.component(.year, from: today)
         let thisYear = ObservanceCalculator.makeCalendar(for: currentYear, settings: settings)
         let nextYear = ObservanceCalculator.makeCalendar(for: currentYear + 1, settings: settings)
-        return (thisYear + nextYear).sorted { $0.date < $1.date }
+        return (thisYear + nextYear)
+            .filter { liturgicalCalendar.startOfDay(for: $0.date) >= today }
+            .sorted { $0.date < $1.date }
     }
 
     var upcomingMandatoryObservance: Observance? {
-        let today = liturgicalCalendar.startOfDay(for: Date())
+        let today = liturgicalCalendar.startOfDay(for: AppClock.now())
         return rollingUpcomingObservances.first { observance in
             observance.obligation == .mandatory
                 && liturgicalCalendar.startOfDay(for: observance.date) > today
@@ -555,7 +585,7 @@ extension ContentView {
     }
 
     var currentLiturgicalSeason: LiturgicalSeason {
-        LiturgicalSeasonThemeEngine.season(for: Date())
+        LiturgicalSeasonThemeEngine.season(for: AppClock.now())
     }
 
     var todayActionableObservances: [Observance] {
@@ -580,7 +610,7 @@ extension ContentView {
     var intermittentHabitSummary: IntermittentHabitSummary {
         IntermittentHabitSummaryEngine.summary(
             sessions: intermittentTracker.sessions,
-            now: Date(),
+            now: AppClock.now(),
             calendar: liturgicalCalendar)
     }
 
@@ -598,7 +628,7 @@ extension ContentView {
     }
 
     var intermittentManualStartRange: ClosedRange<Date> {
-        let latest = Date()
+        let latest = AppClock.now()
         let earliest = liturgicalCalendar.date(byAdding: .day, value: -14, to: latest) ?? latest
         return earliest ... latest
     }
@@ -769,12 +799,15 @@ extension ContentView {
             return localizedFormat(
                 "decision.optional_unknown.rationale_format",
                 default: "Review the age eligibility toggles in Settings so the app can determine whether %@ binds you.",
-                titles)
+                localizedObservanceTitles(in: titles))
         }
 
         if rationale.hasPrefix(knownPrefix), rationale.hasSuffix(knownSuffix) {
             let titles = String(rationale.dropFirst(knownPrefix.count).dropLast(knownSuffix.count))
-            return localizedFormat("decision.optional_known.rationale_format", default: "Based on your current profile, %@ does not strictly bind today.", titles)
+            return localizedFormat(
+                "decision.optional_known.rationale_format",
+                default: "Based on your current profile, %@ does not strictly bind today.",
+                localizedObservanceTitles(in: titles))
         }
 
         let singlePrefix = "This is based on "
@@ -782,10 +815,20 @@ extension ContentView {
         if rationale.hasPrefix(singlePrefix), rationale.hasSuffix(singleSuffix) {
             let titles = String(rationale.dropFirst(singlePrefix.count).dropLast(singleSuffix.count))
             let key = titles.contains(", ") ? "decision.observance.multi_format" : "decision.observance.single_format"
-            return localizedFormat(key, default: "This is based on %@.", titles)
+            return localizedFormat(key, default: "This is based on %@.", localizedObservanceTitles(in: titles))
         }
 
         return rationale
+    }
+
+    private func localizedObservanceTitles(in text: String) -> String {
+        ObservanceLocalizationCatalog.titleDefaultsByIdentifier.values
+            .sorted { $0.count > $1.count }
+            .reduce(text) { result, defaultTitle in
+                result.replacingOccurrences(
+                    of: defaultTitle,
+                    with: localizedObservanceTitle(defaultTitle))
+            }
     }
 
     private func localizedFoodDecisionSource(_ sourceLine: String) -> String {
@@ -834,7 +877,7 @@ extension ContentView {
     }
 
     var streakObservances: [Observance] {
-        let currentYear = liturgicalCalendar.component(.year, from: Date())
+        let currentYear = liturgicalCalendar.component(.year, from: AppClock.now())
         let previousYear = currentYear - 1
         let previous = ObservanceCalculator.makeCalendar(for: previousYear, settings: settings)
         return previous + currentYearObservances
@@ -853,7 +896,7 @@ extension ContentView {
         guard !uniqueDays.isEmpty else { return 0 }
 
         var streak = 0
-        var expected = liturgicalCalendar.startOfDay(for: Date())
+        var expected = liturgicalCalendar.startOfDay(for: AppClock.now())
         for day in uniqueDays {
             if liturgicalCalendar.isDate(day, inSameDayAs: expected) {
                 streak += 1
@@ -887,9 +930,9 @@ extension ContentView {
     func todayButtonLabel(for status: CompletionStatus) -> String {
         switch status {
         case .notStarted:
-            "Complete"
+            localized("observance.action.complete", default: "Complete")
         default:
-            status.label
+            localizedCompletionStatusLabel(status)
         }
     }
 

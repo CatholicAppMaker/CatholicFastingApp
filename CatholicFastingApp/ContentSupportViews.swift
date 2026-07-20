@@ -18,11 +18,15 @@ struct ObservanceRowView: View {
                     .foregroundStyle(.secondary)
 
                 HStack(spacing: 6) {
-                    StatusTag(text: observance.kind.label, color: observance.kind.color)
-                    StatusTag(text: observance.dispositionLabel, color: obligationColor)
+                    StatusTag(
+                        text: ObservancePresentationLocalizer.currentKindLabel(observance.kind),
+                        color: observance.kind.color)
+                    StatusTag(
+                        text: ObservancePresentationLocalizer.currentDispositionLabel(observance),
+                        color: obligationColor)
                 }
 
-                if let detail = observance.detail {
+                if let detail = ObservanceContentLocalizer.localizedCurrentDetail(observance.detail) {
                     Text(detail)
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -32,7 +36,7 @@ struct ObservanceRowView: View {
                     AppLocalizer.localizedCurrentFormat(
                         "observance.why_format",
                         default: "Why: %@",
-                        observance.rationale))
+                        ObservanceContentLocalizer.localizedCurrentRationale(observance)))
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
@@ -63,7 +67,7 @@ struct ObservanceRowView: View {
             } else {
                 Menu {
                     ForEach(CompletionStatus.allCases) { statusOption in
-                        Button(statusOption.label) {
+                        Button(ObservancePresentationLocalizer.currentCompletionLabel(statusOption)) {
                             onSetStatus(statusOption)
                         }
                     }
@@ -77,7 +81,7 @@ struct ObservanceRowView: View {
                     AppLocalizer.localizedCurrentFormat(
                         "observance.set_status_format",
                         default: "Set status %@",
-                        status.label))
+                        ObservancePresentationLocalizer.currentCompletionLabel(status)))
                 .contextMenu {
                     Button(AppLocalizer.localizedCurrent("observance.toggle_complete", default: "Toggle Complete"), action: onToggleCompletion)
                 }
@@ -172,7 +176,7 @@ struct StatusTag: View {
     var body: some View {
         Text(text)
             .font(.caption)
-            .foregroundStyle(CatholicTheme.primary)
+            .foregroundStyle(.primary)
             .padding(.horizontal, 8)
             .padding(.vertical, 3)
             .background(CatholicTheme.parchment.opacity(0.88), in: Capsule())

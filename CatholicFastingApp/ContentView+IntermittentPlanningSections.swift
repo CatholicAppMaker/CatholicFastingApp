@@ -303,6 +303,12 @@ extension ContentView {
             .multilineTextAlignment(.center)
         }
         .frame(width: liveTrackerRingSize, height: liveTrackerRingSize)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(
+            reached
+                ? localized("intermittent.live.ring.target", default: "Target")
+                : localized("intermittent.live.ring.remaining", default: "Remaining"))
+        .accessibilityValue(countdown)
         .accessibilityIdentifier("intermittent.live_ring")
     }
 
@@ -400,6 +406,12 @@ extension ContentView {
             .multilineTextAlignment(.center)
         }
         .frame(width: liveTrackerRingSize, height: liveTrackerRingSize)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(
+            hasEatingWindow
+                ? localized("intermittent.live.eating_window", default: "Eating Window")
+                : localized("intermittent.live.next_fast", default: "Next Fast"))
+        .accessibilityValue(countdown)
         .accessibilityIdentifier("intermittent.eating_ring")
     }
 

@@ -1,0 +1,11 @@
+"widget.configuration.name" = "Catholic Fasting";
+"widget.configuration.description" = "See today's guidance and the next required observance.";
+"widget.section.today" = "Today";
+"widget.section.today.upper" = "TODAY";
+"widget.section.next_required.upper" = "NEXT REQUIRED";
+"widget.fallback.today.title" = "No observance today";
+"widget.fallback.today.obligation" = "No obligation";
+"widget.fallback.next_required" = "No upcoming required observance";
+"widget.fallback.motivation" = "Stay faithful in small daily disciplines.";
+"widget.fast.active" = "Fast active";
+"widget.fast.target_reached" = "Fast target reached";

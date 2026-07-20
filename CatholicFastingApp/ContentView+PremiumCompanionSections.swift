@@ -97,9 +97,8 @@ extension ContentView {
 
     var premiumAndSupportSection: some View {
         Section {
-            premiumStatusSummaryCard
-
             if monetizationStore.premiumUnlocked {
+                premiumStatusSummaryCard
                 premiumLegalSupportCard
                 premiumJourneyCardWithStoreMarker
                 premiumActiveStateCard
@@ -116,20 +115,29 @@ extension ContentView {
                         Text(localized("premium.upgrade.loading", default: "Loading purchases…"))
                     }
                     .font(.caption)
-                }
-
-                if !monetizationStore.premiumProducts.isEmpty {
+                } else if !monetizationStore.premiumProducts.isEmpty {
                     ForEach(monetizationStore.premiumProducts, id: \.id) { product in
                         let offer = premiumOfferCatalog.offer(for: product.id)
                         premiumOfferCard(product: product, offer: offer)
                     }
                 } else {
-                    Text(
-                        localized(
-                            "premium.upgrade.unavailable",
-                            default: "Premium plans are temporarily unavailable. Try again in a moment, then use Restore Purchases if needed."))
-                        .appSupportingTextStyle()
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text(premiumCatalogRecoveryMessage)
+                            .appSupportingTextStyle()
+                            .accessibilityIdentifier("premium.catalog.recovery")
+                        Button {
+                            Task { await monetizationStore.refreshCatalogAndEntitlements() }
+                        } label: {
+                            Label(
+                                localized("premium.catalog.retry", default: "Try loading plans again"),
+                                systemImage: "arrow.clockwise")
+                        }
+                        .appSecondaryButtonStyle()
+                        .accessibilityIdentifier("premium.catalog.retry")
+                    }
                 }
+
+                premiumStatusSummaryCard
 
                 premiumLegalSupportCard
 
@@ -153,6 +161,21 @@ extension ContentView {
         .animation(.none, value: monetizationStore.tipProducts.map(\.id))
         .animation(.none, value: monetizationStore.isLoading)
         .animation(.none, value: monetizationStore.statusMessage)
+    }
+
+    var premiumCatalogRecoveryMessage: String {
+        switch monetizationStore.catalogLoadState {
+        case .offline:
+            localized(
+                "premium.catalog.offline",
+                default: "You appear to be offline. Premium plans need an App Store connection; your current access remains unchanged.")
+        case .loading:
+            localized("premium.upgrade.loading", default: "Loading purchases…")
+        case .idle, .loaded, .failed:
+            localized(
+                "premium.upgrade.unavailable",
+                default: "Premium plans are temporarily unavailable. Try again in a moment, then use Restore Purchases if needed.")
+        }
     }
 
     var premiumJourneyCardWithStoreMarker: some View {
@@ -508,13 +531,22 @@ extension ContentView {
             .accessibilityIdentifier("premium.manage")
 
             Link(localized("premium.legal.terms", default: "Terms of Use (EULA)"), destination: UIConstants.termsOfUseURL)
-                .appSupportingTextStyle()
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(CatholicTheme.primary)
+                .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                .contentShape(Rectangle())
                 .accessibilityIdentifier("premium.legal.terms")
             Link(localized("premium.legal.privacy", default: "Privacy Policy"), destination: UIConstants.privacyPolicyURL)
-                .appSupportingTextStyle()
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(CatholicTheme.primary)
+                .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                .contentShape(Rectangle())
                 .accessibilityIdentifier("premium.legal.privacy")
             Link(localized("premium.legal.support", default: "Support"), destination: UIConstants.supportSiteURL)
-                .appSupportingTextStyle()
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(CatholicTheme.primary)
+                .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                .contentShape(Rectangle())
                 .accessibilityIdentifier("premium.legal.support")
         }
         .padding(14)

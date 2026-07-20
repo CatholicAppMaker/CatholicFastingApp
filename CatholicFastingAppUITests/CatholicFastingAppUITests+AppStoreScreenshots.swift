@@ -50,7 +50,7 @@ extension CatholicFastingAppUITests {
         try captureAppStoreScreen("01-today") { app in
             app.launch()
             ensureOnHomeScreen(app)
-            XCTAssertTrue(app.otherElements["ipad.today.workspace"].waitForExistence(timeout: 4))
+            assertIPadWorkspaceVisible("today", in: app)
         }
 
         try captureAppStoreScreen("02-track-fast", seedActiveFast: true) { app in
@@ -58,7 +58,7 @@ extension CatholicFastingAppUITests {
             ensureOnHomeScreen(app)
             openIPadSurface("intermittent", in: app)
             let workspaceReady = app.otherElements["surface.intermittent.ready"].waitForExistence(timeout: 8)
-                || app.otherElements["ipad.intermittent.live"].waitForExistence(timeout: 8)
+                || elementByIdentifier("ipad.intermittent.live", in: app).waitForExistence(timeout: 8)
             XCTAssertTrue(workspaceReady)
             XCTAssertTrue(scrollToElementPresence(elementByIdentifier("ipad.intermittent.live", in: app), in: app))
         }
@@ -66,7 +66,7 @@ extension CatholicFastingAppUITests {
         try captureAppStoreScreen("03-privacy", initialMoreDestination: "privacyAndData") { app in
             app.launch()
             XCTAssertTrue(app.otherElements["home.ready"].waitForExistence(timeout: 4))
-            XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
+            assertIPadWorkspaceVisible("more", in: app)
             XCTAssertTrue(scrollToElementPresence(elementByIdentifier("launch.export_data", in: app), in: app))
         }
 
@@ -139,9 +139,9 @@ extension CatholicFastingAppUITests {
             app.launch()
             ensureOnHomeScreen(app)
             openIPadSurface("intermittent", in: app)
-            XCTAssertTrue(app.otherElements["ipad.intermittent.live"].waitForExistence(timeout: 4))
+            XCTAssertTrue(elementByIdentifier("ipad.intermittent.live", in: app).waitForExistence(timeout: 4))
             XCTAssertTrue(app.buttons["ipad.intermittent.end"].waitForExistence(timeout: 4))
-            XCTAssertTrue(elementIsVisible(app.otherElements["ipad.intermittent.live"].firstMatch, in: app))
+            XCTAssertTrue(elementIsVisible(elementByIdentifier("ipad.intermittent.live", in: app), in: app))
         }
     }
 
@@ -193,14 +193,14 @@ extension CatholicFastingAppUITests {
         try captureAppStoreScreen("01-ipad-today") { app in
             app.launch()
             ensureOnHomeScreen(app)
-            XCTAssertTrue(app.otherElements["ipad.today.workspace"].waitForExistence(timeout: 4))
+            assertIPadWorkspaceVisible("today", in: app)
         }
 
         try captureAppStoreScreen("02-ipad-fasting-days") { app in
             app.launch()
             ensureOnHomeScreen(app)
             openIPadSurface("fastingDays", in: app)
-            XCTAssertTrue(app.otherElements["ipad.fasting_days.workspace"].waitForExistence(timeout: 4))
+            assertIPadWorkspaceVisible("fastingDays", in: app)
             let yearPicker = elementByIdentifier("ipad.fasting_days.year", in: app)
             XCTAssertTrue(yearPicker.waitForExistence(timeout: 4))
             XCTAssertEqual(yearPicker.value as? String, "2026", "Calendar years must render as verbatim dates without thousands separators")
@@ -210,7 +210,7 @@ extension CatholicFastingAppUITests {
             app.launch()
             ensureOnHomeScreen(app)
             openIPadSurface("intermittent", in: app)
-            XCTAssertTrue(app.otherElements["ipad.intermittent.live"].waitForExistence(timeout: 4))
+            XCTAssertTrue(elementByIdentifier("ipad.intermittent.live", in: app).waitForExistence(timeout: 4))
         }
 
         try captureAppStoreScreen("04-ipad-premium") { app in

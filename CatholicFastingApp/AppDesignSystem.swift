@@ -9,25 +9,25 @@ enum SacredEditorialTokens {
 
     static func canvasTop(for colorScheme: ColorScheme) -> Color {
         colorScheme == .dark
-            ? Color(red: 0.075, green: 0.078, blue: 0.068)
+            ? Color(red: 0.070, green: 0.064, blue: 0.058)
             : CatholicTheme.parchment
     }
 
     static func canvasBottom(for colorScheme: ColorScheme) -> Color {
         colorScheme == .dark
-            ? Color(red: 0.105, green: 0.11, blue: 0.092)
+            ? Color(red: 0.105, green: 0.092, blue: 0.078)
             : CatholicTheme.parchmentShade.opacity(0.72)
     }
 
     static func raisedSurface(for colorScheme: ColorScheme) -> Color {
         colorScheme == .dark
-            ? Color(red: 0.14, green: 0.145, blue: 0.125)
+            ? Color(red: 0.145, green: 0.127, blue: 0.108)
             : Color(red: 0.985, green: 0.975, blue: 0.925)
     }
 
     static func quietSurface(for colorScheme: ColorScheme) -> Color {
         colorScheme == .dark
-            ? Color.white.opacity(0.045)
+            ? Color(red: 0.95, green: 0.90, blue: 0.82).opacity(0.055)
             : CatholicTheme.parchment.opacity(0.48)
     }
 }

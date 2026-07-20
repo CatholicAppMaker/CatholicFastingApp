@@ -16,6 +16,38 @@ extension View {
     }
 }
 
+struct IPadSidebarRow: View {
+    let title: String
+    let subtitle: String
+    let systemImage: String
+    let isSelected: Bool
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: systemImage)
+                .font(.headline)
+                .foregroundStyle(isSelected ? CatholicTheme.primary : .primary)
+                .frame(width: 22)
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.headline)
+                    .foregroundStyle(isSelected ? CatholicTheme.primary : .primary)
+                    .fixedSize(horizontal: false, vertical: true)
+                Text(subtitle)
+                    .font(.footnote)
+                    .foregroundStyle(.primary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding(.vertical, 6)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
+        .accessibilityElement(children: .combine)
+    }
+}
+
 struct IPadWorkspaceHeader: View {
     let eyebrow: String
     let title: String
@@ -32,6 +64,7 @@ struct IPadWorkspaceHeader: View {
                 .appLeadTextStyle()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -154,7 +187,7 @@ struct IPadWorkspaceHeroBand: View {
                         }
                         Text(regionContext.disclosureText)
                             .appSupportingTextStyle()
-                            .lineLimit(2)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
             } else {
@@ -235,9 +268,11 @@ struct IPadObservanceSelectionRow: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 HStack(spacing: 6) {
-                    StatusTag(text: context.observance.kind.label, color: context.observance.kind.color)
                     StatusTag(
-                        text: context.observance.dispositionLabel,
+                        text: ObservancePresentationLocalizer.currentKindLabel(context.observance.kind),
+                        color: context.observance.kind.color)
+                    StatusTag(
+                        text: ObservancePresentationLocalizer.currentDispositionLabel(context.observance),
                         color: context.observance.obligation == .mandatory ? .red : .blue)
                     IPadContextBadge(text: context.regionalContext.classificationLabel, supportLevel: context.regionalContext.supportLevel)
                 }

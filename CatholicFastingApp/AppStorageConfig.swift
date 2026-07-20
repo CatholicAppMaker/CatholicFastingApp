@@ -4,8 +4,8 @@ enum DefaultValues {
     static let birthYear = 0
     static let birthMonth = 0
     static let birthDay = 0
-    static let age14OrOlderForAbstinence = true
-    static let age18OrOlderForFasting = true
+    static let age14OrOlderForAbstinence = false
+    static let age18OrOlderForFasting = false
     static let medicalDispensation = false
     static let ascension = RuleSettings.AscensionObservance.sunday
     static let fridayOutsideLent = RuleSettings.FridayOutsideLentMode.substitutePenance
@@ -34,6 +34,7 @@ enum StorageKeys {
     static let birthDay = "birth_day"
     static let age14OrOlderForAbstinence = "age_14_or_older_for_abstinence"
     static let age18OrOlderForFasting = "age_18_or_older_for_fasting"
+    static let fastingAgeEligibilityContractVersion = "fasting_age_eligibility_contract_version"
     static let medicalDispensation = "medical_dispensation"
     static let ascensionObservance = "ascension_observance"
     static let fridayOutsideLentMode = "friday_outside_lent_mode"

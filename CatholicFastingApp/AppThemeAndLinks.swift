@@ -106,6 +106,46 @@ enum CatholicTheme {
     static var primary: Color {
         #if canImport(UIKit)
         adaptiveColor(
+            light: UIColor(red: 0.39, green: 0.16, blue: 0.18, alpha: 1),
+            dark: UIColor(red: 0.76, green: 0.56, blue: 0.56, alpha: 1))
+        #else
+        Color(red: 0.39, green: 0.16, blue: 0.18)
+        #endif
+    }
+
+    static var accent: Color {
+        #if canImport(UIKit)
+        adaptiveColor(
+            light: UIColor(red: 0.64, green: 0.46, blue: 0.16, alpha: 1),
+            dark: UIColor(red: 0.73, green: 0.62, blue: 0.39, alpha: 1))
+        #else
+        Color(red: 0.64, green: 0.46, blue: 0.16)
+        #endif
+    }
+
+    static var accentForeground: Color {
+        #if canImport(UIKit)
+        adaptiveColor(
+            light: UIColor(red: 0.39, green: 0.28, blue: 0.08, alpha: 1),
+            dark: UIColor(red: 0.78, green: 0.67, blue: 0.43, alpha: 1))
+        #else
+        Color(red: 0.39, green: 0.28, blue: 0.08)
+        #endif
+    }
+
+    static var action: Color {
+        #if canImport(UIKit)
+        adaptiveColor(
+            light: UIColor(red: 0.39, green: 0.16, blue: 0.18, alpha: 1),
+            dark: UIColor(red: 0.43, green: 0.19, blue: 0.21, alpha: 1))
+        #else
+        Color(red: 0.39, green: 0.16, blue: 0.18)
+        #endif
+    }
+
+    static var seasonAccent: Color {
+        #if canImport(UIKit)
+        adaptiveColor(
             light: UIColor(activePalette.primary),
             dark: darkPrimaryColor(for: activePalette.season, seasonModeEnabled: seasonColorsEnabled))
         #else
@@ -113,25 +153,11 @@ enum CatholicTheme {
         #endif
     }
 
-    static var accent: Color {
-        activePalette.accent
-    }
-
-    static var accentForeground: Color {
-        #if canImport(UIKit)
-        adaptiveColor(
-            light: UIColor(activePalette.accentForeground),
-            dark: darkPrimaryColor(for: activePalette.season, seasonModeEnabled: seasonColorsEnabled))
-        #else
-        activePalette.accentForeground
-        #endif
-    }
-
     static var successForeground: Color {
         #if canImport(UIKit)
         adaptiveColor(
             light: UIColor(red: 0.05, green: 0.36, blue: 0.13, alpha: 1),
-            dark: UIColor(red: 0.40, green: 0.84, blue: 0.50, alpha: 1))
+            dark: UIColor(red: 0.54, green: 0.70, blue: 0.55, alpha: 1))
         #else
         Color(red: 0.05, green: 0.36, blue: 0.13)
         #endif
@@ -141,7 +167,7 @@ enum CatholicTheme {
         #if canImport(UIKit)
         adaptiveColor(
             light: UIColor(red: 0.56, green: 0.28, blue: 0.03, alpha: 1),
-            dark: UIColor(red: 0.95, green: 0.70, blue: 0.38, alpha: 1))
+            dark: UIColor(red: 0.80, green: 0.65, blue: 0.38, alpha: 1))
         #else
         Color(red: 0.56, green: 0.28, blue: 0.03)
         #endif
@@ -151,7 +177,7 @@ enum CatholicTheme {
         #if canImport(UIKit)
         adaptiveColor(
             light: UIColor(red: 0.05, green: 0.28, blue: 0.58, alpha: 1),
-            dark: UIColor(red: 0.48, green: 0.70, blue: 1.00, alpha: 1))
+            dark: UIColor(red: 0.57, green: 0.67, blue: 0.78, alpha: 1))
         #else
         Color(red: 0.05, green: 0.28, blue: 0.58)
         #endif
@@ -161,28 +187,39 @@ enum CatholicTheme {
         #if canImport(UIKit)
         adaptiveColor(
             light: UIColor(red: 0.62, green: 0.08, blue: 0.08, alpha: 1),
-            dark: UIColor(red: 1.00, green: 0.55, blue: 0.55, alpha: 1))
+            dark: UIColor(red: 0.86, green: 0.56, blue: 0.54, alpha: 1))
         #else
         Color(red: 0.62, green: 0.08, blue: 0.08)
         #endif
     }
 
     static var parchment: Color {
+        #if canImport(UIKit)
+        adaptiveColor(
+            light: UIColor(activePalette.parchment),
+            dark: UIColor(red: 0.145, green: 0.127, blue: 0.108, alpha: 1))
+        #else
         activePalette.parchment
+        #endif
     }
 
     static var parchmentShade: Color {
+        #if canImport(UIKit)
+        adaptiveColor(
+            light: UIColor(activePalette.parchmentShade),
+            dark: UIColor(red: 0.105, green: 0.092, blue: 0.078, alpha: 1))
+        #else
         activePalette.parchmentShade
+        #endif
     }
 
     static var cardBorder: Color {
         #if canImport(UIKit)
         adaptiveColor(
-            light: UIColor(activePalette.cardBorder),
-            dark: darkPrimaryColor(for: activePalette.season, seasonModeEnabled: seasonColorsEnabled)
-                .withAlphaComponent(0.72))
+            light: UIColor(red: 0.64, green: 0.56, blue: 0.43, alpha: 1),
+            dark: UIColor(red: 0.39, green: 0.33, blue: 0.28, alpha: 1))
         #else
-        activePalette.cardBorder
+        Color(red: 0.64, green: 0.56, blue: 0.43)
         #endif
     }
 
@@ -219,20 +256,20 @@ enum CatholicTheme {
         seasonModeEnabled: Bool) -> UIColor
     {
         guard seasonModeEnabled else {
-            return UIColor(red: 0.95, green: 0.62, blue: 0.67, alpha: 1)
+            return UIColor(red: 0.72, green: 0.54, blue: 0.56, alpha: 1)
         }
 
         return switch season {
         case .ordinary:
-            UIColor(red: 0.43, green: 0.82, blue: 0.52, alpha: 1)
+            UIColor(red: 0.55, green: 0.66, blue: 0.54, alpha: 1)
         case .advent:
-            UIColor(red: 0.66, green: 0.71, blue: 1.00, alpha: 1)
+            UIColor(red: 0.64, green: 0.65, blue: 0.76, alpha: 1)
         case .christmas:
-            UIColor(red: 0.95, green: 0.77, blue: 0.42, alpha: 1)
+            UIColor(red: 0.74, green: 0.64, blue: 0.42, alpha: 1)
         case .lent:
-            UIColor(red: 0.80, green: 0.64, blue: 0.94, alpha: 1)
+            UIColor(red: 0.66, green: 0.57, blue: 0.70, alpha: 1)
         case .easter:
-            UIColor(red: 0.55, green: 0.83, blue: 0.61, alpha: 1)
+            UIColor(red: 0.58, green: 0.68, blue: 0.50, alpha: 1)
         }
     }
     #endif
@@ -290,12 +327,12 @@ enum CatholicTheme {
         case .ordinary:
             return Palette(
                 season: season,
-                primary: Color(red: 0.10, green: 0.38, blue: 0.17),
-                accent: Color(red: 0.72, green: 0.56, blue: 0.15),
-                accentForeground: Color(red: 0.10, green: 0.38, blue: 0.17),
-                parchment: Color(red: 0.97, green: 0.96, blue: 0.86),
-                parchmentShade: Color(red: 0.86, green: 0.90, blue: 0.76),
-                cardBorder: Color(red: 0.38, green: 0.59, blue: 0.34))
+                primary: Color(red: 0.16, green: 0.30, blue: 0.20),
+                accent: Color(red: 0.65, green: 0.48, blue: 0.17),
+                accentForeground: Color(red: 0.34, green: 0.25, blue: 0.08),
+                parchment: Color(red: 0.96, green: 0.94, blue: 0.90),
+                parchmentShade: Color(red: 0.91, green: 0.88, blue: 0.82),
+                cardBorder: Color(red: 0.66, green: 0.60, blue: 0.48))
         }
     }
 }

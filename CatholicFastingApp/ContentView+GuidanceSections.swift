@@ -476,70 +476,12 @@ extension ContentView {
     }
 
     var foodGuidanceSection: some View {
-        let snapshot = FoodGuidanceEngine.snapshot(for: guidanceScenario, settings: settings)
-        return Section(localized("guidance.food_guidelines", default: "Food Guidance")) {
-            Picker(localized("guidance.scenario", default: "Scenario"), selection: $guidanceScenario) {
-                ForEach(GuidanceScenario.allCases) { scenario in
-                    Text(scenario.label).tag(scenario)
-                }
-            }
-            .accessibilityIdentifier("guidance.scenario")
-
-            VStack(alignment: .leading, spacing: 10) {
-                Text(snapshot.summaryLine)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                Text(
-                    localized(
-                        "guidance.food.common_questions",
-                        default: "Use this for common food questions: meat, dairy, eggs, fish, broth, and gravies."))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            .accessibilityIdentifier("guidance.food.summary")
-
-            foodGuidanceGroupView(snapshot.whatCountsAsMeat, icon: "xmark.circle", tint: .red)
-            foodGuidanceGroupView(snapshot.generallyPermitted, icon: "checkmark.circle", tint: .green)
-            foodGuidanceGroupView(snapshot.mealPattern, icon: "fork.knife", tint: CatholicTheme.accentForeground)
-            foodGuidanceGroupView(snapshot.extraGuidance, icon: "questionmark.circle", tint: CatholicTheme.warningForeground)
-
-            VStack(alignment: .leading, spacing: 8) {
-                Text(localized("guidance.food.stricter_title", default: "Stricter traditional practice"))
-                    .font(.headline)
-                    .foregroundStyle(CatholicTheme.primary)
-                ForEach(snapshot.stricterTraditionalPractice, id: \.self) { line in
-                    Label(line, systemImage: "flame")
-                        .font(.subheadline)
-                }
-            }
-            .accessibilityIdentifier("guidance.food.stricter")
-
-            VStack(alignment: .leading, spacing: 8) {
-                Text(localized("guidance.food.if_unsure_title", default: "If unsure"))
-                    .font(.headline)
-                    .foregroundStyle(CatholicTheme.primary)
-                ForEach(snapshot.ifUnsure, id: \.self) { line in
-                    Label(line, systemImage: "arrow.forward.circle")
-                        .font(.subheadline)
-                }
-                Text(snapshot.caveatLine)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            .accessibilityIdentifier("guidance.food.if_unsure")
-
-            Text(snapshot.sourceLine)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-
-            Link(
-                regionProfile == .canada
-                    ? localized("guidance.food.cccb_link", default: "Read CCCB Friday guidance")
-                    : localized("guidance.usccb.link_label", default: "Read Full USCCB Fast & Abstinence Guidelines"),
-                destination: regionProfile == .canada ? UIConstants.cccbKeepingFridayURL : UIConstants.usccbFastAbstinenceURL)
-                .accessibilityIdentifier("guidance.food.source_link")
-        }
-        .accessibilityIdentifier("guidance.food.section")
+        FoodGuidanceSection(
+            scenario: guidanceScenario,
+            settings: settings,
+            languageCode: languageModeRaw,
+            selectedScenario: $guidanceScenario)
+            .equatable()
     }
 
     var guidanceSeasonContextSection: some View {
@@ -701,8 +643,113 @@ extension ContentView {
                 .foregroundStyle(.secondary)
         }
     }
+}
 
-    func foodGuidanceGroupView(_ group: FoodGuidanceGroup, icon: String, tint: Color) -> some View {
+private struct FoodGuidanceSection: View, Equatable {
+    let scenario: GuidanceScenario
+    let settings: RuleSettings
+    let languageCode: String
+    @Binding var selectedScenario: GuidanceScenario
+
+    private var snapshot: FoodGuidanceSnapshot {
+        FoodGuidanceEngine.snapshot(for: scenario, settings: settings)
+    }
+
+    static func == (lhs: FoodGuidanceSection, rhs: FoodGuidanceSection) -> Bool {
+        lhs.scenario == rhs.scenario
+            && lhs.settings == rhs.settings
+            && lhs.languageCode == rhs.languageCode
+    }
+
+    var body: some View {
+        let snapshot = snapshot
+
+        Section(localized("guidance.food_guidelines", default: "Food Guidance")) {
+            Picker(localized("guidance.scenario", default: "Scenario"), selection: $selectedScenario) {
+                ForEach(GuidanceScenario.allCases) { scenario in
+                    Text(scenario.label).tag(scenario)
+                }
+            }
+            .accessibilityIdentifier("guidance.scenario")
+
+            VStack(alignment: .leading, spacing: 10) {
+                Text(snapshot.summaryLine)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                Text(
+                    localized(
+                        "guidance.food.common_questions",
+                        default: "Use this for common food questions: meat, dairy, eggs, fish, broth, and gravies."))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .accessibilityIdentifier("guidance.food.summary")
+
+            FoodGuidanceGroupView(group: snapshot.whatCountsAsMeat, icon: "xmark.circle", tint: .red)
+            FoodGuidanceGroupView(group: snapshot.generallyPermitted, icon: "checkmark.circle", tint: .green)
+            FoodGuidanceGroupView(
+                group: snapshot.mealPattern,
+                icon: "fork.knife",
+                tint: CatholicTheme.accentForeground)
+            FoodGuidanceGroupView(
+                group: snapshot.extraGuidance,
+                icon: "questionmark.circle",
+                tint: CatholicTheme.warningForeground)
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text(localized("guidance.food.stricter_title", default: "Stricter traditional practice"))
+                    .font(.headline)
+                    .foregroundStyle(CatholicTheme.primary)
+                ForEach(snapshot.stricterTraditionalPractice, id: \.self) { line in
+                    Label(line, systemImage: "flame")
+                        .font(.subheadline)
+                }
+            }
+            .accessibilityIdentifier("guidance.food.stricter")
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text(localized("guidance.food.if_unsure_title", default: "If unsure"))
+                    .font(.headline)
+                    .foregroundStyle(CatholicTheme.primary)
+                ForEach(snapshot.ifUnsure, id: \.self) { line in
+                    Label(line, systemImage: "arrow.forward.circle")
+                        .font(.subheadline)
+                }
+                Text(snapshot.caveatLine)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .accessibilityIdentifier("guidance.food.if_unsure")
+
+            Text(snapshot.sourceLine)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            Link(
+                settings.regionProfile == .canada
+                    ? localized("guidance.food.cccb_link", default: "Read CCCB Friday guidance")
+                    : localized(
+                        "guidance.usccb.link_label",
+                        default: "Read Full USCCB Fast & Abstinence Guidelines"),
+                destination: settings.regionProfile == .canada
+                    ? UIConstants.cccbKeepingFridayURL
+                    : UIConstants.usccbFastAbstinenceURL)
+                .accessibilityIdentifier("guidance.food.source_link")
+        }
+        .accessibilityIdentifier("guidance.food.section")
+    }
+
+    private func localized(_ key: String, default defaultValue: String) -> String {
+        AppLocalizer.localized(key, default: defaultValue, languageCode: languageCode)
+    }
+}
+
+private struct FoodGuidanceGroupView: View {
+    let group: FoodGuidanceGroup
+    let icon: String
+    let tint: Color
+
+    var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(group.title)
                 .font(.headline)

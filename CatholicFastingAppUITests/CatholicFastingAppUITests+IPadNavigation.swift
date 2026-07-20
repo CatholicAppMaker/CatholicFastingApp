@@ -88,16 +88,16 @@ extension CatholicFastingAppUITests {
         ensureOnHomeScreen(app)
 
         openIPadSurface("today", in: app)
-        XCTAssertTrue(app.otherElements["ipad.today.workspace"].waitForExistence(timeout: 4))
+        assertIPadWorkspaceVisible("today", in: app)
 
         openIPadSurface("fasting_days", in: app)
-        XCTAssertTrue(app.otherElements["ipad.fasting_days.workspace"].waitForExistence(timeout: 4))
+        assertIPadWorkspaceVisible("fastingDays", in: app)
 
         openIPadSurface("intermittent", in: app)
-        XCTAssertTrue(app.otherElements["ipad.intermittent.workspace"].waitForExistence(timeout: 4))
+        assertIPadWorkspaceVisible("intermittent", in: app)
 
         openIPadSurface("more", in: app)
-        XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
+        assertIPadWorkspaceVisible("more", in: app)
     }
 
     func testIPadSidebarLoopsAcrossAllWorkspacesAfterCanadaFrenchSelection() {
@@ -107,13 +107,13 @@ extension CatholicFastingAppUITests {
 
         for _ in 0 ..< 2 {
             openIPadSurface("today", in: app)
-            XCTAssertTrue(app.otherElements["ipad.today.workspace"].waitForExistence(timeout: 4))
+            assertIPadWorkspaceVisible("today", in: app)
             openIPadSurface("fasting_days", in: app)
-            XCTAssertTrue(app.otherElements["ipad.fasting_days.workspace"].waitForExistence(timeout: 4))
+            assertIPadWorkspaceVisible("fastingDays", in: app)
             openIPadSurface("intermittent", in: app)
-            XCTAssertTrue(app.otherElements["ipad.intermittent.workspace"].waitForExistence(timeout: 4))
+            assertIPadWorkspaceVisible("intermittent", in: app)
             openIPadSurface("more", in: app)
-            XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
+            assertIPadWorkspaceVisible("more", in: app)
         }
     }
 
@@ -144,7 +144,7 @@ extension CatholicFastingAppUITests {
 
         for destination in destinations {
             openIPadMoreDestination(destination, in: app)
-            XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
+            assertIPadWorkspaceVisible("more", in: app)
         }
     }
 
@@ -184,7 +184,7 @@ extension CatholicFastingAppUITests {
 
         openIPadMoreDestination("historyOfFasting", in: app)
 
-        XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
+        assertIPadWorkspaceVisible("more", in: app)
         XCTAssertTrue(scrollToElement(app.buttons["history.article.earlyChurch"].firstMatch, in: app))
     }
 
@@ -195,7 +195,7 @@ extension CatholicFastingAppUITests {
 
         openIPadSurface("more", in: app)
 
-        XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
+        assertIPadWorkspaceVisible("more", in: app)
         XCTAssertTrue(scrollToElement(app.staticTexts["Support & Premium"].firstMatch, in: app))
         XCTAssertTrue(scrollToElement(elementByIdentifier("premium.plan_choice", in: app), in: app))
     }
@@ -207,9 +207,9 @@ extension CatholicFastingAppUITests {
 
         for _ in 0 ..< 3 {
             openIPadSurface("today", in: app)
-            XCTAssertTrue(app.otherElements["ipad.today.workspace"].waitForExistence(timeout: 4))
+            assertIPadWorkspaceVisible("today", in: app)
             openIPadSurface("more", in: app)
-            XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
+            assertIPadWorkspaceVisible("more", in: app)
         }
     }
 
@@ -223,20 +223,20 @@ extension CatholicFastingAppUITests {
         let openFastingDays = app.buttons["ipad.today.action.open_fasting_days"].firstMatch
         XCTAssertTrue(scrollToElement(openFastingDays, in: app))
         openFastingDays.tap()
-        XCTAssertTrue(app.otherElements["ipad.fasting_days.workspace"].waitForExistence(timeout: 4))
+        assertIPadWorkspaceVisible("fastingDays", in: app)
 
         openIPadSurface("today", in: app)
         let openPlanning = app.buttons["ipad.today.action.open_planning"].firstMatch
         XCTAssertTrue(scrollToElement(openPlanning, in: app))
         openPlanning.tap()
-        XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
+        assertIPadWorkspaceVisible("more", in: app)
         XCTAssertTrue(scrollToElement(elementByIdentifier("settings.region_picker", in: app), in: app))
 
         openIPadSurface("today", in: app)
         let openPremium = app.buttons["ipad.today.action.open_premium"].firstMatch
         XCTAssertTrue(scrollToElement(openPremium, in: app))
         openPremium.tap()
-        XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
+        assertIPadWorkspaceVisible("more", in: app)
         XCTAssertTrue(scrollToElement(elementByIdentifier("premium.plan_choice", in: app), in: app))
     }
 
@@ -251,20 +251,20 @@ extension CatholicFastingAppUITests {
             let openFastingDays = app.buttons["ipad.today.action.open_fasting_days"].firstMatch
             XCTAssertTrue(scrollToElement(openFastingDays, in: app))
             openFastingDays.tap()
-            XCTAssertTrue(app.otherElements["ipad.fasting_days.workspace"].waitForExistence(timeout: 4))
+            assertIPadWorkspaceVisible("fastingDays", in: app)
 
             openIPadSurface("today", in: app)
             let openPlanning = app.buttons["ipad.today.action.open_planning"].firstMatch
             XCTAssertTrue(scrollToElement(openPlanning, in: app))
             openPlanning.tap()
-            XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
+            assertIPadWorkspaceVisible("more", in: app)
             XCTAssertTrue(scrollToElement(elementByIdentifier("settings.region_picker", in: app), in: app))
 
             openIPadSurface("today", in: app)
             let openPremium = app.buttons["ipad.today.action.open_premium"].firstMatch
             XCTAssertTrue(scrollToElement(openPremium, in: app))
             openPremium.tap()
-            XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
+            assertIPadWorkspaceVisible("more", in: app)
             XCTAssertTrue(scrollToElement(elementByIdentifier("premium.plan_choice", in: app), in: app))
         }
     }
@@ -277,13 +277,13 @@ extension CatholicFastingAppUITests {
         openIPadSurface("today", in: app)
 
         XCTAssertFalse(app.buttons["ipad.today.action.read_voice_summary"].firstMatch.exists)
-        XCTAssertTrue(app.otherElements["ipad.today.workspace"].waitForExistence(timeout: 4))
+        assertIPadWorkspaceVisible("today", in: app)
 
         let openPlanning = app.buttons["ipad.today.action.open_planning"].firstMatch
         XCTAssertTrue(scrollToElement(openPlanning, in: app))
         openPlanning.tap()
 
-        XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
+        assertIPadWorkspaceVisible("more", in: app)
         XCTAssertTrue(scrollToElement(elementByIdentifier("settings.region_picker", in: app), in: app))
     }
 
@@ -303,8 +303,12 @@ extension CatholicFastingAppUITests {
         for _ in 0 ..< 2 {
             for destination in destinations {
                 openIPadMoreDestination(destination, in: app)
-                XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
-                assertIPadMoreDestinationContent(destination, in: app)
+                assertIPadWorkspaceVisible("more", in: app)
+                let railSelection = app.buttons["ipad.more.destination.\(destination)"].firstMatch
+                let compactSelection = app.buttons["ipad.more.compact.\(destination)"].firstMatch
+                let selected = railSelection.exists ? railSelection : compactSelection
+                XCTAssertTrue(selected.waitForExistence(timeout: 4))
+                XCTAssertTrue(selected.isSelected, "iPad More did not select \(destination) after repeated navigation")
             }
         }
     }

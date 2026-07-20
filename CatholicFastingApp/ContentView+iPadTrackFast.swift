@@ -8,7 +8,7 @@ extension ContentView {
             let activeFast = intermittentTracker.activeStart != nil
 
             ScrollView {
-                ZStack(alignment: .topLeading) {
+                Group {
                     if stacked {
                         VStack(alignment: .leading, spacing: 20) {
                             if !activeFast {
@@ -50,23 +50,9 @@ extension ContentView {
                         }
                     }
 
-                    ipadIntermittentUITestMarkers
                 }
                 .padding(20)
             }
-        }
-    }
-
-    private var ipadIntermittentUITestMarkers: some View {
-        VStack(spacing: 0) {
-            uiTestMarker("ipad.intermittent.live")
-            uiTestMarker("ipad.intermittent.controls")
-            uiTestMarker("ipad.intermittent.planning")
-            uiTestMarker("ipad.intermittent.advanced")
-            uiTestMarker("ipad.intermittent.history")
-            uiTestMarker("ipad.intermittent.intention")
-            uiTestMarker("ipad.intermittent.start")
-            uiTestMarker("ipad.intermittent.start_date")
         }
     }
 }

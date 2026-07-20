@@ -5,7 +5,7 @@ PROJECT="CatholicFastingApp.xcodeproj"
 SCHEME="CatholicFastingApp"
 RESULT_ROOT="${RESULT_ROOT:-/tmp/CatholicFastingAppTestResults}"
 DERIVED_DATA="${DERIVED_DATA:-/tmp/CatholicFastingAppDerivedData}"
-MAX_ATTEMPTS="${MAX_ATTEMPTS:-2}"
+MAX_ATTEMPTS="${MAX_ATTEMPTS:-1}"
 TEST_TIMEOUT_SECONDS="${TEST_TIMEOUT_SECONDS:-900}"
 SMOKE_TIMEOUT_SECONDS="${SMOKE_TIMEOUT_SECONDS:-240}"
 DEEP_TIMEOUT_SECONDS="${DEEP_TIMEOUT_SECONDS:-900}"
@@ -75,8 +75,8 @@ run_suite() {
 		rm -rf "${result_bundle}"
 
 		echo "==> [${suite}] Attempt ${attempt}/${MAX_ATTEMPTS}: resetting simulator state"
-		xcrun simctl shutdown all || true
-		xcrun simctl erase all || true
+		xcrun simctl shutdown "${simulator_ref}" || true
+		xcrun simctl erase "${simulator_ref}" || true
 		xcrun simctl boot "${simulator_ref}" || true
 		xcrun simctl bootstatus "${simulator_ref}" -b
 
@@ -105,6 +105,42 @@ run_suite() {
 
 	echo "[${suite}] UI tests failed after ${MAX_ATTEMPTS} attempts."
 	return 1
+}
+
+discover_release_tests() {
+	local target_family="$1"
+	local test_name=""
+	while IFS= read -r test_name; do
+		[[ -n "${test_name}" ]] || continue
+		[[ "${test_name}" == *Screenshots ]] && continue
+		if [[ "${target_family}" == "ipad" ]]; then
+			[[ "${test_name}" == *IPad* ]] || continue
+		else
+			[[ "${test_name}" == *IPad* ]] && continue
+		fi
+		printf '%s\n' "-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/${test_name}"
+	done < <(
+		rg --no-filename -o 'func[[:space:]]+test[A-Za-z0-9_]+\(' CatholicFastingAppUITests \
+			| sed -E 's/func[[:space:]]+//; s/\($//' \
+			| sort -u
+	)
+}
+
+run_release_suite() {
+	local phone_selectors=()
+	local ipad_selectors=()
+	local selector=""
+
+	while IFS= read -r selector; do
+		phone_selectors+=("${selector}")
+	done < <(discover_release_tests phone)
+	while IFS= read -r selector; do
+		ipad_selectors+=("${selector}")
+	done < <(discover_release_tests ipad)
+
+	echo "==> Release inventory: ${#phone_selectors[@]} iPhone tests, ${#ipad_selectors[@]} iPad tests"
+	run_suite "release-phone" "${DEEP_TIMEOUT_SECONDS}" "${PHONE_SIMULATOR_NAME}" "${PHONE_SIMULATOR_ID}" "${phone_selectors[@]}"
+	run_suite "release-ipad" "${IPAD_TIMEOUT_SECONDS}" "${IPAD_SIMULATOR_NAME}" "${IPAD_SIMULATOR_ID}" "${ipad_selectors[@]}"
 }
 
 run_smoke_suite() {
@@ -182,12 +218,13 @@ ipad)
 	run_ipad_suite
 	;;
 all)
-	run_smoke_suite
-	run_deep_suite
-	run_ipad_suite
+	run_release_suite
+	;;
+release)
+	run_release_suite
 	;;
 *)
-	echo "Unknown TEST_SUITE='${TEST_SUITE}'. Expected smoke, deep, ipad, or all."
+	echo "Unknown TEST_SUITE='${TEST_SUITE}'. Expected smoke, deep, ipad, release, or all."
 	exit 2
 	;;
 esac

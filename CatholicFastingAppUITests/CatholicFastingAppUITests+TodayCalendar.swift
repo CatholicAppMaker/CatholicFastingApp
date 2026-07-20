@@ -40,6 +40,7 @@ extension CatholicFastingAppUITests {
         openSurface("Today", in: app)
 
         XCTAssertTrue(elementIsVisible(elementByIdentifier("companion.dashboard", in: app), in: app))
+        XCTAssertTrue(elementIsVisible(elementByIdentifier("companion.sacred_masthead", in: app), in: app))
         XCTAssertTrue(elementIsVisible(app.staticTexts["companion.rule.obligation"].firstMatch, in: app))
         XCTAssertTrue(elementIsVisible(app.buttons["companion.primary_action.button"].firstMatch, in: app))
         XCTAssertTrue(elementIsVisible(elementByIdentifier("companion.rule.source", in: app), in: app))
@@ -216,11 +217,12 @@ extension CatholicFastingAppUITests {
 
         openIPadSurface("today", in: app)
 
-        XCTAssertTrue(app.otherElements["ipad.today.workspace"].waitForExistence(timeout: 4))
-        XCTAssertTrue(app.otherElements["ipad.today.hero"].waitForExistence(timeout: 4))
-        XCTAssertTrue(app.otherElements["ipad.today.primary_card"].waitForExistence(timeout: 4))
-        XCTAssertTrue(app.otherElements["ipad.today.metrics"].waitForExistence(timeout: 4))
+        assertIPadWorkspaceVisible("today", in: app)
+        XCTAssertTrue(app.otherElements["companion.dashboard"].waitForExistence(timeout: 4))
+        XCTAssertTrue(elementByIdentifier("companion.sacred_masthead", in: app).waitForExistence(timeout: 4))
         XCTAssertTrue(app.otherElements["ipad.today.actions"].waitForExistence(timeout: 4))
+        XCTAssertTrue(app.otherElements["companion.live_state"].waitForExistence(timeout: 4))
+        XCTAssertTrue(app.otherElements["companion.formation"].waitForExistence(timeout: 4))
     }
 
     func testIPadTodayShowsDecisionActionsAndContextRail() {
@@ -230,8 +232,7 @@ extension CatholicFastingAppUITests {
 
         openIPadSurface("today", in: app)
 
-        XCTAssertTrue(app.otherElements["ipad.today.primary_card"].waitForExistence(timeout: 4))
-        XCTAssertTrue(app.otherElements["ipad.today.metrics"].waitForExistence(timeout: 4))
+        XCTAssertTrue(app.otherElements["companion.dashboard"].waitForExistence(timeout: 4))
         XCTAssertTrue(app.otherElements["ipad.today.actions"].waitForExistence(timeout: 4))
         XCTAssertTrue(app.otherElements["companion.live_state"].waitForExistence(timeout: 4))
     }
@@ -282,7 +283,7 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(shortcut, in: app))
         shortcut.tap()
 
-        XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
+        assertIPadWorkspaceVisible("more", in: app)
         let guidanceSection = app.otherElements["guidance.food.section"].firstMatch
         XCTAssertTrue(scrollToElement(guidanceSection, in: app))
     }

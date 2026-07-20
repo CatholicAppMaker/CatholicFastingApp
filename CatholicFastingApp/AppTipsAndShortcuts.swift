@@ -17,7 +17,7 @@ struct FastingDaysFocusTip: Tip {
     }
 
     var message: Text? {
-        tipText("tips.fasting_days.message", fallback: "Open Fasting Days to filter required observances and plan ahead.")
+        tipText("tips.fasting_days.message", fallback: "Open Calendar to filter required observances and plan ahead.")
     }
 
     var image: Image? {
@@ -31,7 +31,7 @@ struct IntermittentTrackerTip: Tip {
     }
 
     var message: Text? {
-        tipText("tips.intermittent.message", fallback: "Use Track Fast for optional intermittent disciplines.")
+        tipText("tips.intermittent.message", fallback: "Use Fast for optional personal disciplines.")
     }
 
     var image: Image? {
@@ -66,8 +66,8 @@ struct OpenTodayIntent: AppIntent {
 }
 
 struct OpenFastingDaysIntent: AppIntent {
-    static let title: LocalizedStringResource = "Open Fasting Days"
-    static let description = IntentDescription("Open the fasting days list.")
+    static let title: LocalizedStringResource = "Open Calendar"
+    static let description = IntentDescription("Open the Church observance calendar.")
     static var openAppWhenRun: Bool = true
 
     func perform() async throws -> some IntentResult & OpensIntent {
@@ -76,8 +76,8 @@ struct OpenFastingDaysIntent: AppIntent {
 }
 
 struct OpenIntermittentTrackerIntent: AppIntent {
-    static let title: LocalizedStringResource = "Open Fast Tracker"
-    static let description = IntentDescription("Open the intermittent fasting tracker.")
+    static let title: LocalizedStringResource = "Open Fast"
+    static let description = IntentDescription("Open the optional personal fast tracker.")
     static var openAppWhenRun: Bool = true
 
     func perform() async throws -> some IntentResult & OpensIntent {
@@ -94,13 +94,13 @@ struct CatholicFastingAppShortcuts: AppShortcutsProvider {
             systemImageName: "sun.max")
         AppShortcut(
             intent: OpenFastingDaysIntent(),
-            phrases: ["Open \(.applicationName) fasting days"],
-            shortTitle: "Fasting Days",
+            phrases: ["Open \(.applicationName) Calendar", "Open \(.applicationName) fasting days"],
+            shortTitle: "Calendar",
             systemImageName: "calendar")
         AppShortcut(
             intent: OpenIntermittentTrackerIntent(),
-            phrases: ["Open \(.applicationName) fast tracker"],
-            shortTitle: "Track Fast",
+            phrases: ["Open \(.applicationName) Fast", "Open \(.applicationName) fast tracker"],
+            shortTitle: "Fast",
             systemImageName: "timer")
     }
 }

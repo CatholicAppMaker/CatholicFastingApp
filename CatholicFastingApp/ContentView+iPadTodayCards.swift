@@ -5,116 +5,6 @@ import AVFoundation
 #endif
 
 extension ContentView {
-    var ipadTodayPrimaryGuidanceCard: some View {
-        let decision = todayFoodDecision
-        let todayContext = todayActionableObservances.first.map { RegionalGuidanceContextFactory.presentationContext(for: $0, settings: settings) }
-
-        return VStack(alignment: .leading, spacing: 16) {
-            IPadWorkspaceHeader(
-                eyebrow: localized("ipad.today.primary.eyebrow", default: "Today"),
-                title: todayActionableObservances.isEmpty
-                    ? localized("ipad.today.primary.title_clear", default: "No mandatory observance today")
-                    : localized("ipad.today.primary.title_attention", default: "Today requires attention"),
-                detail: heroSummaryText)
-
-            HStack(spacing: 10) {
-                IPadContextBadge(
-                    text: todayContext?.regionalContext.classificationLabel ?? RegionalGuidanceContextFactory.generalContext(for: settings).classificationLabel,
-                    supportLevel: todayContext?.regionalContext.supportLevel ?? RegionalGuidanceContextFactory.generalContext(for: settings).supportLevel)
-                if let today = todayActionableObservances.first {
-                    StatusTag(text: today.kind.label, color: today.kind.color)
-                    StatusTag(text: today.dispositionLabel, color: today.obligation == .mandatory ? .red : .blue)
-                }
-            }
-
-            VStack(alignment: .leading, spacing: 8) {
-                Text(decision.obligationLine)
-                    .font(.system(.title3, design: .serif).weight(.bold))
-                    .foregroundStyle(CatholicTheme.primary)
-                if let allowed = decision.allowed.first {
-                    Text(localizedFormat("ipad.today.primary.allowed_format", default: "Okay today: %@", allowed))
-                        .font(.subheadline)
-                }
-                if let avoid = decision.avoid.first {
-                    Text(localizedFormat("ipad.today.primary.avoid_format", default: "Avoid today: %@", avoid))
-                        .font(.subheadline)
-                }
-                Text(decision.rationale)
-                    .appLeadTextStyle()
-            }
-
-            VStack(alignment: .leading, spacing: 8) {
-                Text(localized("ipad.today.primary.next_step", default: "Next step"))
-                    .appEyebrowStyle()
-                    .textCase(.uppercase)
-                Text(
-                    todayContext?.nextActionText
-                        ?? localized(
-                            "ipad.today.primary.next_step_detail",
-                            default: "Keep the next required day visible and review your region profile before planning optional disciplines."))
-                    .appLeadTextStyle()
-            }
-            .padding(12)
-            .appSurfaceCard(.utility, cornerRadius: 16)
-
-            Button {
-                navigateToMoreDestination(.guidanceAndRules)
-            } label: {
-                Label(localized("ipad.today.primary.open_guidance", default: "Open full food guidance"), systemImage: "book.closed")
-            }
-            .appSecondaryButtonStyle()
-            .accessibilityIdentifier("ipad.today.open_food_guidance")
-
-            VStack(alignment: .leading, spacing: 8) {
-                Text(localized("ipad.today.primary.common_questions", default: "Common food questions"))
-                    .appEyebrowStyle()
-                    .foregroundStyle(CatholicTheme.primary)
-                    .textCase(.uppercase)
-                Label(localized("ipad.today.primary.common.chicken", default: "Chicken and turkey count as meat."), systemImage: "xmark.circle")
-                Label(localized("ipad.today.primary.common.dairy", default: "Eggs, milk, butter, and cheese are generally permitted."), systemImage: "checkmark.circle")
-                Label(localized("ipad.today.primary.common.fish", default: "Fish and shellfish are generally permitted."), systemImage: "checkmark.circle")
-                Label(
-                    localized(
-                        "ipad.today.primary.common.open_guidance_hint",
-                        default: "Open the full guidance page if you need stricter-practice details or region-specific notes."),
-                    systemImage: "book.closed")
-                    .foregroundStyle(.secondary)
-            }
-            .padding(12)
-            .appSurfaceCard(.utility, cornerRadius: 16)
-            .accessibilityIdentifier("ipad.today.food_guidance_preview")
-        }
-        .padding(18)
-        .iPadPaneCard(.primary)
-        .accessibilityIdentifier("ipad.today.primary_card")
-    }
-
-    var ipadTodayMetricsCard: some View {
-        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-            IPadSummaryMetricCard(
-                title: localized("ipad.today.metrics.next_required", default: "Next required"),
-                value: upcomingMandatoryObservance.map { localizedObservanceTitle($0.title) }
-                    ?? localized("ipad.today.metrics.none_ahead", default: "None ahead"),
-                subtitle: upcomingMandatoryObservance.map { localizedAbbreviatedDate($0.date) }
-                    ?? localized("ipad.today.metrics.current_year_clear", default: "Current year clear"))
-            IPadSummaryMetricCard(
-                title: localized("ipad.today.metrics.this_week", default: "This week"),
-                value: "\(weeklyCompletedObservancesCount)/\(weeklyActionableObservanceCount)",
-                subtitle: localized("ipad.today.metrics.this_week_detail", default: "discipline days completed"),
-                tint: CatholicTheme.accentForeground)
-            IPadSummaryMetricCard(
-                title: localized("ipad.today.metrics.current_rhythm", default: "Current rhythm"),
-                value: localizedFormat("ipad.today.metrics.current_rhythm_value", default: "%d days", currentStreak),
-                subtitle: streakResilienceMessage)
-            IPadSummaryMetricCard(
-                title: localized("ipad.today.metrics.this_month", default: "This month"),
-                value: "\(monthlyCompletionCount)",
-                subtitle: localized("ipad.today.metrics.this_month_detail", default: "logged observances"),
-                tint: CatholicTheme.warningForeground)
-        }
-        .accessibilityIdentifier("ipad.today.metrics")
-    }
-
     var ipadTodayQuickActionsCard: some View {
         VStack(alignment: .leading, spacing: 14) {
             IPadWorkspaceHeader(
@@ -124,7 +14,7 @@ extension ContentView {
 
             HStack(spacing: 10) {
                 IPadWorkspaceActionButton(
-                    title: localized("ipad.today.actions.open_fasting_days", default: "Open Fasting Days"),
+                    title: localized("ipad.today.actions.open_fasting_days", default: "Open Calendar"),
                     systemImage: "calendar",
                     primary: true,
                     accessibilityIdentifier: "ipad.today.action.open_fasting_days")
@@ -243,31 +133,6 @@ extension ContentView {
         .padding(18)
         .iPadPaneCard()
         .accessibilityIdentifier("ipad.today.recovery")
-    }
-
-    var ipadTodaySeasonCard: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            IPadWorkspaceHeader(
-                eyebrow: localized("ipad.today.season.eyebrow", default: "Season"),
-                title: activeSeasonalContentPack.campaignTitle,
-                detail: activeSeasonalContentPack.campaignSubtitle)
-
-            Text(dailySeasonalFormationLine)
-                .appLeadTextStyle()
-
-            HStack(spacing: 8) {
-                ForEach(activeSeasonalContentPack.formationLines.prefix(2), id: \.self) { line in
-                    Text(line)
-                        .appSupportingTextStyle()
-                        .padding(10)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .appSurfaceCard(.utility, cornerRadius: 14)
-                }
-            }
-        }
-        .padding(18)
-        .iPadPaneCard()
-        .accessibilityIdentifier("ipad.today.season")
     }
 
     func ipadTodayTrustCard(regionContext: RegionalRuleContext) -> some View {

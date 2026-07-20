@@ -140,7 +140,7 @@ extension ContentView {
             assetName: fastingDaysHeroArtwork.assetName,
             seasonLabel: localizedSeasonLabel(currentLiturgicalSeason),
             seasonContextLabel: localizedFormat("ipad.hero.season_label", default: "Liturgical Season: %@", localizedSeasonLabel(currentLiturgicalSeason)),
-            title: localized("ipad.fasting_days.hero.title", default: "Fasting Day Planner"),
+            title: localized("ipad.fasting_days.hero.title", default: "Calendar"),
             subtitle: localized("ipad.fasting_days.hero.subtitle", default: "Browse obligation days, optional practices, and celebrations without leaving the workspace."),
             quote: fastingDaysFastingQuote,
             regionContext: regionContext,
@@ -209,11 +209,13 @@ extension ContentView {
                         detail: localizedCompleteDate(selected.date))
                     VStack(alignment: .leading, spacing: 8) {
                         HStack(spacing: 8) {
-                            StatusTag(text: selected.kind.label, color: selected.kind.color)
-                            StatusTag(text: selected.dispositionLabel, color: selected.obligation == .mandatory ? .red : .blue)
+                            StatusTag(text: localizedObservanceKindLabel(selected.kind), color: selected.kind.color)
+                            StatusTag(
+                                text: localizedObservanceDispositionLabel(selected),
+                                color: selected.obligation == .mandatory ? .red : .blue)
                             IPadContextBadge(text: context.regionalContext.supportLevel.label, supportLevel: context.regionalContext.supportLevel)
                         }
-                        if let detail = selected.detail {
+                        if let detail = localizedObservanceDetail(selected) {
                             Text(detail)
                                 .appSupportingTextStyle()
                         }
@@ -241,7 +243,7 @@ extension ContentView {
                 VStack(alignment: .leading, spacing: 12) {
                     IPadWorkspaceHeader(
                         eyebrow: localized("ipad.fasting_days.log.eyebrow", default: "Log"),
-                        title: localized("ipad.fasting_days.log.title", default: "Mark today clearly"),
+                        title: localized("ipad.fasting_days.log.title", default: "Log this observance"),
                         detail: localized("ipad.fasting_days.log.detail", default: "Keep status and notes together without leaving this detail pane."))
                     if compact {
                         VStack(alignment: .leading, spacing: 10) {

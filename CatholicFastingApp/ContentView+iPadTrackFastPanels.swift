@@ -6,7 +6,7 @@ extension ContentView {
             assetName: intermittentHeroArtwork.assetName,
             seasonLabel: localizedSeasonLabel(currentLiturgicalSeason),
             seasonContextLabel: localizedFormat("ipad.hero.season_label", default: "Liturgical Season: %@", localizedSeasonLabel(currentLiturgicalSeason)),
-            title: localized("ipad.intermittent.hero.title", default: "Track Fast"),
+            title: localized("ipad.intermittent.hero.title", default: "Fast"),
             subtitle: intermittentTracker.activeStart == nil
                 ? localized("ipad.intermittent.hero.subtitle_idle", default: "Choose a target, set the start time if needed, then begin.")
                 : localized("ipad.intermittent.hero.subtitle_active", default: "Sacred context stays nearby while the live tracker leads."),
@@ -26,6 +26,7 @@ extension ContentView {
                 detail: intermittentTracker.activeStart == nil
                     ? localized("ipad.intermittent.live.detail_idle", default: "Set a target and start when ready.")
                     : localized("ipad.intermittent.live.detail_active", default: "Elapsed time, target, and next action stay together."))
+                .accessibilityIdentifier("ipad.intermittent.live")
 
             if let activeStart = intermittentTracker.activeStart {
                 TimelineView(.periodic(from: .now, by: 1)) { context in
@@ -67,7 +68,7 @@ extension ContentView {
                 }
                 .id(activeStart)
             } else if let latestSession = intermittentTracker.sessions.first {
-                TimelineView(.periodic(from: .now, by: 1)) { context in
+                TimelineView(.periodic(from: .now, by: 60)) { context in
                     let now = context.date
                     let recap = IntermittentFastSessionRecap.make(
                         session: latestSession,
@@ -104,16 +105,14 @@ extension ContentView {
                 }
                 .id(latestSession.id)
             } else {
-                TimelineView(.periodic(from: .now, by: 1)) { _ in
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(localized("ipad.intermittent.live.empty_title", default: "No fasting session yet"))
-                            .font(.title3.weight(.semibold))
-                            .foregroundStyle(CatholicTheme.primary)
-                        Text(localized("ipad.intermittent.live.empty_detail", default: "Choose a quick plan below, then start when ready."))
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                        intermittentFirstViewportContext
-                    }
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(localized("ipad.intermittent.live.empty_title", default: "No fasting session yet"))
+                        .font(.title3.weight(.semibold))
+                        .foregroundStyle(CatholicTheme.primary)
+                    Text(localized("ipad.intermittent.live.empty_detail", default: "Choose a quick plan below, then start when ready."))
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    intermittentFirstViewportContext
                 }
             }
         }
@@ -133,6 +132,7 @@ extension ContentView {
                 detail: intermittentTracker.activeStart == nil
                     ? localized("ipad.intermittent.controls.detail", default: "Quick presets first. Adjust the start time if you already began fasting.")
                     : localized("ipad.intermittent.controls.detail_active", default: "Fine-tune the current fast without moving the live controls out of reach."))
+                .accessibilityIdentifier("ipad.intermittent.controls")
 
             if intermittentTracker.activeStart == nil {
                 ipadIntermittentPrimaryActionRow
@@ -243,7 +243,6 @@ extension ContentView {
         }
         .padding(18)
         .iPadPaneCard()
-        .accessibilityIdentifier("ipad.intermittent.controls")
     }
 
     var ipadIntermittentPrimaryActionRow: some View {
@@ -291,6 +290,7 @@ extension ContentView {
                 eyebrow: localized("ipad.intermittent.planning.eyebrow", default: "Planning"),
                 title: localized("ipad.intermittent.planning.title", default: "Current plan"),
                 detail: localized("ipad.intermittent.planning.detail", default: "Keep the current rhythm visible without crowding the live tracker."))
+                .accessibilityIdentifier("ipad.intermittent.planning")
 
             HStack(spacing: 10) {
                 let summary = intermittentHabitSummary
@@ -323,7 +323,6 @@ extension ContentView {
         }
         .padding(18)
         .iPadPaneCard()
-        .accessibilityIdentifier("ipad.intermittent.planning")
     }
 
     var ipadIntermittentAdvancedToolsCard: some View {
@@ -332,6 +331,7 @@ extension ContentView {
                 eyebrow: localized("ipad.intermittent.advanced.eyebrow", default: "Advanced"),
                 title: localized("ipad.intermittent.advanced.title", default: "Schedules, milestones, and recovery"),
                 detail: localized("ipad.intermittent.advanced.detail", default: "Keep deeper tools available without letting them lead the page."))
+                .accessibilityIdentifier("ipad.intermittent.advanced")
 
             Button {
                 intermittentShowAdvanced.toggle()
@@ -451,10 +451,10 @@ extension ContentView {
                 eyebrow: localized("ipad.intermittent.history.eyebrow", default: "History"),
                 title: localized("ipad.intermittent.history.title", default: "Recent sessions"),
                 detail: localized("ipad.intermittent.history.detail", default: "Review recent fasts without crowding the live controls."))
+                .accessibilityIdentifier("ipad.intermittent.history")
             intermittentSessionHistorySection
         }
         .padding(18)
         .iPadPaneCard()
-        .accessibilityIdentifier("ipad.intermittent.history")
     }
 }

@@ -1,7 +1,7 @@
 import SwiftUI
 
 extension View {
-    func appPrimaryButtonStyle(legacyTint: Color = CatholicTheme.primary) -> some View {
+    func appPrimaryButtonStyle(legacyTint: Color = CatholicTheme.action) -> some View {
         tint(legacyTint)
             .buttonStyle(.glassProminent)
             .controlSize(.large)
@@ -24,7 +24,8 @@ extension View {
     }
 
     func phoneTabBarScrollClearance() -> some View {
-        contentMargins(.bottom, 24, for: .scrollContent)
+        padding(.bottom, 72)
+            .contentMargins(.bottom, 24, for: .scrollContent)
     }
 
     func appRoundedGlass(cornerRadius: CGFloat) -> some View {
@@ -40,8 +41,8 @@ extension View {
     }
 
     func appEyebrowStyle() -> some View {
-        font(.caption2.weight(.semibold))
-            .foregroundStyle(.secondary)
+        font(.footnote.weight(.semibold))
+            .foregroundStyle(.primary)
     }
 
     func appSectionTitleStyle(serif: Bool = false) -> some View {
@@ -62,7 +63,7 @@ extension View {
 
     func appSupportingTextStyle() -> some View {
         font(.footnote)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(.primary)
             .lineSpacing(1)
     }
 
@@ -134,7 +135,8 @@ private struct AppSelectedAccessibilityModifier: ViewModifier {
     func body(content: Content) -> some View {
         if isSelected {
             content
-                .accessibilityValue(Text("Selected"))
+                .accessibilityValue(Text(AppLocalizer.localizedCurrent(
+                    "accessibility.value.selected", default: "Selected")))
                 .accessibilityAddTraits(.isSelected)
         } else {
             content

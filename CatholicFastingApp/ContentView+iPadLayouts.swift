@@ -45,17 +45,14 @@ extension ContentView {
                         Button {
                             homeSurface = surface
                         } label: {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Label(localizedHomeSurfaceLabel(surface), systemImage: surface.iconName)
-                                    .font(.headline)
-                                    .foregroundStyle(homeSurface == surface ? CatholicTheme.primary : .primary)
-                                Text(surface.ipadSubtitle)
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                            }
-                            .padding(.vertical, 4)
+                            IPadSidebarRow(
+                                title: localizedHomeSurfaceLabel(surface),
+                                subtitle: surface.ipadSubtitle,
+                                systemImage: surface.iconName,
+                                isSelected: homeSurface == surface)
                         }
                         .buttonStyle(.plain)
+                        .appSelectedAccessibility(homeSurface == surface)
                         .accessibilityIdentifier("ipad.sidebar.\(surface.rawValue)")
                     }
                 }
@@ -68,7 +65,6 @@ extension ContentView {
             NavigationStack {
                 ipadSurfaceWorkspace(for: homeSurface)
             }
-            .id(homeSurface)
         }
         .navigationSplitViewStyle(.balanced)
         .tint(CatholicTheme.primary)
@@ -91,7 +87,7 @@ extension ContentView {
         }
         .appRootBackground()
         .navigationTitle(localizedHomeSurfaceLabel(surface))
-        .navigationBarTitleDisplayMode(.large)
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 seasonBadge

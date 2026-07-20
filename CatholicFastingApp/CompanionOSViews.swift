@@ -4,18 +4,26 @@ struct CompanionDashboardCard: View {
     let snapshot: CompanionSnapshot
     let todayLabel: String
     let nextRequiredLabel: String
+    let seasonLabel: String
     let onPrimaryAction: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
+            SacredMasthead(
+                assetName: "HeroSacred",
+                seasonLabel: seasonLabel,
+                height: 88,
+                accessibilityIdentifier: "companion.sacred_masthead")
+
             HStack(alignment: .top, spacing: 10) {
                 Image(systemName: iconName)
                     .appSymbolStyle(.prominent)
                     .foregroundStyle(iconTint)
                     .padding(.top, 2)
+                    .accessibilityHidden(true)
 
                 VStack(alignment: .leading, spacing: 5) {
-                    Text(localized("companion.dashboard.eyebrow", default: "Companion OS"))
+                    Text(localized("companion.dashboard.eyebrow", default: "Today’s guidance"))
                         .appEyebrowStyle()
                         .textCase(.uppercase)
                         .foregroundStyle(CatholicTheme.primary)
@@ -124,11 +132,12 @@ struct CompanionLiveStateCard: View {
                     .appSymbolStyle(.prominent)
                     .foregroundStyle(CatholicTheme.accentForeground)
                     .padding(.top, 2)
+                    .accessibilityHidden(true)
 
                 VStack(alignment: .leading, spacing: 5) {
                     Text(localized("companion.live.eyebrow", default: "Live fasting"))
-                        .appEyebrowStyle()
-                        .textCase(.uppercase)
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(.primary)
                     Text(title)
                         .font(.headline.weight(.semibold))
                         .foregroundStyle(CatholicTheme.primary)
@@ -185,7 +194,10 @@ struct CompanionFormationCard: View {
                     .padding(.top, 2)
 
                 VStack(alignment: .leading, spacing: 5) {
-                    Text(formation.seasonLabel)
+                    Text(AppLocalizer.localizedCurrentFormat(
+                        "companion.formation.seasonal_program_format",
+                        default: "Seasonal formation • %@",
+                        formation.seasonLabel))
                         .appEyebrowStyle()
                         .textCase(.uppercase)
                     Text(formation.journeyTitle)
@@ -272,8 +284,8 @@ private struct CompanionMetricPill: View {
             Text(value)
                 .font(.system(.subheadline, design: .rounded).weight(.semibold))
                 .foregroundStyle(CatholicTheme.primary)
-                .lineLimit(2)
-                .minimumScaleFactor(0.82)
+                .lineLimit(3)
+                .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.vertical, 7)

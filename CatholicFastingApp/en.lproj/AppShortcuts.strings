@@ -1,0 +1,6 @@
+/* Spoken phrases for App Shortcuts. Keep ${applicationName} in every value. */
+"Open ${applicationName} today" = "Open ${applicationName} today";
+"Open ${applicationName} Calendar" = "Open ${applicationName} Calendar";
+"Open ${applicationName} fasting days" = "Open ${applicationName} fasting days";
+"Open ${applicationName} Fast" = "Open ${applicationName} Fast";
+"Open ${applicationName} fast tracker" = "Open ${applicationName} fast tracker";

@@ -56,8 +56,17 @@
 		A00000000000000000000001 /* CatholicFastingAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000011 /* CatholicFastingAppApp.swift */; };
 		A00000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000012 /* ContentView.swift */; };
 		A00000000000000000000003 /* ObservanceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000013 /* ObservanceStore.swift */; };
+		B60000000000000000000001 /* WidgetSnapshotContract.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000003 /* WidgetSnapshotContract.swift */; };
+		B60000000000000000000002 /* WidgetSnapshotContract.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000003 /* WidgetSnapshotContract.swift */; };
+		B60000000000000000000004 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000005 /* Localizable.strings */; };
+		B60000000000000000000009 /* AppClock.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6000000000000000000000A /* AppClock.swift */; };
+		B6000000000000000000000D /* AppLaunchExecutionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6000000000000000000000E /* AppLaunchExecutionState.swift */; };
+		B70000000000000000000001 /* ObservanceLocalizationCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70000000000000000000002 /* ObservanceLocalizationCatalog.swift */; };
+		B70000000000000000000003 /* ObservanceLocalizationCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70000000000000000000004 /* ObservanceLocalizationCatalog.swift */; };
+		B6000000000000000000000F /* AppShortcuts.strings in Resources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000010 /* AppShortcuts.strings */; };
 		A00000000000000000000004 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000014 /* Assets.xcassets */; };
 		A00000000000000000000020 /* CatholicFastingAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000021 /* CatholicFastingAppUITests.swift */; };
+		B6000000000000000000000B /* CatholicFastingAppUITests+AccessibilityPerformance.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6000000000000000000000C /* CatholicFastingAppUITests+AccessibilityPerformance.swift */; };
 		A00000000000000000000030 /* RuleDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000031 /* RuleDomain.swift */; };
 		A00000000000000000000032 /* ObservanceCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000033 /* ObservanceCalculator.swift */; };
 		A00000000000000000000034 /* CompletionStatusAndFastTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000035 /* CompletionStatusAndFastTracker.swift */; };
@@ -303,9 +312,21 @@
 		A00000000000000000000011 /* CatholicFastingAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatholicFastingAppApp.swift; sourceTree = "<group>"; };
 		A00000000000000000000012 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A00000000000000000000013 /* ObservanceStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservanceStore.swift; sourceTree = "<group>"; };
+		B60000000000000000000003 /* WidgetSnapshotContract.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WidgetSnapshotContract.swift; path = CatholicFastingApp/Models/WidgetSnapshotContract.swift; sourceTree = SOURCE_ROOT; };
+		B60000000000000000000006 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		B60000000000000000000007 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		B60000000000000000000008 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		B6000000000000000000000A /* AppClock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppClock.swift; sourceTree = "<group>"; };
+		B6000000000000000000000E /* AppLaunchExecutionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLaunchExecutionState.swift; sourceTree = "<group>"; };
+		B70000000000000000000002 /* ObservanceLocalizationCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservanceLocalizationCatalog.swift; sourceTree = "<group>"; };
+		B70000000000000000000004 /* ObservanceLocalizationCatalog.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ObservanceLocalizationCatalog.swift; path = CatholicFastingApp/Models/ObservanceLocalizationCatalog.swift; sourceTree = "<group>"; };
+		B60000000000000000000011 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/AppShortcuts.strings; sourceTree = "<group>"; };
+		B60000000000000000000012 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/AppShortcuts.strings; sourceTree = "<group>"; };
+		B60000000000000000000013 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/AppShortcuts.strings"; sourceTree = "<group>"; };
 		A00000000000000000000014 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A0000000000000000000001A /* CatholicFastingApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CatholicFastingApp.entitlements; sourceTree = "<group>"; };
 		A00000000000000000000021 /* CatholicFastingAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatholicFastingAppUITests.swift; sourceTree = "<group>"; };
+		B6000000000000000000000C /* CatholicFastingAppUITests+AccessibilityPerformance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CatholicFastingAppUITests+AccessibilityPerformance.swift"; sourceTree = "<group>"; };
 		A00000000000000000000022 /* CatholicFastingAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CatholicFastingAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A00000000000000000000023 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A00000000000000000000031 /* RuleDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuleDomain.swift; sourceTree = "<group>"; };
@@ -650,6 +671,7 @@
 				A00000000000000000000093 /* ReminderScheduler.swift */,
 				A00000000000000000000039 /* ContentSupportViews.swift */,
 				A00000000000000000000043 /* Localizable.strings */,
+				B60000000000000000000010 /* AppShortcuts.strings */,
 				A00000000000000000000044 /* PrivacyInfo.xcprivacy */,
 				A00000000000000000000090 /* IconFallbacks */,
 				A00000000000000000000015 /* Models */,
@@ -665,8 +687,12 @@
 			isa = PBXGroup;
 			children = (
 				A00000000000000000000013 /* ObservanceStore.swift */,
+				B60000000000000000000003 /* WidgetSnapshotContract.swift */,
+				B6000000000000000000000A /* AppClock.swift */,
+				B6000000000000000000000E /* AppLaunchExecutionState.swift */,
 				A00000000000000000000031 /* RuleDomain.swift */,
 				A00000000000000000000033 /* ObservanceCalculator.swift */,
+				B70000000000000000000002 /* ObservanceLocalizationCatalog.swift */,
 				A000000000000000000000F5 /* ObservanceCalculator+CalendarEntries.swift */,
 				A000000000000000000000F7 /* ObservanceCalculator+DateMath.swift */,
 				A0000000000000000000005B /* LiturgicalSeasonThemeEngine.swift */,
@@ -710,6 +736,7 @@
 			isa = PBXGroup;
 			children = (
 				A00000000000000000000021 /* CatholicFastingAppUITests.swift */,
+				B6000000000000000000000C /* CatholicFastingAppUITests+AccessibilityPerformance.swift */,
 				A000000000000000000000D5 /* CatholicFastingAppUITests+OnboardingSetup.swift */,
 				A000000000000000000000D6 /* CatholicFastingAppUITests+TodayCalendar.swift */,
 				A000000000000000000000D7 /* CatholicFastingAppUITests+Premium.swift */,
@@ -726,6 +753,7 @@
 			children = (
 				A00000000000000000000071 /* CatholicFastingWidgetBundle.swift */,
 				A00000000000000000000072 /* CatholicFastingWidget.swift */,
+				B60000000000000000000005 /* Localizable.strings */,
 				A00000000000000000000073 /* Info.plist */,
 				A00000000000000000000074 /* CatholicFastingWidget.entitlements */,
 			);
@@ -769,6 +797,7 @@
 				BF9B39DD0FFB7A81742A86BA /* ObservanceCalculator+CalendarEntries.swift */,
 				89934BF64AF569966A346C66 /* ObservanceCalculator+DateMath.swift */,
 				CFCAE90F694EE4878A1A7960 /* ObservanceCalculator.swift */,
+				B70000000000000000000004 /* ObservanceLocalizationCatalog.swift */,
 				C7A11A7D18BD16FE73699ED4 /* ObservanceQueryEngine.swift */,
 				826B1BDE034A92D80BD47E87 /* ObservanceStore.swift */,
 				C009A99FB027665F39EA3581 /* PremiumAdaptiveRulePlanner.swift */,
@@ -978,7 +1007,7 @@
 					A00000000000000000000006 = {
 						CreatedOnToolsVersion = 26.2;
 						SystemCapabilities = {
-							com.apple.iCloud = {
+							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
 							};
 						};
@@ -989,6 +1018,11 @@
 					};
 					A0000000000000000000007E = {
 						CreatedOnToolsVersion = 26.2;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 					E8C4C8A42C2442B82854383B = {
 						CreatedOnToolsVersion = 26.4;
@@ -1044,6 +1078,7 @@
 			files = (
 				A00000000000000000000004 /* Assets.xcassets in Resources */,
 				A00000000000000000000040 /* Localizable.strings in Resources */,
+				B6000000000000000000000F /* AppShortcuts.strings in Resources */,
 				A00000000000000000000045 /* PrivacyInfo.xcprivacy in Resources */,
 				A00000000000000000000091 /* IconFallbacks in Resources */,
 			);
@@ -1053,6 +1088,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B60000000000000000000004 /* Localizable.strings in Resources */,
 				C4F200000000000000000003 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1115,6 +1151,7 @@
 				D03E68508A9E1C5CC346C7CA /* ObservanceCalculator+CalendarEntries.swift in Sources */,
 				9C6B156E989A01B8BD55A864 /* ObservanceCalculator+DateMath.swift in Sources */,
 				7FCEFE817F94A99FDA8E90B7 /* ObservanceCalculator.swift in Sources */,
+				B70000000000000000000003 /* ObservanceLocalizationCatalog.swift in Sources */,
 				A8B7CC1918B5BAC11307ADE0 /* ObservanceQueryEngine.swift in Sources */,
 				CD41C03D5483FC63B1A58CE5 /* ObservanceStore.swift in Sources */,
 				A33B58395959AC064CFFAAF6 /* PremiumAdaptiveRulePlanner.swift in Sources */,
@@ -1170,8 +1207,12 @@
 				A00000000000000000000001 /* CatholicFastingAppApp.swift in Sources */,
 				A00000000000000000000002 /* ContentView.swift in Sources */,
 				A00000000000000000000003 /* ObservanceStore.swift in Sources */,
+				B60000000000000000000001 /* WidgetSnapshotContract.swift in Sources */,
+				B60000000000000000000009 /* AppClock.swift in Sources */,
+				B6000000000000000000000D /* AppLaunchExecutionState.swift in Sources */,
 				A00000000000000000000030 /* RuleDomain.swift in Sources */,
 				A00000000000000000000032 /* ObservanceCalculator.swift in Sources */,
+				B70000000000000000000001 /* ObservanceLocalizationCatalog.swift in Sources */,
 				A000000000000000000000F4 /* ObservanceCalculator+CalendarEntries.swift in Sources */,
 				A000000000000000000000F6 /* ObservanceCalculator+DateMath.swift in Sources */,
 				A0000000000000000000005A /* LiturgicalSeasonThemeEngine.swift in Sources */,
@@ -1254,6 +1295,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A00000000000000000000020 /* CatholicFastingAppUITests.swift in Sources */,
+				B6000000000000000000000B /* CatholicFastingAppUITests+AccessibilityPerformance.swift in Sources */,
 				A000000000000000000000C5 /* CatholicFastingAppUITests+OnboardingSetup.swift in Sources */,
 				A000000000000000000000C6 /* CatholicFastingAppUITests+TodayCalendar.swift in Sources */,
 				A000000000000000000000C7 /* CatholicFastingAppUITests+Premium.swift in Sources */,
@@ -1269,6 +1311,7 @@
 			files = (
 				A00000000000000000000076 /* CatholicFastingWidgetBundle.swift in Sources */,
 				A00000000000000000000077 /* CatholicFastingWidget.swift in Sources */,
+				B60000000000000000000002 /* WidgetSnapshotContract.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1315,6 +1358,26 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		B60000000000000000000010 /* AppShortcuts.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B60000000000000000000011 /* en */,
+				B60000000000000000000012 /* es */,
+				B60000000000000000000013 /* fr-CA */,
+			);
+			name = AppShortcuts.strings;
+			sourceTree = "<group>";
+		};
+		B60000000000000000000005 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B60000000000000000000006 /* en */,
+				B60000000000000000000007 /* es */,
+				B60000000000000000000008 /* fr-CA */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		A00000000000000000000043 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

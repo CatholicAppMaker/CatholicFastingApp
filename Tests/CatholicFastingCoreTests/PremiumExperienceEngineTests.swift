@@ -146,7 +146,7 @@ final class PremiumExperienceEngineTests: XCTestCase {
     func testSubscriptionHealthMatrixPrioritizesCriticalStates() {
         XCTAssertEqual(
             PremiumSubscriptionHealthEvaluator.message(states: [.revoked], premiumUnlocked: true),
-            "Subscription was revoked. Restore or update your account.")
+            "Premium subscription is active.")
         XCTAssertEqual(
             PremiumSubscriptionHealthEvaluator.message(states: [.inBillingRetry], premiumUnlocked: true),
             "Billing issue detected. Update your payment method to keep Premium.")
@@ -171,12 +171,53 @@ final class PremiumExperienceEngineTests: XCTestCase {
         let message = PremiumSubscriptionHealthEvaluator.message(
             states: [.subscribed, .expired, .inBillingRetry, .revoked],
             premiumUnlocked: true)
-        XCTAssertEqual(message, "Subscription was revoked. Restore or update your account.")
+        XCTAssertEqual(message, "Premium subscription is active.")
 
         let gracePriority = PremiumSubscriptionHealthEvaluator.message(
             states: [.expired, .inGracePeriod, .subscribed],
             premiumUnlocked: true)
-        XCTAssertEqual(gracePriority, "You are in billing grace period. Premium remains active for now.")
+        XCTAssertEqual(gracePriority, "Premium subscription is active.")
+    }
+
+    func testCatalogFailurePreservesVerifiedEntitlementAndClearsStalePlans() {
+        let offline = PremiumCatalogRefreshPolicy.failure(
+            entitlementUnlocked: true,
+            isOffline: true)
+        XCTAssertEqual(
+            offline,
+            PremiumCatalogRefreshResolution(
+                premiumUnlocked: true,
+                catalogState: .offline,
+                clearsCatalog: true))
+
+        let generic = PremiumCatalogRefreshPolicy.failure(
+            entitlementUnlocked: false,
+            isOffline: false)
+        XCTAssertEqual(
+            generic,
+            PremiumCatalogRefreshResolution(
+                premiumUnlocked: false,
+                catalogState: .failed,
+                clearsCatalog: true))
+    }
+
+    func testCatalogResultNeverOverridesVerifiedEntitlement() {
+        XCTAssertEqual(
+            PremiumCatalogRefreshPolicy.catalogResult(
+                entitlementUnlocked: true,
+                hasPlans: false),
+            PremiumCatalogRefreshResolution(
+                premiumUnlocked: true,
+                catalogState: .failed,
+                clearsCatalog: true))
+        XCTAssertEqual(
+            PremiumCatalogRefreshPolicy.catalogResult(
+                entitlementUnlocked: false,
+                hasPlans: true),
+            PremiumCatalogRefreshResolution(
+                premiumUnlocked: false,
+                catalogState: .loaded,
+                clearsCatalog: false))
     }
 
     private var fixedCalendar: Calendar {

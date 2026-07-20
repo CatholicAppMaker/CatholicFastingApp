@@ -16,7 +16,7 @@ struct ContentView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.requestReview) var requestReview
-    @State var year = Calendar.current.component(.year, from: Date())
+    @State var year = Calendar.current.component(.year, from: AppClock.now())
     @StateObject var tracker = FastTracker()
     @StateObject var penanceNotes = FridayPenanceNotes()
     @StateObject var intermittentTracker = IntermittentFastTracker()
@@ -31,11 +31,7 @@ struct ContentView: View {
     @State var pendingPhoneMoreDestination: MoreHubDestination?
     @State var selectedPremiumToolDestination: PremiumToolDestination? = .planner
     @State var selectedFastingObservanceID = ""
-    @State var didConfigureTips = false
-    @State var didPrepareLaunchState = false
-    @State var didApplyUITestInitialNavigation = false
-    @State var didRunDeferredStartup = false
-    @State var didRefreshStoreCatalog = false
+    @State var launchExecutionState = AppLaunchExecutionState()
     @State var planningData = LocalFeatureStore.loadPlanningData()
     @State var intermittentSchedules = LocalFeatureStore.loadSchedules()
     @State var activeIntermittentScheduleID = LocalFeatureStore.loadActiveScheduleID() ?? ""
@@ -44,7 +40,7 @@ struct ContentView: View {
     @State var newIntermittentScheduleName = ""
     @State var newIntermittentScheduleStartHour = 20
     @State var newIntermittentScheduleWeekdays: Set<Int> = [2, 4, 6]
-    @State var intermittentManualStart = Date()
+    @State var intermittentManualStart = AppClock.now()
     @State var intermittentRecapNote = ""
     @FocusState var intermittentRecapNoteFocused: Bool
     @State var lastTargetReachedHapticKey = ""
@@ -144,7 +140,7 @@ struct ContentView: View {
 
     var currentYearObservances: [Observance] {
         ObservanceCalculator.makeCalendar(
-            for: Calendar.current.component(.year, from: Date()),
+            for: Calendar.current.component(.year, from: AppClock.now()),
             settings: settings)
     }
 

@@ -49,72 +49,6 @@ enum CoreLocalizer {
     }
 }
 
-struct WidgetSnapshot: Codable, Equatable {
-    let generatedAt: Date
-    let todayTitle: String
-    let todayObligation: String
-    let nextRequiredTitle: String
-    let nextRequiredDate: Date?
-    let completionRate: Double
-    let hasActiveIntermittentFast: Bool
-    let activeIntermittentFastStart: Date?
-    let activeIntermittentTargetHours: Int
-    let premiumMotivationLine: String
-
-    enum CodingKeys: String, CodingKey {
-        case generatedAt
-        case todayTitle
-        case todayObligation
-        case nextRequiredTitle
-        case nextRequiredDate
-        case completionRate
-        case hasActiveIntermittentFast
-        case activeIntermittentFastStart
-        case activeIntermittentTargetHours
-        case premiumMotivationLine
-    }
-
-    init(
-        generatedAt: Date,
-        todayTitle: String,
-        todayObligation: String,
-        nextRequiredTitle: String,
-        nextRequiredDate: Date?,
-        completionRate: Double,
-        hasActiveIntermittentFast: Bool,
-        activeIntermittentFastStart: Date?,
-        activeIntermittentTargetHours: Int,
-        premiumMotivationLine: String = "Stay faithful in small daily disciplines.")
-    {
-        self.generatedAt = generatedAt
-        self.todayTitle = todayTitle
-        self.todayObligation = todayObligation
-        self.nextRequiredTitle = nextRequiredTitle
-        self.nextRequiredDate = nextRequiredDate
-        self.completionRate = completionRate
-        self.hasActiveIntermittentFast = hasActiveIntermittentFast
-        self.activeIntermittentFastStart = activeIntermittentFastStart
-        self.activeIntermittentTargetHours = activeIntermittentTargetHours
-        self.premiumMotivationLine = premiumMotivationLine
-    }
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        generatedAt = try container.decode(Date.self, forKey: .generatedAt)
-        todayTitle = try container.decode(String.self, forKey: .todayTitle)
-        todayObligation = try container.decode(String.self, forKey: .todayObligation)
-        nextRequiredTitle = try container.decode(String.self, forKey: .nextRequiredTitle)
-        nextRequiredDate = try container.decodeIfPresent(Date.self, forKey: .nextRequiredDate)
-        completionRate = try container.decode(Double.self, forKey: .completionRate)
-        hasActiveIntermittentFast = try container.decode(Bool.self, forKey: .hasActiveIntermittentFast)
-        activeIntermittentFastStart = try container.decodeIfPresent(Date.self, forKey: .activeIntermittentFastStart)
-        activeIntermittentTargetHours = try container.decode(Int.self, forKey: .activeIntermittentTargetHours)
-        premiumMotivationLine =
-            try container.decodeIfPresent(String.self, forKey: .premiumMotivationLine)
-                ?? "Stay faithful in small daily disciplines."
-    }
-}
-
 enum PremiumRuleTemplate: String, Codable, CaseIterable, Identifiable {
     case beginner
     case steady
@@ -237,64 +171,6 @@ struct PremiumHouseholdSharePacket: Codable, Equatable {
     let planningData: FastingPlanningData
     let schedules: [IntermittentSchedulePlan]
     let checklist: [PremiumChecklistItem]
-}
-
-enum WidgetSnapshotStore {
-    private static let key = "widget_snapshot"
-    private static let appGroupIdentifier = "group.com.kevpierce.CatholicFastingApp"
-    private static var prefersLocalOnlyStorage: Bool {
-        let processInfo = ProcessInfo.processInfo
-        let arguments = processInfo.arguments
-        let environment = processInfo.environment
-        return environment["UITEST_MODE"] == "1"
-            || environment["DISABLE_APP_GROUP_STORAGE"] == "1"
-            || arguments.contains("-uitest-reset")
-            || arguments.contains("-uitest-skip-onboarding")
-            || arguments.contains("-uitest-seed-deterministic")
-            || arguments.contains("-uitest-seed-missed")
-    }
-
-    private static var canUseSharedAppGroupStorage: Bool {
-        #if os(iOS)
-        // The iOS app target is intentionally not provisioned with App Groups.
-        // Keep the containing app on local storage; the widget extension owns shared storage.
-        return Bundle.main.bundlePath.hasSuffix(".appex")
-        #else
-        return true
-        #endif
-    }
-
-    private static var sharedDefaults: UserDefaults? {
-        guard !prefersLocalOnlyStorage else { return nil }
-        guard canUseSharedAppGroupStorage else { return nil }
-        return UserDefaults(suiteName: appGroupIdentifier)
-    }
-
-    static func persist(_ snapshot: WidgetSnapshot) {
-        guard let data = try? JSONEncoder().encode(snapshot) else { return }
-        if let sharedDefaults {
-            sharedDefaults.set(data, forKey: key)
-        } else {
-            UserDefaults.standard.set(data, forKey: key)
-        }
-    }
-
-    static func load() -> WidgetSnapshot? {
-        let data: Data? = if let sharedDefaults {
-            sharedDefaults.data(forKey: key)
-        } else {
-            UserDefaults.standard.data(forKey: key)
-        }
-        guard let data else { return nil }
-        return try? JSONDecoder().decode(WidgetSnapshot.self, from: data)
-    }
-
-    static func clear() {
-        if let sharedDefaults {
-            sharedDefaults.removeObject(forKey: key)
-        }
-        UserDefaults.standard.removeObject(forKey: key)
-    }
 }
 
 struct WeeklyIntention: Codable, Equatable, Identifiable {

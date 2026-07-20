@@ -1,14 +1,18 @@
 ---
 name: Catholic Fasting
 description:
-  Native Apple fasting guidance with seasonal sacred color, parchment surfaces, and calm devotional
-  clarity.
+  Native Apple fasting guidance with Roman-missal color, sacred imagery, parchment surfaces, and
+  calm devotional clarity.
 colors:
-  ordinary-primary: "#1A612B"
-  ordinary-accent: "#B88F26"
-  ordinary-parchment: "#F7F5DB"
-  ordinary-parchment-shade: "#DBE6C2"
-  ordinary-card-border: "#619657"
+  brand-oxblood: "#64292E"
+  brand-antique-brass: "#A37529"
+  brand-vellum: "#F5F0E5"
+  brand-ink: "#171411"
+  ordinary-primary: "#294D33"
+  ordinary-accent: "#A67A2B"
+  ordinary-parchment: "#F5F0E5"
+  ordinary-parchment-shade: "#E8E0D1"
+  ordinary-card-border: "#A89A7A"
   advent-primary: "#1C337D"
   advent-accent: "#B85494"
   advent-parchment: "#F2F2FC"
@@ -68,7 +72,7 @@ spacing:
   xl: "24px"
 components:
   button-primary:
-    backgroundColor: "{colors.ordinary-primary}"
+    backgroundColor: "{colors.brand-oxblood}"
     textColor: "{colors.ordinary-parchment}"
     typography: "{typography.body}"
     rounded: "{rounded.md}"
@@ -95,17 +99,23 @@ components:
 
 ## 1. Overview
 
-### Creative North Star: "The Quiet Liturgical Companion"
+### Creative North Star: "The Roman Missal Companion"
 
 Catholic Fasting is a product interface, not a marketing surface. Design serves a repeated
 devotional workflow: checking today's guidance, planning upcoming observances, tracking a fast,
 understanding a rule, and returning to a steady rhythm after a missed day. The app should feel
 native, calm, and readable before it feels expressive.
 
-The visual system combines Apple platform controls with a seasonal sacred palette. Parchment
-backgrounds, muted ecclesial color, modest glass effects, and occasional serif titles create a
-devotional atmosphere without turning the app into a decorative artifact. Sacred imagery anchors
-major surfaces when it clarifies mood or context.
+The visual system combines Apple platform controls with one stable Roman-missal palette: vellum,
+oxblood rubric red, antique brass, and black ink. Occasional serif titles and real sacred imagery
+create a devotional atmosphere without turning the app into a decorative artifact. Liturgical
+season color is contextual information, not the product chrome.
+
+The iOS app intentionally ships in this single warm appearance. It requests light appearance even
+when the device uses dark mode. A future dark appearance must be designed as a complete Catholic
+art direction and cannot be inferred by swapping semantic colors. Widgets still obey system
+rendering modes because WidgetKit requires them to remain legible when tinted, vibrant, darkened,
+or reduced in luminance.
 
 The system rejects generic fasting apps, productivity dashboards, aggressive streak mechanics, and
 wellness-brand polish. It also rejects sacred ornament detached from action. The user should always
@@ -113,7 +123,8 @@ know what to do next, why it matters, and where to find the underlying rule cont
 
 **Key Characteristics:**
 
-- Parchment-toned root backgrounds with seasonal liturgical color.
+- Vellum root backgrounds with stable oxblood and antique-brass product color.
+- Liturgical season color confined to season badges, calendar context, and semantic observance cues.
 - Native SwiftUI controls, glass buttons, platform navigation, and system type.
 - Official app mark: the D3 liturgical bookmark/ribbon direction, pairing a cross with an empty
   bowl/plate so the brand reads as Catholic fasting rather than generic church or generic fasting.
@@ -166,46 +177,46 @@ the pass is unfinished and name the remaining work. Stale progress panels are P0
 
 ## 2. Colors
 
-The palette changes by liturgical season. Each season provides a primary color, an accent, a
-parchment base, a parchment shade, and a card border. Ordinary Time is the neutral default, Advent
-shifts toward blue and rose, Christmas warms toward gold, Lent quiets into violet, and Easter
-returns with green and gold.
+The product palette does not change by liturgical season. Oxblood is the action and editorial
+color, vellum is the canvas, antique brass provides restrained warmth, and black ink carries dense
+content. Seasonal palettes remain available only for compact context and observance semantics.
 
 ### Primary
 
-- **Ordinary Green** (#1A612B): Default primary for navigation tint, section titles, selected
-  states, and steady daily guidance.
-- **Advent Blue** (#1C337D): Seasonal primary for Advent, used with restraint so the app feels
-  watchful and preparatory.
-- **Christmas Umber** (#804A12): Seasonal primary for Christmas, warmer and more celebratory while
-  staying grounded.
-- **Lenten Violet** (#4D2173): Seasonal primary for Lent, penitential without becoming theatrical.
-- **Easter Green** (#245E2E): Seasonal primary for Easter, renewed and vivid enough for celebration
-  without overpowering text.
+- **Rubric Oxblood** (#64292E): Stable product identity for obligation headlines, selected states,
+  primary actions, and the D3 mark.
+- **Vellum** (#F5F0E5): Warm root canvas inspired by missal paper rather than generic white UI.
+- **Ink** (#171411): Main text and dense utility content.
 
 ### Secondary
 
-- **Ordinary Gold** (#B88F26): Accent for highlights, soft gradients, and surface tinting.
-- **Advent Rose** (#B85494): Accent for Advent emphasis and Gaudete-adjacent warmth.
-- **Christmas Gold** (#D9A62E): Accent for celebratory highlights.
-- **Lenten Lavender** (#9C75B8): Accent for Lent, used softly in backgrounds and borders.
-- **Easter Gold** (#D1A82E): Accent for Easter highlights and celebratory premium surfaces.
+- **Antique Brass** (#A37529): Hairlines, progress, restrained highlights, and selected sacred
+  details. It is not used for long text on vellum.
+- **Season Context**: Ordinary green, Advent blue/rose, Christmas gold, Lenten violet, and Easter
+  green appear in compact season badges and observance-specific context only.
 
 ### Neutral
 
-- **Seasonal Parchment**: The root surface family. Each season uses a light parchment base and a
-  slightly deeper shade for gradients and list backgrounds.
-- **Seasonal Border**: Muted border color tied to the active season. Use it for 1px strokes and
-  gentle card definition.
+- **Vellum Shade**: A slightly deeper paper tone for gradients and list backgrounds.
+- **Warm Border**: Muted brass-brown used for 1px strokes and gentle card definition.
 - **System Secondary**: Use SwiftUI `.secondary` for subordinate text, metadata, and icon labels
   where platform contrast remains appropriate.
 
 ### Named Rules
 
-**The Seasonal Context Rule.** Seasonal color should orient the user in liturgical time. It should
-not make each season feel like a different app.
+**The Seasonal Context Rule.** Seasonal color orients the user in liturgical time but never controls
+navigation, primary buttons, large headings, or card chrome. The app must remain recognizably the
+same missal-inspired product in every season.
 
-**The Parchment First Rule.** Most surfaces sit on parchment or a tonal shade. White and black are
+**The Single Appearance Rule.** iOS uses the finished vellum appearance in both system light and
+dark settings. Do not add ad-hoc dark tokens. Dark mode returns only after it receives a complete,
+separately reviewed Catholic art direction.
+
+**The Sacred Anchor Rule.** Every primary iPhone and iPad workspace keeps one recognizably Catholic
+image or mark near its first actionable content. The anchor must share the viewport with the task,
+not replace it or get buried at the bottom of the page.
+
+**The Vellum First Rule.** Most surfaces sit on vellum or a tonal shade. White and black are
 avoided unless required by platform controls, sacred imagery overlays, or accessibility.
 
 **The Obligation Color Rule.** Red, blue, gray, green, indigo, and other status colors may appear
@@ -256,7 +267,7 @@ baseline.
 
 ## 4. Elevation
 
-Depth is conveyed through tonal layering, 1px seasonal borders, subtle opacity changes, and SwiftUI
+Depth is conveyed through tonal layering, 1px warm borders, subtle opacity changes, and SwiftUI
 glass effects. Shadows exist, but they are quiet: most cards use a small shadow at very low
 primary-color opacity, while hero imagery may use a slightly larger shadow to separate it from the
 parchment background.
@@ -292,9 +303,9 @@ already does: controls, rounded surfaces, and compact tags. Do not turn every co
 
 ### Surface Cards
 
-- **Standard:** Parchment fill at about 0.88 opacity, low accent tint, 1px seasonal border, radius
+- **Standard:** Vellum fill at about 0.88 opacity, low accent tint, 1px warm border, radius
   capped around 15px.
-- **Primary:** Parchment fill at about 0.94 opacity, stronger accent tint, 1px seasonal border at
+- **Primary:** Vellum fill at about 0.94 opacity, stronger accent tint, 1px warm border at
   higher opacity, radius capped around 18px.
 - **Utility:** Parchment fill at about 0.80 opacity, faint accent tint, low border opacity, radius
   typically 14-16px.
@@ -318,7 +329,8 @@ already does: controls, rounded surfaces, and compact tags. Do not turn every co
 
 ### Navigation
 
-- iPhone uses tabbed `NavigationStack` surfaces for Today, Fasting Days, Intermittent, and More.
+- iPhone uses tabbed `NavigationStack` surfaces for Today, Calendar, Fast, and More. Stable deep-link
+  values continue to use `fastingDays` and `intermittent` internally.
 - iPad uses split-view style workspaces.
 - Mac uses native `NavigationSplitView`, sidebar rows, toolbars, Settings, commands, and menu bar
   surfaces.
@@ -329,7 +341,7 @@ already does: controls, rounded surfaces, and compact tags. Do not turn every co
 
 Do:
 
-- Preserve the seasonal palette API in `CatholicTheme`.
+- Preserve seasonal palette data for contextual badges and observance semantics, not product chrome.
 - Use app style helpers such as `appSurfaceCard`, `appRoundedGlass`, `appSectionTitleStyle`,
   `appSupportingTextStyle`, and `appPrimaryButtonStyle`.
 - Keep rule rationale, citations, and regional profile context close to the user's decision.

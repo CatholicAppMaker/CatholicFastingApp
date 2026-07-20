@@ -1,0 +1,6 @@
+/* Frases habladas para App Shortcuts. Conserve ${applicationName} en cada valor. */
+"Open ${applicationName} today" = "Abrir el plan de hoy en ${applicationName}";
+"Open ${applicationName} Calendar" = "Abrir el Calendario de ${applicationName}";
+"Open ${applicationName} fasting days" = "Abrir los días de ayuno en ${applicationName}";
+"Open ${applicationName} Fast" = "Abrir la sección Ayuno en ${applicationName}";
+"Open ${applicationName} fast tracker" = "Abrir el registro de ayuno en ${applicationName}";

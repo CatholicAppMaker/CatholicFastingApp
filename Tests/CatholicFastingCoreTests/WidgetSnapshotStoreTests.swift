@@ -90,4 +90,36 @@ final class WidgetSnapshotStoreTests: XCTestCase {
 
         XCTAssertNil(WidgetSnapshotStore.load())
     }
+
+    func testLegacyWidgetSnapshotWithoutLocalizationCodeStillLoads() throws {
+        struct LegacySnapshot: Codable {
+            let generatedAt: Date
+            let todayTitle: String
+            let todayObligation: String
+            let nextRequiredTitle: String
+            let nextRequiredDate: Date?
+            let completionRate: Double
+            let hasActiveIntermittentFast: Bool
+            let activeIntermittentFastStart: Date?
+            let activeIntermittentTargetHours: Int
+            let premiumMotivationLine: String
+        }
+
+        let legacy = LegacySnapshot(
+            generatedAt: Date(timeIntervalSince1970: 1_726_500_000),
+            todayTitle: "Friday",
+            todayObligation: "Required",
+            nextRequiredTitle: "Good Friday",
+            nextRequiredDate: nil,
+            completionRate: 0.5,
+            hasActiveIntermittentFast: false,
+            activeIntermittentFastStart: nil,
+            activeIntermittentTargetHours: 16,
+            premiumMotivationLine: "Stay faithful.")
+        UserDefaults.standard.set(try JSONEncoder().encode(legacy), forKey: "widget_snapshot")
+
+        let loaded = WidgetSnapshotStore.load()
+        XCTAssertEqual(loaded?.localizationCode, "en")
+        XCTAssertEqual(loaded?.todayTitle, legacy.todayTitle)
+    }
 }

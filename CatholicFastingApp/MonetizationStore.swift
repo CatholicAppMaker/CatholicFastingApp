@@ -30,6 +30,7 @@ final class MonetizationStore: ObservableObject {
     @Published var subscriptionHealthMessage = ""
     @Published var premiumProducts: [Product] = []
     @Published var tipProducts: [Product] = []
+    @Published private(set) var catalogLoadState: PremiumCatalogLoadState = .idle
 
     private static let debugPremiumUnlockedKey = "debug_simulator_premium_unlocked"
     private var updatesTask: Task<Void, Never>?
@@ -51,6 +52,7 @@ final class MonetizationStore: ObservableObject {
             premiumUnlocked = UserDefaults.standard.bool(forKey: Self.debugPremiumUnlockedKey)
             premiumProducts = []
             tipProducts = []
+            catalogLoadState = .failed
             statusMessage = premiumUnlocked ? "Premium unlocked for local UI testing." : ""
             await refreshSubscriptionHealth()
             return
@@ -58,7 +60,14 @@ final class MonetizationStore: ObservableObject {
 
         startTransactionMonitoringIfNeeded()
         isLoading = true
+        catalogLoadState = .loading
         defer { isLoading = false }
+
+        // StoreKit entitlements are available independently of the product catalog.
+        // Refresh them first so a catalog/network outage can never hide access that
+        // the App Store still reports as active.
+        await refreshEntitlements()
+        await refreshSubscriptionHealth()
 
         do {
             let products = try await Product.products(for: Array(Self.allProductIDs))
@@ -70,10 +79,31 @@ final class MonetizationStore: ObservableObject {
                 products
                     .filter { Self.tipProductIDs.contains($0.id) }
                     .sorted { tipSortIndex(for: $0.id) < tipSortIndex(for: $1.id) }
-            await refreshEntitlements()
+            let resolution = PremiumCatalogRefreshPolicy.catalogResult(
+                entitlementUnlocked: premiumUnlocked,
+                hasPlans: !premiumProducts.isEmpty)
+            premiumUnlocked = resolution.premiumUnlocked
+            catalogLoadState = resolution.catalogState
+            if resolution.clearsCatalog {
+                premiumProducts = []
+                tipProducts = []
+            }
+            if premiumProducts.isEmpty {
+                statusMessage = "Premium plans are temporarily unavailable."
+            }
             await refreshSubscriptionHealth()
         } catch {
+            let resolution = PremiumCatalogRefreshPolicy.failure(
+                entitlementUnlocked: premiumUnlocked,
+                isOffline: Self.isNetworkFailure(error))
+            premiumUnlocked = resolution.premiumUnlocked
+            if resolution.clearsCatalog {
+                premiumProducts = []
+                tipProducts = []
+            }
+            catalogLoadState = resolution.catalogState
             statusMessage = "Unable to load purchases right now."
+            await refreshSubscriptionHealth()
         }
     }
 
@@ -200,8 +230,10 @@ final class MonetizationStore: ObservableObject {
         for await verification in Transaction.currentEntitlements {
             guard case .verified(let transaction) = verification else { continue }
             guard Self.premiumProductIDs.contains(transaction.productID) else { continue }
-            if transaction.revocationDate != nil { continue }
-            if let expiration = transaction.expirationDate, expiration <= Date() { continue }
+            // `currentEntitlements` already applies StoreKit's expiration,
+            // revocation, renewal, and billing-grace rules. Rechecking the
+            // normal expiration date here would incorrectly lock subscribers
+            // who still have access during billing grace.
             premiumUnlocked = true
         }
     }
@@ -295,6 +327,25 @@ final class MonetizationStore: ObservableObject {
     private static var usesLocalDebugPremiumOverride: Bool {
         usesSimulatorDebugPurchases || ProcessInfo.processInfo.environment["UITEST_MODE"] == "1"
     }
+
+    private static func isNetworkFailure(_ error: Error) -> Bool {
+        if let storeKitError = error as? StoreKitError,
+           case .networkError = storeKitError
+        {
+            return true
+        }
+
+        let nsError = error as NSError
+        if nsError.domain == NSURLErrorDomain {
+            return true
+        }
+        if let underlying = nsError.userInfo[NSUnderlyingErrorKey] as? Error,
+           (underlying as NSError) !== nsError
+        {
+            return isNetworkFailure(underlying)
+        }
+        return false
+    }
 }
 #else
 @MainActor
@@ -306,6 +357,7 @@ final class MonetizationStore: ObservableObject {
     @Published var subscriptionHealthMessage = ""
     @Published var premiumProducts: [String] = []
     @Published var tipProducts: [String] = []
+    @Published private(set) var catalogLoadState: PremiumCatalogLoadState = .failed
 
     func refreshCatalogAndEntitlements() async {}
     func restorePurchases() async {}

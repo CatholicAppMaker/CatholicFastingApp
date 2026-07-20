@@ -18,6 +18,9 @@ struct OnboardingView: View {
     @Binding var acceptedLegalNotice: Bool
     let onComplete: () -> Void
     @State private var didConfirmLanguage = false
+    @State private var legalRequirementReviewRequest = 0
+
+    private static let legalAcknowledgmentAnchor = "onboarding.legal_acknowledgment.anchor"
 
     var body: some View {
         NavigationStack {
@@ -30,6 +33,11 @@ struct OnboardingView: View {
             }
             .navigationTitle(localized("onboarding.title", default: "Welcome"))
             .appRootBackground()
+            .safeAreaInset(edge: .top, spacing: 0) {
+                if didConfirmLanguage, !acceptedLegalNotice {
+                    onboardingLegalRequirementBar
+                }
+            }
             .onAppear {
                 let tier = ReminderTier(rawValue: reminderTierRaw) ?? .balanced
                 dailyReminderSupportEnabled = tier.supportEnabled
@@ -44,6 +52,14 @@ struct OnboardingView: View {
                         }
                         .appPrimaryButtonStyle()
                         .disabled(!acceptedLegalNotice)
+                        .accessibilityHint(
+                            localized(
+                                acceptedLegalNotice
+                                    ? "onboarding.trust.finish_enabled_hint"
+                                    : "onboarding.trust.finish_disabled_hint",
+                                default: acceptedLegalNotice
+                                    ? "Completes setup and opens Today."
+                                    : "Review and accept the independent-app notice below to finish setup."))
                         .accessibilityIdentifier("onboarding.continue")
                     } else {
                         Button(localized("onboarding.language_continue", default: "Continue")) {
@@ -55,6 +71,62 @@ struct OnboardingView: View {
                 }
             }
         }
+    }
+
+    private var onboardingLegalRequirementBar: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(alignment: .center, spacing: 12) {
+                onboardingLegalRequirementSummary
+                Spacer(minLength: 12)
+                onboardingLegalRequirementReviewButton
+            }
+
+            VStack(alignment: .leading, spacing: 10) {
+                onboardingLegalRequirementSummary
+                onboardingLegalRequirementReviewButton
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+        .background(CatholicTheme.parchment.opacity(0.96))
+        .overlay(alignment: .bottom) {
+            Divider()
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("onboarding.legal_requirement")
+    }
+
+    private var onboardingLegalRequirementSummary: some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: "exclamationmark.shield")
+                .foregroundStyle(CatholicTheme.primary)
+                .padding(.top, 2)
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(localized(
+                    "onboarding.trust.finish_requirement_title",
+                    default: "Finish Setup needs one acknowledgment"))
+                    .font(.subheadline.weight(.semibold))
+                    .accessibilityIdentifier("onboarding.legal_requirement.title")
+                Text(localized(
+                    "onboarding.trust.finish_requirement_detail",
+                    default: "Review and accept the independent-app notice below."))
+                    .appSupportingTextStyle()
+            }
+        }
+    }
+
+    private var onboardingLegalRequirementReviewButton: some View {
+        Button(localized("onboarding.trust.review", default: "Review notice")) {
+            legalRequirementReviewRequest += 1
+        }
+        .appSecondaryButtonStyle()
+        .accessibilityHint(
+            localized(
+                "onboarding.trust.review_hint",
+                default: "Moves to the acknowledgment required to finish setup."))
+        .accessibilityIdentifier("onboarding.legal_requirement.review")
     }
 
     private var languageOnboardingList: some View {
@@ -92,6 +164,15 @@ struct OnboardingView: View {
     }
 
     private var mainOnboardingList: some View {
+        ScrollViewReader { proxy in
+            mainOnboardingListContent
+                .onChange(of: legalRequirementReviewRequest) { _, _ in
+                    proxy.scrollTo(Self.legalAcknowledgmentAnchor, anchor: .center)
+                }
+        }
+    }
+
+    private var mainOnboardingListContent: some View {
         List {
             Section {
                 SacredEditorialSectionHeader(
@@ -110,9 +191,13 @@ struct OnboardingView: View {
                 Toggle(
                     localized(
                         "onboarding.step1.age18",
-                        default: "I am 18 or older (fasting age)"),
+                        default: "I am between 18 and 59 (fasting age)"),
                     isOn: $age18OrOlderForFasting)
                     .accessibilityIdentifier("onboarding.age18_toggle")
+                Text(localized(
+                    "onboarding.step1.age_helper",
+                    default: "Confirm both age statements that apply. People 60 and older remain bound by abstinence, but not by the Church fasting-age rule."))
+                    .appSupportingTextStyle()
                 Toggle(
                     localized(
                         "onboarding.step1.dispensation",
@@ -170,7 +255,13 @@ struct OnboardingView: View {
                         "onboarding.trust.acknowledgement",
                         default: "I understand this is an independent app, not an official Church authority app"),
                     isOn: $acceptedLegalNotice)
+                    .id(Self.legalAcknowledgmentAnchor)
                     .accessibilityIdentifier("onboarding.accept_legal_notice")
+
+                Text(localized(
+                    "onboarding.trust.finish_hint",
+                    default: "After accepting this notice, Finish Setup becomes available."))
+                    .appSupportingTextStyle()
             }
         }
         .listStyle(.plain)

@@ -209,4 +209,26 @@ extension CatholicFastingAppUITests {
             XCTAssertLessThan(journey.frame.minY, tipButton.frame.minY)
         }
     }
+
+    func testPremiumUnavailableStateOffersCatalogRetry() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openMoreDestination("Support & Premium", in: app)
+
+        let retry = app.buttons["premium.catalog.retry"].firstMatch
+        XCTAssertTrue(scrollToElement(retry, in: app))
+        XCTAssertTrue(retry.isHittable)
+    }
+
+    func testIPadPremiumUnavailableStateOffersCatalogRetry() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openIPadMoreDestination("supportAndPremium", in: app)
+
+        let retry = app.buttons["premium.catalog.retry"].firstMatch
+        XCTAssertTrue(scrollToElement(retry, in: app))
+        XCTAssertTrue(retry.isHittable)
+    }
 }

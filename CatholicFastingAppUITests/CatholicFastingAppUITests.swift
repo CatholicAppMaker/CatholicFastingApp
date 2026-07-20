@@ -22,6 +22,9 @@ final class CatholicFastingAppUITests: XCTestCase {
         includeUITestEnvironment: Bool = true,
         regionProfile: String? = nil,
         languageMode: String? = nil,
+        fixedDate: String? = nil,
+        abstinenceAgeEligible: Bool? = nil,
+        fastingAgeEligible: Bool? = nil,
         initialMoreDestination: String? = nil,
         premiumUnlocked: Bool = false) -> XCUIApplication
     {
@@ -52,6 +55,15 @@ final class CatholicFastingAppUITests: XCTestCase {
         if let languageMode {
             app.launchEnvironment["UITEST_LANGUAGE_MODE"] = languageMode
         }
+        if let fixedDate {
+            app.launchEnvironment["UITEST_FIXED_DATE"] = fixedDate
+        }
+        if let abstinenceAgeEligible {
+            app.launchEnvironment["UITEST_ABSTINENCE_AGE_ELIGIBLE"] = abstinenceAgeEligible ? "1" : "0"
+        }
+        if let fastingAgeEligible {
+            app.launchEnvironment["UITEST_FASTING_AGE_ELIGIBLE"] = fastingAgeEligible ? "1" : "0"
+        }
         if let initialMoreDestination {
             app.launchEnvironment["UITEST_INITIAL_MORE_DESTINATION"] = initialMoreDestination
         }
@@ -79,20 +91,6 @@ final class CatholicFastingAppUITests: XCTestCase {
     }
 
     func openSurface(_ label: String, in app: XCUIApplication) {
-        if tapUITestSurfaceSwitcher(label, in: app) {
-            if surfaceReady(label, in: app, timeout: 4) {
-                return
-            }
-        }
-
-        if tapTodayQuickSurfaceAction(label, in: app) {
-            XCTAssertTrue(
-                waitUntil(timeout: 3, condition: { visibleSurfaceNavigationTitle(for: label, in: app) }),
-                "Unable to select tab \(label)")
-            waitForSurfaceReady(label, in: app)
-            return
-        }
-
         let tabBar = app.tabBars.firstMatch
         XCTAssertTrue(tabBar.waitForExistence(timeout: 3))
 
@@ -114,65 +112,6 @@ final class CatholicFastingAppUITests: XCTestCase {
             waitUntil(timeout: 4, condition: { visibleSurfaceNavigationTitle(for: label, in: app) }),
             "Visible navigation did not open \(label)")
         waitForSurfaceReady(label, in: app)
-    }
-
-    func tapUITestSurfaceSwitcher(_ label: String, in app: XCUIApplication) -> Bool {
-        guard let rawValue = surfaceRawValue(for: label) else {
-            return false
-        }
-
-        let button = app.buttons["uitest.surface.\(rawValue)"].firstMatch
-        guard button.exists || button.waitForExistence(timeout: 1) else {
-            return false
-        }
-        button.tap()
-        return true
-    }
-
-    func surfaceRawValue(for label: String) -> String? {
-        switch label {
-        case "Today":
-            "today"
-        case "Fasting Days":
-            "fastingDays"
-        case "Track Fast":
-            "intermittent"
-        case "More":
-            "more"
-        default:
-            nil
-        }
-    }
-
-    func tapTodayQuickSurfaceAction(_ label: String, in app: XCUIApplication) -> Bool {
-        guard let identifier = todayQuickSurfaceActionIdentifier(for: label),
-              visibleSurfaceNavigationTitle(for: "Today", in: app)
-        else {
-            return false
-        }
-
-        let button = app.buttons[identifier].firstMatch
-        guard button.exists || scrollToElementPresence(button, in: app, maxSwipes: 8) else {
-            return false
-        }
-        guard scrollToElement(button, in: app, maxSwipes: 8) else {
-            return false
-        }
-        button.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
-        return true
-    }
-
-    func todayQuickSurfaceActionIdentifier(for label: String) -> String? {
-        switch label {
-        case "Fasting Days":
-            "today.quick.fasting_days"
-        case "Track Fast":
-            "today.quick.intermittent"
-        case "More":
-            "today.quick.more"
-        default:
-            nil
-        }
     }
 
     func tabButton(for label: String, in app: XCUIApplication) -> XCUIElement {
@@ -244,13 +183,6 @@ final class CatholicFastingAppUITests: XCTestCase {
     }
 
     func openMoreDestination(_ title: String, in app: XCUIApplication) {
-        if let rawValue = moreDestinationRawValue(for: title),
-           tapUITestMoreDestination(rawValue, in: app)
-        {
-            assertMoreDestinationOpened(rawValue, title: title, in: app)
-            return
-        }
-
         openSurface("More", in: app)
 
         if let rawValue = moreDestinationRawValue(for: title) {
@@ -283,15 +215,6 @@ final class CatholicFastingAppUITests: XCTestCase {
         } else {
             XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 4))
         }
-    }
-
-    func tapUITestMoreDestination(_ rawValue: String, in app: XCUIApplication) -> Bool {
-        let button = app.buttons["uitest.more.destination.\(rawValue)"].firstMatch
-        guard button.exists || button.waitForExistence(timeout: 1) else {
-            return false
-        }
-        button.tap()
-        return true
     }
 
     func assertMoreDestinationOpened(_ rawValue: String, title: String, in app: XCUIApplication) {
@@ -348,16 +271,55 @@ final class CatholicFastingAppUITests: XCTestCase {
         button.tap()
     }
 
-    func openIPadMoreDestination(_ rawValue: String, in app: XCUIApplication) {
-        if tapUITestMoreDestination(rawValue, in: app) {
-            XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
-            return
+    func assertIPadWorkspaceVisible(
+        _ rawValue: String,
+        in app: XCUIApplication,
+        timeout: TimeInterval = 4,
+        file: StaticString = #filePath,
+        line: UInt = #line)
+    {
+        XCTAssertTrue(
+            waitForIPadWorkspaceContent(rawValue, in: app, timeout: timeout),
+            "iPad workspace \(rawValue) did not render visible feature content",
+            file: file,
+            line: line)
+    }
+
+    func waitForIPadWorkspaceContent(
+        _ rawValue: String,
+        in app: XCUIApplication,
+        timeout: TimeInterval = 4) -> Bool
+    {
+        let stableRawValue = rawValue == "fasting_days" ? "fastingDays" : rawValue
+        let contentIdentifiers: [String]
+        switch stableRawValue {
+        case "today":
+            contentIdentifiers = ["companion.dashboard"]
+        case "fastingDays":
+            contentIdentifiers = ["ipad.fasting_days.detail_pane"]
+        case "intermittent":
+            contentIdentifiers = ["ipad.intermittent.hero", "ipad.intermittent.live"]
+        case "more":
+            contentIdentifiers = [
+                "ipad.more.destination.supportAndPremium",
+                "ipad.more.compact.supportAndPremium",
+            ]
+        default:
+            XCTFail("Unhandled iPad workspace \(rawValue)")
+            return false
         }
 
+        return waitUntil(timeout: timeout) {
+            contentIdentifiers.contains { identifier in
+                elementIsVisible(elementByIdentifier(identifier, in: app), in: app)
+            }
+        }
+    }
+
+    func openIPadMoreDestination(_ rawValue: String, in app: XCUIApplication) {
         openIPadSurface("more", in: app)
         let regularMoreReady = app.otherElements["surface.more.ready"].firstMatch.waitForExistence(timeout: 4)
-        let workspaceReady = app.otherElements["ipad.more.workspace"].firstMatch.waitForExistence(timeout: 2)
-            || app.otherElements["ipad.more.premium"].firstMatch.waitForExistence(timeout: 2)
+        let workspaceReady = waitForIPadWorkspaceContent("more", in: app, timeout: 2)
 
         if regularMoreReady, !workspaceReady, let title = moreDestinationTitle(for: rawValue) {
             if let identifiedDestination = optionalElementByIdentifier("more.hub.\(rawValue)", in: app) {
@@ -427,7 +389,7 @@ final class CatholicFastingAppUITests: XCTestCase {
                 compactDestination.tap()
                 return
             }
-            XCTAssertTrue(app.otherElements["ipad.more.workspace"].waitForExistence(timeout: 4))
+            assertIPadWorkspaceVisible("more", in: app)
             return
         }
 
@@ -468,7 +430,8 @@ final class CatholicFastingAppUITests: XCTestCase {
         case "supportAndPremium":
             XCTAssertTrue(scrollToElement(elementByIdentifier("premium.plan_choice", in: app), in: app))
         case "setupAndReminders":
-            XCTAssertTrue(scrollToElement(elementByIdentifier("settings.region_picker", in: app), in: app))
+            XCTAssertTrue(scrollToElement(elementByIdentifier("settings.quick.language", in: app), in: app))
+            XCTAssertTrue(scrollToElement(elementByIdentifier("settings.quick.reminder_support", in: app), in: app))
         case "profileAndNorms":
             XCTAssertTrue(scrollToElement(elementByIdentifier("settings.region_picker", in: app), in: app))
         case "guidanceAndRules":

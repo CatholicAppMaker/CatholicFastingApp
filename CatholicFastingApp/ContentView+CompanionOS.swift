@@ -3,7 +3,7 @@ import SwiftUI
 extension ContentView {
     var companionSnapshot: CompanionSnapshot {
         CompanionSnapshotEngine.snapshot(CompanionSnapshotRequest(
-            date: Date(),
+            date: AppClock.now(),
             observances: rollingUpcomingObservances,
             settings: settings,
             statusesByID: tracker.statusesByID,
@@ -22,7 +22,8 @@ extension ContentView {
             CompanionDashboardCard(
                 snapshot: companionSnapshot,
                 todayLabel: companionTodayLabel,
-                nextRequiredLabel: companionNextRequiredLabel)
+                nextRequiredLabel: companionNextRequiredLabel,
+                seasonLabel: localizedSeasonLabel(currentLiturgicalSeason))
             {
                 performCompanionAction(companionSnapshot.primaryAction)
             }
@@ -100,7 +101,8 @@ extension ContentView {
         CompanionDashboardCard(
             snapshot: companionSnapshot,
             todayLabel: companionTodayLabel,
-            nextRequiredLabel: companionNextRequiredLabel)
+            nextRequiredLabel: companionNextRequiredLabel,
+            seasonLabel: localizedSeasonLabel(currentLiturgicalSeason))
         {
             performCompanionAction(companionSnapshot.primaryAction)
         }
@@ -127,7 +129,7 @@ extension ContentView {
                     CompanionCardMetric(title: localized("intermittent.live.target", default: "Target"), value: "\(targetHours)h"),
                     CompanionCardMetric(title: localized("intermittent.controls.intention", default: "Intention"), value: intermittentIntentionLabel),
                 ],
-                actionTitle: localized("companion.live.open_tracker", default: "Open Track Fast"),
+                actionTitle: localized("companion.live.open_tracker", default: "Open Fast"),
                 actionSystemImage: "timer")
             {
                 homeSurface = .intermittent
@@ -192,7 +194,7 @@ extension ContentView {
                         value: suggestedNextStart.map(localizedAbbreviatedDateTime)
                             ?? localized("intermittent.live.status_ready_anytime", default: "Ready anytime")),
                 ],
-                actionTitle: localized("companion.live.open_tracker", default: "Open Track Fast"),
+                actionTitle: localized("companion.live.open_tracker", default: "Open Fast"),
                 actionSystemImage: "timer")
             {
                 homeSurface = .intermittent
@@ -214,7 +216,7 @@ extension ContentView {
                         title: localized("intermittent.live.next", default: "Next"),
                         value: localized("intermittent.live.status_ready_anytime", default: "Ready anytime")),
                 ],
-                actionTitle: localized("today.actions.track_fast", default: "Track Fast Now"),
+                actionTitle: localized("today.actions.track_fast", default: "Open Fast"),
                 actionSystemImage: "play.fill")
             {
                 homeSurface = .intermittent

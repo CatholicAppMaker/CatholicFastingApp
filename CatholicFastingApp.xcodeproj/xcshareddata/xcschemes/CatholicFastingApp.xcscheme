@@ -51,19 +51,16 @@
             ReferencedContainer = "container:CatholicFastingApp.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <Testables>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A00000000000000000000027"
-               BuildableName = "CatholicFastingAppUITests.xctest"
-               BlueprintName = "CatholicFastingAppUITests"
-               ReferencedContainer = "container:CatholicFastingApp.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-      </Testables>
+      <TestPlans>
+         <TestPlanReference
+            reference = "container:CatholicFastingApp.xctestplan"
+            default = "YES">
+         </TestPlanReference>
+         <TestPlanReference
+            reference = "container:CatholicFastingAppScreenshots.xctestplan"
+            default = "NO">
+         </TestPlanReference>
+      </TestPlans>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"

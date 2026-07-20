@@ -126,7 +126,7 @@ enum CompanionSnapshotEngine {
             obligationLine: localizedDecision.obligationLine,
             rationale: localizedDecision.rationale,
             sourceLine: localizedDecision.sourceLine,
-            todayTitles: todayObservances.map(\.title),
+            todayTitles: todayObservances.map { ObservanceLocalizationCatalog.localizedCurrentTitle($0.title) },
             hasMandatoryObservance: todayActionable.contains { $0.obligation == .mandatory })
         let nextJourneyAction = journeyProgress.nextAction
         let formation = CompanionFormationState(
@@ -144,7 +144,7 @@ enum CompanionSnapshotEngine {
             currentStreak: currentStreak,
             premiumUnlocked: premiumUnlocked)
         let primaryAction = primaryAction(
-            decision: decision,
+            decision: localizedDecision,
             hasMedicalDispensation: settings.hasMedicalDispensation,
             todayActionable: todayActionable,
             nextRequired: nextRequired,
@@ -227,7 +227,7 @@ enum CompanionSnapshotEngine {
                     default: "Check the live fast"),
                 detail: CoreLocalizer.localizedCurrent(
                     "companion.action.active_fast.detail",
-                    default: "Elapsed, remaining, target, and intention are ready in Track Fast."),
+                    default: "Elapsed, remaining, target, and intention are ready in Fast."),
                 destination: .trackFast,
                 priority: .high,
                 requiresPremium: false)
@@ -282,7 +282,7 @@ enum CompanionSnapshotEngine {
                 id: "track-fast",
                 title: CoreLocalizer.localizedCurrent(
                     "companion.action.track_fast.title",
-                    default: "Track Fast"),
+                    default: "Fast"),
                 detail: CoreLocalizer.localizedCurrent(
                     "companion.action.track_fast.detail",
                     default: "Start, edit, or review your fasting window."),
@@ -297,7 +297,7 @@ enum CompanionSnapshotEngine {
                     id: "fasting-days",
                     title: CoreLocalizer.localizedCurrent(
                         "companion.action.fasting_days.title",
-                        default: "Open Fasting Days"),
+                        default: "Open Calendar"),
                     detail: CoreLocalizer.localizedCurrent(
                         "companion.action.fasting_days.detail",
                         default: "Review required and optional observances."),
@@ -390,7 +390,7 @@ enum CompanionSnapshotEngine {
             return CoreLocalizer.localizedCurrentFormat(
                 "decision.optional_unknown.rationale_format",
                 default: "Review the age eligibility toggles in Settings so the app can determine whether %@ binds you.",
-                titles)
+                localizedObservanceTitles(in: titles))
         }
 
         if rationale.hasPrefix(knownPrefix), rationale.hasSuffix(knownSuffix) {
@@ -398,7 +398,7 @@ enum CompanionSnapshotEngine {
             return CoreLocalizer.localizedCurrentFormat(
                 "decision.optional_known.rationale_format",
                 default: "Based on your current profile, %@ does not strictly bind today.",
-                titles)
+                localizedObservanceTitles(in: titles))
         }
 
         let singlePrefix = "This is based on "
@@ -406,10 +406,23 @@ enum CompanionSnapshotEngine {
         if rationale.hasPrefix(singlePrefix), rationale.hasSuffix(singleSuffix) {
             let titles = String(rationale.dropFirst(singlePrefix.count).dropLast(singleSuffix.count))
             let key = titles.contains(", ") ? "decision.observance.multi_format" : "decision.observance.single_format"
-            return CoreLocalizer.localizedCurrentFormat(key, default: "This is based on %@.", titles)
+            return CoreLocalizer.localizedCurrentFormat(
+                key,
+                default: "This is based on %@.",
+                localizedObservanceTitles(in: titles))
         }
 
         return rationale
+    }
+
+    private static func localizedObservanceTitles(in text: String) -> String {
+        ObservanceLocalizationCatalog.titleDefaultsByIdentifier.values
+            .sorted { $0.count > $1.count }
+            .reduce(text) { result, defaultTitle in
+                result.replacingOccurrences(
+                    of: defaultTitle,
+                    with: ObservanceLocalizationCatalog.localizedCurrentTitle(defaultTitle))
+            }
     }
 
     private static func localizedFoodDecisionSource(_ sourceLine: String) -> String {

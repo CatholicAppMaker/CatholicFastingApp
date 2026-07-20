@@ -81,39 +81,155 @@ enum AppLocalizer {
     }
 }
 
+enum ObservanceContentLocalizer {
+    static func localizedTitle(_ title: String, languageCode: String) -> String {
+        guard let identifier = ObservanceLocalizationCatalog.titleIdentifier(for: title) else { return title }
+        return AppLocalizer.localized(
+            localizationKey(section: "title", identifier: identifier),
+            default: title,
+            languageCode: languageCode)
+    }
+
+    static func localizedDetail(_ detail: String?, languageCode: String) -> String? {
+        guard let detail, !detail.isEmpty else { return detail }
+        guard let identifier = ObservanceLocalizationCatalog.detailIdentifier(for: detail) else { return detail }
+        return AppLocalizer.localized(
+            localizationKey(section: "detail", identifier: identifier),
+            default: detail,
+            languageCode: languageCode)
+    }
+
+    static func localizedRationale(_ observance: Observance, languageCode: String) -> String {
+        guard let identifier = ObservanceLocalizationCatalog.rationaleIdentifier(for: observance.rationale) else {
+            return observance.rationale
+        }
+        let key = "observance.rationale.\(identifier)"
+        let localizedDefault = ObservanceLocalizationCatalog.rationaleDefaultsByIdentifier[identifier]
+            ?? observance.rationale
+        let format = AppLocalizer.localized(key, default: localizedDefault, languageCode: languageCode)
+        if identifier.hasSuffix("_format") {
+            return String(
+                format: format,
+                locale: Locale(identifier: (LanguageMode(rawValue: languageCode) ?? .english).localizationCode),
+                localizedTitle(observance.title, languageCode: languageCode))
+        }
+        return format
+    }
+
+    static func localizedCurrentTitle(
+        _ title: String,
+        userDefaults: UserDefaults = .standard) -> String
+    {
+        localizedTitle(title, languageCode: AppLocalizer.currentLanguageCode(userDefaults: userDefaults))
+    }
+
+    static func localizedCurrentDetail(
+        _ detail: String?,
+        userDefaults: UserDefaults = .standard) -> String?
+    {
+        localizedDetail(detail, languageCode: AppLocalizer.currentLanguageCode(userDefaults: userDefaults))
+    }
+
+    static func localizedCurrentRationale(
+        _ observance: Observance,
+        userDefaults: UserDefaults = .standard) -> String
+    {
+        localizedRationale(observance, languageCode: AppLocalizer.currentLanguageCode(userDefaults: userDefaults))
+    }
+
+    private static func localizationKey(section: String, identifier: String) -> String {
+        ["observance", section, identifier].joined(separator: ".")
+    }
+}
+
 enum ObservanceTitleLocalizer {
     static func localizedCurrent(_ title: String, userDefaults: UserDefaults = .standard) -> String {
-        switch title {
-        case "Ash Wednesday":
-            AppLocalizer.localizedCurrent("observance.title.ash_wednesday", default: title, userDefaults: userDefaults)
-        case "Good Friday":
-            AppLocalizer.localizedCurrent("observance.title.good_friday", default: title, userDefaults: userDefaults)
-        case "Friday of Lent":
-            AppLocalizer.localizedCurrent("observance.title.friday_of_lent", default: title, userDefaults: userDefaults)
-        case "Friday Penance (Outside Lent)":
-            AppLocalizer.localizedCurrent("observance.title.friday_penance_outside_lent", default: title, userDefaults: userDefaults)
-        case "Ember Day":
-            AppLocalizer.localizedCurrent("observance.title.ember_day", default: title, userDefaults: userDefaults)
-        case "Palm Sunday", "Palm Sunday of the Passion of the Lord":
-            AppLocalizer.localizedCurrent("observance.title.palm_sunday", default: title, userDefaults: userDefaults)
-        case "Holy Thursday (Evening Mass of the Lord's Supper)":
-            AppLocalizer.localizedCurrent("observance.title.holy_thursday", default: title, userDefaults: userDefaults)
-        case "Mary, Mother of God":
-            AppLocalizer.localizedCurrent("observance.title.mary_mother_of_god", default: title, userDefaults: userDefaults)
-        case "Ascension":
-            AppLocalizer.localizedCurrent("observance.title.ascension", default: title, userDefaults: userDefaults)
-        case "Assumption of the Blessed Virgin Mary":
-            AppLocalizer.localizedCurrent("observance.title.assumption", default: title, userDefaults: userDefaults)
-        case "All Saints":
-            AppLocalizer.localizedCurrent("observance.title.all_saints", default: title, userDefaults: userDefaults)
-        case "Immaculate Conception":
-            AppLocalizer.localizedCurrent("observance.title.immaculate_conception", default: title, userDefaults: userDefaults)
-        case "Immaculate Conception (Transferred)":
-            AppLocalizer.localizedCurrent("observance.title.immaculate_conception_transferred", default: title, userDefaults: userDefaults)
-        case "Christmas":
-            AppLocalizer.localizedCurrent("observance.title.christmas", default: title, userDefaults: userDefaults)
+        ObservanceContentLocalizer.localizedCurrentTitle(title, userDefaults: userDefaults)
+    }
+}
+
+enum ObservancePresentationLocalizer {
+    static func kindLabel(_ kind: Observance.Kind, languageCode: String) -> String {
+        let key: String
+        let defaultValue: String
+        switch kind {
+        case .fastAndAbstinence:
+            (key, defaultValue) = ("observance.kind.fast_and_abstinence", "Fast + Abstinence")
+        case .abstinence:
+            (key, defaultValue) = ("observance.kind.abstinence", "Abstinence")
+        case .fridayPenance:
+            (key, defaultValue) = ("observance.kind.friday_penance", "Friday Penance")
+        case .holyDay:
+            (key, defaultValue) = ("observance.kind.holy_day", "Holy Day")
+        case .feastDay:
+            (key, defaultValue) = ("observance.kind.feast_day", "Feast Day")
+        case .memorialDay:
+            (key, defaultValue) = ("observance.kind.memorial", "Memorial")
+        case .optionalEmber:
+            (key, defaultValue) = ("observance.kind.optional_ember", "Optional Ember Day")
+        }
+        return AppLocalizer.localized(key, default: defaultValue, languageCode: languageCode)
+    }
+
+    static func dispositionLabel(_ observance: Observance, languageCode: String) -> String {
+        switch observance.kind {
+        case .feastDay, .memorialDay:
+            return AppLocalizer.localized(
+                "observance.disposition.celebrate", default: "Celebrate", languageCode: languageCode)
+        case .fridayPenance:
+            switch observance.obligation {
+            case .mandatory:
+                return AppLocalizer.localized(
+                    "observance.disposition.penance_required", default: "Penance Required", languageCode: languageCode)
+            case .optional:
+                return AppLocalizer.localized(
+                    "observance.disposition.penance_optional", default: "Penance Optional", languageCode: languageCode)
+            case .notApplicable:
+                return obligationLabel(.notApplicable, languageCode: languageCode)
+            }
         default:
-            title
+            return obligationLabel(observance.obligation, languageCode: languageCode)
+        }
+    }
+
+    static func completionLabel(_ status: CompletionStatus, languageCode: String) -> String {
+        let key: String
+        let defaultValue: String
+        switch status {
+        case .notStarted:
+            (key, defaultValue) = ("observance.completion.not_started", "Not Started")
+        case .completed:
+            (key, defaultValue) = ("observance.completion.completed", "Completed")
+        case .substituted:
+            (key, defaultValue) = ("observance.completion.substituted", "Substituted")
+        case .dispensed:
+            (key, defaultValue) = ("observance.completion.dispensed", "Dispensed")
+        case .missed:
+            (key, defaultValue) = ("observance.completion.missed", "Missed")
+        }
+        return AppLocalizer.localized(key, default: defaultValue, languageCode: languageCode)
+    }
+
+    static func currentKindLabel(_ kind: Observance.Kind) -> String {
+        kindLabel(kind, languageCode: AppLocalizer.currentLanguageCode())
+    }
+
+    static func currentDispositionLabel(_ observance: Observance) -> String {
+        dispositionLabel(observance, languageCode: AppLocalizer.currentLanguageCode())
+    }
+
+    static func currentCompletionLabel(_ status: CompletionStatus) -> String {
+        completionLabel(status, languageCode: AppLocalizer.currentLanguageCode())
+    }
+
+    private static func obligationLabel(_ obligation: Observance.Obligation, languageCode: String) -> String {
+        switch obligation {
+        case .mandatory:
+            AppLocalizer.localized("observance.obligation.required", default: "Required", languageCode: languageCode)
+        case .optional:
+            AppLocalizer.localized("observance.obligation.optional", default: "Optional", languageCode: languageCode)
+        case .notApplicable:
+            AppLocalizer.localized("observance.obligation.not_required", default: "Not Required", languageCode: languageCode)
         }
     }
 }

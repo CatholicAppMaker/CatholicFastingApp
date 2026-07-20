@@ -6,25 +6,23 @@ extension ContentView {
         let selected = selectedFastingObservance(from: items)
         let grouped = ipadFastingDayGroups(from: items)
 
-        return ScrollView {
-            if dynamicTypeSize.isAccessibilitySize {
-                ipadFastingDaysStackedLayout(items: items, selected: selected, groups: grouped)
-            } else {
-                ViewThatFits(in: .horizontal) {
-                    ipadFastingDaysWideLayout(items: items, selected: selected, groups: grouped)
-                        .frame(minWidth: 1_280)
-                    ipadFastingDaysMediumLayout(items: items, selected: selected, groups: grouped)
-                        .frame(minWidth: 960)
+        return GeometryReader { geometry in
+            ScrollView {
+                if dynamicTypeSize.isAccessibilitySize || geometry.size.width < 960 {
                     ipadFastingDaysStackedLayout(items: items, selected: selected, groups: grouped)
+                } else if geometry.size.width < 1_280 {
+                    ipadFastingDaysMediumLayout(items: items, selected: selected, groups: grouped)
+                } else {
+                    ipadFastingDaysWideLayout(items: items, selected: selected, groups: grouped)
                 }
             }
-        }
-        .padding(28)
-        .onAppear {
-            selectDefaultFastingObservance(from: items)
-        }
-        .onChange(of: items.map(\.id)) { _, _ in
-            selectDefaultFastingObservance(from: items)
+            .padding(28)
+            .onAppear {
+                selectDefaultFastingObservance(from: items)
+            }
+            .onChange(of: items.map(\.id)) { _, _ in
+                selectDefaultFastingObservance(from: items)
+            }
         }
     }
 
@@ -35,6 +33,7 @@ extension ContentView {
     {
         HStack(alignment: .top, spacing: 20) {
             VStack(alignment: .leading, spacing: 16) {
+                ipadFastingDaysHeroBand(compact: true)
                 ipadFastingDaysSummaryCards(for: items)
                 ipadFastingDaysQuickDateStrip(from: items)
                 ipadFastingDaysGroupedList(groups: groups)
@@ -59,11 +58,11 @@ extension ContentView {
                 .frame(minWidth: 260, idealWidth: 300, maxWidth: 340)
 
             VStack(alignment: .leading, spacing: 16) {
+                ipadFastingDaysHeroBand(compact: true)
                 ipadFastingDaysSummaryCards(for: items)
                 ipadFastingDaysQuickDateStrip(from: items)
                 ipadFastingDaysFilterRail
                 ipadFastingDaysGroupedList(groups: groups)
-                ipadFastingDaysHeroBand(compact: true)
             }
             .frame(minWidth: 0, maxWidth: .infinity, alignment: .top)
         }
@@ -76,11 +75,11 @@ extension ContentView {
     {
         VStack(alignment: .leading, spacing: 16) {
             ipadFastingDaysDetailPane(selected: selected, compact: true)
+            ipadFastingDaysHeroBand(compact: true)
             ipadFastingDaysSummaryCards(for: items)
             ipadFastingDaysQuickDateStrip(from: items)
             ipadFastingDaysFilterRail
             ipadFastingDaysGroupedList(groups: groups)
-            ipadFastingDaysHeroBand(compact: true)
         }
     }
 }

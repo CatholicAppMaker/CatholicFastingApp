@@ -24,12 +24,12 @@ enum SacredHeroImageSelector {
         case .fastingDays:
             SacredHeroArtwork(
                 assetName: "SacredFridayAbstinence",
-                title: "Fasting Day Planner",
+                title: "Calendar",
                 subtitle: "See required days, optional practices, and celebrations in one steady rhythm.")
         case .intermittent:
             SacredHeroArtwork(
                 assetName: "SacredScriptureCandle",
-                title: "Track Fast",
+                title: "Fast",
                 subtitle: "Keep optional fasting tied to prayer and reflection, not just metrics.")
         case .guidance:
             SacredHeroArtwork(
@@ -91,9 +91,14 @@ extension ContentView {
         Section {
             if let nextRequired = upcomingMandatoryObservance {
                 VStack(alignment: .leading, spacing: 10) {
-                    Label(localized("fasting_days.next_required", default: "Next required"), systemImage: "calendar.badge.exclamationmark")
-                        .appEyebrowStyle()
-                        .textCase(.uppercase)
+                    HStack(alignment: .firstTextBaseline, spacing: 6) {
+                        Image(systemName: "calendar.badge.exclamationmark")
+                            .accessibilityHidden(true)
+                        Text(localized("fasting_days.next_required", default: "Next required"))
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .appEyebrowStyle()
+                    .textCase(.uppercase)
 
                     Text(localizedObservanceTitle(nextRequired.title))
                         .appSectionTitleStyle(serif: true)
@@ -106,9 +111,14 @@ extension ContentView {
                 .appSurfaceCard(.utility, cornerRadius: 16)
             } else if let nextPotential = upcomingPotentialFastingObservance {
                 VStack(alignment: .leading, spacing: 10) {
-                    Label(localized("fasting_days.next_possible", default: "Next possible observance"), systemImage: "calendar")
-                        .appEyebrowStyle()
-                        .textCase(.uppercase)
+                    HStack(alignment: .firstTextBaseline, spacing: 6) {
+                        Image(systemName: "calendar")
+                            .accessibilityHidden(true)
+                        Text(localized("fasting_days.next_possible", default: "Next possible observance"))
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .appEyebrowStyle()
+                    .textCase(.uppercase)
 
                     Text(localizedObservanceTitle(nextPotential.title))
                         .appSectionTitleStyle(serif: true)
@@ -180,7 +190,7 @@ extension ContentView {
         if fastingDaysIncludeFeastAndHolyDays {
             visibleKinds.formUnion([.holyDay, .feastDay, .memorialDay])
         }
-        let todayStart = liturgicalCalendar.startOfDay(for: Date())
+        let todayStart = liturgicalCalendar.startOfDay(for: AppClock.now())
         let source =
             fastingDaysShowAllYearDays
                 ? currentYearObservances
@@ -282,7 +292,7 @@ extension ContentView {
                 VStack(alignment: .leading, spacing: 3) {
                     Text(localizedObservanceTitle(observance.title))
                         .font(.headline)
-                    Text("\(observance.kind.label) • \(observanceDispositionLabel(for: observance))")
+                    Text("\(localizedObservanceKindLabel(observance.kind)) • \(observanceDispositionLabel(for: observance))")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     Text(localizedAbbreviatedDate(observance.date))
@@ -298,7 +308,7 @@ extension ContentView {
             if observance.obligation != .notApplicable {
                 Menu {
                     ForEach(CompletionStatus.allCases) { statusOption in
-                        Button(statusOption.label) {
+                        Button(localizedCompletionStatusLabel(statusOption)) {
                             tracker.setStatus(statusOption, for: observance.id)
                         }
                     }
@@ -309,6 +319,7 @@ extension ContentView {
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(localized("fasting_days.detail.status", default: "Observance status"))
+                .accessibilityValue(localizedCompletionStatusLabel(tracker.status(for: observance.id)))
                 .accessibilityIdentifier("fasting_days.status.\(observance.id)")
             }
         }
@@ -325,8 +336,10 @@ extension ContentView {
                     Text(localizedObservanceTitle(observance.title))
                         .appSectionTitleStyle(serif: true)
                     HStack(spacing: 8) {
-                        StatusTag(text: observance.kind.label, color: observance.kind.color)
-                        StatusTag(text: observance.dispositionLabel, color: observance.obligation == .mandatory ? .red : .blue)
+                        StatusTag(text: localizedObservanceKindLabel(observance.kind), color: observance.kind.color)
+                        StatusTag(
+                            text: localizedObservanceDispositionLabel(observance),
+                            color: observance.obligation == .mandatory ? .red : .blue)
                     }
                     Text(context.nextActionText)
                         .appLeadTextStyle()
@@ -336,10 +349,10 @@ extension ContentView {
             }
 
             Section(localized("fasting_days.detail.why", default: "Why this day matters")) {
-                if let detail = observance.detail, !detail.isEmpty {
+                if let detail = localizedObservanceDetail(observance), !detail.isEmpty {
                     Text(detail)
                 }
-                Text(observance.rationale)
+                Text(localizedObservanceRationale(observance))
                     .appSupportingTextStyle()
             }
 
@@ -371,7 +384,7 @@ extension ContentView {
                             set: { tracker.setStatus($0, for: observance.id) }))
                     {
                         ForEach(CompletionStatus.allCases) { status in
-                            Text(status.label).tag(status)
+                            Text(localizedCompletionStatusLabel(status)).tag(status)
                         }
                     }
                     .accessibilityIdentifier("fasting_days.detail.status_picker")
@@ -417,7 +430,7 @@ extension ContentView {
             if todayItems.isEmpty {
                 Text(localized("fasting_days.today.empty", default: "No listed observances today."))
                     .foregroundStyle(.secondary)
-                Button(localized("fasting_days.today.plan_ahead", default: "Open Fasting Days to Plan Ahead")) {
+                Button(localized("fasting_days.today.plan_ahead", default: "Open Calendar to Plan Ahead")) {
                     homeSurface = .fastingDays
                 }
                 .appSecondaryButtonStyle()
@@ -427,7 +440,7 @@ extension ContentView {
                         VStack(alignment: .leading) {
                             Text(localizedObservanceTitle(observance.title))
                                 .font(.headline)
-                            Text("\(observance.kind.label) • \(observanceDispositionLabel(for: observance))")
+                            Text("\(localizedObservanceKindLabel(observance.kind)) • \(observanceDispositionLabel(for: observance))")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
@@ -601,7 +614,7 @@ extension ContentView {
     }
 
     private func observanceDispositionLabel(for observance: Observance) -> String {
-        observance.dispositionLabel
+        localizedObservanceDispositionLabel(observance)
     }
 
     private var fastingDaysDisplaySummaryText: String {

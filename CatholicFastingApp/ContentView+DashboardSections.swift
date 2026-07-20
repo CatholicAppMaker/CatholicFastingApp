@@ -16,7 +16,7 @@ extension ContentView {
         CatholicFastingQuoteSelector.seasonalQuote(
             locale: languageMode.contentLocale,
             season: currentLiturgicalSeason,
-            date: Date())
+            date: AppClock.now())
     }
 
     var fastingDaysFastingQuote: CatholicFastingQuote {
@@ -24,7 +24,7 @@ extension ContentView {
             for: .fastingDays,
             locale: languageMode.contentLocale,
             season: currentLiturgicalSeason,
-            date: Date())
+            date: AppClock.now())
     }
 
     var intermittentFastingQuote: CatholicFastingQuote {
@@ -32,7 +32,7 @@ extension ContentView {
             for: .intermittent,
             locale: languageMode.contentLocale,
             season: currentLiturgicalSeason,
-            date: Date())
+            date: AppClock.now())
     }
 
     var guidanceFastingQuote: CatholicFastingQuote {
@@ -40,7 +40,7 @@ extension ContentView {
             for: .guidance,
             locale: languageMode.contentLocale,
             season: currentLiturgicalSeason,
-            date: Date())
+            date: AppClock.now())
     }
 
     var planningProgressSection: some View {
@@ -227,93 +227,9 @@ extension ContentView {
             Color.clear
                 .frame(width: 1, height: 1)
                 .accessibilityIdentifier(surfaceReadyIdentifier)
-            Color.clear
-                .frame(width: 1, height: 1)
-                .accessibilityIdentifier(ipadWorkspaceReadyIdentifier)
         }
         .allowsHitTesting(false)
         .accessibilityHidden(!isUITestMode)
-    }
-
-    var uiTestSurfaceSwitcher: some View {
-        Group {
-            if isUITestMode {
-                VStack(alignment: .trailing, spacing: 0) {
-                    HStack(spacing: 0) {
-                        ForEach(HomeSurface.primarySurfaces) { surface in
-                            Button {
-                                homeSurface = surface
-                            } label: {
-                                Color.white.opacity(0.001)
-                                    .frame(width: 44, height: 44)
-                                    .contentShape(Rectangle())
-                            }
-                            .buttonStyle(.plain)
-                            .accessibilityLabel(Text(surface.label))
-                            .accessibilityIdentifier("uitest.surface.\(surface.rawValue)")
-                        }
-                    }
-
-                    HStack(spacing: 0) {
-                        ForEach(MoreHubDestination.allCases) { destination in
-                            Button {
-                                navigateToMoreDestination(destination)
-                            } label: {
-                                Color.white.opacity(0.001)
-                                    .frame(width: 44, height: 44)
-                                    .contentShape(Rectangle())
-                            }
-                            .buttonStyle(.plain)
-                            .accessibilityLabel(Text(destination.title))
-                            .accessibilityIdentifier("uitest.more.destination.\(destination.rawValue)")
-                        }
-                    }
-
-                    HStack(spacing: 0) {
-                        Button {
-                            age14OrOlderForAbstinence = true
-                            age18OrOlderForFasting = true
-                        } label: {
-                            Color.white.opacity(0.001)
-                                .frame(width: 44, height: 44)
-                                .contentShape(Rectangle())
-                        }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel(Text("Set fasting age eligible"))
-                        .accessibilityIdentifier("uitest.state.setAgeEligible")
-
-                        Button {
-                            let profile = HouseholdProfile(
-                                id: "uitest-underage-profile",
-                                name: "Teen Profile",
-                                isAge14OrOlderForAbstinence: false,
-                                isAge18OrOlderForFasting: false,
-                                medicalDispensation: false)
-                            householdProfiles.removeAll(where: { $0.id == profile.id })
-                            householdProfiles.append(profile)
-                            activeHouseholdProfileID = profile.id
-                        } label: {
-                            Color.white.opacity(0.001)
-                                .frame(width: 44, height: 44)
-                                .contentShape(Rectangle())
-                        }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel(Text("Seed underage household profile"))
-                        .accessibilityIdentifier("uitest.household.seedUnderageProfile")
-
-                        Color.white.opacity(0.001)
-                            .frame(width: 1, height: 1)
-                            .accessibilityIdentifier(
-                                "uitest.state.age14.\(age14OrOlderForAbstinence ? "true" : "false")")
-
-                        Color.white.opacity(0.001)
-                            .frame(width: 1, height: 1)
-                            .accessibilityIdentifier(
-                                "uitest.state.age18.\(age18OrOlderForFasting ? "true" : "false")")
-                    }
-                }
-            }
-        }
     }
 
     var surfaceReadyIdentifier: String {
@@ -329,19 +245,6 @@ extension ContentView {
         }
     }
 
-    var ipadWorkspaceReadyIdentifier: String {
-        switch homeSurface {
-        case .today:
-            "ipad.today.workspace"
-        case .fastingDays:
-            "ipad.fasting_days.workspace"
-        case .intermittent:
-            "ipad.intermittent.workspace"
-        case .more:
-            "ipad.more.workspace"
-        }
-    }
-
     var isUITestMode: Bool {
         let processInfo = ProcessInfo.processInfo
         return processInfo.environment["UITEST_MODE"] == "1"
@@ -350,14 +253,6 @@ extension ContentView {
             || processInfo.arguments.contains("-uitest-seed-deterministic")
             || processInfo.arguments.contains("-uitest-seed-missed")
             || processInfo.arguments.contains("-uitest-disable-animations")
-    }
-
-    func uiTestMarker(_ identifier: String) -> some View {
-        Color.clear
-            .frame(width: 1, height: 1)
-            .accessibilityIdentifier(identifier)
-            .accessibilityHidden(!isUITestMode)
-            .allowsHitTesting(false)
     }
 
     var dashboardHeroSection: some View {
@@ -397,7 +292,7 @@ extension ContentView {
             Button {
                 homeSurface = .fastingDays
             } label: {
-                Label(localized("today.actions.fasting_days", default: "Open Fasting Days"), systemImage: "calendar")
+                Label(localized("today.actions.fasting_days", default: "Open Calendar"), systemImage: "calendar")
             }
             .accessibilityIdentifier("today.quick.fasting_days")
             .appPrimaryButtonStyle()
@@ -408,7 +303,7 @@ extension ContentView {
             Button {
                 homeSurface = .intermittent
             } label: {
-                Label(localized("today.actions.track_fast", default: "Track Fast Now"), systemImage: "timer")
+                Label(localized("today.actions.track_fast", default: "Open Fast"), systemImage: "timer")
             }
             .accessibilityIdentifier("today.quick.intermittent")
             .appSecondaryButtonStyle(legacyTint: CatholicTheme.accentForeground)
@@ -557,7 +452,7 @@ extension ContentView {
                 .appPrimaryButtonStyle(legacyTint: CatholicTheme.accentForeground)
                 .disabled(!canLogRecoverySubstituteToday)
 
-                Button(localized("today.recovery.focus", default: "Focus Required Fasting Days")) {
+                Button(localized("today.recovery.focus", default: "Focus Required Days")) {
                     focusFastingDaysOnUpcomingRequired()
                 }
                 .accessibilityIdentifier("today.recovery.open_fasting_days")
@@ -635,7 +530,7 @@ extension ContentView {
                 Text(localized("today.overview.none", default: "No upcoming required observances this year."))
                     .foregroundStyle(.secondary)
             }
-            Button(localized("today.overview.open_view", default: "Open Fasting Days View")) {
+            Button(localized("today.overview.open_view", default: "Open Calendar")) {
                 homeSurface = .fastingDays
             }
             .accessibilityIdentifier("dashboard.open_fasting_days")
@@ -666,7 +561,7 @@ extension ContentView {
                 Text(localized("today.overview.none", default: "No upcoming required observances this year."))
                     .foregroundStyle(.secondary)
             }
-            Button(localized("today.actions.fasting_days", default: "Open Fasting Days")) {
+            Button(localized("today.actions.fasting_days", default: "Open Calendar")) {
                 homeSurface = .fastingDays
             }
             .appPrimaryButtonStyle()

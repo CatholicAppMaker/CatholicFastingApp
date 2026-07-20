@@ -26,9 +26,9 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(continueButton, in: app))
         continueButton.tap()
 
-        XCTAssertTrue(app.otherElements["ipad.today.workspace"].waitForExistence(timeout: 6))
-        XCTAssertTrue(app.otherElements["ipad.today.hero"].waitForExistence(timeout: 6))
-        XCTAssertTrue(app.otherElements["ipad.today.primary_card"].waitForExistence(timeout: 6))
+        assertIPadWorkspaceVisible("today", in: app, timeout: 6)
+        XCTAssertTrue(app.otherElements["companion.dashboard"].waitForExistence(timeout: 6))
+        XCTAssertTrue(app.otherElements["ipad.today.actions"].waitForExistence(timeout: 6))
     }
 
     func testFreshLaunchCompactOnboardingCanCompleteWithDefaults() {
@@ -42,6 +42,33 @@ extension CatholicFastingAppUITests {
         continueButton.tap()
 
         XCTAssertTrue(app.otherElements["surface.today.ready"].waitForExistence(timeout: 6))
+    }
+
+    func testOnboardingFinishRequirementExplainsAndRevealsAcknowledgment() {
+        let app = makeFreshLaunchApp()
+        app.launch()
+
+        advancePastLanguageSelection(in: app)
+
+        let finishButton = app.buttons["onboarding.continue"].firstMatch
+        XCTAssertTrue(finishButton.waitForExistence(timeout: 4))
+        XCTAssertFalse(finishButton.isEnabled)
+
+        let requirementTitle = app.staticTexts["onboarding.legal_requirement.title"].firstMatch
+        XCTAssertTrue(requirementTitle.waitForExistence(timeout: 4))
+
+        let reviewButton = app.buttons["onboarding.legal_requirement.review"].firstMatch
+        XCTAssertTrue(reviewButton.waitForExistence(timeout: 4))
+        reviewButton.tap()
+
+        let acknowledgment = app.switches["onboarding.accept_legal_notice"].firstMatch
+        XCTAssertTrue(acknowledgment.waitForExistence(timeout: 4))
+        XCTAssertTrue(waitUntil(timeout: 3) { acknowledgment.isHittable })
+        XCTAssertFalse(switchIsOn(acknowledgment))
+
+        turnOnOnboardingToggle("onboarding.accept_legal_notice", in: app)
+        XCTAssertTrue(waitUntil(timeout: 3) { finishButton.isEnabled })
+        XCTAssertTrue(waitUntil(timeout: 3) { !requirementTitle.exists })
     }
 
     func testSmokeOnboardingCanBeCompleted() {
@@ -228,28 +255,35 @@ extension CatholicFastingAppUITests {
     }
 
     func testDeepHouseholdProfileCanBeCreatedAndReapplied() {
-        let app = makeApp()
+        let app = makeApp(abstinenceAgeEligible: false, fastingAgeEligible: false)
         app.launch()
         ensureOnHomeScreen(app)
 
         openMoreDestination("Profile & Norms", in: app)
 
-        let seedProfileButton = app.buttons["uitest.household.seedUnderageProfile"].firstMatch
-        XCTAssertTrue(seedProfileButton.waitForExistence(timeout: 3))
-        seedProfileButton.tap()
+        let nameField = app.textFields["settings.household.new_name"].firstMatch
+        XCTAssertTrue(scrollToElement(nameField, in: app))
+        nameField.tap()
+        nameField.typeText("Teen Profile")
 
-        let setEligibleButton = app.buttons["uitest.state.setAgeEligible"].firstMatch
-        XCTAssertTrue(setEligibleButton.waitForExistence(timeout: 3))
-        setEligibleButton.tap()
-        XCTAssertTrue(elementByIdentifier("uitest.state.age14.true", in: app).waitForExistence(timeout: 3))
-        XCTAssertTrue(elementByIdentifier("uitest.state.age18.true", in: app).waitForExistence(timeout: 3))
+        let addButton = app.buttons["settings.household.add"].firstMatch
+        XCTAssertTrue(scrollToElement(addButton, in: app))
+        addButton.tap()
 
+        openMoreDestination("Setup & Reminders", in: app)
+        let age14Toggle = app.switches["settings.quick.age14_toggle"].firstMatch
+        let age18Toggle = app.switches["settings.quick.age18_toggle"].firstMatch
+        setSwitch(age14Toggle, to: true, in: app)
+        setSwitch(age18Toggle, to: true, in: app)
+
+        openMoreDestination("Profile & Norms", in: app)
         let applyButton = app.buttons["settings.household.apply"].firstMatch
         XCTAssertTrue(scrollToElement(applyButton, in: app))
         applyButton.tap()
 
-        XCTAssertTrue(elementByIdentifier("uitest.state.age14.false", in: app).waitForExistence(timeout: 3))
-        XCTAssertTrue(elementByIdentifier("uitest.state.age18.false", in: app).waitForExistence(timeout: 3))
+        openMoreDestination("Setup & Reminders", in: app)
+        XCTAssertEqual(app.switches["settings.quick.age14_toggle"].firstMatch.value as? String, "0")
+        XCTAssertEqual(app.switches["settings.quick.age18_toggle"].firstMatch.value as? String, "0")
     }
 
     func testIPadOnboardingShowsRegionSelector() {
@@ -336,17 +370,51 @@ extension CatholicFastingAppUITests {
     }
 
     func turnOnOnboardingToggle(_ identifier: String, in app: XCUIApplication) {
-        let toggle = elementByIdentifier(identifier, in: app)
+        let toggle = app.switches[identifier].firstMatch
         XCTAssertTrue(scrollToElement(toggle, in: app))
         if !switchIsOn(toggle) {
-            tapOnboardingToggleControl(toggle)
-            if !waitUntil(timeout: 1, condition: { switchIsOn(toggle) }) {
-                tapOnboardingToggleControl(toggle)
+            turnOnOnboardingToggleControl(toggle)
+            let finishButton = app.buttons["onboarding.continue"].firstMatch
+            let reachedEnabledState = {
+                if finishButton.exists, finishButton.isEnabled {
+                    return true
+                }
+                let refreshed = app.switches[identifier].firstMatch
+                return refreshed.exists && self.switchIsOn(refreshed)
             }
+
+            if !waitUntil(timeout: 1, condition: reachedEnabledState) {
+                let refreshed = app.switches[identifier].firstMatch
+                XCTAssertTrue(scrollToElement(refreshed, in: app))
+                tapTrailingOnboardingSwitchControl(refreshed)
+            }
+
+            XCTAssertTrue(
+                waitUntil(timeout: 3) {
+                    // Accepting the notice removes the requirement inset and can recycle the
+                    // List row on iPadOS. The enabled Finish button is the stable, user-visible
+                    // result of operating the real switch; only query the refreshed switch as
+                    // a fallback while its row remains materialized.
+                    reachedEnabledState()
+                },
+                "Expected onboarding switch \(identifier) to become enabled")
         }
     }
 
-    func tapOnboardingToggleControl(_ toggle: XCUIElement) {
-        toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.5)).tap()
+    func turnOnOnboardingToggleControl(_ toggle: XCUIElement) {
+        XCTAssertTrue(toggle.isHittable, "Expected onboarding switch \(toggle.identifier) to be hittable")
+        // iPadOS 27 exposes the full labeled Toggle row as the Switch accessibility frame,
+        // while its visual control is a nested native switch. A directional switch gesture
+        // operates that real control without depending on the row width or label hit region.
+        toggle.swipeRight()
+    }
+
+    func tapTrailingOnboardingSwitchControl(_ toggle: XCUIElement) {
+        XCTAssertTrue(toggle.isHittable, "Expected onboarding switch \(toggle.identifier) to be hittable")
+        // The outer Switch frame spans the whole List row on iPadOS 27. Resolve the native
+        // control from the row's trailing edge instead of a normalized row percentage.
+        toggle.coordinate(withNormalizedOffset: CGVector(dx: 1, dy: 0.5))
+            .withOffset(CGVector(dx: -30, dy: 0))
+            .tap()
     }
 }

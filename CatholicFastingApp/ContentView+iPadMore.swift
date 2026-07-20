@@ -45,11 +45,14 @@ extension ContentView {
     var ipadSimplePremiumWorkspace: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                uiTestMarker("ipad.more.premium")
                 AppSectionLeadCard(
                     eyebrow: localized("premium.section.support", default: "Support & Premium"),
-                    title: localized("ipad.more.premium.title", default: "Choose a plan, then keep the journey visible"),
-                    detail: localized("ipad.more.premium.detail", default: "Yearly stays primary. Tips, billing, and legal tools remain below the plan choice."),
+                    title: monetizationStore.premiumUnlocked
+                        ? localized("ipad.more.premium.active_title", default: "Premium formation is active")
+                        : localized("ipad.more.premium.title", default: "Choose a plan, then keep the journey visible"),
+                    detail: monetizationStore.premiumUnlocked
+                        ? localized("ipad.more.premium.active_detail", default: "Open the current journey and formation tools; billing and legal actions remain available below.")
+                        : localized("ipad.more.premium.detail", default: "Yearly stays primary. Tips, billing, and legal tools remain below the plan choice."),
                     serifTitle: true,
                     style: .utility)
 
@@ -123,12 +126,20 @@ extension ContentView {
                 }
                 .accessibilityIdentifier("premium.plan_choice_state")
             } else if monetizationStore.premiumProducts.isEmpty {
-                Text(
-                    localized(
-                        "premium.upgrade.unavailable",
-                        default: "Premium plans are temporarily unavailable. Try again in a moment, then use Restore Purchases if needed."))
-                    .appSupportingTextStyle()
-                    .accessibilityIdentifier("premium.plan_choice_state")
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(premiumCatalogRecoveryMessage)
+                        .appSupportingTextStyle()
+                        .accessibilityIdentifier("premium.plan_choice_state")
+                    Button {
+                        Task { await monetizationStore.refreshCatalogAndEntitlements() }
+                    } label: {
+                        Label(
+                            localized("premium.catalog.retry", default: "Try loading plans again"),
+                            systemImage: "arrow.clockwise")
+                    }
+                    .appSecondaryButtonStyle()
+                    .accessibilityIdentifier("premium.catalog.retry")
+                }
             } else {
                 ForEach(monetizationStore.premiumProducts, id: \.id) { product in
                     ipadCompactPremiumOfferCard(product: product, offer: premiumOfferCatalog.offer(for: product.id))
@@ -256,12 +267,18 @@ extension ContentView {
 
             Link(localized("premium.legal.terms", default: "Terms of Use (EULA)"), destination: UIConstants.termsOfUseURL)
                 .appSupportingTextStyle()
+                .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                .contentShape(Rectangle())
                 .accessibilityIdentifier("premium.legal.terms")
             Link(localized("premium.legal.privacy", default: "Privacy Policy"), destination: UIConstants.privacyPolicyURL)
                 .appSupportingTextStyle()
+                .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                .contentShape(Rectangle())
                 .accessibilityIdentifier("premium.legal.privacy")
             Link(localized("premium.legal.support", default: "Support"), destination: UIConstants.supportSiteURL)
                 .appSupportingTextStyle()
+                .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                .contentShape(Rectangle())
                 .accessibilityIdentifier("premium.legal.support")
         }
         .padding(14)
