@@ -18,33 +18,67 @@ extension View {
 
 struct IPadSidebarRow: View {
     let title: String
-    let subtitle: String
     let systemImage: String
     let isSelected: Bool
 
     var body: some View {
-        HStack(alignment: .top, spacing: 10) {
+        HStack(spacing: 11) {
             Image(systemName: systemImage)
-                .font(.headline)
-                .foregroundStyle(isSelected ? CatholicTheme.primary : .primary)
-                .frame(width: 22)
+                .font(.body.weight(.semibold))
+                .foregroundStyle(isSelected ? Color.white : Color.primary)
+                .frame(width: 24)
                 .accessibilityHidden(true)
 
-            VStack(alignment: .leading, spacing: 4) {
-                Text(title)
-                    .font(.headline)
-                    .foregroundStyle(isSelected ? CatholicTheme.primary : .primary)
-                    .fixedSize(horizontal: false, vertical: true)
-                Text(subtitle)
-                    .font(.footnote)
-                    .foregroundStyle(.primary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
+            Text(title)
+                .font(.body.weight(isSelected ? .semibold : .regular))
+                .foregroundStyle(isSelected ? Color.white : Color.primary)
+                .lineLimit(1)
         }
-        .padding(.vertical, 6)
+        .padding(.horizontal, 12)
+        .frame(minHeight: 48)
         .frame(maxWidth: .infinity, alignment: .leading)
+        .background {
+            RoundedRectangle(cornerRadius: 13, style: .continuous)
+                .fill(isSelected ? CatholicTheme.primary : Color.clear)
+        }
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
+    }
+}
+
+struct IPadSeasonContextRow: View {
+    let title: String
+    let colorsEnabled: Bool
+
+    var body: some View {
+        HStack(spacing: 11) {
+            Image(systemName: "cross.fill")
+                .font(.body.weight(.semibold))
+                .foregroundStyle(CatholicTheme.accentForeground)
+                .frame(width: 24)
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.body.weight(.medium))
+                    .foregroundStyle(.primary)
+                if !colorsEnabled {
+                    Text(AppLocalizer.localizedCurrent(
+                        "settings.theme.standard_palette_short",
+                        default: "Ordinary Time colors"))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .padding(.horizontal, 12)
+        .frame(maxWidth: .infinity, minHeight: 48, alignment: .leading)
+        .background {
+            RoundedRectangle(cornerRadius: 13, style: .continuous)
+                .fill(CatholicTheme.primary.opacity(0.07))
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("ipad.sidebar.season_context")
     }
 }
 
@@ -62,6 +96,7 @@ struct IPadWorkspaceHeader: View {
                 .appSectionTitleStyle(serif: serifTitle)
             Text(detail)
                 .appLeadTextStyle()
+                .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityElement(children: .combine)

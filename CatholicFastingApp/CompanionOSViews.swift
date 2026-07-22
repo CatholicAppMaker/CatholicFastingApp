@@ -1,59 +1,54 @@
 import SwiftUI
 
+enum CompanionDashboardPresentation {
+    case phone
+    case workspace
+}
+
 struct CompanionDashboardCard: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     let snapshot: CompanionSnapshot
     let todayLabel: String
     let nextRequiredLabel: String
     let seasonLabel: String
+    var presentation: CompanionDashboardPresentation = .phone
     let onPrimaryAction: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            SacredMasthead(
-                assetName: "HeroSacred",
-                seasonLabel: seasonLabel,
-                height: 88,
-                accessibilityIdentifier: "companion.sacred_masthead")
-
-            HStack(alignment: .top, spacing: 10) {
-                Image(systemName: iconName)
-                    .appSymbolStyle(.prominent)
-                    .foregroundStyle(iconTint)
-                    .padding(.top, 2)
-                    .accessibilityHidden(true)
-
-                VStack(alignment: .leading, spacing: 5) {
-                    Text(localized("companion.dashboard.eyebrow", default: "Today’s guidance"))
-                        .appEyebrowStyle()
-                        .textCase(.uppercase)
-                        .foregroundStyle(CatholicTheme.primary)
-
-                    Text(snapshot.ruleDecision.obligationLine)
-                        .font(.system(.title3, design: .serif).weight(.bold))
-                        .foregroundStyle(CatholicTheme.primary)
-                        .accessibilityIdentifier("companion.rule.obligation")
-
-                    Text(snapshot.ruleDecision.rationale)
-                        .appSupportingTextStyle()
-                }
+        VStack(alignment: .leading, spacing: presentation == .workspace ? 16 : 13) {
+            if dynamicTypeSize.isAccessibilitySize {
+                guidanceHeader(horizontal: false)
+            } else {
+                guidanceHeader(horizontal: true)
             }
 
-            HStack(spacing: 8) {
+            SacredEditorialRule()
+
+            HStack(alignment: .top, spacing: 14) {
                 CompanionMetricPill(
                     title: localized("companion.metric.today", default: "Today"),
                     value: todayLabel)
+
+                Rectangle()
+                    .fill(CatholicTheme.primary.opacity(0.14))
+                    .frame(width: 1, height: 46)
+                    .accessibilityHidden(true)
+
                 CompanionMetricPill(
                     title: localized("companion.metric.next", default: "Next"),
                     value: nextRequiredLabel)
             }
 
-            VStack(alignment: .leading, spacing: 8) {
+            SacredEditorialRule()
+
+            VStack(alignment: .leading, spacing: 7) {
                 Text(localized("companion.next_action.eyebrow", default: "Next faithful action"))
                     .appEyebrowStyle()
                     .textCase(.uppercase)
                 Text(snapshot.primaryAction.title)
                     .font(.headline.weight(.semibold))
-                    .foregroundStyle(CatholicTheme.primary)
+                    .foregroundStyle(.primary)
                 Text(snapshot.primaryAction.detail)
                     .appSupportingTextStyle()
                     .lineLimit(2 ... 4)
@@ -64,18 +59,73 @@ struct CompanionDashboardCard: View {
 
             Button(action: onPrimaryAction) {
                 Label(snapshot.primaryAction.title, systemImage: primaryActionIconName)
+                    .frame(maxWidth: presentation == .workspace ? 300 : .infinity)
             }
             .appPrimaryButtonStyle()
             .accessibilityIdentifier("companion.primary_action.button")
 
-            Text(snapshot.ruleDecision.sourceLine)
-                .appSupportingTextStyle()
+            Label(snapshot.ruleDecision.sourceLine, systemImage: "book.closed")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
                 .accessibilityIdentifier("companion.rule.source")
         }
-        .padding(14)
-        .appSurfaceCard(.primary, cornerRadius: 20)
+        .padding(.vertical, presentation == .workspace ? 4 : 8)
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("companion.dashboard")
+    }
+
+    private func guidanceHeader(horizontal: Bool) -> some View {
+        Group {
+            if horizontal {
+                HStack(alignment: .top, spacing: presentation == .workspace ? 18 : 12) {
+                    sacredAnchor
+                    guidanceCopy
+                }
+            } else {
+                VStack(alignment: .leading, spacing: 10) {
+                    sacredAnchor
+                    guidanceCopy
+                }
+            }
+        }
+    }
+
+    private var sacredAnchor: some View {
+        SacredIdentityThumbnail(
+            assetName: "SacredSacredHeart",
+            statusSymbol: iconName,
+            statusTint: iconTint,
+            imageSize: presentation == .workspace ? 92 : 72)
+            .accessibilityHidden(false)
+            .accessibilityLabel(sacredAnchorAccessibilityLabel)
+            .accessibilityIdentifier("companion.sacred_masthead")
+    }
+
+    private var sacredAnchorAccessibilityLabel: String {
+        let title = AppLocalizer.localizedCurrent(
+            "companion.sacred_anchor.accessibility",
+            default: "Sacred Heart devotional image")
+        return "\(title), \(seasonLabel)"
+    }
+
+    private var guidanceCopy: some View {
+        VStack(alignment: .leading, spacing: 5) {
+            Text(localized("companion.dashboard.eyebrow", default: "Today’s guidance"))
+                .appEyebrowStyle()
+                .textCase(.uppercase)
+                .foregroundStyle(CatholicTheme.primary)
+
+            Text(snapshot.ruleDecision.obligationLine)
+                .font(.system(presentation == .workspace ? .title2 : .title3, design: .serif).weight(.bold))
+                .foregroundStyle(.primary)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("companion.rule.obligation")
+
+            Text(snapshot.ruleDecision.rationale)
+                .appSupportingTextStyle()
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var iconName: String {
@@ -116,6 +166,8 @@ struct CompanionDashboardCard: View {
 }
 
 struct CompanionLiveStateCard: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     let title: String
     let detail: String
     let stageLabel: String
@@ -140,9 +192,10 @@ struct CompanionLiveStateCard: View {
                         .foregroundStyle(.primary)
                     Text(title)
                         .font(.headline.weight(.semibold))
-                        .foregroundStyle(CatholicTheme.primary)
+                        .foregroundStyle(.primary)
                     Text(detail)
                         .appSupportingTextStyle()
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
 
@@ -163,7 +216,12 @@ struct CompanionLiveStateCard: View {
                 .padding(.vertical, 5)
                 .appCapsuleGlass()
 
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
+            LazyVGrid(
+                columns: dynamicTypeSize.isAccessibilitySize
+                    ? [GridItem(.flexible())]
+                    : [GridItem(.flexible()), GridItem(.flexible())],
+                spacing: 8)
+            {
                 ForEach(metrics) { metric in
                     CompanionMetricPill(title: metric.title, value: metric.value)
                 }
@@ -214,7 +272,7 @@ struct CompanionFormationCard: View {
                     .textCase(.uppercase)
                 Text(formation.nextJourneyActionTitle)
                     .font(.headline.weight(.semibold))
-                    .foregroundStyle(CatholicTheme.primary)
+                    .foregroundStyle(.primary)
                 Text(formation.nextJourneyActionDetail)
                     .appSupportingTextStyle()
             }
@@ -289,10 +347,5 @@ private struct CompanionMetricPill: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.vertical, 7)
-        .overlay(alignment: .bottom) {
-            Rectangle()
-                .fill(CatholicTheme.primary.opacity(0.12))
-                .frame(height: 1)
-        }
     }
 }

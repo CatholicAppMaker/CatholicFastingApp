@@ -391,7 +391,9 @@
 "settings.theme.title" = "Thème liturgique";
 "settings.theme.enable_liturgical_colors" = "Activer les couleurs du temps liturgique";
 "settings.theme.active_season_format" = "Temps actuel : %@. Les couleurs se mettent à jour automatiquement tout au long de l’année liturgique.";
-"settings.theme.disabled_hint" = "Les couleurs saisonnières sont désactivées. Activez-les pour l’Avent, le Carême, Pâques et le temps ordinaire.";
+"settings.theme.disabled_hint" = "Les couleurs saisonnières sont désactivées. La palette du temps ordinaire restera utilisée toute l’année.";
+"settings.theme.standard_palette_short" = "Couleurs du temps ordinaire";
+"companion.sacred_anchor.accessibility" = "Image de dévotion du Sacré-Cœur";
 
 "settings.privacy.title" = "Confidentialité et consentement";
 "settings.privacy.legal_ack" = "Je comprends que cette application complète l’accompagnement pastoral sans le remplacer";

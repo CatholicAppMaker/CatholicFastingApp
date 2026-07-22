@@ -4,41 +4,42 @@ extension ContentView {
     var ipadTodayWorkspace: some View {
         GeometryReader { geometry in
             let regionContext = RegionalGuidanceContextFactory.generalContext(for: settings)
-            let compact = geometry.size.width < 1280
 
             ScrollView {
                 ipadTodayWorkspaceBody(
                     regionContext: regionContext,
-                    width: geometry.size.width,
-                    compact: compact)
+                    width: geometry.size.width)
             }
         }
     }
 
     private func ipadTodayWorkspaceBody(
         regionContext: RegionalRuleContext,
-        width: CGFloat,
-        compact: Bool) -> some View
+        width: CGFloat) -> some View
     {
         VStack(alignment: .leading, spacing: 20) {
-            companionIPadEditorialLayout(stacked: width < 960 || dynamicTypeSize.isAccessibilitySize)
+            companionIPadEditorialLayout(stacked: width < 720 || dynamicTypeSize.isAccessibilitySize)
 
-            if width < 1040 {
+            if width >= 840, !dynamicTypeSize.isAccessibilitySize {
                 VStack(alignment: .leading, spacing: 20) {
-                    ipadTodayPlanningCard
-                    ipadTodayRecoveryCard
+                    HStack(alignment: .top, spacing: 20) {
+                        ipadTodayPlanningCard
+                            .frame(maxWidth: .infinity, alignment: .topLeading)
+                        ipadTodayRecoveryCard
+                            .frame(maxWidth: .infinity, alignment: .topLeading)
+                    }
                     ipadTodayTrustCard(regionContext: regionContext)
                 }
             } else {
-                HStack(alignment: .top, spacing: 24) {
+                VStack(alignment: .leading, spacing: 20) {
                     ipadTodayPlanningCard
                     ipadTodayRecoveryCard
                     ipadTodayTrustCard(regionContext: regionContext)
                 }
             }
         }
-        .padding(.horizontal, 28)
-        .padding(.top, 12)
-        .padding(.bottom, 28)
+        .padding(.horizontal, 24)
+        .padding(.top, 8)
+        .padding(.bottom, 24)
     }
 }

@@ -266,9 +266,10 @@ extension ContentView {
                     : localized(
                         "settings.theme.disabled_hint",
                         default:
-                        "Season-based colors are off. Turn this on for Advent, Lent, Easter, and Ordinary Time palettes."))
+                        "Season-based colors are off. The Ordinary Time palette will stay in use year-round."))
                 .font(.caption)
                 .foregroundStyle(.secondary)
+                .accessibilityIdentifier("settings.liturgical_theme_context")
         }
     }
 

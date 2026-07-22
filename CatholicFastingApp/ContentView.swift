@@ -190,7 +190,7 @@ struct ContentView: View {
 
     var appLayoutProfile: AppLayoutProfile {
         #if canImport(UIKit)
-        if UIDevice.current.userInterfaceIdiom == .pad, horizontalSizeClass == .regular {
+        if UIDevice.current.userInterfaceIdiom == .pad {
             return .pad
         }
         #endif

@@ -70,7 +70,7 @@ extension ContentView {
     func companionIPadEditorialLayout(stacked: Bool) -> some View {
         Group {
             if stacked {
-                VStack(alignment: .leading, spacing: 24) {
+                VStack(alignment: .leading, spacing: 20) {
                     companionIPadDashboardCard
                     ipadTodayQuickActionsCard
                     SacredEditorialRule()
@@ -79,19 +79,24 @@ extension ContentView {
                     companionIPadFormationCard
                 }
             } else {
-                HStack(alignment: .top, spacing: 32) {
-                    VStack(alignment: .leading, spacing: 20) {
+                HStack(alignment: .top, spacing: 24) {
+                    VStack(alignment: .leading, spacing: 18) {
                         companionIPadDashboardCard
                         ipadTodayQuickActionsCard
                     }
                         .frame(maxWidth: .infinity, alignment: .top)
 
-                    VStack(alignment: .leading, spacing: 20) {
+                    Rectangle()
+                        .fill(CatholicTheme.primary.opacity(0.14))
+                        .frame(width: 1)
+                        .accessibilityHidden(true)
+
+                    VStack(alignment: .leading, spacing: 18) {
                         companionLiveStateCard
                         SacredEditorialRule()
                         companionIPadFormationCard
                     }
-                    .frame(width: 360, alignment: .top)
+                    .frame(minWidth: 310, idealWidth: 340, maxWidth: 380, alignment: .top)
                 }
             }
         }
@@ -102,7 +107,8 @@ extension ContentView {
             snapshot: companionSnapshot,
             todayLabel: companionTodayLabel,
             nextRequiredLabel: companionNextRequiredLabel,
-            seasonLabel: localizedSeasonLabel(currentLiturgicalSeason))
+            seasonLabel: localizedSeasonLabel(currentLiturgicalSeason),
+            presentation: .workspace)
         {
             performCompanionAction(companionSnapshot.primaryAction)
         }

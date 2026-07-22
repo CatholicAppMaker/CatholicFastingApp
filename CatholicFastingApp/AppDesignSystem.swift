@@ -4,31 +4,23 @@ enum SacredEditorialTokens {
     static let contentMaxWidth: CGFloat = 760
     static let compactHorizontalInset: CGFloat = 20
     static let regularHorizontalInset: CGFloat = 28
-    static let sectionSpacing: CGFloat = 26
-    static let hairlineOpacity = 0.18
+    static let sectionSpacing: CGFloat = 18
+    static let hairlineOpacity = 0.16
 
     static func canvasTop(for colorScheme: ColorScheme) -> Color {
-        colorScheme == .dark
-            ? Color(red: 0.070, green: 0.064, blue: 0.058)
-            : CatholicTheme.parchment
+        CatholicTheme.parchment
     }
 
     static func canvasBottom(for colorScheme: ColorScheme) -> Color {
-        colorScheme == .dark
-            ? Color(red: 0.105, green: 0.092, blue: 0.078)
-            : CatholicTheme.parchmentShade.opacity(0.72)
+        CatholicTheme.parchmentShade.opacity(0.58)
     }
 
     static func raisedSurface(for colorScheme: ColorScheme) -> Color {
-        colorScheme == .dark
-            ? Color(red: 0.145, green: 0.127, blue: 0.108)
-            : Color(red: 0.985, green: 0.975, blue: 0.925)
+        Color(red: 0.995, green: 0.992, blue: 0.978)
     }
 
     static func quietSurface(for colorScheme: ColorScheme) -> Color {
-        colorScheme == .dark
-            ? Color(red: 0.95, green: 0.90, blue: 0.82).opacity(0.055)
-            : CatholicTheme.parchment.opacity(0.48)
+        CatholicTheme.primary.opacity(0.045)
     }
 }
 

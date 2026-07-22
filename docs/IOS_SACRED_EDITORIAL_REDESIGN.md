@@ -34,16 +34,16 @@ Runtime inspection exposed a gap that the earlier score missed: the hierarchy wa
 season-wide green chrome made dark appearance feel technological and light appearance still lacked
 a strong Catholic anchor. That was a real art-direction failure, not a spacing defect.
 
-The implementation now uses one deliberate Roman-missal appearance across iPhone and iPad: warm
-vellum, oxblood rubric red, antique brass, black ink, the D3 mark, and sacred imagery placed beside
-the first actionable content. Seasonal color is limited to liturgical context. The app temporarily
-requests light appearance in both system modes; a future dark appearance will ship only after it is
-designed and validated as a complete direction. WidgetKit surfaces continue to adapt to required
-system rendering modes.
+The first Roman-missal correction improved Catholic identity but overcorrected toward a fixed
+oxblood treatment and did not solve enough dead space. Runtime comparison therefore replaced it
+with the Liturgical Parish Desk direction: warm ivory and black ink remain stable, while selection,
+primary actions, progress, and a few devotional accents follow the active liturgical season. The
+Sacred Heart sits beside the first decision instead of becoming a decorative banner. Turning
+seasonal colors off deliberately keeps the Ordinary Time palette active year-round.
 
-The ratings below describe the pre-correction second pass and are retained as historical evidence.
-They are not the final rating for the Roman-missal correction; that rating follows fresh runtime and
-regression evidence.
+The app requests its finished light appearance in both system modes. A future dark appearance will
+ship only after it receives its own complete Catholic art direction. WidgetKit surfaces continue to
+adapt to required system rendering modes.
 
 | Surface | Task clarity 30 | Accessibility 20 | Native fit 20 | Density 15 | Brand 10 | Risk 5 | Weighted |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -53,39 +53,40 @@ regression evidence.
 | Pre-correction widgets | 9.2 | 8.4 | 9.1 | 9.2 | 8.8 | 8.2 | 8.93 |
 | Pre-correction iOS-family average | — | — | — | — | — | — | 9.07 |
 
-### Roman-missal rerating
+### Liturgical Parish Desk rerating
 
-Fresh iPhone and iPad runtime captures were inspected after the correction. The device simulator
-was left in dark appearance while the app rendered its requested vellum appearance, confirming that
-the design no longer falls back to the rejected green-black scheme. Focused tests then verified the
-Today first viewport, sacred masthead, all four root-surface accessibility audits, and the adaptive
-iPad Today workspace. The complete 174-test core suite and both sacred-asset tests also passed.
+Fresh deterministic iPhone and iPad captures were inspected after three implementation passes and
+compared side by side with the selected direction probe. The iPhone keeps the obligation, action,
+and authority source above the fold, with live personal fasting immediately following. The iPad
+uses a compact seasonal sidebar and a true guidance/context workspace instead of stretched phone
+cards. The final stability loop also removed a SwiftUI 26.5 adaptive-grid crash and redundant
+progress accessibility nodes.
 
 | Surface | Task clarity 30 | Accessibility 20 | Native fit 20 | Density 15 | Brand 10 | Risk 5 | Weighted |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | Store/current baseline | 8.2 | 7.6 | 8.0 | 7.1 | 9.1 | 8.2 | 7.98 |
-| Roman-missal iPhone | 9.4 | 9.0 | 9.3 | 8.9 | 9.7 | 8.5 | 9.21 |
-| Roman-missal iPad | 9.3 | 8.9 | 9.3 | 9.1 | 9.6 | 8.3 | 9.17 |
+| Parish Desk iPhone | 9.4 | 9.2 | 9.3 | 9.2 | 9.7 | 8.6 | 9.30 |
+| Parish Desk iPad | 9.4 | 9.2 | 9.3 | 9.4 | 9.7 | 8.6 | 9.33 |
 | Audited widgets | 9.2 | 8.4 | 9.1 | 9.2 | 8.8 | 8.2 | 8.93 |
-| iOS-family average | — | — | — | — | — | — | 9.10 |
+| iOS-family average | — | — | — | — | — | — | 9.19 |
 
-The correction raises brand distinction without hiding the obligation, primary action, authority
-source, or optional-fast boundary. Density drops slightly on iPhone because the sacred masthead uses
-real first-viewport space; this is an intentional and measured trade for a recognizably Catholic
-identity. The iOS-family score remains conservative because widgets were not visually redesigned in
-this correction and the single app appearance defers, rather than completes, dark mode.
-
-The final 9.10 score is 14.0 percent above the store baseline. It remains intentionally below the
-early 9.24 estimate because risk and accessibility are no longer inferred from clean screenshots.
-The redesign is materially better for daily decision-making, platform fit, information density,
-and Catholic identity, while the remaining score gap is tied to manual release verification rather
-than a known P0/P1 product defect.
+The final 9.19 iOS-family score is 15.2 percent above the store baseline. The iPhone/iPad app alone
+averages 9.32, while the unchanged widget score keeps the combined rating conservative. The result
+materially improves daily decision-making, platform fit, density, and Catholic identity without
+changing business rules, storage, deep links, privacy, or subscription behavior.
 
 ### Verification evidence
 
 - 174 XCTest core tests and 2 Swift Testing asset checks pass.
-- The UI inventory grew from 94 to 108 tests; the release runner discovers every retained non-screenshot
+- The UI inventory grew from 94 to 109 tests; the release runner discovers every retained non-screenshot
   test instead of executing the former 41-test subset.
+- Focused iPhone checks pass for the first-viewport decision, all root accessibility audits, and the
+  seasonal-color ON/OFF contract with Ordinary Time as the year-round fallback.
+- Focused iPad checks pass for dashboard structure, maximum accessibility text, all root
+  accessibility audits, multilingual workspace cycling, and repeated quick-action cycles.
+- The iPad crash loop produced a symbolicated SwiftUI `LazyVGrid` failure on iOS 26.5. Replacing the
+  adaptive grid with a deterministic two-column/stack layout removed the crash; the audit and both
+  repeated-navigation tests then passed.
 - Fresh onboarding, Today, Calendar, Fast, More, Premium recovery, localization, age eligibility,
   maximum Dynamic Type, enhanced accessibility settings, and accessibility audits pass on iPhone.
 - The repaired seven-test iPad gate passes on both iPadOS 26.5 and iPadOS 27. It asserts visible feature

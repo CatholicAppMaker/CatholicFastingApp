@@ -1,38 +1,37 @@
 ---
 name: Catholic Fasting
 description:
-  Native Apple fasting guidance with Roman-missal color, sacred imagery, parchment surfaces, and
-  calm devotional clarity.
+  Native Apple fasting guidance with compact editorial hierarchy, sacred imagery, warm ivory
+  surfaces, and colors that follow the liturgical year.
 colors:
-  brand-oxblood: "#64292E"
-  brand-antique-brass: "#A37529"
-  brand-vellum: "#F5F0E5"
+  brand-antique-brass: "#A87D2E"
+  brand-vellum: "#FBF9F1"
   brand-ink: "#171411"
-  ordinary-primary: "#294D33"
-  ordinary-accent: "#A67A2B"
-  ordinary-parchment: "#F5F0E5"
-  ordinary-parchment-shade: "#E8E0D1"
-  ordinary-card-border: "#A89A7A"
-  advent-primary: "#1C337D"
-  advent-accent: "#B85494"
-  advent-parchment: "#F2F2FC"
-  advent-parchment-shade: "#D6DBF5"
-  advent-card-border: "#6670BA"
-  christmas-primary: "#804A12"
-  christmas-accent: "#D9A62E"
-  christmas-parchment: "#FFFAEB"
-  christmas-parchment-shade: "#F2E8C7"
-  christmas-card-border: "#C79E3D"
-  lent-primary: "#4D2173"
-  lent-accent: "#9C75B8"
-  lent-parchment: "#F2E8F2"
-  lent-parchment-shade: "#D6CAE6"
-  lent-card-border: "#8C6BA8"
-  easter-primary: "#245E2E"
-  easter-accent: "#D1A82E"
-  easter-parchment: "#FCFAEB"
-  easter-parchment-shade: "#E3EDCC"
-  easter-card-border: "#75A866"
+  ordinary-primary: "#2E573B"
+  ordinary-accent: "#A87D2E"
+  ordinary-parchment: "#FBF9F1"
+  ordinary-parchment-shade: "#EDEDE0"
+  ordinary-card-border: "#7D8F7D"
+  advent-primary: "#4F3866"
+  advent-accent: "#A17391"
+  advent-parchment: "#FBF9F6"
+  advent-parchment-shade: "#EBE6F0"
+  advent-card-border: "#877896"
+  christmas-primary: "#6B292B"
+  christmas-accent: "#B3862E"
+  christmas-parchment: "#FEFBF4"
+  christmas-parchment-shade: "#F2EBD6"
+  christmas-card-border: "#998052"
+  lent-primary: "#4D315E"
+  lent-accent: "#94739C"
+  lent-parchment: "#FBF7F7"
+  lent-parchment-shade: "#EBE3EB"
+  lent-card-border: "#82708A"
+  easter-primary: "#6E4F1A"
+  easter-accent: "#BF9933"
+  easter-parchment: "#FEFCF6"
+  easter-parchment-shade: "#F0EDDB"
+  easter-card-border: "#968757"
 typography:
   display:
     fontFamily: "Apple system serif"
@@ -72,7 +71,7 @@ spacing:
   xl: "24px"
 components:
   button-primary:
-    backgroundColor: "{colors.brand-oxblood}"
+    backgroundColor: "active liturgical primary"
     textColor: "{colors.ordinary-parchment}"
     typography: "{typography.body}"
     rounded: "{rounded.md}"
@@ -99,17 +98,17 @@ components:
 
 ## 1. Overview
 
-### Creative North Star: "The Roman Missal Companion"
+### Creative North Star: "The Liturgical Parish Desk"
 
 Catholic Fasting is a product interface, not a marketing surface. Design serves a repeated
 devotional workflow: checking today's guidance, planning upcoming observances, tracking a fast,
 understanding a rule, and returning to a steady rhythm after a missed day. The app should feel
 native, calm, and readable before it feels expressive.
 
-The visual system combines Apple platform controls with one stable Roman-missal palette: vellum,
-oxblood rubric red, antique brass, and black ink. Occasional serif titles and real sacred imagery
-create a devotional atmosphere without turning the app into a decorative artifact. Liturgical
-season color is contextual information, not the product chrome.
+The visual system combines Apple platform controls with warm paper, black ink, restrained brass,
+and a primary color that follows the liturgical season. Occasional serif titles and recognizable
+sacred imagery create a devotional atmosphere without turning the app into a decorative artifact.
+Seasonal color carries selection and action; it does not wash every heading, divider, and surface.
 
 The iOS app intentionally ships in this single warm appearance. It requests light appearance even
 when the device uses dark mode. A future dark appearance must be designed as a complete Catholic
@@ -123,8 +122,8 @@ know what to do next, why it matters, and where to find the underlying rule cont
 
 **Key Characteristics:**
 
-- Vellum root backgrounds with stable oxblood and antique-brass product color.
-- Liturgical season color confined to season badges, calendar context, and semantic observance cues.
+- Warm ivory root backgrounds with the active liturgical primary and restrained antique brass.
+- The same compact layout in every season; only semantic color roles change.
 - Native SwiftUI controls, glass buttons, platform navigation, and system type.
 - Official app mark: the D3 liturgical bookmark/ribbon direction, pairing a cross with an empty
   bowl/plate so the brand reads as Catholic fasting rather than generic church or generic fasting.
@@ -177,23 +176,26 @@ the pass is unfinished and name the remaining work. Stale progress panels are P0
 
 ## 2. Colors
 
-The product palette does not change by liturgical season. Oxblood is the action and editorial
-color, vellum is the canvas, antique brass provides restrained warmth, and black ink carries dense
-content. Seasonal palettes remain available only for compact context and observance semantics.
+The product palette changes with the liturgical year while its hierarchy stays stable. The active
+season primary carries selected navigation, primary actions, progress, and a small number of
+devotional accents. Warm ivory is the canvas, restrained brass provides continuity, and black ink
+carries the majority of content. If the user turns seasonal colors off, the Ordinary Time palette
+remains active year-round.
 
 ### Primary
 
-- **Rubric Oxblood** (#64292E): Stable product identity for obligation headlines, selected states,
-  primary actions, and the D3 mark.
-- **Vellum** (#F5F0E5): Warm root canvas inspired by missal paper rather than generic white UI.
-- **Ink** (#171411): Main text and dense utility content.
+- **Active Liturgical Primary:** Ordinary forest, Advent violet, Christmas oxblood, Lenten purple,
+  or Easter gold-umber. Used for selection, primary actions, and a few meaningful values.
+- **Warm Ivory** (#FBF9F1): Root canvas inspired by parish paper and devotional books rather than
+  generic white UI.
+- **Ink** (#171411): Main text, obligation headlines, and dense utility content.
 
 ### Secondary
 
-- **Antique Brass** (#A37529): Hairlines, progress, restrained highlights, and selected sacred
+- **Antique Brass** (#A87D2E): Restrained highlights and selected sacred
   details. It is not used for long text on vellum.
-- **Season Context**: Ordinary green, Advent blue/rose, Christmas gold, Lenten violet, and Easter
-  green appear in compact season badges and observance-specific context only.
+- **Season Surface Wash:** A very low-opacity tint derived from the active primary. It may group a
+  real decision but never color the entire app like a terminal or themed dashboard.
 
 ### Neutral
 
@@ -204,9 +206,9 @@ content. Seasonal palettes remain available only for compact context and observa
 
 ### Named Rules
 
-**The Seasonal Context Rule.** Seasonal color orients the user in liturgical time but never controls
-navigation, primary buttons, large headings, or card chrome. The app must remain recognizably the
-same missal-inspired product in every season.
+**The Seasonal Role Rule.** Seasonal color orients the user and controls selected navigation,
+primary actions, progress, and sparse devotional accents. Ink carries roughly 85-90% of text. The
+layout, spacing, imagery, and control hierarchy do not change by season.
 
 **The Single Appearance Rule.** iOS uses the finished vellum appearance in both system light and
 dark settings. Do not add ad-hoc dark tokens. Dark mode returns only after it receives a complete,

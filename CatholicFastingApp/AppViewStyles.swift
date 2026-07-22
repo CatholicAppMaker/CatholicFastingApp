@@ -24,8 +24,7 @@ extension View {
     }
 
     func phoneTabBarScrollClearance() -> some View {
-        padding(.bottom, 72)
-            .contentMargins(.bottom, 24, for: .scrollContent)
+        contentMargins(.bottom, 12, for: .scrollContent)
     }
 
     func appRoundedGlass(cornerRadius: CGFloat) -> some View {
@@ -47,12 +46,12 @@ extension View {
 
     func appSectionTitleStyle(serif: Bool = false) -> some View {
         font(serif ? .system(.title3, design: .serif).weight(.bold) : .system(.title3, design: .rounded).weight(.bold))
-            .foregroundStyle(CatholicTheme.primary)
+            .foregroundStyle(.primary)
     }
 
     func appDisplayTitleStyle(serif: Bool = false) -> some View {
         font(serif ? .system(.title2, design: .serif).weight(.bold) : .system(.title2, design: .rounded).weight(.bold))
-            .foregroundStyle(CatholicTheme.primary)
+            .foregroundStyle(.primary)
     }
 
     func appLeadTextStyle() -> some View {
@@ -216,7 +215,7 @@ struct AppSurfaceCardModifier: ViewModifier {
             .overlay {
                 if style == .primary {
                     RoundedRectangle(cornerRadius: resolvedCornerRadius, style: .continuous)
-                        .stroke(CatholicTheme.primary.opacity(colorScheme == .dark ? 0.30 : 0.22), lineWidth: 1)
+                        .stroke(CatholicTheme.primary.opacity(0.16), lineWidth: 1)
                         .allowsHitTesting(false)
                 }
             }

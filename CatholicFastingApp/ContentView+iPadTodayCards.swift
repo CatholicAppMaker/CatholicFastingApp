@@ -6,21 +6,22 @@ import AVFoundation
 
 extension ContentView {
     var ipadTodayQuickActionsCard: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: 12) {
             IPadWorkspaceHeader(
                 eyebrow: localized("ipad.today.actions.eyebrow", default: "Do next"),
                 title: localized("ipad.today.actions.title", default: "Quick actions"),
                 detail: localized("ipad.today.actions.detail", default: "Keep the next obligation and planning one tap away."))
 
+            IPadWorkspaceActionButton(
+                title: localized("ipad.today.actions.open_fasting_days", default: "Open Calendar"),
+                systemImage: "calendar",
+                primary: true,
+                accessibilityIdentifier: "ipad.today.action.open_fasting_days")
+            {
+                focusFastingDaysOnUpcomingRequired()
+            }
+
             HStack(spacing: 10) {
-                IPadWorkspaceActionButton(
-                    title: localized("ipad.today.actions.open_fasting_days", default: "Open Calendar"),
-                    systemImage: "calendar",
-                    primary: true,
-                    accessibilityIdentifier: "ipad.today.action.open_fasting_days")
-                {
-                    focusFastingDaysOnUpcomingRequired()
-                }
                 IPadWorkspaceActionButton(
                     title: localized("ipad.today.actions.open_planning", default: "Open Planning"),
                     systemImage: "slider.horizontal.3",
@@ -29,9 +30,7 @@ extension ContentView {
                 {
                     navigateToMoreDestination(.profileAndNorms)
                 }
-            }
 
-            HStack(spacing: 10) {
                 IPadWorkspaceActionButton(
                     title: localized("ipad.today.actions.support_premium", default: "Support & Premium"),
                     systemImage: "heart.circle",
@@ -40,17 +39,18 @@ extension ContentView {
                 {
                     navigateToMoreDestination(.supportAndPremium)
                 }
-                IPadWorkspaceActionButton(
-                    title: localized("ipad.today.actions.open_guidance", default: "Open full food guidance"),
-                    systemImage: "book",
-                    primary: false,
-                    accessibilityIdentifier: "ipad.today.action.open_food_guidance")
-                {
-                    navigateToMoreDestination(.guidanceAndRules)
-                }
+            }
+
+            IPadWorkspaceActionButton(
+                title: localized("ipad.today.actions.open_guidance", default: "Open full food guidance"),
+                systemImage: "book",
+                primary: false,
+                accessibilityIdentifier: "ipad.today.action.open_food_guidance")
+            {
+                navigateToMoreDestination(.guidanceAndRules)
             }
         }
-        .padding(18)
+        .padding(14)
         .iPadPaneCard()
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("ipad.today.actions")
@@ -79,8 +79,10 @@ extension ContentView {
 
             ProgressView(value: requirementGoalProgress)
                 .tint(CatholicTheme.primary)
+                .accessibilityHidden(true)
             ProgressView(value: optionalGoalProgress)
                 .tint(CatholicTheme.accent)
+                .accessibilityHidden(true)
 
             if currentSeasonCommitments.isEmpty {
                 Text(localizedFormat("ipad.today.planning.no_commitments", default: "No active commitments for %@.", localizedSeasonLabel(currentLiturgicalSeason)))
@@ -94,6 +96,7 @@ extension ContentView {
         }
         .padding(18)
         .iPadPaneCard()
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("ipad.today.planning")
     }
 

@@ -146,7 +146,7 @@ extension ContentView {
         NavigationStack {
             todaySurfaceList
                 .navigationTitle(localizedHomeSurfaceLabel(.today))
-                .navigationBarTitleDisplayMode(.large)
+                .navigationBarTitleDisplayMode(.inline)
                 .toolbar { phoneTabToolbar }
         }
         .phoneNavigationDestinations(for: self)
@@ -161,7 +161,7 @@ extension ContentView {
         NavigationStack {
             fastingDaysSurfaceList
                 .navigationTitle(localizedHomeSurfaceLabel(.fastingDays))
-                .navigationBarTitleDisplayMode(.large)
+                .navigationBarTitleDisplayMode(.inline)
                 .toolbar { phoneTabToolbar }
         }
         .phoneNavigationDestinations(for: self)
@@ -176,7 +176,7 @@ extension ContentView {
         NavigationStack {
             intermittentSurfaceList
                 .navigationTitle(localizedHomeSurfaceLabel(.intermittent))
-                .navigationBarTitleDisplayMode(.large)
+                .navigationBarTitleDisplayMode(.inline)
                 .toolbar { phoneTabToolbar }
         }
         .phoneNavigationDestinations(for: self)
@@ -191,7 +191,7 @@ extension ContentView {
         NavigationStack(path: $moreNavigationPath) {
             moreSurfaceList
                 .navigationTitle(localizedHomeSurfaceLabel(.more))
-                .navigationBarTitleDisplayMode(.large)
+                .navigationBarTitleDisplayMode(.inline)
                 .toolbar { phoneTabToolbar }
                 .onAppear {
                     openPendingPhoneMoreDestinationIfNeeded()

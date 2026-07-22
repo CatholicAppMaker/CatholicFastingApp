@@ -40,26 +40,30 @@ extension ContentView {
     var ipadRootScaffold: some View {
         NavigationSplitView {
             List {
-                Section(AppLocalizer.localizedCurrent("shared.app_title", default: "Catholic Fasting")) {
-                    ForEach(HomeSurface.primarySurfaces) { surface in
-                        Button {
-                            homeSurface = surface
-                        } label: {
-                            IPadSidebarRow(
-                                title: localizedHomeSurfaceLabel(surface),
-                                subtitle: surface.ipadSubtitle,
-                                systemImage: surface.iconName,
-                                isSelected: homeSurface == surface)
-                        }
-                        .buttonStyle(.plain)
-                        .appSelectedAccessibility(homeSurface == surface)
-                        .accessibilityIdentifier("ipad.sidebar.\(surface.rawValue)")
+                ForEach(HomeSurface.primarySurfaces) { surface in
+                    Button {
+                        homeSurface = surface
+                    } label: {
+                        IPadSidebarRow(
+                            title: localizedHomeSurfaceLabel(surface),
+                            systemImage: surface.iconName,
+                            isSelected: homeSurface == surface)
                     }
+                    .buttonStyle(.plain)
+                    .appSelectedAccessibility(homeSurface == surface)
+                    .accessibilityHint(surface.ipadSubtitle)
+                    .accessibilityIdentifier("ipad.sidebar.\(surface.rawValue)")
+                }
+
+                Section {
+                    IPadSeasonContextRow(
+                        title: localizedSeasonLabel(currentLiturgicalSeason),
+                        colorsEnabled: liturgicalSeasonColorsEnabled)
                 }
             }
             .listStyle(.sidebar)
             .navigationTitle(AppLocalizer.localizedCurrent("shared.app_title", default: "Catholic Fasting"))
-            .navigationSplitViewColumnWidth(min: 260, ideal: 290, max: 320)
+            .navigationSplitViewColumnWidth(min: 220, ideal: 235, max: 260)
             .appListBackground()
         } detail: {
             NavigationStack {
@@ -88,11 +92,6 @@ extension ContentView {
         .appRootBackground()
         .navigationTitle(localizedHomeSurfaceLabel(surface))
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                seasonBadge
-            }
-        }
     }
 
     var fastingDaysDisplayObservances: [Observance] {

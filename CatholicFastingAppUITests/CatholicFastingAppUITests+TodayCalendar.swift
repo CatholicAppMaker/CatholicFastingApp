@@ -58,6 +58,30 @@ extension CatholicFastingAppUITests {
         XCTAssertFalse(elementIsVisible(elementByIdentifier("companion.formation", in: app), in: app))
     }
 
+    func testIPhoneLiturgicalThemeToggleExplainsOrdinaryTimeFallback() {
+        let app = makeApp(fixedDate: "2026-03-06")
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        let seasonBadge = elementByIdentifier("home.season_badge", in: app)
+        XCTAssertTrue(seasonBadge.waitForExistence(timeout: 4))
+        XCTAssertTrue(seasonBadge.label.localizedCaseInsensitiveContains("Lent"))
+
+        openMoreDestination("Profile & Norms", in: app)
+        let toggle = app.switches["settings.liturgical_theme_toggle"].firstMatch
+        XCTAssertTrue(scrollToElement(toggle, in: app, maxSwipes: 12))
+        XCTAssertEqual(toggle.value as? String, "1")
+        toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.5)).tap()
+
+        let disabled = NSPredicate(format: "value == %@", "0")
+        let disabledExpectation = XCTNSPredicateExpectation(predicate: disabled, object: toggle)
+        XCTAssertEqual(XCTWaiter.wait(for: [disabledExpectation], timeout: 3), .completed)
+        let context = elementByIdentifier("settings.liturgical_theme_context", in: app)
+        XCTAssertTrue(scrollToElement(context, in: app, maxSwipes: 3))
+        XCTAssertTrue(context.exists)
+        XCTAssertTrue(context.label.localizedCaseInsensitiveContains("Ordinary Time"))
+    }
+
     func testDeepCompanionActiveFastPrimaryActionOpensTrackFast() {
         let app = makeApp(seedActiveFast: true)
         app.launch()
@@ -223,6 +247,8 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(app.otherElements["ipad.today.actions"].waitForExistence(timeout: 4))
         XCTAssertTrue(app.otherElements["companion.live_state"].waitForExistence(timeout: 4))
         XCTAssertTrue(app.otherElements["companion.formation"].waitForExistence(timeout: 4))
+        XCTAssertTrue(elementByIdentifier("ipad.sidebar.season_context", in: app).waitForExistence(timeout: 4))
+        XCTAssertTrue(app.buttons["ipad.sidebar.today"].isSelected)
     }
 
     func testIPadTodayShowsDecisionActionsAndContextRail() {
