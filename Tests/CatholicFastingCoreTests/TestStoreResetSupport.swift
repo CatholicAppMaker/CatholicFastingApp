@@ -48,6 +48,7 @@ extension XCTestCase {
             "accepted_legal_notice_at",
             "rule_bundle_directory_override",
             "widget_snapshot",
+            "widget_localization_code",
         ]
     }
 

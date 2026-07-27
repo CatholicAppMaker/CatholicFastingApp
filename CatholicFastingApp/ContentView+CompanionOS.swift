@@ -33,6 +33,11 @@ extension ContentView {
     var companionLiveStateSection: some View {
         Section {
             companionLiveStateCard
+                .frame(maxWidth: .infinity, alignment: .leading)
+                // List can under-measure conditional cards on iOS 26; keep the
+                // action and metrics inside the first measured row.
+                .frame(minHeight: 230, alignment: .topLeading)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 
@@ -40,29 +45,6 @@ extension ContentView {
         Section {
             CompanionFormationCard(formation: companionSnapshot.formation) {
                 openCompanionFormation()
-            }
-        }
-    }
-
-    func companionIPadTriad(stacked: Bool) -> some View {
-        Group {
-            if stacked {
-                VStack(alignment: .leading, spacing: 20) {
-                    companionIPadDashboardCard
-                    companionLiveStateCard
-                    companionIPadFormationCard
-                }
-            } else {
-                HStack(alignment: .top, spacing: 20) {
-                    companionIPadDashboardCard
-                        .frame(maxWidth: .infinity, alignment: .top)
-
-                    companionLiveStateCard
-                        .frame(maxWidth: .infinity, alignment: .top)
-
-                    companionIPadFormationCard
-                        .frame(maxWidth: .infinity, alignment: .top)
-                }
             }
         }
     }
@@ -84,7 +66,7 @@ extension ContentView {
                         companionIPadDashboardCard
                         ipadTodayQuickActionsCard
                     }
-                        .frame(maxWidth: .infinity, alignment: .top)
+                    .frame(maxWidth: .infinity, alignment: .top)
 
                     Rectangle()
                         .fill(CatholicTheme.primary.opacity(0.14))
@@ -205,23 +187,13 @@ extension ContentView {
             {
                 homeSurface = .intermittent
             }
-        case .inactive(let targetHours, let latestSession):
-            CompanionLiveStateCard(
-                title: localized("companion.live.inactive.title", default: "Ready for the next fast"),
-                detail: companionInactiveFastDetail(latestSession: latestSession),
+        case .inactive(let targetHours, _):
+            CompanionInactiveFastCard(
                 stageLabel: FastStage.ready.label,
-                progress: nil,
-                metrics: [
-                    CompanionCardMetric(title: localized("intermittent.live.target", default: "Target"), value: "\(targetHours)h"),
-                    CompanionCardMetric(
-                        title: localized("intermittent.live.last_fast", default: "Last Fast"),
-                        value: latestSession.map { durationText($0.duration) }
-                            ?? localized("companion.live.none_yet", default: "None yet")),
-                    CompanionCardMetric(title: localized("intermittent.controls.intention", default: "Intention"), value: intermittentIntentionLabel),
-                    CompanionCardMetric(
-                        title: localized("intermittent.live.next", default: "Next"),
-                        value: localized("intermittent.live.status_ready_anytime", default: "Ready anytime")),
-                ],
+                targetTitle: localized("intermittent.live.target", default: "Target"),
+                targetValue: "\(targetHours)h",
+                intentionTitle: localized("intermittent.controls.intention", default: "Intention"),
+                intentionValue: intermittentIntentionLabel,
                 actionTitle: localized("today.actions.track_fast", default: "Open Fast"),
                 actionSystemImage: "play.fill")
             {
@@ -242,13 +214,6 @@ extension ContentView {
             return localized("companion.next_required.none", default: "None ahead")
         }
         return localizedAbbreviatedDate(next.date)
-    }
-
-    private func companionInactiveFastDetail(latestSession: IntermittentFastSession?) -> String {
-        if latestSession == nil {
-            return localized("companion.live.inactive.empty_detail", default: "Choose a target, set an intention, and start when ready.")
-        }
-        return localized("companion.live.inactive.detail", default: "Your last fast is saved locally. Repeat the rhythm only if it remains prudent.")
     }
 
     func performCompanionAction(_ action: CompanionNextAction) {

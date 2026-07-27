@@ -22,7 +22,7 @@ enum UIConstants {
     }
 
     static var yearRange: ClosedRange<Int> {
-        let currentYear = Calendar.current.component(.year, from: Date())
+        let currentYear = Calendar(identifier: .gregorian).component(.year, from: AppClock.now())
         return (currentYear - 5) ... (currentYear + 15)
     }
 
@@ -92,19 +92,13 @@ enum CatholicTheme {
     }
 
     static var activePalette: Palette {
-        #if canImport(UIKit)
         palette(seasonModeEnabled: seasonColorsEnabled, date: AppClock.now())
-        #else
-        palette(seasonModeEnabled: seasonColorsEnabled, date: Date())
-        #endif
     }
 
     private static var seasonColorsEnabled: Bool {
-        let enabled =
-            UserDefaults.standard.object(forKey: StorageKeys.liturgicalSeasonColorsEnabled) == nil
-                ? true
-                : UserDefaults.standard.bool(forKey: StorageKeys.liturgicalSeasonColorsEnabled)
-        return enabled
+        UserDefaults.standard.object(forKey: StorageKeys.liturgicalSeasonColorsEnabled) == nil
+            ? true
+            : UserDefaults.standard.bool(forKey: StorageKeys.liturgicalSeasonColorsEnabled)
     }
 
     static var primary: Color {
@@ -185,6 +179,17 @@ enum CatholicTheme {
 
     static var parchment: Color {
         activePalette.parchment
+    }
+
+    /// The near-black editorial ink used over opaque parchment surfaces.
+    static var ink: Color {
+        #if canImport(UIKit)
+        adaptiveColor(
+            light: UIColor(red: 0.09, green: 0.075, blue: 0.06, alpha: 1),
+            dark: UIColor(red: 0.09, green: 0.075, blue: 0.06, alpha: 1))
+        #else
+        Color(red: 0.09, green: 0.075, blue: 0.06)
+        #endif
     }
 
     static var parchmentShade: Color {

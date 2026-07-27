@@ -114,6 +114,7 @@ extension ContentView {
             intermittentPhoneTab
             morePhoneTab
         }
+        .toolbarBackground(.hidden, for: .tabBar)
     }
 
     var body: some View {
@@ -355,6 +356,9 @@ extension ContentView {
             .onChange(of: settings) { _, _ in
                 persistWidgetSnapshot()
             }
+            .onChange(of: languageModeRaw) { _, _ in
+                persistWidgetSnapshot()
+            }
     }
 
     func applyLaunchPersistenceHandlers(to content: some View) -> some View {
@@ -401,35 +405,35 @@ extension ContentView {
 
     func applyStateSavePersistenceHandlers(to content: some View) -> some View {
         content
-            .onChange(of: planningData) { _, _ in
-                saveAdvancedState()
+            .onChange(of: planningData) { _, newValue in
+                LocalFeatureStore.savePlanningData(newValue)
             }
-            .onChange(of: intermittentSchedules) { _, _ in
-                saveAdvancedState()
+            .onChange(of: intermittentSchedules) { _, newValue in
+                LocalFeatureStore.saveSchedules(newValue)
             }
-            .onChange(of: activeIntermittentScheduleID) { _, _ in
-                saveAdvancedState()
+            .onChange(of: activeIntermittentScheduleID) { _, newValue in
+                LocalFeatureStore.saveActiveScheduleID(newValue)
             }
-            .onChange(of: householdProfiles) { _, _ in
-                saveAdvancedState()
+            .onChange(of: householdProfiles) { _, newValue in
+                LocalFeatureStore.saveProfiles(newValue)
             }
-            .onChange(of: activeHouseholdProfileID) { _, _ in
-                saveAdvancedState()
+            .onChange(of: activeHouseholdProfileID) { _, newValue in
+                LocalFeatureStore.saveActiveProfileID(newValue)
             }
-            .onChange(of: devotionalFavorites) { _, _ in
-                saveAdvancedState()
+            .onChange(of: devotionalFavorites) { _, newValue in
+                LocalFeatureStore.saveDevotionalFavorites(newValue)
             }
-            .onChange(of: reflectionEntries) { _, _ in
-                saveAdvancedState()
+            .onChange(of: reflectionEntries) { _, newValue in
+                LocalFeatureStore.saveReflections(newValue)
             }
-            .onChange(of: premiumChecklist) { _, _ in
-                saveAdvancedState()
+            .onChange(of: premiumChecklist) { _, newValue in
+                LocalFeatureStore.saveChecklist(newValue)
             }
-            .onChange(of: premiumCompanion) { _, _ in
-                saveAdvancedState()
+            .onChange(of: premiumCompanion) { _, newValue in
+                LocalFeatureStore.savePremiumCompanionState(newValue)
             }
-            .onChange(of: launchFunnelSnapshot) { _, _ in
-                saveAdvancedState()
+            .onChange(of: launchFunnelSnapshot) { _, newValue in
+                LocalFeatureStore.saveLaunchFunnelSnapshot(newValue)
             }
             .onDisappear {
                 saveAdvancedState()
@@ -601,15 +605,17 @@ extension ContentView {
     var moreHubSection: some View {
         Section {
             ForEach(MoreHubDestination.allCases) { destination in
-                NavigationLink {
-                    moreDestinationList(for: destination)
+                Button {
+                    moreNavigationPath.append(destination)
                 } label: {
                     AppDestinationRowCard(
                         title: localizedMoreDestinationTitle(destination),
                         subtitle: localizedMoreDestinationSubtitle(destination),
                         systemImage: destination.iconName,
-                        showsChevron: false)
+                        showsChevron: true,
+                        usesPrimarySubtitle: true)
                 }
+                .buttonStyle(.plain)
                 .accessibilityIdentifier("more.hub.\(destination.rawValue)")
             }
         }

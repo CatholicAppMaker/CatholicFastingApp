@@ -1,9 +1,9 @@
+@testable import CatholicFastingCore
 import Foundation
 import XCTest
-@testable import CatholicFastingCore
 
 final class ObservanceLocalizationCatalogTests: XCTestCase {
-    func testGeneratedCalendarsHaveCompleteLocalizationMappings() throws {
+    func testGeneratedCalendarsHaveCompleteLocalizationMappings() {
         var generated: [Observance] = []
         for year in [2026, 2027] {
             for region in RuleSettings.RegionProfile.allCases {

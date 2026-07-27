@@ -84,7 +84,6 @@ extension ContentView {
                     .accessibilityIdentifier("premium.optional_tips")
                 }
                 #endif
-
             }
             .padding(18)
         }
@@ -93,7 +92,6 @@ extension ContentView {
     }
 
     #if canImport(StoreKit)
-    @ViewBuilder
     var ipadPremiumPlanChoiceSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(localized("premium.plan_choice.title", default: "Plan choice"))

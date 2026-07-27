@@ -73,7 +73,7 @@ enum LiturgicalSeasonThemeEngine {
     }
 
     private static func firstSundayOfAdvent(year: Int, calendar: Calendar) -> Date {
-        let nov27 = calendar.date(from: DateComponents(year: year, month: 11, day: 27)) ?? Date()
+        let nov27 = calendar.date(from: DateComponents(year: year, month: 11, day: 27)) ?? AppClock.now()
         var cursor = nov27
         while calendar.component(.weekday, from: cursor) != 1 {
             cursor = dateByAdding(days: 1, to: cursor, calendar: calendar)
@@ -100,6 +100,6 @@ enum LiturgicalSeasonThemeEngine {
         let m = (a + 11 * h + 22 * l) / 451
         let month = (h + l - 7 * m + 114) / 31
         let day = ((h + l - 7 * m + 114) % 31) + 1
-        return calendar.date(from: DateComponents(year: year, month: month, day: day)) ?? Date()
+        return calendar.date(from: DateComponents(year: year, month: month, day: day)) ?? AppClock.now()
     }
 }

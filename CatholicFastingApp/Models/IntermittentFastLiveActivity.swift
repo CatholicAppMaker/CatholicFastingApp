@@ -22,7 +22,10 @@ enum IntermittentFastLiveActivityManager {
     static func start(start: Date, targetHours: Int) async {
         guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
         await endAll()
-        let attributes = IntermittentFastActivityAttributes(title: "Intermittent Fast")
+        let attributes = IntermittentFastActivityAttributes(
+            title: CoreLocalizer.localizedCurrent(
+                "fast.live_activity.title",
+                default: "Personal Fast"))
         let state = IntermittentFastActivityAttributes.ContentState(
             start: start,
             targetDate: start.addingTimeInterval(TimeInterval(targetHours * 3600)),

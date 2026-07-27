@@ -253,7 +253,7 @@ struct OnboardingView: View {
                 Toggle(
                     localized(
                         "onboarding.trust.acknowledgement",
-                        default: "I understand this is an independent app, not an official Church authority app"),
+                        default: "I understand that this is an independent devotional app, not an official app of the Catholic Church"),
                     isOn: $acceptedLegalNotice)
                     .id(Self.legalAcknowledgmentAnchor)
                     .accessibilityIdentifier("onboarding.accept_legal_notice")

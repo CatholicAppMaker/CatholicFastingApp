@@ -49,7 +49,6 @@ extension ContentView {
                                 alignment: .top)
                         }
                     }
-
                 }
                 .padding(20)
             }

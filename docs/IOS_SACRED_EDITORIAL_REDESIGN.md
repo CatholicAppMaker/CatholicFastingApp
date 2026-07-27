@@ -75,9 +75,35 @@ averages 9.32, while the unchanged widget score keeps the combined rating conser
 materially improves daily decision-making, platform fit, density, and Catholic identity without
 changing business rules, storage, deep links, privacy, or subscription behavior.
 
+### Zero-error cleanup rerating
+
+The July 26 cleanup pass closed every confirmed interaction and root-accessibility failure without
+reopening the complete UI matrix. Two independent reviews placed the final iOS-family result between
+9.24 and 9.29. The table records the more conservative technical rating because the signed physical
+device pass covered installation and launch rather than every journey, manual VoiceOver and WidgetKit
+appearance checks remain, and several feature files are still larger than the preferred maintenance
+target.
+
+The [US App Store listing](https://apps.apple.com/us/app/catholic-fasting-app/id6759585549) was
+rechecked on July 26, 2026 and identifies Store version 5.0, released June 16. The local project is
+also version 5.0, build 12.
+
+| Surface | Task clarity 30 | Accessibility 20 | Native fit 20 | Density 15 | Brand 10 | Risk 5 | Weighted |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Verified Store 5.0 baseline | 8.2 | 7.6 | 8.0 | 7.1 | 9.1 | 8.2 | 7.98 |
+| Pre-cleanup redesign | — | — | — | — | — | — | 9.19 |
+| Final iPhone | 9.4 | 9.3 | 9.3 | 9.2 | 9.7 | 8.9 | 9.34 |
+| Final iPad | 9.4 | 9.3 | 9.3 | 9.4 | 9.7 | 8.9 | 9.37 |
+| Final widgets | 9.3 | 8.6 | 9.1 | 9.2 | 8.8 | 8.8 | 9.03 |
+| Final iOS-family average | — | — | — | — | — | — | 9.24 |
+
+The final score is 15.8 percent above the Store 5.0 baseline and 0.6 percent above the pre-cleanup
+redesign. This is an incremental evidence and maintainability improvement, not a new art-direction
+claim.
+
 ### Verification evidence
 
-- 174 XCTest core tests and 2 Swift Testing asset checks pass.
+- 197 XCTest core tests and 2 Swift Testing asset checks pass, for 199 core checks.
 - The UI inventory grew from 94 to 109 tests; the release runner discovers every retained non-screenshot
   test instead of executing the former 41-test subset.
 - Focused iPhone checks pass for the first-viewport decision, all root accessibility audits, and the
@@ -89,15 +115,24 @@ changing business rules, storage, deep links, privacy, or subscription behavior.
   repeated-navigation tests then passed.
 - Fresh onboarding, Today, Calendar, Fast, More, Premium recovery, localization, age eligibility,
   maximum Dynamic Type, enhanced accessibility settings, and accessibility audits pass on iPhone.
+- Today, Calendar, Fast, and More each pass `performAccessibilityAudit` with zero non-allowlisted
+  findings. One anonymous, unresolved, zero-frame iOS 26 framework artifact is narrowly documented
+  and does not suppress named, identifiable, or measurable findings.
 - The repaired seven-test iPad gate passes on both iPadOS 26.5 and iPadOS 27. It asserts visible feature
   content rather than transparent state markers.
 - Measured iPhone root-navigation time averaged 14.273 seconds for a four-surface round trip across
   three iterations, with a 30.45 MB peak and low run-to-run variance.
 - Widget tests cover current, legacy, missing, and corrupt local snapshots plus localized fallback copy.
-- Separate Address Sanitizer and Thread Sanitizer runs pass all 174 core tests and both Swift Testing
+- Separate Address Sanitizer and Thread Sanitizer runs pass all 197 XCTest core tests and both Swift Testing
   asset checks without a reported sanitizer defect.
-- The optimized iPhoneOS Release app and embedded widget compile and validate successfully. After the
-  Apple account was connected, a signed build also installed and launched on the physical iPhone.
+- SwiftFormat reports 0 of 153 files requiring formatting; strict SwiftLint reports zero violations
+  across 120 files; the final diff has no whitespace errors, conflict markers, or temporary debug hooks.
+- Release iOS and macOS builds pass with warnings treated as errors. The iOS static analyzer reports
+  zero findings; both widget extensions build, embed, and validate successfully.
+- The signed Release app and widget build for the connected iPhone 14 Pro, install successfully, launch
+  successfully, and remain running together on the physical device.
+- The 15 failures from the 58-test iPhone release inventory were closed through isolated regression
+  runs. The complete 58-test inventory was intentionally not rerun after every repair.
 
 ### Remaining manual release checks
 

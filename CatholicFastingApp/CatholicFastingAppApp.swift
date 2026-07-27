@@ -104,6 +104,7 @@ private enum UITestBootstrap {
             return
         }
 
+        let now = AppClock.now(environment: environment, arguments: arguments)
         let defaults = UserDefaults.standard
         if arguments.contains("-uitest-reset") {
             [
@@ -225,9 +226,9 @@ private enum UITestBootstrap {
                 ascensionObservance: .sunday,
                 fridayOutsideLentMode: .substitutePenance,
                 calendarMode: .usccb)
-            let year = Calendar.current.component(.year, from: Date())
+            let year = Calendar.current.component(.year, from: now)
             let observances = ObservanceCalculator.makeCalendar(for: year, settings: settings)
-            let today = Calendar.current.startOfDay(for: Date())
+            let today = Calendar.current.startOfDay(for: now)
             let missedTarget =
                 observances.last(where: {
                     $0.obligation == .mandatory
@@ -241,7 +242,7 @@ private enum UITestBootstrap {
         }
 
         if arguments.contains("-uitest-seed-active-fast") {
-            let activeStart = ISO8601DateFormatter().string(from: Date().addingTimeInterval(-60))
+            let activeStart = ISO8601DateFormatter().string(from: now.addingTimeInterval(-60))
             defaults.set(
                 [
                     "preset_hours": "16",

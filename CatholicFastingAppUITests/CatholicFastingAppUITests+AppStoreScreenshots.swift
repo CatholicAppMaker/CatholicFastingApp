@@ -17,7 +17,7 @@ extension CatholicFastingAppUITests {
         try captureAppStoreScreen("02-track-fast", seedActiveFast: true) { app in
             app.launch()
             ensureOnHomeScreen(app)
-            openSurface("Track Fast", in: app)
+            openSurface("Fast", in: app)
             XCTAssertTrue(app.staticTexts["intermittent.active_elapsed"].firstMatch.waitForExistence(timeout: 4))
         }
 
@@ -31,7 +31,7 @@ extension CatholicFastingAppUITests {
         try captureAppStoreScreen("04-fasting-days") { app in
             app.launch()
             ensureOnHomeScreen(app)
-            openSurface("Fasting Days", in: app)
+            openSurface("Calendar", in: app)
         }
 
         try captureAppStoreScreen("05-premium") { app in
@@ -84,7 +84,7 @@ extension CatholicFastingAppUITests {
         }
     }
 
-    func testIPhoneTrackFastQAScreenshots() throws {
+    func testIPhoneFastQAScreenshots() throws {
         try XCTSkipIf(
             AppStoreScreenshotConfig.load() == nil,
             "Run through scripts/generate_track_fast_qa_screenshots.sh to enable screenshot capture.")
@@ -92,14 +92,14 @@ extension CatholicFastingAppUITests {
         try captureAppStoreScreen("01-track-fast-idle") { app in
             app.launch()
             ensureOnHomeScreen(app)
-            openSurface("Track Fast", in: app)
+            openSurface("Fast", in: app)
             XCTAssertTrue(app.staticTexts["intermittent.no_active"].firstMatch.waitForExistence(timeout: 4))
         }
 
         try captureAppStoreScreen("02-track-fast-active", seedActiveFast: true) { app in
             app.launch()
             ensureOnHomeScreen(app)
-            openSurface("Track Fast", in: app)
+            openSurface("Fast", in: app)
             let elapsed = app.staticTexts["intermittent.active_elapsed"].firstMatch
             XCTAssertTrue(elapsed.waitForExistence(timeout: 4))
             XCTAssertTrue(elementIsVisible(elapsed, in: app))
@@ -108,7 +108,7 @@ extension CatholicFastingAppUITests {
         try captureAppStoreScreen("03-track-fast-recap", seedActiveFast: true) { app in
             app.launch()
             ensureOnHomeScreen(app)
-            openSurface("Track Fast", in: app)
+            openSurface("Fast", in: app)
             let endButton = app.buttons["intermittent.end_fast"].firstMatch
             XCTAssertTrue(endButton.waitForExistence(timeout: 4) || scrollToElement(endButton, in: app, maxSwipes: 4))
             endButton.tap()
@@ -118,7 +118,7 @@ extension CatholicFastingAppUITests {
         try captureAppStoreScreen("04-track-fast-history", seedActiveFast: true) { app in
             app.launch()
             ensureOnHomeScreen(app)
-            openSurface("Track Fast", in: app)
+            openSurface("Fast", in: app)
             let endButton = app.buttons["intermittent.end_fast"].firstMatch
             XCTAssertTrue(endButton.waitForExistence(timeout: 4) || scrollToElement(endButton, in: app, maxSwipes: 4))
             endButton.tap()
@@ -130,7 +130,7 @@ extension CatholicFastingAppUITests {
         }
     }
 
-    func testIPadTrackFastQAScreenshots() throws {
+    func testIPadFastQAScreenshots() throws {
         try XCTSkipIf(
             AppStoreScreenshotConfig.load() == nil,
             "Run through scripts/generate_track_fast_qa_screenshots.sh to enable screenshot capture.")
@@ -159,14 +159,14 @@ extension CatholicFastingAppUITests {
         try captureAppStoreScreen("02-fasting-days") { app in
             app.launch()
             ensureOnHomeScreen(app)
-            openSurface("Fasting Days", in: app)
+            openSurface("Calendar", in: app)
             XCTAssertTrue(app.otherElements["surface.fasting_days.ready"].firstMatch.waitForExistence(timeout: 4))
         }
 
         try captureAppStoreScreen("03-track-fast-active", seedActiveFast: true) { app in
             app.launch()
             ensureOnHomeScreen(app)
-            openSurface("Track Fast", in: app)
+            openSurface("Fast", in: app)
             XCTAssertTrue(app.staticTexts["intermittent.active_elapsed"].firstMatch.waitForExistence(timeout: 4))
         }
 

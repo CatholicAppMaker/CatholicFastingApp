@@ -21,10 +21,10 @@
       "selectedTests" : [
         "CatholicFastingAppUITests/testIPhoneAppCleanQAScreenshots",
         "CatholicFastingAppUITests/testIPhoneAppStoreScreenshots",
-        "CatholicFastingAppUITests/testIPhoneTrackFastQAScreenshots",
+        "CatholicFastingAppUITests/testIPhoneFastQAScreenshots",
         "CatholicFastingAppUITests/testIPadAppCleanQAScreenshots",
         "CatholicFastingAppUITests/testIPadAppStoreScreenshots",
-        "CatholicFastingAppUITests/testIPadTrackFastQAScreenshots"
+        "CatholicFastingAppUITests/testIPadFastQAScreenshots"
       ],
       "target" : {
         "containerPath" : "container:CatholicFastingApp.xcodeproj",

@@ -2,41 +2,110 @@ import SwiftUI
 
 struct SacredHeroArtwork {
     let assetName: String
-    let title: String
-    let subtitle: String
 }
 
 enum SacredHeroScene {
     case dashboard
     case fastingDays
     case intermittent
-    case guidance
 }
 
 enum SacredHeroImageSelector {
     static func anchorArtwork(for scene: SacredHeroScene) -> SacredHeroArtwork {
         switch scene {
         case .dashboard:
-            SacredHeroArtwork(
-                assetName: "HeroSacred",
-                title: "Daily Catholic Fasting",
-                subtitle: "Keep today's discipline rooted in prayer, worship, and charity.")
+            SacredHeroArtwork(assetName: "HeroSacred")
         case .fastingDays:
-            SacredHeroArtwork(
-                assetName: "SacredFridayAbstinence",
-                title: "Calendar",
-                subtitle: "See required days, optional practices, and celebrations in one steady rhythm.")
+            SacredHeroArtwork(assetName: "SacredFridayAbstinence")
         case .intermittent:
-            SacredHeroArtwork(
-                assetName: "SacredScriptureCandle",
-                title: "Fast",
-                subtitle: "Keep optional fasting tied to prayer and reflection, not just metrics.")
-        case .guidance:
-            SacredHeroArtwork(
-                assetName: "GuidanceSacred",
-                title: "Guidance and Support",
-                subtitle: "Open setup, rules, privacy, and premium tools from one calm place.")
+            SacredHeroArtwork(assetName: "SacredScriptureCandle")
         }
+    }
+}
+
+private struct FastingDaysMetricSummary: View {
+    let seasonLabel: String
+    let observanceCountText: String
+
+    var body: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 8) {
+                season
+                Circle()
+                    .fill(CatholicTheme.primary)
+                    .frame(width: 3, height: 3)
+                    .accessibilityHidden(true)
+                Text(observanceCountText)
+                    .lineLimit(nil)
+            }
+
+            VStack(alignment: .leading, spacing: 4) {
+                season
+                Text(observanceCountText)
+                    .lineLimit(nil)
+            }
+        }
+        .font(.footnote)
+        .fontWeight(.medium)
+        .foregroundStyle(CatholicTheme.primary)
+    }
+
+    private var season: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "calendar")
+                .accessibilityHidden(true)
+            Text(seasonLabel)
+                .lineLimit(nil)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
+private struct FastingDaysScopeControl: View {
+    @Binding var selection: Int
+    let title: String
+    let upcomingTitle: String
+    let fullYearTitle: String
+
+    var body: some View {
+        HStack(spacing: 4) {
+            option(title: upcomingTitle, value: 0)
+            option(title: fullYearTitle, value: 1)
+        }
+        .padding(3)
+        .background(
+            Capsule()
+                .fill(Color.secondary.opacity(0.12))
+                .accessibilityHidden(true))
+        .accessibilityRepresentation {
+            // The custom capsule remains visual-only to accessibility. A native
+            // Picker supplies equivalent state and semantic Dynamic Type behavior.
+            Picker(title, selection: $selection) {
+                Text(upcomingTitle).tag(0)
+                Text(fullYearTitle).tag(1)
+            }
+            .pickerStyle(.menu)
+        }
+        .accessibilityIdentifier("fasting_days.scope_picker")
+    }
+
+    private func option(title: String, value: Int) -> some View {
+        Button {
+            selection = value
+        } label: {
+            Text(title)
+                .font(.body)
+                .foregroundStyle(.primary)
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 7)
+                .background(
+                    Capsule()
+                        .fill(selection == value ? CatholicTheme.parchment : Color.clear)
+                        .accessibilityHidden(true))
+        }
+        .buttonStyle(.plain)
+        .appSelectedAccessibility(selection == value)
     }
 }
 
@@ -53,24 +122,6 @@ extension ContentView {
                     fastingDaysIncludeOptionalDays = true
                 }
             })
-    }
-
-    var fastingDaysFilterTags: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                StatusTag(
-                    text: fastingDaysShowAllYearDays ? "Full Year" : "Upcoming",
-                    color: fastingDaysShowAllYearDays ? CatholicTheme.primary : CatholicTheme.accent)
-                StatusTag(
-                    text: fastingDaysIncludeOptionalDays ? "Required + Optional" : "Required Only",
-                    color: fastingDaysIncludeOptionalDays ? .orange : .red)
-                if fastingDaysIncludeFeastAndHolyDays {
-                    StatusTag(text: "Celebrations Included", color: .green)
-                }
-            }
-            .padding(.vertical, 2)
-        }
-        .accessibilityIdentifier("fasting_days.filter_tags")
     }
 
     var fastingDaysHeroSection: some View {
@@ -137,28 +188,21 @@ extension ContentView {
                     .appSupportingTextStyle()
             }
 
-            HStack(spacing: 8) {
-                Label(currentLiturgicalSeason.label, systemImage: "calendar")
-                Text("·")
-                Text(localizedFormat(
+            FastingDaysMetricSummary(
+                seasonLabel: localizedSeasonLabel(currentLiturgicalSeason),
+                observanceCountText: localizedFormat(
                     "fasting_days.metric.showing_compact_format",
                     default: "%d observances",
                     fastingDaysDisplayObservances.count))
-            }
-            .font(.footnote.weight(.medium))
-            .foregroundStyle(.secondary)
 
             Text(regionalNormSummaryLine)
                 .appSupportingTextStyle()
 
-            Picker(localized("fasting_days.scope.title", default: "Scope"), selection: fastingDaysScopeSelection) {
-                Text(localized("fasting_days.scope.upcoming", default: "Upcoming")).tag(0)
-                Text(localized("fasting_days.scope.full_year", default: "Full Year")).tag(1)
-            }
-            .pickerStyle(.segmented)
-            .accessibilityIdentifier("fasting_days.scope_picker")
-
-            fastingDaysFilterTags
+            FastingDaysScopeControl(
+                selection: fastingDaysScopeSelection,
+                title: localized("fasting_days.scope.title", default: "Scope"),
+                upcomingTitle: localized("fasting_days.scope.upcoming", default: "Upcoming"),
+                fullYearTitle: localized("fasting_days.scope.full_year", default: "Full Year"))
         }
     }
 
@@ -257,8 +301,8 @@ extension ContentView {
 
             if displayItems.isEmpty {
                 Section {
-                Text(localized("fasting_days.list.empty", default: "No observance days match the current list filters."))
-                    .foregroundStyle(.secondary)
+                    Text(localized("fasting_days.list.empty", default: "No observance days match the current list filters."))
+                        .foregroundStyle(.secondary)
                 }
             } else {
                 ForEach(monthGroups, id: \.0) { monthTitle, observances in

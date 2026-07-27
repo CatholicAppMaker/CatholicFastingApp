@@ -1,4 +1,4 @@
-"widget.configuration.name" = "Ayuno católico";
+"widget.configuration.name" = "Catholic Fasting";
 "widget.configuration.description" = "Vea la guía de hoy y la próxima observancia obligatoria.";
 "widget.section.today" = "Hoy";
 "widget.section.today.upper" = "HOY";
@@ -6,6 +6,5 @@
 "widget.fallback.today.title" = "No hay observancia hoy";
 "widget.fallback.today.obligation" = "Sin obligación";
 "widget.fallback.next_required" = "No hay una próxima observancia obligatoria";
-"widget.fallback.motivation" = "Sea fiel en las pequeñas disciplinas diarias.";
 "widget.fast.active" = "Ayuno activo";
 "widget.fast.target_reached" = "Objetivo de ayuno alcanzado";

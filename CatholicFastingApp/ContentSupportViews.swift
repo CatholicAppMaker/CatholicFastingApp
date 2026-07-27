@@ -172,20 +172,33 @@ struct ObservanceRowView: View {
 struct StatusTag: View {
     let text: String
     let color: Color
+    var font: Font = .caption
 
     var body: some View {
         Text(text)
-            .font(.caption)
+            .font(font)
             .foregroundStyle(.primary)
+            .lineLimit(nil)
             .padding(.horizontal, 8)
             .padding(.vertical, 3)
-            .background(CatholicTheme.parchment.opacity(0.88), in: Capsule())
+            .background(
+                Capsule()
+                    .fill(CatholicTheme.parchment.opacity(0.88))
+                    .accessibilityHidden(true))
             .overlay(
                 Capsule()
-                    .fill(color.opacity(0.16)))
+                    .fill(color.opacity(0.16))
+                    .accessibilityHidden(true))
             .overlay(
                 Capsule()
-                    .stroke(color.opacity(0.55), lineWidth: 0.8))
+                    .stroke(color.opacity(0.55), lineWidth: 0.8)
+                    .accessibilityHidden(true))
+            .accessibilityRepresentation {
+                // Keep the visible editorial tag while exposing a native semantic
+                // text node whose font follows every Dynamic Type category.
+                Text(text)
+                    .font(.body)
+            }
     }
 }
 
@@ -260,6 +273,7 @@ struct AppDestinationRowCard: View {
     var isSelected: Bool = false
     var selectedTint: Color = CatholicTheme.primary
     var showsChevron: Bool = true
+    var usesPrimarySubtitle = false
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
@@ -270,15 +284,19 @@ struct AppDestinationRowCard: View {
                 .background(
                     Circle()
                         .fill(isSelected ? Color.white.opacity(0.18) : selectedTint.opacity(0.10))
-                        .allowsHitTesting(false))
+                        .allowsHitTesting(false)
+                        .accessibilityHidden(true))
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(title)
                     .font(.headline.weight(.semibold))
                     .foregroundStyle(isSelected ? .white : .primary)
                 Text(subtitle)
-                    .appSupportingTextStyle()
-                    .foregroundStyle(isSelected ? Color.white.opacity(0.84) : .secondary)
+                    .font(.footnote)
+                    .foregroundStyle(
+                        isSelected
+                            ? Color.white
+                            : usesPrimarySubtitle ? Color.primary : Color.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
 
@@ -287,8 +305,9 @@ struct AppDestinationRowCard: View {
             if showsChevron {
                 Image(systemName: "chevron.right")
                     .font(.caption.weight(.bold))
-                    .foregroundStyle(isSelected ? Color.white.opacity(0.85) : .secondary)
+                    .foregroundStyle(isSelected ? Color.white : CatholicTheme.primary)
                     .padding(.top, 4)
+                    .accessibilityHidden(true)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -296,11 +315,13 @@ struct AppDestinationRowCard: View {
         .background(
             RoundedRectangle(cornerRadius: 14, style: .continuous)
                 .fill(isSelected ? selectedTint : Color.clear)
-                .allowsHitTesting(false))
+                .allowsHitTesting(false)
+                .accessibilityHidden(true))
         .overlay(
             RoundedRectangle(cornerRadius: 14, style: .continuous)
                 .stroke(isSelected ? Color.white.opacity(0.16) : Color.clear, lineWidth: 1)
-                .allowsHitTesting(false))
+                .allowsHitTesting(false)
+                .accessibilityHidden(true))
         .accessibilityElement(children: .combine)
         .appSelectedAccessibility(isSelected)
     }
@@ -340,7 +361,9 @@ struct FridayNotesHistoryView: View {
     var body: some View {
         List {
             if filteredRecords.isEmpty {
-                ContentUnavailableView("No notes found", systemImage: "magnifyingglass")
+                ContentUnavailableView(
+                    AppLocalizer.localizedCurrent("friday_notes.empty", default: "No notes found"),
+                    systemImage: "magnifyingglass")
             } else {
                 ForEach(filteredRecords) { record in
                     VStack(alignment: .leading, spacing: 6) {

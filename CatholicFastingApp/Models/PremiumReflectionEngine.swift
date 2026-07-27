@@ -8,7 +8,7 @@ struct PremiumReflection: Hashable {
 
 enum PremiumReflectionEngine {
     static func reflection(
-        for date: Date = Date(),
+        for date: Date = AppClock.now(),
         season: LiturgicalSeason) -> PremiumReflection
     {
         let dayIndex = Calendar.current.ordinality(of: .day, in: .year, for: date) ?? 1

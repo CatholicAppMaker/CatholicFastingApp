@@ -1,4 +1,4 @@
-"widget.configuration.name" = "Jeûne catholique";
+"widget.configuration.name" = "Catholic Fasting";
 "widget.configuration.description" = "Consultez les directives d’aujourd’hui et la prochaine observance obligatoire.";
 "widget.section.today" = "Aujourd’hui";
 "widget.section.today.upper" = "AUJOURD’HUI";
@@ -6,6 +6,5 @@
 "widget.fallback.today.title" = "Aucune observance aujourd’hui";
 "widget.fallback.today.obligation" = "Aucune obligation";
 "widget.fallback.next_required" = "Aucune observance obligatoire à venir";
-"widget.fallback.motivation" = "Restez fidèle dans les petites disciplines quotidiennes.";
 "widget.fast.active" = "Jeûne actif";
 "widget.fast.target_reached" = "Objectif de jeûne atteint";

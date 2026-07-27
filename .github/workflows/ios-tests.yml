@@ -6,12 +6,23 @@ on:
   pull_request:
 
 jobs:
+  source-quality:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Swift source-quality tools
+        run: brew install swiftformat swiftlint
+      - name: Verify formatting
+        run: swiftformat . --lint
+      - name: Verify lint
+        run: swiftlint lint --config .swiftlint.yml --strict --no-cache
+
   swift-package:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       - name: Swift test
-        run: swift test
+        run: swift test -Xswiftc -warnings-as-errors
 
   ios-ui:
     runs-on: macos-latest

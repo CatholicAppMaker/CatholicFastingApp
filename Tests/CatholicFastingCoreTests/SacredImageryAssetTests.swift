@@ -5,7 +5,7 @@ struct SacredImageryAssetTests {
     @Test func activeSacredGalleryUsesStrongResolvableAssets() throws {
         let root = repoRoot()
         let source = try String(contentsOf: root.appendingPathComponent("CatholicFastingApp/AppSacredVisuals.swift"), encoding: .utf8)
-        let gallerySource = try source.slice(from: "static let fastingGallery", through: "    ]")
+        let gallerySource = try source.slice(from: "static var fastingGallery", through: "        ]")
         let assetNames = gallerySource.matches(for: #"assetName: "([^"]+)""#)
 
         #expect(assetNames.count >= 18)

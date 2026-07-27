@@ -1,28 +1,36 @@
 import XCTest
 
 extension CatholicFastingAppUITests {
-    func testIPhonePrimarySurfacesPassAccessibilityAudit() throws {
-        continueAfterFailure = true
-        let app = makeApp(fixedDate: "2026-07-17")
-        app.launch()
-        ensureOnHomeScreen(app)
-
-        for surface in ["Today", "Fasting Days", "Track Fast", "More"] {
-            openSurfaceThroughVisibleNavigation(surface, in: app)
-            try performPrimarySurfaceAccessibilityAudit(in: app)
-        }
+    func testIPhoneTodayPassesAccessibilityAudit() throws {
+        try auditIPhoneSurface("Today")
     }
 
-    func testIPadPrimaryWorkspacesPassAccessibilityAudit() throws {
-        continueAfterFailure = true
-        let app = makeApp(fixedDate: "2026-07-17")
-        app.launch()
-        ensureOnHomeScreen(app)
+    func testIPhoneCalendarPassesAccessibilityAudit() throws {
+        try auditIPhoneSurface("Calendar")
+    }
 
-        for surface in ["today", "fasting_days", "intermittent", "more"] {
-            openIPadSurface(surface, in: app)
-            try performPrimarySurfaceAccessibilityAudit(in: app)
-        }
+    func testIPhoneFastPassesAccessibilityAudit() throws {
+        try auditIPhoneSurface("Fast")
+    }
+
+    func testIPhoneMorePassesAccessibilityAudit() throws {
+        try auditIPhoneSurface("More")
+    }
+
+    func testIPadTodayPassesAccessibilityAudit() throws {
+        try auditIPadWorkspace("today")
+    }
+
+    func testIPadCalendarPassesAccessibilityAudit() throws {
+        try auditIPadWorkspace("fasting_days")
+    }
+
+    func testIPadFastPassesAccessibilityAudit() throws {
+        try auditIPadWorkspace("intermittent")
+    }
+
+    func testIPadMorePassesAccessibilityAudit() throws {
+        try auditIPadWorkspace("more")
     }
 
     func testIPhoneAccessibilityTextSizeKeepsPrimaryActionsReachable() {
@@ -35,7 +43,7 @@ extension CatholicFastingAppUITests {
         ensureOnHomeScreen(app)
 
         XCTAssertTrue(scrollToElement(app.buttons["companion.primary_action.button"].firstMatch, in: app))
-        openSurfaceThroughVisibleNavigation("Track Fast", in: app)
+        openSurfaceThroughVisibleNavigation("Fast", in: app)
         XCTAssertTrue(scrollToElement(app.buttons["intermittent.start_fast"].firstMatch, in: app))
     }
 
@@ -49,7 +57,7 @@ extension CatholicFastingAppUITests {
         app.launch()
         ensureOnHomeScreen(app)
 
-        for surface in ["Today", "Fasting Days", "Track Fast", "More"] {
+        for surface in ["Today", "Calendar", "Fast", "More"] {
             openSurfaceThroughVisibleNavigation(surface, in: app)
         }
     }
@@ -91,6 +99,52 @@ extension CatholicFastingAppUITests {
                 || selected.identifier.contains("2026-12-")
                 || selected.identifier.contains("2027-"),
             "Upcoming Calendar did not select today or a future observance: \(selected.identifier)")
+    }
+
+    func testIOS26AccessibilityArtifactPolicyIsNarrow() {
+        XCTAssertTrue(Self.isKnownIOS26AccessibilityArtifact(
+            auditType: .contrast,
+            label: "",
+            identifier: "",
+            elementExists: false,
+            frame: .zero))
+        XCTAssertTrue(Self.isKnownIOS26AccessibilityArtifact(
+            auditType: .elementDetection,
+            label: "",
+            identifier: "",
+            elementExists: false,
+            frame: nil))
+
+        XCTAssertFalse(Self.isKnownIOS26AccessibilityArtifact(
+            auditType: .dynamicType,
+            label: "",
+            identifier: "",
+            elementExists: false,
+            frame: .zero))
+        XCTAssertFalse(Self.isKnownIOS26AccessibilityArtifact(
+            auditType: .contrast,
+            label: "Visible content",
+            identifier: "",
+            elementExists: false,
+            frame: .zero))
+        XCTAssertFalse(Self.isKnownIOS26AccessibilityArtifact(
+            auditType: .contrast,
+            label: "",
+            identifier: "app.content",
+            elementExists: false,
+            frame: .zero))
+        XCTAssertFalse(Self.isKnownIOS26AccessibilityArtifact(
+            auditType: .contrast,
+            label: "",
+            identifier: "",
+            elementExists: true,
+            frame: .zero))
+        XCTAssertFalse(Self.isKnownIOS26AccessibilityArtifact(
+            auditType: .elementDetection,
+            label: "",
+            identifier: "",
+            elementExists: false,
+            frame: CGRect(x: 10, y: 10, width: 44, height: 44)))
     }
 
     func testIPhoneAge60PlusProfileDoesNotReceiveMandatoryFastingRule() {
@@ -137,7 +191,7 @@ extension CatholicFastingAppUITests {
         let options = XCTMeasureOptions()
         options.iterationCount = 3
         measure(metrics: [XCTClockMetric(), XCTMemoryMetric()], options: options) {
-            for surface in ["Fasting Days", "Track Fast", "More", "Today"] {
+            for surface in ["Calendar", "Fast", "More", "Today"] {
                 openSurfaceThroughVisibleNavigation(surface, in: app)
             }
         }
@@ -159,18 +213,68 @@ extension CatholicFastingAppUITests {
     }
 
     private func performPrimarySurfaceAccessibilityAudit(in app: XCUIApplication) throws {
-        // Xcode 27 beta reports solid black system text as a contrast failure when it
-        // intersects the iOS 26 floating tab-bar renderer. Contrast and Dynamic Type
-        // are exercised through dedicated maximum-size/enhanced-setting journeys.
-        try app.performAccessibilityAudit(
-            for: .all.subtracting([.dynamicType, .textClipped, .contrast])) { issue in
+        try app.performAccessibilityAudit(for: .all) { issue in
             let element = issue.element
+            let label = element?.label ?? ""
+            let identifier = element?.identifier ?? ""
+            let elementExists = element?.exists ?? false
+            let frame = element.map(\.frame)
             print(
                 "CFA_ACCESSIBILITY_AUDIT type=\(issue.auditType.rawValue) "
-                    + "label=\(element?.label ?? "<none>") "
-                    + "identifier=\(element?.identifier ?? "<none>") "
+                    + "label=\(label.isEmpty ? "<none>" : label) "
+                    + "identifier=\(identifier.isEmpty ? "<none>" : identifier) "
                     + "detail=\(issue.detailedDescription)")
-            return false
+
+            let isAllowedArtifact = Self.isKnownIOS26AccessibilityArtifact(
+                auditType: issue.auditType,
+                label: label,
+                identifier: identifier,
+                elementExists: elementExists,
+                frame: frame)
+            if isAllowedArtifact {
+                // iOS 26 can leave transient anonymous SwiftUI/system nodes behind
+                // after floating-tab layout. Only unresolvable zero-frame contrast
+                // or text-detection nodes qualify; visible or labeled content does not.
+                print(
+                    "CFA_ACCESSIBILITY_ALLOWLIST type=\(issue.auditType.rawValue) "
+                        + "reason=anonymous_unresolvable_zero_frame_ios26_artifact")
+            }
+            return isAllowedArtifact
         }
+    }
+
+    static func isKnownIOS26AccessibilityArtifact(
+        auditType: XCUIAccessibilityAuditType,
+        label: String,
+        identifier: String,
+        elementExists: Bool,
+        frame: CGRect?) -> Bool
+    {
+        let isEligibleAuditType = auditType == .contrast || auditType == .elementDetection
+        let hasNoAccessibleIdentity = label.isEmpty && identifier.isEmpty
+        let hasNoResolvableFrame = frame == nil || frame == .zero || frame?.isEmpty == true
+
+        return isEligibleAuditType
+            && hasNoAccessibleIdentity
+            && !elementExists
+            && hasNoResolvableFrame
+    }
+
+    private func auditIPhoneSurface(_ surface: String) throws {
+        continueAfterFailure = true
+        let app = makeApp(fixedDate: "2026-07-17")
+        app.launch()
+        ensureOnHomeScreen(app)
+        openSurfaceThroughVisibleNavigation(surface, in: app)
+        try performPrimarySurfaceAccessibilityAudit(in: app)
+    }
+
+    private func auditIPadWorkspace(_ workspace: String) throws {
+        continueAfterFailure = true
+        let app = makeApp(fixedDate: "2026-07-17")
+        app.launch()
+        ensureOnHomeScreen(app)
+        openIPadSurface(workspace, in: app)
+        try performPrimarySurfaceAccessibilityAudit(in: app)
     }
 }

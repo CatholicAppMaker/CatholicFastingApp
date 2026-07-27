@@ -3,7 +3,11 @@
 enum SeasonalAppIconPolicy {
     static let liturgicalSeasonColorsStorageKey = "liturgical_season_colors_enabled"
 
-    static func targetIconName(now: Date = Date(), userDefaults: UserDefaults, calendar: Calendar = .gregorian) -> String? {
+    static func targetIconName(
+        now: Date = AppClock.now(),
+        userDefaults: UserDefaults,
+        calendar: Calendar = .gregorian) -> String?
+    {
         let seasonModeEnabled =
             userDefaults.object(forKey: liturgicalSeasonColorsStorageKey) as? Bool ?? true
         let season = LiturgicalSeasonThemeEngine.season(for: now, calendar: calendar)

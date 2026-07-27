@@ -3,11 +3,11 @@
 ## 1) Prepare Build
 
 1. Run:
-   - `swiftformat --lint .`
-   - `swiftlint`
-   - `swift test`
-   - deterministic iPhone UI suite
-   - deterministic iPad UI suite
+   - `swiftformat . --lint --cache ignore`
+   - `swiftlint lint --strict --no-cache`
+   - `swift test -Xswiftc -warnings-as-errors`
+   - `TEST_SUITE=release-phone ./scripts/run_ios_tests.sh`
+   - `TEST_SUITE=release-ipad ./scripts/run_ios_tests.sh`
    - Do not run `periphery` during release or cleanup passes unless Kevin explicitly asks for it.
 2. Resolve all failures before archive.
 

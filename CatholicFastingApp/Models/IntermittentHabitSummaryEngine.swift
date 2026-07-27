@@ -13,7 +13,7 @@ struct IntermittentHabitSummary: Hashable {
 enum IntermittentHabitSummaryEngine {
     static func summary(
         sessions: [IntermittentFastSession],
-        now: Date = Date(),
+        now: Date = AppClock.now(),
         calendar: Calendar = .current) -> IntermittentHabitSummary
     {
         let sortedSessions = sessions.sorted { $0.end > $1.end }

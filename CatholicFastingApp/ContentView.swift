@@ -1,5 +1,5 @@
-import SwiftUI
 import StoreKit
+import SwiftUI
 #if canImport(UIKit)
 import UIKit
 #endif
@@ -16,12 +16,12 @@ struct ContentView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.requestReview) var requestReview
-    @State var year = Calendar.current.component(.year, from: AppClock.now())
+    @State var year = Calendar.gregorian.component(.year, from: AppClock.now())
     @StateObject var tracker = FastTracker()
     @StateObject var penanceNotes = FridayPenanceNotes()
     @StateObject var intermittentTracker = IntermittentFastTracker()
     @StateObject var monetizationStore = MonetizationStore()
-    @State var notificationStatus = "Not scheduled"
+    @State var notificationStatus = ""
     @State var premiumCoachStatus = ""
     @State var showDeleteDataConfirm = false
     @State var guidanceScenario: GuidanceScenario = .normalDay
@@ -140,7 +140,7 @@ struct ContentView: View {
 
     var currentYearObservances: [Observance] {
         ObservanceCalculator.makeCalendar(
-            for: Calendar.current.component(.year, from: AppClock.now()),
+            for: Calendar.gregorian.component(.year, from: AppClock.now()),
             settings: settings)
     }
 
@@ -154,14 +154,6 @@ struct ContentView: View {
 
     var ruleBundleMetadata: RuleBundleMetadata {
         ObservanceCalculator.ruleBundleMetadata()
-    }
-
-    var ruleBundleAudit: RuleBundleAudit {
-        ObservanceCalculator.ruleBundleAudit()
-    }
-
-    var ruleBundleChanges: [RuleBundleChange] {
-        ObservanceCalculator.ruleBundleChanges()
     }
 
     func localized(_ key: String, default defaultValue: String) -> String {

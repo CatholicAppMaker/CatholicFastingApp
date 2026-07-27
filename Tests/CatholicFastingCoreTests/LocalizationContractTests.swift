@@ -11,7 +11,7 @@ final class LocalizationContractTests: XCTestCase {
         XCTAssertFalse(sourceContract.keys.isEmpty, "No explicit localization keys were extracted from app sources.")
 
         for locale in supportedLocales {
-            let localizedKeys = Set(try XCTUnwrap(localizations[locale]).keys)
+            let localizedKeys = try Set(XCTUnwrap(localizations[locale]).keys)
             let missingKeys = sourceContract.keys.subtracting(localizedKeys).sorted()
             XCTAssertTrue(
                 missingKeys.isEmpty,
@@ -29,6 +29,21 @@ final class LocalizationContractTests: XCTestCase {
             XCTAssertTrue(
                 emptyKeys.isEmpty,
                 "\(locale) has empty localized values for: \(emptyKeys.joined(separator: ", "))")
+        }
+    }
+
+    func testSupportedAppLocalizationTablesShareTheSameKeys() throws {
+        let localizations = try loadSupportedLocalizations()
+        let englishKeys = try Set(XCTUnwrap(localizations["en"]).keys)
+
+        for locale in supportedLocales {
+            let localizedKeys = try Set(XCTUnwrap(localizations[locale]).keys)
+            let missing = englishKeys.subtracting(localizedKeys).sorted()
+            let unexpected = localizedKeys.subtracting(englishKeys).sorted()
+            XCTAssertTrue(
+                missing.isEmpty && unexpected.isEmpty,
+                "\(locale) app localization keys differ from English. "
+                    + "Missing: \(summarize(missing)); unexpected: \(summarize(unexpected)).")
         }
     }
 
@@ -67,11 +82,10 @@ final class LocalizationContractTests: XCTestCase {
                 let localizedValue = try XCTUnwrap(
                     localized[key],
                     "\(locale) is missing \(key), so its format placeholders cannot be verified.")
-                let canonicalValue: String
-                if let sourceDefault = sourceContract.literalDefaults[key] {
-                    canonicalValue = sourceDefault
+                let canonicalValue: String = if let sourceDefault = sourceContract.literalDefaults[key] {
+                    sourceDefault
                 } else {
-                    canonicalValue = try XCTUnwrap(
+                    try XCTUnwrap(
                         english[key],
                         "English is missing \(key), so its format placeholders cannot be used as the fallback contract.")
                 }
@@ -117,15 +131,71 @@ final class LocalizationContractTests: XCTestCase {
 
             for key in englishKeys.sorted() {
                 XCTAssertEqual(
-                    formatPlaceholders(in: try XCTUnwrap(localization[key])),
-                    formatPlaceholders(in: try XCTUnwrap(english[key])),
+                    try formatPlaceholders(in: XCTUnwrap(localization[key])),
+                    try formatPlaceholders(in: XCTUnwrap(english[key])),
                     "\(locale) widget placeholders are incompatible for \(key).")
             }
         }
     }
 
+    func testEveryWidgetSourceLocalizationKeyExistsInEverySupportedLocale() throws {
+        let widgetSource = try String(
+            contentsOf: repoRoot()
+                .appendingPathComponent("CatholicFastingWidget")
+                .appendingPathComponent("CatholicFastingWidget.swift"),
+            encoding: .utf8)
+        let keyExpression = try NSRegularExpression(
+            pattern: #"(?:\bWidgetLocalization\.text|\.(?:configurationDisplayName|description))\s*\(\s*\"((?:\\.|[^\"\\])*)\""#)
+        let sourceKeys = Set(matches(of: keyExpression, in: widgetSource).compactMap(\.first))
+        let localizations = try loadLocalizations(in: "CatholicFastingWidget")
+
+        XCTAssertFalse(sourceKeys.isEmpty, "No widget localization keys were extracted from source.")
+        for locale in supportedLocales {
+            let localizedKeys = try Set(XCTUnwrap(localizations[locale]).keys)
+            let missingKeys = sourceKeys.subtracting(localizedKeys).sorted()
+            let staleKeys = localizedKeys.subtracting(sourceKeys).sorted()
+            XCTAssertTrue(
+                missingKeys.isEmpty && staleKeys.isEmpty,
+                "\(locale) widget keys differ from source. "
+                    + "Missing: \(missingKeys.joined(separator: ", ")); "
+                    + "stale: \(staleKeys.joined(separator: ", "))")
+        }
+    }
+
+    func testSharedWidgetFallbackValuesMatchAppTables() throws {
+        let appLocalizations = try loadSupportedLocalizations()
+        let widgetLocalizations = try loadLocalizations(in: "CatholicFastingWidget")
+        let sharedFallbackKeys = [
+            "widget.fallback.today.title",
+            "widget.fallback.today.obligation",
+            "widget.fallback.next_required",
+        ]
+
+        for locale in supportedLocales {
+            let app = try XCTUnwrap(appLocalizations[locale])
+            let widget = try XCTUnwrap(widgetLocalizations[locale])
+            for key in sharedFallbackKeys {
+                XCTAssertEqual(
+                    app[key],
+                    widget[key],
+                    "\(locale) uses different app and widget fallback text for \(key).")
+            }
+        }
+    }
+
+    func testWidgetConfigurationNameKeepsStableProductName() throws {
+        let localizations = try loadLocalizations(in: "CatholicFastingWidget")
+
+        for locale in supportedLocales {
+            XCTAssertEqual(
+                try XCTUnwrap(localizations[locale])["widget.configuration.name"],
+                "Catholic Fasting",
+                "\(locale) translated the fixed Catholic Fasting product name.")
+        }
+    }
+
     func testAppIntentAndShortcutLocalizationsStayComplete() throws {
-        let intentMetadataKeys: Set<String> = [
+        let intentMetadataKeys: Set = [
             "Open Today Plan",
             "Open the Today tab in Catholic Fasting.",
             "Open Calendar",
@@ -136,7 +206,7 @@ final class LocalizationContractTests: XCTestCase {
             "Calendar",
             "Fast",
         ]
-        let shortcutPhraseKeys: Set<String> = [
+        let shortcutPhraseKeys: Set = [
             "Open ${applicationName} today",
             "Open ${applicationName} Calendar",
             "Open ${applicationName} fasting days",
@@ -205,8 +275,8 @@ final class LocalizationContractTests: XCTestCase {
 
     private func loadLocalizations(
         in targetDirectory: String,
-        table: String = "Localizable.strings"
-    ) throws -> [String: [String: String]] {
+        table: String = "Localizable.strings") throws -> [String: [String: String]]
+    {
         try Dictionary(uniqueKeysWithValues: supportedLocales.map { locale in
             let url = repoRoot()
                 .appendingPathComponent(targetDirectory)
@@ -246,9 +316,11 @@ final class LocalizationContractTests: XCTestCase {
         for url in sourceURLs {
             let source = try String(contentsOf: url, encoding: .utf8)
             for captures in matches(of: keyExpression, in: source) {
+                guard !captures[0].contains(#"\("#) else { continue }
                 keys.insert(captures[0])
             }
             for captures in matches(of: defaultExpression, in: source) {
+                guard !captures[0].contains(#"\("#) else { continue }
                 literalDefaults[captures[0], default: captures[1]] = captures[1]
             }
         }
@@ -259,7 +331,7 @@ final class LocalizationContractTests: XCTestCase {
         let sourceRange = NSRange(source.startIndex..., in: source)
         return expression.matches(in: source, range: sourceRange).compactMap { match in
             guard match.numberOfRanges > 1 else { return nil }
-            return (1..<match.numberOfRanges).compactMap { captureIndex in
+            return (1 ..< match.numberOfRanges).compactMap { captureIndex in
                 guard let range = Range(match.range(at: captureIndex), in: source) else { return nil }
                 return String(source[range])
             }

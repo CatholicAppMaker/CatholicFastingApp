@@ -1,6 +1,15 @@
 import SwiftUI
 
 extension ContentView {
+    var intermittentQuickTargetOptions: [IntermittentFastTargetOption] {
+        [12, 14, 16, 18, 20, 24, 36].map { hours in
+            IntermittentFastTargetOption(
+                hours: hours,
+                title: localizedFormat("ipad.intermittent.plan_hours_format", default: "%dh", hours),
+                detail: intermittentPlanDescription(hours))
+        }
+    }
+
     private var liveTrackerRingSize: CGFloat {
         if dynamicTypeSize.isAccessibilitySize {
             return 172
@@ -127,7 +136,7 @@ extension ContentView {
                     }
                     .accessibilityIdentifier("intermittent.schedule.weekdays")
 
-                    if !notificationStatus.isEmpty, notificationStatus != "Not scheduled" {
+                    if !notificationStatus.isEmpty {
                         Text(notificationStatus)
                             .font(.caption2)
                             .foregroundStyle(.secondary)
@@ -389,7 +398,7 @@ extension ContentView {
             Circle()
                 .trim(from: 0, to: progress)
                 .stroke(
-                    hasEatingWindow ? CatholicTheme.accent : CatholicTheme.cardBorder,
+                    hasEatingWindow ? CatholicTheme.accentForeground : CatholicTheme.primary,
                     style: StrokeStyle(lineWidth: liveTrackerRingStroke, lineCap: .round))
                 .rotationEffect(.degrees(-90))
             VStack(spacing: 2) {
@@ -398,7 +407,7 @@ extension ContentView {
                         ? localized("intermittent.live.eating_window", default: "Eating Window")
                         : localized("intermittent.live.next_fast", default: "Next Fast"))
                     .font(liveTrackerLabelFont)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.primary)
                 Text(countdown)
                     .font(.system(size: liveTrackerCountdownFontSize, weight: .semibold, design: .rounded).monospacedDigit())
                     .foregroundStyle(CatholicTheme.primary)

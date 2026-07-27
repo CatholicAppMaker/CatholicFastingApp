@@ -38,7 +38,7 @@ extension ContentView {
             Toggle(
                 localized(
                     "settings.quick.consent_label",
-                    default: "I understand this is an independent app, not an official Church authority app"),
+                    default: "I understand that this is an independent devotional app, not an official app of the Catholic Church"),
                 isOn: $acceptedLegalNotice)
                 .accessibilityIdentifier("settings.quick.consent")
 
@@ -90,11 +90,7 @@ extension ContentView {
                 .appSupportingTextStyle()
 
             if dailyReminderSupportEnabled {
-                VStack(alignment: .leading, spacing: 12) {
-                    Text(localized("settings.quick.reminder_actions", default: "Reminder Actions"))
-                        .appEyebrowStyle()
-                        .accessibilityIdentifier("settings.quick.reminder_actions")
-
+                DisclosureGroup {
                     if monetizationStore.premiumUnlocked {
                         Toggle(localized("settings.quick.reminder_morning", default: "Morning check-in (7:00 AM)"), isOn: $morningReminderEnabled)
                             .accessibilityIdentifier("settings.quick.reminder_morning")
@@ -171,7 +167,11 @@ extension ContentView {
                     }
                     .appSecondaryButtonStyle()
                     .accessibilityIdentifier("settings.quick.refresh_status")
+                } label: {
+                    Text(localized("settings.quick.reminder_actions", default: "Reminder Actions"))
+                        .font(.headline)
                 }
+                .accessibilityIdentifier("settings.quick.reminder_actions")
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
 

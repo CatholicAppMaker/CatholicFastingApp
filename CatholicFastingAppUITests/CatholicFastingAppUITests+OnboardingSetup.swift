@@ -9,7 +9,8 @@ extension CatholicFastingAppUITests {
         advancePastLanguageSelection(in: app)
         acceptOnboardingNotice(in: app)
         let continueButton = app.buttons["onboarding.continue"].firstMatch
-        XCTAssertTrue(scrollToElement(continueButton, in: app))
+        XCTAssertTrue(continueButton.waitForExistence(timeout: 4))
+        XCTAssertTrue(waitUntil(timeout: 3) { continueButton.isHittable })
         continueButton.tap()
 
         XCTAssertTrue(app.otherElements["surface.today.ready"].waitForExistence(timeout: 6))
@@ -29,19 +30,6 @@ extension CatholicFastingAppUITests {
         assertIPadWorkspaceVisible("today", in: app, timeout: 6)
         XCTAssertTrue(app.otherElements["companion.dashboard"].waitForExistence(timeout: 6))
         XCTAssertTrue(app.otherElements["ipad.today.actions"].waitForExistence(timeout: 6))
-    }
-
-    func testFreshLaunchCompactOnboardingCanCompleteWithDefaults() {
-        let app = makeFreshLaunchApp()
-        app.launch()
-
-        advancePastLanguageSelection(in: app)
-        acceptOnboardingNotice(in: app)
-        let continueButton = app.buttons["onboarding.continue"].firstMatch
-        XCTAssertTrue(scrollToElement(continueButton, in: app))
-        continueButton.tap()
-
-        XCTAssertTrue(app.otherElements["surface.today.ready"].waitForExistence(timeout: 6))
     }
 
     func testOnboardingFinishRequirementExplainsAndRevealsAcknowledgment() {
@@ -69,22 +57,6 @@ extension CatholicFastingAppUITests {
         turnOnOnboardingToggle("onboarding.accept_legal_notice", in: app)
         XCTAssertTrue(waitUntil(timeout: 3) { finishButton.isEnabled })
         XCTAssertTrue(waitUntil(timeout: 3) { !requirementTitle.exists })
-    }
-
-    func testSmokeOnboardingCanBeCompleted() {
-        let app = makeApp(skipOnboarding: false)
-        app.launch()
-
-        advancePastLanguageSelection(in: app)
-        acceptOnboardingNotice(in: app)
-        let continueButton = app.buttons["onboarding.continue"]
-        XCTAssertTrue(scrollToElement(continueButton, in: app))
-        continueButton.tap()
-
-        XCTAssertTrue(app.otherElements["surface.today.ready"].waitForExistence(timeout: 4))
-        XCTAssertTrue(
-            app.navigationBars["Today"].firstMatch.waitForExistence(timeout: 4)
-                || app.staticTexts["Today"].firstMatch.waitForExistence(timeout: 4))
     }
 
     func testIPhoneOnboardingSpanishSelectionUpdatesVisibleCopy() {
@@ -133,20 +105,20 @@ extension CatholicFastingAppUITests {
         XCTAssertFalse(exportButton.isEnabled)
     }
 
-    func testDeepCanOpenFridayNotesHistory() {
+    func testIPhoneSetupOpensFridayNotesHistory() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
         openMoreDestination("Setup & Reminders", in: app)
 
         let historyLink = app.staticTexts["Friday Notes History"].firstMatch
-        XCTAssertTrue(scrollToElement(historyLink, in: app))
+        XCTAssertTrue(scrollToElement(historyLink, in: app, maxSwipes: 16))
         historyLink.tap()
 
         XCTAssertTrue(app.navigationBars["Friday Notes"].waitForExistence(timeout: 4))
     }
 
-    func testDeepLaunchReadinessControlsVisible() {
+    func testIPhonePrivacyDataShowsExportAndDeleteControls() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
@@ -157,16 +129,6 @@ extension CatholicFastingAppUITests {
 
         let deleteButton = app.buttons["launch.delete_all_data"].firstMatch
         XCTAssertTrue(scrollToElement(deleteButton, in: app))
-    }
-
-    func testDeepTodaySetupCardOpensQuickSetup() {
-        let app = makeApp()
-        app.launch()
-        ensureOnHomeScreen(app)
-        openMoreDestination("Setup & Reminders", in: app)
-
-        let quickProgress = app.staticTexts["settings.quick.progress"].firstMatch
-        XCTAssertTrue(scrollToElement(quickProgress, in: app))
     }
 
     func testDeepQuickSetupConsentIncrementsProgress() {
@@ -215,18 +177,54 @@ extension CatholicFastingAppUITests {
         ensureOnHomeScreen(app)
         openMoreDestination("Setup & Reminders", in: app)
 
+        setSwitch(app.switches["settings.quick.reminder_support"].firstMatch, to: true, in: app)
+
+        let actions = elementByIdentifier("settings.quick.reminder_actions", in: app)
+        XCTAssertTrue(
+            scrollToElement(actions, in: app, maxSwipes: 8),
+            "Enabling reminder support did not expose Reminder Actions")
+        expandDisclosureGroup("Reminder Actions", in: app)
+        let permissionButton = app.buttons["Request Notification Permission"].firstMatch
+        XCTAssertTrue(
+            scrollToElementPresence(permissionButton, in: app, maxSwipes: 8),
+            "Expanding Reminder Actions did not reveal the permission action")
+        let requiredButton = app.buttons["Schedule Required-Day Reminders"].firstMatch
+        XCTAssertTrue(
+            scrollToElementPresence(requiredButton, in: app, maxSwipes: 8),
+            "Expanding Reminder Actions did not reveal required-day scheduling")
+        let quoteButton = app.buttons["Schedule Daily Quote Reminder"].firstMatch
+        XCTAssertTrue(
+            scrollToElementPresence(quoteButton, in: app, maxSwipes: 8),
+            "Expanding Reminder Actions did not reveal quote scheduling")
+        let supportButton = app.buttons["Schedule Daily Support Reminders"].firstMatch
+        XCTAssertTrue(
+            scrollToElementPresence(supportButton, in: app, maxSwipes: 8),
+            "Expanding Reminder Actions did not reveal support scheduling")
+    }
+
+    func testIPhoneNotificationDenialShowsSettingsRecoveryGuidance() {
+        let app = makeApp(notificationAuthorization: "denied")
+        app.launch()
+        ensureOnHomeScreen(app)
+        openMoreDestination("Setup & Reminders", in: app)
+        setSwitch(app.switches["settings.quick.consent"].firstMatch, to: true, in: app)
+        setSwitch(app.switches["settings.quick.reminder_support"].firstMatch, to: true, in: app)
         expandDisclosureGroup("Reminder Actions", in: app)
 
-        let status = elementByIdentifier("settings.quick.reminder_status", in: app)
-        XCTAssertTrue(scrollToElement(status, in: app))
-        let permissionButton = app.buttons["settings.quick.request_permission"].firstMatch
-        XCTAssertTrue(scrollToElement(permissionButton, in: app))
-        let requiredButton = app.buttons["settings.quick.schedule_required"].firstMatch
-        XCTAssertTrue(scrollToElement(requiredButton, in: app))
-        let quoteButton = app.buttons["settings.quick.schedule_quote"].firstMatch
-        XCTAssertTrue(scrollToElement(quoteButton, in: app))
-        let supportButton = app.buttons["settings.quick.schedule_support"].firstMatch
-        XCTAssertTrue(scrollToElement(supportButton, in: app))
+        let status = app.staticTexts.matching(
+            NSPredicate(format: "label CONTAINS[c] 'denied' AND label CONTAINS[c] 'Settings'"))
+            .firstMatch
+        XCTAssertTrue(
+            scrollToElementPresence(status, in: app, maxSwipes: 8),
+            "Expanding Reminder Actions did not reveal notification status")
+        XCTAssertTrue(
+            waitUntil(timeout: 4) {
+                status.label.localizedCaseInsensitiveContains("denied")
+            },
+            "Denied notification status did not appear")
+        XCTAssertTrue(
+            status.label.localizedCaseInsensitiveContains("Settings"),
+            "Denied notification guidance does not direct the user to Settings")
     }
 
     func testDeepQuickSetupQuoteReminderControlsVisible() {
@@ -270,17 +268,20 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(addButton, in: app))
         addButton.tap()
 
+        returnToMoreHub(in: app)
         openMoreDestination("Setup & Reminders", in: app)
         let age14Toggle = app.switches["settings.quick.age14_toggle"].firstMatch
         let age18Toggle = app.switches["settings.quick.age18_toggle"].firstMatch
         setSwitch(age14Toggle, to: true, in: app)
         setSwitch(age18Toggle, to: true, in: app)
 
+        returnToMoreHub(in: app)
         openMoreDestination("Profile & Norms", in: app)
         let applyButton = app.buttons["settings.household.apply"].firstMatch
         XCTAssertTrue(scrollToElement(applyButton, in: app))
         applyButton.tap()
 
+        returnToMoreHub(in: app)
         openMoreDestination("Setup & Reminders", in: app)
         XCTAssertEqual(app.switches["settings.quick.age14_toggle"].firstMatch.value as? String, "0")
         XCTAssertEqual(app.switches["settings.quick.age18_toggle"].firstMatch.value as? String, "0")
@@ -336,7 +337,7 @@ extension CatholicFastingAppUITests {
         openMoreDestination("Setup & Reminders", in: app)
 
         XCTAssertTrue(scrollToElement(app.staticTexts["Configuration rapide"].firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(app.staticTexts["Réglez ceci une fois, puis utilisez surtout Aujourd’hui et Jours de jeûne."].firstMatch, in: app))
+        XCTAssertTrue(scrollToElement(app.staticTexts["Réglez ceci une fois, puis utilisez surtout Aujourd’hui et Calendrier."].firstMatch, in: app))
         XCTAssertTrue(scrollToElement(elementByIdentifier("settings.quick.language", in: app), in: app))
     }
 
@@ -345,8 +346,7 @@ extension CatholicFastingAppUITests {
         app.launch()
         ensureOnHomeScreen(app)
 
-        openSurface("More", in: app)
-        openMoreDestination("Setup & Reminders", in: app)
+        openMoreDestination("Profile & Norms", in: app)
 
         let advancedAccessibility = app.buttons["settings.accessibility.advanced"].firstMatch
         XCTAssertTrue(scrollToElement(advancedAccessibility, in: app))

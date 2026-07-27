@@ -158,7 +158,7 @@ struct LaunchFunnelSnapshot: Codable, Equatable {
 
 /// Keeps the system review request tied to a meaningful success moment rather
 /// than an install, onboarding, or purchase screen.
-struct AppReviewPromptPolicy {
+enum AppReviewPromptPolicy {
     static let minimumCompletedTargetSessions = 3
 
     static func shouldRequestReview(

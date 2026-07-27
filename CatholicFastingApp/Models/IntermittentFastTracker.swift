@@ -6,6 +6,7 @@ final class IntermittentFastTracker: ObservableObject {
     @Published private(set) var activeStart: Date?
     @Published private(set) var presetHours: Int = 16
 
+    private var persistedSessionsByID: [String: String] = [:]
     private let sessionsKey = SyncStoreKeys.intermittentFastSessions
     private let metaKey = SyncStoreKeys.intermittentFastMeta
     private static let activeStartMetaField = "active_start"
@@ -20,9 +21,9 @@ final class IntermittentFastTracker: ObservableObject {
         loadFromStore()
     }
 
-    func startFast(now: Date = Date()) {
+    func startFast(now: Date = AppClock.now(), evaluationDate: Date = AppClock.now()) {
         guard activeStart == nil else { return }
-        let clampedStart = min(now, Date())
+        let clampedStart = min(now, evaluationDate)
         activeStart = clampedStart
         persistMeta()
         #if canImport(ActivityKit) && os(iOS)
@@ -33,7 +34,7 @@ final class IntermittentFastTracker: ObservableObject {
         #endif
     }
 
-    func updateActiveStart(to start: Date, now: Date = Date()) {
+    func updateActiveStart(to start: Date, now: Date = AppClock.now()) {
         guard activeStart != nil else { return }
         let clampedStart = min(start, now)
         activeStart = clampedStart
@@ -46,7 +47,7 @@ final class IntermittentFastTracker: ObservableObject {
         #endif
     }
 
-    func endFast(now: Date = Date(), intentionID: String? = nil, note: String? = nil) {
+    func endFast(now: Date = AppClock.now(), intentionID: String? = nil, note: String? = nil) {
         guard let start = activeStart, now > start else { return }
         let session = IntermittentFastSession(
             id: UUID().uuidString,
@@ -56,11 +57,13 @@ final class IntermittentFastTracker: ObservableObject {
             intentionID: intentionID,
             note: note?.trimmingCharacters(in: .whitespacesAndNewlines).nilIfEmpty)
         sessions.insert(session, at: 0)
+        var removedSessionIDs: [String] = []
         if sessions.count > Self.maxStoredSessions {
+            removedSessionIDs = sessions.dropFirst(Self.maxStoredSessions).map(\.id)
             sessions = Array(sessions.prefix(Self.maxStoredSessions))
         }
         activeStart = nil
-        persistSessions()
+        persistSession(session, removing: removedSessionIDs)
         persistMeta()
         #if canImport(ActivityKit) && os(iOS)
         Task {
@@ -94,6 +97,7 @@ final class IntermittentFastTracker: ObservableObject {
 
     func clearAll() {
         sessions.removeAll()
+        persistedSessionsByID.removeAll()
         activeStart = nil
         presetHours = Self.defaultPresetHours
         SyncedStore.persist([String: String](), for: sessionsKey)
@@ -127,6 +131,12 @@ final class IntermittentFastTracker: ObservableObject {
         if sessions.count > Self.maxStoredSessions {
             sessions = Array(sessions.prefix(Self.maxStoredSessions))
         }
+        persistedSessionsByID = sessions.reduce(into: [:]) { result, session in
+            result[session.id] = encodeSession(session)
+        }
+        if persistedSessionsByID != rawSessions {
+            SyncedStore.persist(persistedSessionsByID, for: sessionsKey)
+        }
 
         let meta = SyncedStore.mergedStringDictionary(for: metaKey)
         if let activeRaw = meta[Self.activeStartMetaField], let parsed = Self.decodeDate(activeRaw) {
@@ -141,14 +151,14 @@ final class IntermittentFastTracker: ObservableObject {
         }
     }
 
-    private func persistSessions() {
-        var raw: [String: String] = [:]
-        for session in sessions.prefix(Self.maxStoredSessions) {
-            if let encoded = encodeSession(session) {
-                raw[session.id] = encoded
-            }
+    private func persistSession(_ session: IntermittentFastSession, removing sessionIDs: [String]) {
+        if let encoded = encodeSession(session) {
+            persistedSessionsByID[session.id] = encoded
         }
-        SyncedStore.persist(raw, for: sessionsKey)
+        for sessionID in sessionIDs {
+            persistedSessionsByID.removeValue(forKey: sessionID)
+        }
+        SyncedStore.persist(persistedSessionsByID, for: sessionsKey)
     }
 
     private func persistMeta() {

@@ -53,22 +53,34 @@ enum PremiumSubscriptionHealthEvaluator {
         // subscriptions at the same time. Any active subscription wins over
         // stale expired or revoked statuses from another source.
         if states.contains(.subscribed) {
-            return "Premium subscription is active."
+            return CoreLocalizer.localizedCurrent(
+                "premium.subscription.active",
+                default: "Premium subscription is active.")
         }
         if states.contains(.inGracePeriod) {
-            return "You are in billing grace period. Premium remains active for now."
+            return CoreLocalizer.localizedCurrent(
+                "premium.subscription.grace_period",
+                default: "You are in billing grace period. Premium remains active for now.")
         }
         if states.contains(.inBillingRetry) {
-            return "Billing issue detected. Update your payment method to keep Premium."
+            return CoreLocalizer.localizedCurrent(
+                "premium.subscription.billing_retry",
+                default: "Billing issue detected. Update your payment method to keep Premium.")
         }
         if premiumUnlocked {
-            return "Premium subscription is active."
+            return CoreLocalizer.localizedCurrent(
+                "premium.subscription.active",
+                default: "Premium subscription is active.")
         }
         if states.contains(.revoked) {
-            return "Subscription was revoked. Restore or update your account."
+            return CoreLocalizer.localizedCurrent(
+                "premium.subscription.revoked",
+                default: "Subscription was revoked. Restore or update your account.")
         }
         if states.contains(.expired) {
-            return "Premium subscription expired."
+            return CoreLocalizer.localizedCurrent(
+                "premium.subscription.expired",
+                default: "Premium subscription expired.")
         }
         return ""
     }

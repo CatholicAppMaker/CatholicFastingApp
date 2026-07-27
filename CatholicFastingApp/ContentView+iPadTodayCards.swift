@@ -155,7 +155,9 @@ extension ContentView {
             }
 
             if !acceptedLegalNotice {
-                Text(localized("ipad.today.transparency.notice", default: "This remains an independent devotional app and not an official Church authority app."))
+                Text(localized(
+                    "ipad.today.transparency.notice",
+                    default: "This is an independent devotional app, not an official app of the Catholic Church."))
                     .appSupportingTextStyle()
             }
         }

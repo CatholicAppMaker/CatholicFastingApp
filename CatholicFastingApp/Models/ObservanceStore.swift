@@ -161,7 +161,7 @@ struct PremiumCompanionState: Codable, Equatable {
         protectFeastDays: true,
         conditionRules: .default,
         seasonProgramRawValue: PremiumSeasonProgram.liturgicalRhythm.rawValue,
-        seasonProgramStartDate: Date(),
+        seasonProgramStartDate: AppClock.now(),
         completedProgramActions: [],
         virtueLogs: [])
 }
@@ -288,7 +288,7 @@ struct HouseholdProfile: Codable, Equatable, Identifiable {
     private static func legacyAge(birthYear: Int, birthMonth: Int, birthDay: Int) -> Int? {
         guard birthYear >= 1900 else { return nil }
         let calendar = Calendar.gregorian
-        let now = Date()
+        let now = AppClock.now()
         let currentYear = calendar.component(.year, from: now)
 
         guard (1 ... 12).contains(birthMonth), (1 ... 31).contains(birthDay) else {

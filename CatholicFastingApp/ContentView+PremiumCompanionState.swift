@@ -14,11 +14,12 @@ extension ContentView {
     }
 
     var premiumProgramWeek: Int {
+        let now = AppClock.now()
         let days =
             liturgicalCalendar.dateComponents(
                 [.day],
                 from: liturgicalCalendar.startOfDay(for: premiumCompanion.seasonProgramStartDate),
-                to: liturgicalCalendar.startOfDay(for: Date())).day ?? 0
+                to: liturgicalCalendar.startOfDay(for: now)).day ?? 0
         return max(1, (days / 7) + 1)
     }
 
@@ -62,12 +63,6 @@ extension ContentView {
             season: currentLiturgicalSeason)
     }
 
-    var premiumSeasonProgramActions: [String] {
-        PremiumSeasonProgramEngine.actions(
-            for: selectedPremiumSeasonProgram,
-            week: premiumProgramWeek)
-    }
-
     var premiumGuidedJourneyWeek: GuidedSeasonalJourneyWeek {
         GuidedSeasonalJourneyEngine.week(
             for: currentLiturgicalSeason,
@@ -81,22 +76,12 @@ extension ContentView {
             completedActionKeys: premiumCompanion.completedProgramActions)
     }
 
-    var premiumJourneyCompletedCount: Int {
-        premiumJourneyProgress.completedCount
-    }
-
     var premiumGuidedJourneyNextAction: GuidedSeasonalJourneyAction? {
         premiumJourneyProgress.nextAction
     }
 
     var premiumJourneyCompletionSummary: String {
         premiumJourneyProgress.completionSummary
-    }
-
-    var premiumPrepAndRefeedGuidance: [String] {
-        PremiumFastPrepGuidanceEngine.prepAndRefeed(
-            targetHours: intermittentTracker.presetHours,
-            hasMedicalDispensation: settings.hasMedicalDispensation)
     }
 
     var premiumMotivationLine: String {
@@ -116,38 +101,79 @@ extension ContentView {
     }
 
     var premiumWeeklySummaryText: String {
-        let start = liturgicalCalendar.date(byAdding: .day, value: -6, to: Date()) ?? Date()
-        let weeklyObservances = currentYearObservances.filter { $0.date >= start && $0.date <= Date() }
+        let now = AppClock.now()
+        let start = liturgicalCalendar.date(byAdding: .day, value: -6, to: now) ?? now
+        let weeklyObservances = currentYearObservances.filter { $0.date >= start && $0.date <= now }
         let completed = weeklyObservances.count(where: { tracker.status(for: $0.id).countsTowardProgress })
         return [
-            "Catholic Fasting Weekly Report",
-            "Week ending \(Date().formatted(date: .abbreviated, time: .omitted))",
+            localized("premium.export.weekly.title", default: "Catholic Fasting Weekly Report"),
+            localizedFormat(
+                "premium.export.weekly.ending_format",
+                default: "Week ending %@",
+                localizedAbbreviatedDate(now)),
             "",
-            "Completed observances: \(completed)/\(weeklyObservances.count)",
-            "Current rhythm: \(currentStreak) day(s)",
-            "Template: \(selectedPremiumTemplate.label)",
-            "Program: \(selectedPremiumSeasonProgram.label) (Week \(premiumProgramWeek))",
-            "Motivation: \(premiumMotivationLine)",
+            localizedFormat(
+                "premium.export.completed_observances_format",
+                default: "Completed observances: %d/%d",
+                completed,
+                weeklyObservances.count),
+            localizedFormat(
+                "premium.export.current_rhythm_format",
+                default: "Current rhythm: %d days",
+                currentStreak),
+            localizedFormat(
+                "premium.export.template_format",
+                default: "Template: %@",
+                selectedPremiumTemplate.label),
+            localizedFormat(
+                "premium.export.program_week_format",
+                default: "Program: %@ (Week %d)",
+                selectedPremiumSeasonProgram.label,
+                premiumProgramWeek),
+            localizedFormat(
+                "premium.export.reflection_format",
+                default: "Reflection: %@",
+                premiumMotivationLine),
         ].joined(separator: "\n")
     }
 
     var premiumMonthlySummaryText: String {
-        let month = liturgicalCalendar.component(.month, from: Date())
-        let year = liturgicalCalendar.component(.year, from: Date())
+        let now = AppClock.now()
+        let month = liturgicalCalendar.component(.month, from: now)
+        let year = liturgicalCalendar.component(.year, from: now)
         let monthlyObservances = currentYearObservances.filter {
             liturgicalCalendar.component(.month, from: $0.date) == month
                 && liturgicalCalendar.component(.year, from: $0.date) == year
         }
         let completed = monthlyObservances.count(where: { tracker.status(for: $0.id).countsTowardProgress })
         return [
-            "Catholic Fasting Monthly Report",
-            "Month: \(Date().formatted(.dateTime.month(.wide).year()))",
+            localized("premium.export.monthly.title", default: "Catholic Fasting Monthly Report"),
+            localizedFormat(
+                "premium.export.monthly.month_format",
+                default: "Month: %@",
+                localizedMonthYear(now)),
             "",
-            "Completed observances: \(completed)/\(monthlyObservances.count)",
-            "Required completion: \(premiumAnalyticsSummary.requiredCompletionPercent)%",
-            "Overall completion: \(premiumAnalyticsSummary.overallCompletionPercent)%",
-            "Intermittent target hit rate: \(premiumAnalyticsSummary.intermittentTargetHitPercent)%",
-            "Motivation: \(premiumMotivationLine)",
+            localizedFormat(
+                "premium.export.completed_observances_format",
+                default: "Completed observances: %d/%d",
+                completed,
+                monthlyObservances.count),
+            localizedFormat(
+                "premium.analytics.required_format",
+                default: "Required completion: %d%%",
+                premiumAnalyticsSummary.requiredCompletionPercent),
+            localizedFormat(
+                "premium.analytics.overall_format",
+                default: "Overall completion: %d%%",
+                premiumAnalyticsSummary.overallCompletionPercent),
+            localizedFormat(
+                "premium.analytics.personal_fast_hits_format",
+                default: "Personal fast targets met: %d%%",
+                premiumAnalyticsSummary.intermittentTargetHitPercent),
+            localizedFormat(
+                "premium.export.reflection_format",
+                default: "Reflection: %@",
+                premiumMotivationLine),
         ].joined(separator: "\n")
     }
 
@@ -183,7 +209,10 @@ extension ContentView {
         case .custom:
             break
         }
-        premiumCompanionStatus = "\(template.label) template applied."
+        premiumCompanionStatus = localizedFormat(
+            "premium.status.template_applied_format",
+            default: "%@ template applied.",
+            template.label)
     }
 
     func togglePremiumSeasonProgramAction(_ action: String) {
@@ -214,12 +243,6 @@ extension ContentView {
         isPremiumSeasonProgramActionCompleted(action.id)
     }
 
-    func restartPremiumSeasonProgram() {
-        premiumCompanion.seasonProgramStartDate = Date()
-        premiumCompanion.completedProgramActions = []
-        premiumCompanionStatus = "\(selectedPremiumSeasonProgram.label) restarted."
-    }
-
     func addPremiumVirtueLog() {
         let trimmed = newVirtueNote.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
@@ -244,26 +267,36 @@ extension ContentView {
             schedules: intermittentSchedules,
             checklist: premiumChecklist)
         guard let data = try? JSONEncoder().encode(packet) else {
-            premiumCompanionStatus = "Could not generate household share code."
+            premiumCompanionStatus = localized(
+                "premium.status.household_export_failed",
+                default: "The household share code could not be created.")
             return
         }
         premiumHouseholdExportCode = data.base64EncodedString()
-        premiumCompanionStatus = "Household share code generated."
+        premiumCompanionStatus = localized(
+            "premium.status.household_export_ready",
+            default: "Household share code created.")
     }
 
     func importPremiumHouseholdShareCode() {
         let code = premiumHouseholdImportCode.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !code.isEmpty, let data = Data(base64Encoded: code) else {
-            premiumCompanionStatus = "Invalid share code."
+            premiumCompanionStatus = localized(
+                "premium.status.household_import_invalid",
+                default: "Enter a valid household share code.")
             return
         }
         guard let packet = try? JSONDecoder().decode(PremiumHouseholdSharePacket.self, from: data) else {
-            premiumCompanionStatus = "Could not decode household packet."
+            premiumCompanionStatus = localized(
+                "premium.status.household_import_failed",
+                default: "The household share code could not be read.")
             return
         }
         planningData = packet.planningData
         intermittentSchedules = packet.schedules
         premiumChecklist = packet.checklist
-        premiumCompanionStatus = "Household packet imported locally."
+        premiumCompanionStatus = localized(
+            "premium.status.household_imported",
+            default: "Household settings imported on this device.")
     }
 }

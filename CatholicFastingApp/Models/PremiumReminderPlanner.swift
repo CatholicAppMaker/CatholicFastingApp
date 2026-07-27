@@ -11,7 +11,7 @@ enum PremiumReminderPlanner {
     static func recommendation(
         observances: [Observance],
         statusesByID: [String: CompletionStatus],
-        now: Date = Date(),
+        now: Date = AppClock.now(),
         calendar: Calendar = .current) -> PremiumReminderRecommendation
     {
         let startOfToday = calendar.startOfDay(for: now)

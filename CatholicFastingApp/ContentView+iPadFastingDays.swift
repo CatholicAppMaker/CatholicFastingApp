@@ -10,7 +10,7 @@ extension ContentView {
             ScrollView {
                 if dynamicTypeSize.isAccessibilitySize || geometry.size.width < 960 {
                     ipadFastingDaysStackedLayout(items: items, selected: selected, groups: grouped)
-                } else if geometry.size.width < 1_280 {
+                } else if geometry.size.width < 1280 {
                     ipadFastingDaysMediumLayout(items: items, selected: selected, groups: grouped)
                 } else {
                     ipadFastingDaysWideLayout(items: items, selected: selected, groups: grouped)

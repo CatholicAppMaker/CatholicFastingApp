@@ -7,81 +7,100 @@ private struct FastingEntry: TimelineEntry {
     let todayObligation: String
     let nextRequiredTitle: String
     let nextRequiredDate: Date?
-    let completionRate: Double
     let hasActiveIntermittentFast: Bool
     let activeIntermittentFastStart: Date?
     let activeIntermittentTargetHours: Int
-    let premiumMotivationLine: String
     let localizationCode: String
+
+    var activeIntermittentTargetDate: Date? {
+        WidgetActiveFastTiming.targetDate(
+            isActive: hasActiveIntermittentFast,
+            start: activeIntermittentFastStart,
+            targetHours: activeIntermittentTargetHours)
+    }
+
+    func hasReachedActiveIntermittentTarget(at date: Date) -> Bool {
+        guard let activeIntermittentTargetDate else { return false }
+        return date >= activeIntermittentTargetDate
+    }
 }
 
 private struct Provider: TimelineProvider {
     func placeholder(in _: Context) -> FastingEntry {
-        fallbackEntry
+        fallbackEntry(at: .now)
     }
 
     func getSnapshot(in _: Context, completion: @escaping (FastingEntry) -> Void) {
-        completion(loadEntry())
+        let now = Date.now
+        completion(loadEntry(at: now))
     }
 
     func getTimeline(in _: Context, completion: @escaping (Timeline<FastingEntry>) -> Void) {
-        let entry = loadEntry()
-        let regularRefresh = Calendar.current.date(byAdding: .minute, value: 30, to: .now) ?? .now
-        let targetDate = entry.activeIntermittentFastStart?.addingTimeInterval(
-            TimeInterval(entry.activeIntermittentTargetHours * 3600))
-        let refresh = targetDate.map { min(regularRefresh, $0) } ?? regularRefresh
+        let now = Date.now
+        let entry = loadEntry(at: now)
+        let refresh = WidgetTimelineSchedule.nextRefreshDate(
+            after: now,
+            activeFastTargetDate: entry.activeIntermittentTargetDate)
         completion(Timeline(entries: [entry], policy: .after(refresh)))
     }
 
-    private func loadEntry() -> FastingEntry {
-        guard
-            let defaults = UserDefaults(suiteName: WidgetSnapshotContract.appGroupIdentifier),
-            let data = defaults.data(forKey: WidgetSnapshotContract.snapshotKey),
-            let snapshot = try? JSONDecoder().decode(WidgetSnapshot.self, from: data)
-        else {
-            return fallbackEntry
+    private func loadEntry(at date: Date) -> FastingEntry {
+        guard let snapshot = WidgetSnapshotStore.load() else {
+            return fallbackEntry(at: date)
+        }
+        guard snapshot.isCurrent(at: date) else {
+            return fallbackEntry(
+                at: date,
+                localizationCode: snapshot.localizationCode,
+                activeFastStart: snapshot.hasActiveIntermittentFast ? snapshot.activeIntermittentFastStart : nil,
+                activeFastTargetHours: snapshot.activeIntermittentTargetHours)
         }
 
         return FastingEntry(
-            date: snapshot.generatedAt,
+            date: date,
             todayTitle: snapshot.todayTitle,
             todayObligation: snapshot.todayObligation,
             nextRequiredTitle: snapshot.nextRequiredTitle,
             nextRequiredDate: snapshot.nextRequiredDate,
-            completionRate: snapshot.completionRate,
             hasActiveIntermittentFast: snapshot.hasActiveIntermittentFast,
             activeIntermittentFastStart: snapshot.activeIntermittentFastStart,
             activeIntermittentTargetHours: snapshot.activeIntermittentTargetHours,
-            premiumMotivationLine: snapshot.premiumMotivationLine,
             localizationCode: snapshot.localizationCode)
     }
 
-    private var fallbackEntry: FastingEntry {
-        FastingEntry(
-            date: .now,
+    private func fallbackEntry(
+        at date: Date,
+        localizationCode: String? = WidgetSnapshotStore.fallbackLocalizationCode(),
+        activeFastStart: Date? = nil,
+        activeFastTargetHours: Int = 16) -> FastingEntry
+    {
+        let resolvedLocalizationCode = localizationCode ?? Locale.current.identifier
+        return FastingEntry(
+            date: date,
             todayTitle: WidgetLocalization.text(
-                "widget.fallback.today.title", default: "No observance today"),
+                "widget.fallback.today.title",
+                default: "No observance today",
+                code: resolvedLocalizationCode),
             todayObligation: WidgetLocalization.text(
-                "widget.fallback.today.obligation", default: "No obligation"),
+                "widget.fallback.today.obligation",
+                default: "No obligation",
+                code: resolvedLocalizationCode),
             nextRequiredTitle: WidgetLocalization.text(
-                "widget.fallback.next_required", default: "No upcoming required observance"),
+                "widget.fallback.next_required",
+                default: "No upcoming required observance",
+                code: resolvedLocalizationCode),
             nextRequiredDate: nil,
-            completionRate: 0,
-            hasActiveIntermittentFast: false,
-            activeIntermittentFastStart: nil,
-            activeIntermittentTargetHours: 16,
-            premiumMotivationLine: WidgetLocalization.text(
-                "widget.fallback.motivation", default: "Stay faithful in small daily disciplines."),
-            localizationCode: Locale.current.identifier)
+            hasActiveIntermittentFast: activeFastStart != nil,
+            activeIntermittentFastStart: activeFastStart,
+            activeIntermittentTargetHours: activeFastTargetHours,
+            localizationCode: resolvedLocalizationCode)
     }
 }
 
 private enum WidgetLocalization {
     static func text(_ key: String, default defaultValue: String, code: String? = nil) -> String {
         let requestedCode = code ?? Locale.current.identifier
-        let candidates = [requestedCode, Locale(identifier: requestedCode).language.languageCode?.identifier]
-            .compactMap { $0 }
-        for candidate in candidates {
+        for candidate in WidgetLocalizationCode.candidates(for: requestedCode) {
             if let path = Bundle.main.path(forResource: candidate, ofType: "lproj"),
                let bundle = Bundle(path: path)
             {
@@ -110,6 +129,7 @@ private struct CatholicFastingWidgetView: View {
         }
         .widgetURL(URL(string: entry.hasActiveIntermittentFast ? "catholicfasting://intermittent" : "catholicfasting://today"))
         .containerBackground(.fill.tertiary, for: .widget)
+        .environment(\.locale, widgetLocale)
         .accessibilityElement(children: .contain)
     }
 
@@ -135,8 +155,7 @@ private struct CatholicFastingWidgetView: View {
             }
         }
         .accessibilityElement(children: .combine)
-        .accessibilityLabel(
-            "\(WidgetLocalization.text("widget.section.today", default: "Today", code: entry.localizationCode)): \(entry.todayObligation). \(entry.todayTitle)")
+        .accessibilityLabel(smallAccessibilityLabel)
     }
 
     private var mediumContent: some View {
@@ -187,11 +206,34 @@ private struct CatholicFastingWidgetView: View {
         }
     }
 
+    private var widgetLocale: Locale {
+        Locale(identifier: WidgetLocalizationCode.resolvedSupportedCode(for: entry.localizationCode))
+    }
+
+    private var smallAccessibilityLabel: String {
+        var parts = [
+            "\(WidgetLocalization.text("widget.section.today", default: "Today", code: entry.localizationCode)): \(entry.todayObligation)",
+            entry.todayTitle,
+        ]
+        if entry.hasActiveIntermittentFast {
+            let fastStatus = entry.hasReachedActiveIntermittentTarget(at: entry.date)
+                ? WidgetLocalization.text(
+                    "widget.fast.target_reached",
+                    default: "Fast target reached",
+                    code: entry.localizationCode)
+                : WidgetLocalization.text(
+                    "widget.fast.active",
+                    default: "Fast active",
+                    code: entry.localizationCode)
+            parts.append(fastStatus)
+        }
+        return parts.joined(separator: ". ")
+    }
+
     @ViewBuilder
     private var activeFastStatus: some View {
-        if let start = entry.activeIntermittentFastStart {
-            let target = start.addingTimeInterval(TimeInterval(entry.activeIntermittentTargetHours * 3600))
-            if target > Date() {
+        if let target = entry.activeIntermittentTargetDate {
+            if !entry.hasReachedActiveIntermittentTarget(at: entry.date) {
                 HStack(spacing: 4) {
                     Text(WidgetLocalization.text(
                         "widget.fast.active", default: "Fast active", code: entry.localizationCode))

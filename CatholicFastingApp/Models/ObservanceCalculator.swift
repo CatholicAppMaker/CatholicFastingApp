@@ -2,14 +2,35 @@
 
 enum ObservanceCalculator {
     static let minimumSupportedBirthYear = 1900
-    private static let cacheLock = NSLock()
-    // swiftlint:disable:next modifier_order
-    private nonisolated(unsafe) static var calendarCache: [CalendarCacheKey: [Observance]] = [:]
+    private static let calendarCache = LockedCalendarCache()
 
     struct CalendarCacheKey: Hashable {
         let year: Int
         let settings: RuleSettings
         let timeZoneIdentifier: String
+    }
+
+    private final class LockedCalendarCache: @unchecked Sendable {
+        private var values: [CalendarCacheKey: [Observance]] = [:]
+        private let lock = NSLock()
+
+        func removeAll() {
+            lock.lock()
+            defer { lock.unlock() }
+            values.removeAll()
+        }
+
+        func value(for key: CalendarCacheKey) -> [Observance]? {
+            lock.lock()
+            defer { lock.unlock() }
+            return values[key]
+        }
+
+        func store(_ observances: [Observance], for key: CalendarCacheKey) {
+            lock.lock()
+            defer { lock.unlock() }
+            values[key] = observances
+        }
     }
 
     struct LiturgicalDates {
@@ -115,21 +136,15 @@ enum ObservanceCalculator {
     }
 
     static func resetCacheForTesting() {
-        cacheLock.lock()
-        defer { cacheLock.unlock() }
         calendarCache.removeAll()
     }
 
     static func cachedCalendar(for key: CalendarCacheKey) -> [Observance]? {
-        cacheLock.lock()
-        defer { cacheLock.unlock() }
-        return calendarCache[key]
+        calendarCache.value(for: key)
     }
 
     static func storeCalendar(_ observances: [Observance], for key: CalendarCacheKey) {
-        cacheLock.lock()
-        defer { cacheLock.unlock() }
-        calendarCache[key] = observances
+        calendarCache.store(observances, for: key)
     }
 
     static func liturgicalDates(for year: Int, settings: RuleSettings) -> LiturgicalDates {

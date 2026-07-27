@@ -4,7 +4,7 @@ enum MissedDayRecoveryEngine {
     static func plan(
         observances: [Observance],
         statusesByID: [String: CompletionStatus],
-        today: Date = Date(),
+        today: Date = AppClock.now(),
         calendar: Calendar = .current) -> MissedDayRecoveryPlan?
     {
         let startOfToday = calendar.startOfDay(for: today)

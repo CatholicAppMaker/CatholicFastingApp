@@ -132,7 +132,9 @@ enum ObservanceLocalizationCatalog {
     static let detailDefaultsByIdentifier: [String: String] = [
         "abstinence_meat_required_fast_age_exempt": "Abstinence from meat is required. Fasting does not bind for your age profile.",
         "age_not_required": "Not required for your age eligibility toggle settings.",
-        "ascension_canada": "Ascension observance in Canada depends on the liturgical calendar in force locally. This release treats the day as informational unless a fully modeled local obligation is known.",
+        "ascension_canada":
+            "Ascension observance in Canada depends on the liturgical calendar in force locally. "
+            + "This release treats the day as informational unless a fully modeled local obligation is known.",
         "ascension_other": "Ascension observance varies by conference and local law. This release treats the day as informational outside the U.S. profile.",
         "ascension_us": "Observed on Thursday or transferred to Sunday by province; obligation depends on local observance rules.",
         "canada_ascension_celebration": "Observed on Sunday in the Canada national baseline and shown here as a celebration rather than a separate weekday holy day obligation.",

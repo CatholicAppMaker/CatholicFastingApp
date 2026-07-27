@@ -174,21 +174,21 @@ enum ObservancePresentationLocalizer {
     static func dispositionLabel(_ observance: Observance, languageCode: String) -> String {
         switch observance.kind {
         case .feastDay, .memorialDay:
-            return AppLocalizer.localized(
+            AppLocalizer.localized(
                 "observance.disposition.celebrate", default: "Celebrate", languageCode: languageCode)
         case .fridayPenance:
             switch observance.obligation {
             case .mandatory:
-                return AppLocalizer.localized(
+                AppLocalizer.localized(
                     "observance.disposition.penance_required", default: "Penance Required", languageCode: languageCode)
             case .optional:
-                return AppLocalizer.localized(
+                AppLocalizer.localized(
                     "observance.disposition.penance_optional", default: "Penance Optional", languageCode: languageCode)
             case .notApplicable:
-                return obligationLabel(.notApplicable, languageCode: languageCode)
+                obligationLabel(.notApplicable, languageCode: languageCode)
             }
         default:
-            return obligationLabel(observance.obligation, languageCode: languageCode)
+            obligationLabel(observance.obligation, languageCode: languageCode)
         }
     }
 

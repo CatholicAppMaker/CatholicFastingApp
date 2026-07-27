@@ -16,11 +16,49 @@ enum ReminderScheduler {
     private static let reminderCategory = "habit-reminder"
     private static let dailyQuoteSchedulingHorizon = 21
 
+    private static func localized(_ key: String, default defaultValue: String) -> String {
+        CoreLocalizer.localizedCurrent(key, default: defaultValue)
+    }
+
+    private static func localizedFormat(
+        _ key: String,
+        default defaultValue: String,
+        _ arguments: CVarArg...) -> String
+    {
+        let format = CoreLocalizer.localizedCurrent(key, default: defaultValue)
+        return String(format: format, locale: CoreLocalizer.currentLocale(), arguments: arguments)
+    }
+
+    private static var notificationsNotEnabledStatus: String {
+        localized(
+            "reminder.status.notifications_not_enabled",
+            default: "Notifications are not enabled. Request permission first.")
+    }
+
+    private static var notificationQueueFullStatus: String {
+        localized(
+            "reminder.status.queue_full",
+            default: "Notification queue is full. Clear other reminders and try again.")
+    }
+
+    private static var targetReminderClearedStatus: String {
+        localized(
+            "reminder.status.target_cleared",
+            default: "Target reminder cleared")
+    }
+
+    private static func schedulingErrorStatus(_ error: Error) -> String {
+        localizedFormat(
+            "reminder.status.scheduling_error_format",
+            default: "Scheduling error: %@",
+            error.localizedDescription)
+    }
+
     private static var notificationSettingsNoun: String {
         #if os(macOS)
-        "System Settings"
+        localized("reminder.settings.system", default: "System Settings")
         #else
-        "Settings"
+        localized("reminder.settings.app", default: "Settings")
         #endif
     }
 
@@ -30,20 +68,30 @@ enum ReminderScheduler {
         let existingStatus = await authorizationStatus(center)
         if isAuthorizedStatus(existingStatus) {
             configureReminderActions(center)
-            return "Permission already granted"
+            return localized("reminder.status.permission_already_granted", default: "Permission already granted")
         }
         if existingStatus == .denied {
-            return "Notifications denied. Enable them in \(notificationSettingsNoun)."
+            return localizedFormat(
+                "reminder.status.notifications_denied_settings_format",
+                default: "Notifications denied. Enable them in %@.",
+                notificationSettingsNoun)
         }
         do {
             let granted = try await center.requestAuthorization(options: [.alert, .sound, .badge])
             configureReminderActions(center)
-            return granted ? "Permission granted" : "Permission denied"
+            return granted
+                ? localized("reminder.status.permission_granted", default: "Permission granted")
+                : localized("reminder.status.permission_denied", default: "Permission denied")
         } catch {
-            return "Permission error: \(error.localizedDescription)"
+            return localizedFormat(
+                "reminder.status.permission_error_format",
+                default: "Permission error: %@",
+                error.localizedDescription)
         }
         #else
-        return "Notifications unavailable on this platform"
+        return localized(
+            "reminder.status.unavailable",
+            default: "Notifications unavailable on this platform")
         #endif
     }
 
@@ -53,7 +101,7 @@ enum ReminderScheduler {
         let liturgicalCalendar = Calendar.gregorian
         let status = await authorizationStatus(center)
         guard isAuthorizedStatus(status) else {
-            return "Notifications are not enabled. Request permission first."
+            return notificationsNotEnabledStatus
         }
         configureReminderActions(center)
         let existing = await pendingRequests(center)
@@ -62,7 +110,7 @@ enum ReminderScheduler {
             center.removePendingNotificationRequests(withIdentifiers: toRemove)
         }
 
-        let now = Date()
+        let now = AppClock.now()
         let existingNonRequiredPendingCount = existing.reduce(into: 0) { count, request in
             if !request.identifier.hasPrefix(reminderPrefix) {
                 count += 1
@@ -72,7 +120,7 @@ enum ReminderScheduler {
             existingNonRequiredPendingCount: existingNonRequiredPendingCount)
 
         guard maxRequiredReminders > 0 else {
-            return "Notification queue is full. Clear other reminders and try again."
+            return notificationQueueFullStatus
         }
 
         let totalUpcomingMandatoryCount = RequiredDayReminderPlanner.upcomingMandatoryObservances(
@@ -87,7 +135,9 @@ enum ReminderScheduler {
             limit: maxRequiredReminders)
 
         guard !plannedMandatoryObservances.isEmpty else {
-            return "No upcoming required observances to schedule"
+            return localized(
+                "reminder.status.no_upcoming_required",
+                default: "No upcoming required observances to schedule")
         }
 
         var scheduled = 0
@@ -107,7 +157,9 @@ enum ReminderScheduler {
 
             let content = UNMutableNotificationContent()
             content.title = ObservanceContentLocalizer.localizedCurrentTitle(observance.title)
-            content.body = "Required observance today. Open Catholic Fasting to mark completion."
+            content.body = localized(
+                "reminder.notification.required.body",
+                default: "Required observance today. Open Catholic Fasting to mark completion.")
             content.sound = .default
             content.categoryIdentifier = reminderCategory
 
@@ -117,20 +169,29 @@ enum ReminderScheduler {
                 try await center.add(request)
                 scheduled += 1
             } catch {
-                return "Scheduling error: \(error.localizedDescription)"
+                return schedulingErrorStatus(error)
             }
         }
 
         guard scheduled > 0 else {
-            return "No future required-day reminders to schedule"
+            return localized(
+                "reminder.status.no_future_required",
+                default: "No future required-day reminders to schedule")
         }
         if totalUpcomingMandatoryCount > plannedMandatoryObservances.count {
-            return
-                "Scheduled \(scheduled) upcoming reminder(s) for the earliest required days. The app will auto-refill future required reminders."
+            return localizedFormat(
+                "reminder.status.required_scheduled_refill_format",
+                default: "Scheduled %d upcoming reminder(s) for the earliest required days. The app will auto-refill future required reminders.",
+                scheduled)
         }
-        return "Scheduled \(scheduled) upcoming reminder(s)"
+        return localizedFormat(
+            "reminder.status.required_scheduled_format",
+            default: "Scheduled %d upcoming reminder(s)",
+            scheduled)
         #else
-        return "Notifications unavailable on this platform"
+        return localized(
+            "reminder.status.unavailable",
+            default: "Notifications unavailable on this platform")
         #endif
     }
 
@@ -155,7 +216,7 @@ enum ReminderScheduler {
             existingNonRequiredPendingCount: existingNonRequiredPendingCount)
         guard additionalSlots > 0 else { return nil }
 
-        let now = Date()
+        let now = AppClock.now()
         let candidates = RequiredDayReminderPlanner.upcomingMandatoryObservances(
             from: observances,
             now: now,
@@ -182,7 +243,9 @@ enum ReminderScheduler {
 
             let content = UNMutableNotificationContent()
             content.title = ObservanceContentLocalizer.localizedCurrentTitle(observance.title)
-            content.body = "Required observance today. Open Catholic Fasting to mark completion."
+            content.body = localized(
+                "reminder.notification.required.body",
+                default: "Required observance today. Open Catholic Fasting to mark completion.")
             content.sound = .default
             content.categoryIdentifier = reminderCategory
 
@@ -192,12 +255,18 @@ enum ReminderScheduler {
                 try await center.add(request)
                 scheduled += 1
             } catch {
-                return "Auto-refill failed: \(error.localizedDescription)"
+                return localizedFormat(
+                    "reminder.status.auto_refill_failed_format",
+                    default: "Auto-refill failed: %@",
+                    error.localizedDescription)
             }
         }
 
         guard scheduled > 0 else { return nil }
-        return "Auto-refilled \(scheduled) required-day reminder(s)"
+        return localizedFormat(
+            "reminder.status.auto_refilled_format",
+            default: "Auto-refilled %d required-day reminder(s)",
+            scheduled)
         #else
         return nil
         #endif
@@ -208,7 +277,7 @@ enum ReminderScheduler {
         let center = UNUserNotificationCenter.current()
         let status = await authorizationStatus(center)
         guard isAuthorizedStatus(status) else {
-            return "Notifications are not enabled. Request permission first."
+            return notificationsNotEnabledStatus
         }
         configureReminderActions(center)
         let existing = await pendingRequests(center)
@@ -218,7 +287,9 @@ enum ReminderScheduler {
         }
 
         guard morning || evening else {
-            return "Select morning or evening support first"
+            return localized(
+                "reminder.status.select_support_time",
+                default: "Select morning or evening support first")
         }
 
         var scheduled = 0
@@ -227,8 +298,12 @@ enum ReminderScheduler {
             if await addHabitSupportReminder(
                 center: center,
                 identifier: "\(supportReminderPrefix)morning",
-                title: "Morning fasting check",
-                body: "Review today’s observance plan before your first meal.",
+                title: localized(
+                    "reminder.notification.morning.title",
+                    default: "Morning fasting check"),
+                body: localized(
+                    "reminder.notification.morning.body",
+                    default: "Review today’s observance plan before your first meal."),
                 hour: 7,
                 minute: 0)
             {
@@ -240,8 +315,12 @@ enum ReminderScheduler {
             if await addHabitSupportReminder(
                 center: center,
                 identifier: "\(supportReminderPrefix)evening",
-                title: "Evening examen",
-                body: "Mark today and prepare for tomorrow’s observance.",
+                title: localized(
+                    "reminder.notification.evening.title",
+                    default: "Evening examen"),
+                body: localized(
+                    "reminder.notification.evening.body",
+                    default: "Mark today and prepare for tomorrow’s observance."),
                 hour: 20,
                 minute: 0)
             {
@@ -249,9 +328,18 @@ enum ReminderScheduler {
             }
         }
 
-        return scheduled > 0 ? "Scheduled \(scheduled) daily support reminder(s)" : "No support reminders selected"
+        return scheduled > 0
+            ? localizedFormat(
+                "reminder.status.support_scheduled_format",
+                default: "Scheduled %d daily support reminder(s)",
+                scheduled)
+            : localized(
+                "reminder.status.no_support_selected",
+                default: "No support reminders selected")
         #else
-        return "Notifications unavailable on this platform"
+        return localized(
+            "reminder.status.unavailable",
+            default: "Notifications unavailable on this platform")
         #endif
     }
 
@@ -260,13 +348,13 @@ enum ReminderScheduler {
         hour: Int,
         minute: Int,
         languageMode: LanguageMode,
-        referenceDate: Date = Date()) async -> String
+        referenceDate: Date = AppClock.now()) async -> String
     {
         #if canImport(UserNotifications)
         let center = UNUserNotificationCenter.current()
         let status = await authorizationStatus(center)
         guard isAuthorizedStatus(status) else {
-            return "Notifications are not enabled. Request permission first."
+            return notificationsNotEnabledStatus
         }
         configureReminderActions(center)
 
@@ -277,14 +365,16 @@ enum ReminderScheduler {
         }
 
         guard enabled else {
-            return "Daily quote reminder cleared"
+            return localized(
+                "reminder.status.quote_cleared",
+                default: "Daily quote reminder cleared")
         }
 
         let remainingPendingCount = existing.count - toRemove.count
         let availableSlots = max(0, 64 - remainingPendingCount)
         let scheduleCount = min(dailyQuoteSchedulingHorizon, availableSlots)
         guard scheduleCount > 0 else {
-            return "Notification queue is full. Clear other reminders and try again."
+            return notificationQueueFullStatus
         }
 
         let calendar = Calendar.gregorian
@@ -323,13 +413,18 @@ enum ReminderScheduler {
                 try await center.add(request)
                 scheduled += 1
             } catch {
-                return "Scheduling error: \(error.localizedDescription)"
+                return schedulingErrorStatus(error)
             }
         }
 
-        return "Scheduled \(scheduled) daily quote reminder(s)"
+        return localizedFormat(
+            "reminder.status.quote_scheduled_format",
+            default: "Scheduled %d daily quote reminder(s)",
+            scheduled)
         #else
-        return "Notifications unavailable on this platform"
+        return localized(
+            "reminder.status.unavailable",
+            default: "Notifications unavailable on this platform")
         #endif
     }
 
@@ -338,7 +433,10 @@ enum ReminderScheduler {
         let center = UNUserNotificationCenter.current()
         let status = await authorizationStatus(center)
         guard isAuthorizedStatus(status) else {
-            return "Applied \(plan.name), but notifications are not enabled. Request permission first."
+            return localizedFormat(
+                "reminder.status.plan_applied_notifications_disabled_format",
+                default: "Applied %@, but notifications are not enabled. Request permission first.",
+                plan.name)
         }
         configureReminderActions(center)
 
@@ -350,7 +448,10 @@ enum ReminderScheduler {
 
         let weekdays = Array(Set(plan.weekdays)).sorted().filter { (1 ... 7).contains($0) }
         guard !weekdays.isEmpty else {
-            return "Applied \(plan.name), but no weekdays were selected."
+            return localizedFormat(
+                "reminder.status.plan_applied_no_days_format",
+                default: "Applied %@, but no weekdays were selected.",
+                plan.name)
         }
 
         var scheduled = 0
@@ -361,8 +462,14 @@ enum ReminderScheduler {
             dateComponents.minute = 0
 
             let content = UNMutableNotificationContent()
-            content.title = "Intermittent fast start"
-            content.body = "\(plan.name): begin your \(plan.targetHours)h fast."
+            content.title = localized(
+                "reminder.notification.personal_fast_start.title",
+                default: "Personal fast begins")
+            content.body = localizedFormat(
+                "reminder.notification.personal_fast_start.body_format",
+                default: "%@: begin your %d-hour fast.",
+                plan.name,
+                plan.targetHours)
             content.sound = .default
             content.categoryIdentifier = reminderCategory
 
@@ -373,13 +480,25 @@ enum ReminderScheduler {
                 try await center.add(request)
                 scheduled += 1
             } catch {
-                return "Applied \(plan.name), but reminder scheduling failed: \(error.localizedDescription)"
+                return localizedFormat(
+                    "reminder.status.plan_scheduling_failed_format",
+                    default: "Applied %@, but reminder scheduling failed: %@",
+                    plan.name,
+                    error.localizedDescription)
             }
         }
 
-        return "Applied \(plan.name): \(scheduled) weekly start reminder(s) at \(String(format: "%02d:00", min(max(plan.startHour, 0), 23)))."
+        return localizedFormat(
+            "reminder.status.plan_applied_format",
+            default: "Applied %@: %d weekly start reminder(s) at %@.",
+            plan.name,
+            scheduled,
+            String(format: "%02d:00", min(max(plan.startHour, 0), 23)))
         #else
-        return "Applied \(plan.name). Notifications unavailable on this platform."
+        return localizedFormat(
+            "reminder.status.plan_applied_unavailable_format",
+            default: "Applied %@. Notifications unavailable on this platform.",
+            plan.name)
         #endif
     }
 
@@ -391,33 +510,43 @@ enum ReminderScheduler {
         enabled: Bool,
         start: Date?,
         targetHours: Int,
-        now: Date = Date()) async -> String
+        now: Date = AppClock.now()) async -> String
     {
         #if canImport(UserNotifications)
         let center = UNUserNotificationCenter.current()
         await clearIntermittentTargetReminders(center)
 
         guard enabled else {
-            return "Target reminder cleared"
+            return targetReminderClearedStatus
         }
         guard let start else {
-            return "No active fast for target reminder"
+            return localized(
+                "reminder.status.no_active_fast",
+                default: "No active fast for target reminder")
         }
 
         let status = await authorizationStatus(center)
         guard isAuthorizedStatus(status) else {
-            return "Target reminder selected. Enable notifications to receive it."
+            return localized(
+                "reminder.status.target_selected_notifications_disabled",
+                default: "Target reminder selected. Enable notifications to receive it.")
         }
         configureReminderActions(center)
 
         let targetDate = start.addingTimeInterval(TimeInterval(max(1, targetHours) * 3600))
         guard targetDate > now else {
-            return "Target already reached"
+            return localized(
+                "reminder.status.target_already_reached",
+                default: "Target already reached")
         }
 
         let content = UNMutableNotificationContent()
-        content.title = "Fast target reached"
-        content.body = "Your planned fast target is complete. Review it when ready."
+        content.title = localized(
+            "reminder.notification.target.title",
+            default: "Fast target reached")
+        content.body = localized(
+            "reminder.notification.target.body",
+            default: "Your planned fast target is complete. Review it when ready.")
         content.sound = .default
         content.categoryIdentifier = reminderCategory
 
@@ -430,21 +559,30 @@ enum ReminderScheduler {
             trigger: UNCalendarNotificationTrigger(dateMatching: components, repeats: false))
         do {
             try await center.add(request)
-            return "Target reminder scheduled"
+            return localized(
+                "reminder.status.target_scheduled",
+                default: "Target reminder scheduled")
         } catch {
-            return "Target reminder failed: \(error.localizedDescription)"
+            return localizedFormat(
+                "reminder.status.target_failed_format",
+                default: "Target reminder failed: %@",
+                error.localizedDescription)
         }
         #else
-        return "Notifications unavailable on this platform"
+        return localized(
+            "reminder.status.unavailable",
+            default: "Notifications unavailable on this platform")
         #endif
     }
 
     static func clearIntermittentTargetReminders() async -> String {
         #if canImport(UserNotifications)
         await clearIntermittentTargetReminders(UNUserNotificationCenter.current())
-        return "Target reminder cleared"
+        return targetReminderClearedStatus
         #else
-        return "Notifications unavailable on this platform"
+        return localized(
+            "reminder.status.unavailable",
+            default: "Notifications unavailable on this platform")
         #endif
     }
 
@@ -453,10 +591,15 @@ enum ReminderScheduler {
         let center = UNUserNotificationCenter.current()
         let status = await authorizationStatus(center)
         if status == .notDetermined {
-            return "Permission not requested"
+            return localized(
+                "reminder.status.permission_not_requested",
+                default: "Permission not requested")
         }
         if status == .denied {
-            return "Notifications denied in \(notificationSettingsNoun)"
+            return localizedFormat(
+                "reminder.status.notifications_denied_in_format",
+                default: "Notifications denied in %@",
+                notificationSettingsNoun)
         }
 
         let requests = await pendingRequests(center)
@@ -467,29 +610,59 @@ enum ReminderScheduler {
         let targetCount = requests.map(\.identifier).count(where: { $0.hasPrefix(intermittentTargetPrefix) })
 
         let summaryParts = [
-            summaryPart(count: requiredCount, label: "required-day"),
-            summaryPart(count: supportCount, label: "support"),
-            summaryPart(count: quoteCount, label: "quote"),
-            summaryPart(count: intermittentCount, label: "intermittent"),
-            summaryPart(count: targetCount, label: "target"),
+            summaryPart(
+                count: requiredCount,
+                labelKey: "reminder.summary.required_day",
+                defaultLabel: "required-day"),
+            summaryPart(
+                count: supportCount,
+                labelKey: "reminder.summary.support",
+                defaultLabel: "support"),
+            summaryPart(
+                count: quoteCount,
+                labelKey: "reminder.summary.quote",
+                defaultLabel: "quote"),
+            summaryPart(
+                count: intermittentCount,
+                labelKey: "reminder.summary.personal_fast",
+                defaultLabel: "personal-fast"),
+            summaryPart(
+                count: targetCount,
+                labelKey: "reminder.summary.target",
+                defaultLabel: "target"),
         ].compactMap(\.self)
 
         if summaryParts.isEmpty {
-            return "No reminders queued"
+            return localized(
+                "reminder.status.no_reminders_queued",
+                default: "No reminders queued")
         }
 
         if summaryParts.count == 1, let only = summaryParts.first {
-            return "\(only) queued"
+            return localizedFormat(
+                "reminder.status.summary_single_format",
+                default: "%@ queued",
+                only)
         }
 
         if summaryParts.count == 2 {
-            return "\(summaryParts[0]) and \(summaryParts[1]) queued"
+            return localizedFormat(
+                "reminder.status.summary_two_format",
+                default: "%@ and %@ queued",
+                summaryParts[0],
+                summaryParts[1])
         }
 
         let leading = summaryParts.dropLast().joined(separator: ", ")
-        return "\(leading), and \(summaryParts[summaryParts.count - 1]) queued"
+        return localizedFormat(
+            "reminder.status.summary_many_format",
+            default: "%@, and %@ queued",
+            leading,
+            summaryParts[summaryParts.count - 1])
         #else
-        return "Notifications unavailable on this platform"
+        return localized(
+            "reminder.status.unavailable",
+            default: "Notifications unavailable on this platform")
         #endif
     }
 
@@ -517,11 +690,15 @@ enum ReminderScheduler {
     private static func configureReminderActions(_ center: UNUserNotificationCenter) {
         let reviewAction = UNNotificationAction(
             identifier: "review_today",
-            title: "Review Today",
+            title: localized(
+                "reminder.action.review_today",
+                default: "Review Today"),
             options: [.foreground])
         let recoveryAction = UNNotificationAction(
             identifier: "open_recovery",
-            title: "Recovery Plan",
+            title: localized(
+                "reminder.action.recovery_plan",
+                default: "Recovery Plan"),
             options: [.foreground])
         let category = UNNotificationCategory(
             identifier: reminderCategory,
@@ -580,7 +757,23 @@ enum ReminderScheduler {
     private static func authorizationStatus(_ center: UNUserNotificationCenter) async
         -> UNAuthorizationStatus
     {
-        await withCheckedContinuation { continuation in
+        let environment = ProcessInfo.processInfo.environment
+        if environment["UITEST_MODE"] == "1",
+           let override = environment["UITEST_NOTIFICATION_AUTHORIZATION"]
+        {
+            switch override {
+            case "authorized":
+                return .authorized
+            case "denied":
+                return .denied
+            case "notDetermined":
+                return .notDetermined
+            default:
+                break
+            }
+        }
+
+        return await withCheckedContinuation { continuation in
             center.getNotificationSettings { settings in
                 continuation.resume(returning: settings.authorizationStatus)
             }
@@ -603,9 +796,25 @@ enum ReminderScheduler {
             languageCode: languageMode.rawValue)
     }
 
-    private static func summaryPart(count: Int, label: String) -> String? {
+    private static func summaryPart(
+        count: Int,
+        labelKey: String,
+        defaultLabel: String) -> String?
+    {
         guard count > 0 else { return nil }
-        return "\(count) \(label) reminder\(count == 1 ? "" : "s")"
+        let label = localized(labelKey, default: defaultLabel)
+        if count == 1 {
+            return localizedFormat(
+                "reminder.summary.part_singular_format",
+                default: "%d %@ reminder",
+                count,
+                label)
+        }
+        return localizedFormat(
+            "reminder.summary.part_plural_format",
+            default: "%d %@ reminders",
+            count,
+            label)
     }
 
     private static func upcomingQuoteDates(

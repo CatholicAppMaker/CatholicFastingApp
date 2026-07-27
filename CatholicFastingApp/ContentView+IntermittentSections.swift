@@ -10,7 +10,8 @@ private struct LiveTrackerMetricChip: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
             Text(title)
-                .appEyebrowStyle()
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(.primary)
                 .textCase(.uppercase)
             Text(value)
                 .font(.system(.title3, design: .rounded).weight(.semibold))
@@ -20,12 +21,6 @@ private struct LiveTrackerMetricChip: View {
         .padding(12)
         .appSurfaceCard(.utility, cornerRadius: 14)
     }
-}
-
-struct FastingIntentionOption: Identifiable {
-    let id: String
-    let label: String
-    let detail: String
 }
 
 extension ContentView {
@@ -219,15 +214,18 @@ extension ContentView {
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(localized("intermittent.live.section", default: "Live Tracker"))
-                        .font(.headline.weight(.semibold))
-                        .foregroundStyle(.primary)
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(CatholicTheme.primary)
                     Text(localized("intermittent.live.optional_practice", default: "Optional personal practice"))
                         .appEyebrowStyle()
+                        .foregroundStyle(CatholicTheme.primary)
                         .textCase(nil)
                 }
             }
             .textCase(nil)
         }
+        .headerProminence(.increased)
     }
 
     private var intermittentQuickTargetTiles: some View {
@@ -236,50 +234,36 @@ extension ContentView {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(localized("intermittent.controls.quick_plan", default: "Quick Plan"))
                         .font(.caption.weight(.semibold))
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.primary)
                     Text(localizedFormat("intermittent.controls.current_target_format", default: "Current target: %@", intermittentWindowLabel))
                         .appSupportingTextStyle()
                 }
                 Spacer(minLength: 0)
             }
 
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 92), spacing: 8)], spacing: 8) {
-                ForEach([12, 14, 16, 18, 20, 24, 36], id: \.self) { hours in
-                    Button {
-                        intermittentPresetBinding.wrappedValue = hours
-                    } label: {
-                        VStack(alignment: .leading, spacing: 3) {
-                            Text(localizedFormat("ipad.intermittent.plan_hours_format", default: "%dh", hours))
-                                .font(.system(.headline, design: .rounded).weight(.semibold))
-                            Text(intermittentPlanDescription(hours))
-                                .font(.caption2)
-                                .foregroundStyle(.secondary)
-                                .lineLimit(2)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                        .frame(maxWidth: .infinity, minHeight: 58, alignment: .leading)
-                        .appInteractiveTileStyle(isSelected: intermittentTracker.presetHours == hours, cornerRadius: 14)
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityIdentifier("intermittent.plan.\(hours)")
-                    .appSelectedAccessibility(intermittentTracker.presetHours == hours)
-                }
-            }
-            .accessibilityIdentifier("intermittent.target_picker")
+            IntermittentFastQuickTargetGrid(
+                options: intermittentQuickTargetOptions,
+                selectedHours: intermittentPresetBinding,
+                presentation: .phone,
+                pickerIdentifier: "intermittent.target_picker",
+                optionIdentifierPrefix: "intermittent.plan")
         }
     }
 
     @ViewBuilder
     private var intermittentCustomTargetControl: some View {
         if monetizationStore.premiumUnlocked {
-            Stepper(value: intermittentPresetBinding, in: 12 ... 336, step: 1) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(localizedFormat("intermittent.controls.custom_target_format", default: "Custom target: %dh", intermittentTracker.presetHours))
-                    Text(localized("intermittent.controls.custom_target_hint", default: "Longer disciplines remain available here (up to 14 days / 336h)."))
-                        .appEyebrowStyle()
-                }
-            }
-            .accessibilityIdentifier("intermittent.custom_target_stepper")
+            IntermittentFastCustomTargetStepper(
+                targetHours: intermittentPresetBinding,
+                title: localizedFormat(
+                    "intermittent.controls.custom_target_format",
+                    default: "Custom target: %dh",
+                    intermittentTracker.presetHours),
+                detail: localized(
+                    "intermittent.controls.custom_target_hint",
+                    default: "Longer disciplines remain available here (up to 14 days / 336h)."),
+                presentation: .phone,
+                accessibilityIdentifier: "intermittent.custom_target_stepper")
         } else {
             VStack(alignment: .leading, spacing: 8) {
                 Text(localized("intermittent.controls.premium_hint", default: "Custom targets beyond presets are part of Premium."))
@@ -294,38 +278,31 @@ extension ContentView {
     }
 
     private var intermittentStartTimeControl: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            DatePicker(
-                localized("intermittent.controls.started", default: "Started"),
-                selection: intermittentTracker.activeStart == nil ? $intermittentManualStart : intermittentActiveStartBinding,
-                in: intermittentManualStartRange,
-                displayedComponents: [.date, .hourAndMinute])
-                .datePickerStyle(.compact)
-                .environment(\.locale, contentLocale)
-                .accessibilityIdentifier("intermittent.start_date")
-
-            Text(
-                intermittentTracker.activeStart == nil
-                    ? localized("intermittent.controls.started_hint", default: "If you already started, set the start time here before beginning the timer.")
-                    : localized("intermittent.controls.adjust_hint", default: "Adjust the start time here if you began fasting earlier. The live tracker updates right away."))
-                .appSupportingTextStyle()
-        }
+        IntermittentFastStartTimeControl(
+            label: localized("intermittent.controls.started", default: "Started"),
+            hint: intermittentTracker.activeStart == nil
+                ? localized(
+                    "intermittent.controls.started_hint",
+                    default: "If you already started, set the start time here before beginning the timer.")
+                : localized(
+                    "intermittent.controls.adjust_hint",
+                    default: "Adjust the start time here if you began fasting earlier. The live tracker updates right away."),
+            selection: intermittentTracker.activeStart == nil
+                ? $intermittentManualStart
+                : intermittentActiveStartBinding,
+            allowedRange: intermittentManualStartRange,
+            locale: contentLocale,
+            accessibilityIdentifier: "intermittent.start_date")
     }
 
     private var intermittentIntentionControl: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Picker(localized("intermittent.controls.intention", default: "Intention"), selection: $intermittentIntentionRaw) {
-                ForEach(intermittentIntentionOptions) { option in
-                    Text(option.label).tag(option.id)
-                }
-            }
-            .pickerStyle(.menu)
-            .accessibilityIdentifier("intermittent.intention_picker")
-
-            Text(intermittentIntentionDetail)
-                .appSupportingTextStyle()
-                .accessibilityIdentifier("intermittent.intention_detail")
-        }
+        IntermittentFastIntentionControl(
+            label: localized("intermittent.controls.intention", default: "Intention"),
+            options: intermittentIntentionOptions,
+            selection: $intermittentIntentionRaw,
+            detail: intermittentIntentionDetail,
+            pickerIdentifier: "intermittent.intention_picker",
+            detailIdentifier: "intermittent.intention_detail")
     }
 
     @ViewBuilder
@@ -342,16 +319,16 @@ extension ContentView {
                     .lineLimit(2 ... 4)
                     .textInputAutocapitalization(.sentences)
                     .focused($intermittentRecapNoteFocused)
-                    .toolbar {
-                        ToolbarItemGroup(placement: .keyboard) {
-                            Spacer()
-                            Button(localized("common.done", default: "Done")) {
-                                intermittentRecapNoteFocused = false
-                            }
-                            .accessibilityIdentifier("intermittent.recap_note.done")
-                        }
-                    }
                     .accessibilityIdentifier("intermittent.recap_note")
+                if intermittentRecapNoteFocused {
+                    HStack {
+                        Spacer()
+                        Button(localized("common.done", default: "Done")) {
+                            intermittentRecapNoteFocused = false
+                        }
+                        .accessibilityIdentifier("intermittent.recap_note.done")
+                    }
+                }
                 Text(localized("intermittent.recap.note.hint", default: "Saved locally with the session when you end and review."))
                     .appSupportingTextStyle()
             }
@@ -359,65 +336,42 @@ extension ContentView {
     }
 
     private var intermittentTargetReminderControl: some View {
-        Toggle(isOn: $intermittentTargetReminderEnabled) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(localized("intermittent.reminder.target.label", default: "Target reminder"))
-                Text(localized("intermittent.reminder.target.hint", default: "Notify me calmly when this fast reaches its planned target."))
-                    .appEyebrowStyle()
-            }
-        }
-        .onChange(of: intermittentTargetReminderEnabled) { _, _ in
-            refreshIntermittentTargetReminder()
-        }
-        .accessibilityIdentifier("intermittent.target_reminder")
+        IntermittentFastReminderControl(
+            isOn: $intermittentTargetReminderEnabled,
+            label: localized("intermittent.reminder.target.label", default: "Target reminder"),
+            hint: localized(
+                "intermittent.reminder.target.hint",
+                default: "Notify me calmly when this fast reaches its planned target."),
+            accessibilityIdentifier: "intermittent.target_reminder",
+            onChange: refreshIntermittentTargetReminder)
     }
 
-    @ViewBuilder
     private var intermittentPrimaryActionControls: some View {
-        if intermittentTracker.activeStart == nil {
-            Button {
-                startIntermittentFastFromSelectedTime()
-            } label: {
-                Label(localized("intermittent.controls.start_now", default: "Start Fast Now"), systemImage: "play.fill")
-            }
-            .appPrimaryButtonStyle()
-            .font(.headline.weight(.semibold))
-            .frame(maxWidth: .infinity, minHeight: 56)
-            .accessibilityIdentifier("intermittent.start_fast")
-        } else {
-            HStack(spacing: 10) {
-                Button {
-                    endIntermittentFastWithReview()
-                } label: {
-                    Text(localized("intermittent.controls.end_review", default: "End & Review"))
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.82)
-                }
-                .appPrimaryButtonStyle(legacyTint: .green)
-                .font(.headline.weight(.semibold))
-                .frame(maxWidth: .infinity, minHeight: 56)
-                .accessibilityIdentifier("intermittent.end_fast")
-
-                Button {
-                    cancelIntermittentFast()
-                } label: {
-                    Text(localized("intermittent.controls.cancel", default: "Cancel"))
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.82)
-                }
-                .appSecondaryButtonStyle()
-                .font(.headline.weight(.semibold))
-                .frame(maxWidth: .infinity, minHeight: 56)
-                .accessibilityIdentifier("intermittent.cancel_fast")
-            }
-        }
+        IntermittentFastPrimaryActions(
+            isActive: intermittentTracker.activeStart != nil,
+            start: IntermittentFastActionDescriptor(
+                title: localized("intermittent.controls.start_now", default: "Start Fast Now"),
+                systemImage: "play.fill",
+                accessibilityIdentifier: "intermittent.start_fast"),
+            end: IntermittentFastActionDescriptor(
+                title: localized("intermittent.controls.end_review", default: "End & Review"),
+                systemImage: nil,
+                accessibilityIdentifier: "intermittent.end_fast"),
+            cancel: IntermittentFastActionDescriptor(
+                title: localized("intermittent.controls.cancel", default: "Cancel"),
+                systemImage: nil,
+                accessibilityIdentifier: "intermittent.cancel_fast"),
+            minimumHeight: 56,
+            onStart: startIntermittentFastFromSelectedTime,
+            onEnd: endIntermittentFastWithReview,
+            onCancel: cancelIntermittentFast)
     }
 
     @ViewBuilder
     private var intermittentControlCenterLiveState: some View {
         if let activeStart = intermittentTracker.activeStart {
-            TimelineView(.periodic(from: .now, by: 1)) { context in
-                let now = context.date
+            TimelineView(.periodic(from: .now, by: 1)) { _ in
+                let now = AppClock.now()
                 let start = intermittentTracker.activeStart ?? activeStart
                 let targetSeconds = TimeInterval(intermittentTracker.presetHours * 3600)
                 let elapsed = max(0, now.timeIntervalSince(start))
@@ -449,8 +403,8 @@ extension ContentView {
             }
             .id(activeStart)
         } else if let latestSession = intermittentTracker.sessions.first {
-            TimelineView(.periodic(from: .now, by: 60)) { context in
-                let now = context.date
+            TimelineView(.periodic(from: .now, by: 60)) { _ in
+                let now = AppClock.now()
                 let recap = IntermittentFastSessionRecap.make(
                     session: latestSession,
                     hasMedicalDispensation: medicalDispensation)
@@ -740,7 +694,8 @@ extension ContentView {
                     .appSectionTitleStyle()
                     .accessibilityIdentifier("intermittent.no_active")
                 Text(localized("intermittent.live.no_active_detail", default: "Pick a target below, adjust the start time if you already began, and start when ready."))
-                    .appLeadTextStyle()
+                    .font(.subheadline)
+                    .foregroundStyle(.primary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }

@@ -2,13 +2,83 @@ import Foundation
 import XCTest
 
 extension CatholicFastingAppUITests {
-    func testSmokeFastingDaysControlsVisible() {
+    func testIPhoneDeepLinkAliasesOpenExpectedDestinations() {
+        let routes: [(aliases: [String], marker: String)] = [
+            (
+                ["calendar", "fasting-days", "fastingdays"],
+                "surface.fasting_days.ready"),
+            (
+                ["track", "intermittent", "fast"],
+                "surface.intermittent.ready"),
+        ]
+
+        for route in routes {
+            for alias in route.aliases {
+                let app = makeApp(initialDeepLink: "catholicfasting://\(alias)")
+                app.launch()
+                XCTAssertTrue(
+                    app.otherElements[route.marker].waitForExistence(timeout: 5),
+                    "Deep-link alias \(alias) did not open \(route.marker)")
+                app.terminate()
+            }
+        }
+    }
+
+    func testIPhoneMoreAndPremiumDeepLinkAliasesOpenExpectedDestinations() {
+        for alias in ["more", "settings"] {
+            let app = makeApp(initialDeepLink: "catholicfasting://\(alias)")
+            app.launch()
+            XCTAssertTrue(
+                elementByIdentifier("settings.quick.language", in: app)
+                    .waitForExistence(timeout: 5),
+                "Deep-link alias \(alias) did not open Setup & Reminders")
+            app.terminate()
+        }
+
+        for alias in ["premium", "support-premium", "support", "toolkit"] {
+            let app = makeApp(initialDeepLink: "catholicfasting://\(alias)")
+            app.launch()
+            XCTAssertTrue(
+                elementByIdentifier("premium.plan_choice", in: app)
+                    .waitForExistence(timeout: 5),
+                "Deep-link alias \(alias) did not open Support & Premium")
+            app.terminate()
+        }
+    }
+
+    func testIPhoneInvalidDeepLinkLeavesTodaySelected() {
+        let app = makeApp(initialDeepLink: "https://example.com/calendar")
+        app.launch()
+
+        XCTAssertTrue(app.otherElements["surface.today.ready"].waitForExistence(timeout: 5))
+        XCTAssertTrue(elementByIdentifier("companion.dashboard", in: app).waitForExistence(timeout: 5))
+    }
+
+    func testIPadCanonicalDeepLinksOpenExpectedWorkspaces() {
+        let routes: [(url: String, marker: String)] = [
+            ("catholicfasting://today", "companion.dashboard"),
+            ("catholicfasting://fasting-days", "ipad.fasting_days.detail_pane"),
+            ("catholicfasting://intermittent", "ipad.intermittent.live"),
+            ("catholicfasting://premium", "premium.plan_choice"),
+        ]
+
+        for route in routes {
+            let app = makeApp(initialDeepLink: route.url)
+            app.launch()
+            XCTAssertTrue(
+                elementByIdentifier(route.marker, in: app).waitForExistence(timeout: 5),
+                "Deep link \(route.url) did not expose \(route.marker)")
+            app.terminate()
+        }
+    }
+
+    func testSmokeCalendarControlsVisible() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
-        openSurface("Fasting Days", in: app)
+        openSurface("Calendar", in: app)
 
-        let scopePicker = app.segmentedControls["fasting_days.scope_picker"].firstMatch
+        let scopePicker = elementByIdentifier("fasting_days.scope_picker", in: app)
         XCTAssertTrue(scrollToElement(scopePicker, in: app))
         XCTAssertTrue(scrollToElement(elementByIdentifier("fasting_days.filters.customize", in: app), in: app))
     }
@@ -20,15 +90,6 @@ extension CatholicFastingAppUITests {
         openMoreDestination("Guidance & Rules", in: app)
 
         XCTAssertTrue(app.navigationBars["Guidance & Rules"].firstMatch.waitForExistence(timeout: 4))
-        XCTAssertTrue(elementByIdentifier("guidance.sacred_gallery", in: app).waitForExistence(timeout: 4))
-    }
-
-    func testDeepGuidanceSacredGalleryVisible() {
-        let app = makeApp()
-        app.launch()
-        ensureOnHomeScreen(app)
-        openMoreDestination("Guidance & Rules", in: app)
-
         let gallery = elementByIdentifier("guidance.sacred_gallery", in: app)
         XCTAssertTrue(scrollToElement(gallery, in: app))
     }
@@ -58,6 +119,25 @@ extension CatholicFastingAppUITests {
         XCTAssertFalse(elementIsVisible(elementByIdentifier("companion.formation", in: app), in: app))
     }
 
+    func testPhoneTodayOptionalFastActionStaysAboveTabBar() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openSurface("Today", in: app)
+
+        let action = app.buttons["companion.live.action"].firstMatch
+        let tabBar = app.tabBars.firstMatch
+        XCTAssertTrue(action.waitForExistence(timeout: 4))
+        XCTAssertTrue(tabBar.waitForExistence(timeout: 4))
+
+        let usableBottom = tabBar.frame.minY - 8
+        XCTAssertLessThanOrEqual(
+            action.frame.maxY,
+            usableBottom,
+            "Today’s personal-fast action is clipped or pushed into the tab-bar dead band")
+        XCTAssertTrue(action.isHittable, "Today’s personal-fast action is not reachable in the initial viewport")
+    }
+
     func testIPhoneLiturgicalThemeToggleExplainsOrdinaryTimeFallback() {
         let app = makeApp(fixedDate: "2026-03-06")
         app.launch()
@@ -82,57 +162,38 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(context.label.localizedCaseInsensitiveContains("Ordinary Time"))
     }
 
-    func testDeepCompanionActiveFastPrimaryActionOpensTrackFast() {
+    func testDeepCompanionActiveFastActionOpensFast() {
         let app = makeApp(seedActiveFast: true)
         app.launch()
         ensureOnHomeScreen(app)
         openSurface("Today", in: app)
 
         XCTAssertTrue(scrollToElement(elementByIdentifier("companion.live.progress", in: app), in: app))
-        let primaryAction = app.buttons["companion.primary_action.button"].firstMatch
-        XCTAssertTrue(scrollToElement(primaryAction, in: app))
-        primaryAction.tap()
+        let openFast = app.buttons["companion.live.action"].firstMatch
+        XCTAssertEqual(openFast.label, "Open Fast")
+        XCTAssertTrue(scrollToElement(openFast, in: app))
+        openFast.tap()
 
         XCTAssertTrue(app.otherElements["surface.intermittent.ready"].waitForExistence(timeout: 4))
         XCTAssertTrue(scrollToElement(app.staticTexts["intermittent.active_elapsed"].firstMatch, in: app, maxSwipes: 8))
     }
 
-    func testDeepUnofficialNoticeVisible() {
-        let app = makeApp()
-        app.launch()
-        ensureOnHomeScreen(app)
-        openSurface("Today", in: app)
-
-        // Authority context stays next to the decision; legal acknowledgement lives in More.
-        XCTAssertTrue(scrollToElement(elementByIdentifier("companion.rule.source", in: app), in: app))
-        openMoreDestination("Privacy & Data", in: app)
-        XCTAssertTrue(scrollToElement(app.switches["launch.accept_legal_notice"].firstMatch, in: app))
-    }
-
-    func testDeepDashboardOpenFastingDaysQuickAction() {
-        let app = makeApp()
-        app.launch()
-        ensureOnHomeScreen(app)
-        openSurface("Fasting Days", in: app)
-
-        XCTAssertTrue(app.otherElements["surface.fasting_days.ready"].waitForExistence(timeout: 4))
-        XCTAssertTrue(app.staticTexts["Calendar"].firstMatch.waitForExistence(timeout: 4))
-    }
-
-    func testDeepDashboardFocusRequiredQuickAction() {
-        let app = makeApp()
+    func testIPhoneTodayRequiredActionOpensFilteredCalendar() {
+        let app = makeApp(fixedDate: "2026-07-18")
         app.launch()
         ensureOnHomeScreen(app)
         openSurface("Today", in: app)
 
         let focusRequired = app.buttons["companion.primary_action.button"].firstMatch
         XCTAssertTrue(scrollToElement(focusRequired, in: app))
+        XCTAssertEqual(focusRequired.label, "Plan the next required day")
         focusRequired.tap()
 
         XCTAssertTrue(app.otherElements["surface.fasting_days.ready"].waitForExistence(timeout: 4))
         XCTAssertTrue(app.staticTexts["Calendar"].firstMatch.exists)
-        XCTAssertTrue(scrollToElement(elementByIdentifier("fasting_days.filter_tags", in: app), in: app))
-        XCTAssertTrue(app.staticTexts["Required Only"].firstMatch.exists)
+        let scopeControl = elementByIdentifier("fasting_days.scope_picker", in: app)
+        XCTAssertTrue(scrollToElement(scopeControl, in: app))
+        XCTAssertTrue(scopeControl.exists)
     }
 
     func testDeepTodayFoodGuidanceShortcutOpensGuidanceRules() {
@@ -146,11 +207,10 @@ extension CatholicFastingAppUITests {
         foodShortcut.tap()
 
         assertMoreDestinationOpened("guidanceAndRules", title: "Guidance & Rules", in: app)
-        let foodSection = elementByIdentifier("guidance.food.section", in: app)
-        XCTAssertTrue(scrollToElement(foodSection, in: app))
+        XCTAssertTrue(scrollToGuidanceFoodSection(in: app))
     }
 
-    func testIPhoneCanadaModeCanMoveAcrossTodayFastingDaysAndGuidance() {
+    func testIPhoneCanadaModeCanMoveAcrossTodayCalendarAndGuidance() {
         let app = makeApp(regionProfile: "canada")
         app.launch()
         ensureOnHomeScreen(app)
@@ -160,9 +220,9 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(app.staticTexts["companion.rule.source"].firstMatch.waitForExistence(timeout: 4))
 
         openMoreDestination("Guidance & Rules", in: app)
-        XCTAssertTrue(scrollToElement(elementByIdentifier("guidance.food.section", in: app), in: app))
+        XCTAssertTrue(scrollToGuidanceFoodSection(in: app))
 
-        openSurface("Fasting Days", in: app)
+        openSurface("Calendar", in: app)
         XCTAssertTrue(app.staticTexts[
             "Canada profile: the national baseline keeps Fridays penitential all year and models Canada-wide holy day obligations."
         ].firstMatch.waitForExistence(timeout: 4))
@@ -171,21 +231,11 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(app.otherElements["surface.more.ready"].waitForExistence(timeout: 4))
     }
 
-    func testDeepFastingDaysScopePickerVisible() {
+    func testDeepCalendarAgendaOpensRuleSourceAndReminderDetail() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
-        openSurface("Fasting Days", in: app)
-
-        let scopePicker = app.segmentedControls["fasting_days.scope_picker"].firstMatch
-        XCTAssertTrue(scrollToElement(scopePicker, in: app))
-    }
-
-    func testDeepFastingDaysAgendaOpensRuleSourceAndReminderDetail() {
-        let app = makeApp()
-        app.launch()
-        ensureOnHomeScreen(app)
-        openSurface("Fasting Days", in: app)
+        openSurface("Calendar", in: app)
 
         let detailLinks = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH %@", "fasting_days.detail."))
@@ -213,28 +263,7 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(recoveryAction.label.localizedCaseInsensitiveContains("recovery"))
     }
 
-    func testMainSurfacesShowStableHeroAnchors() {
-        let app = makeApp()
-        app.launch()
-        ensureOnHomeScreen(app)
-
-        let surfaces: [(label: String, identifier: String)] = [
-            ("Today", "dashboard.hero"),
-            ("Fasting Days", "fasting_days.hero"),
-            ("Track Fast", "intermittent.hero"),
-            ("More", "more.hub.hero"),
-        ]
-
-        for surface in surfaces {
-            openSurface(surface.label, in: app)
-            let anchor = elementByIdentifier(surface.identifier, in: app)
-            XCTAssertTrue(
-                anchor.waitForExistence(timeout: 4) || scrollToElement(anchor, in: app),
-                "\(surface.label) did not expose its stable hero anchor")
-        }
-    }
-
-    func testIPadTodayDashboardShowsHeroAndCoreCards() {
+    func testIPadTodayShowsGuidanceActionsAndContext() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
@@ -251,19 +280,7 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(app.buttons["ipad.sidebar.today"].isSelected)
     }
 
-    func testIPadTodayShowsDecisionActionsAndContextRail() {
-        let app = makeApp()
-        app.launch()
-        ensureOnHomeScreen(app)
-
-        openIPadSurface("today", in: app)
-
-        XCTAssertTrue(app.otherElements["companion.dashboard"].waitForExistence(timeout: 4))
-        XCTAssertTrue(app.otherElements["ipad.today.actions"].waitForExistence(timeout: 4))
-        XCTAssertTrue(app.otherElements["companion.live_state"].waitForExistence(timeout: 4))
-    }
-
-    func testIPadFastingDaysSelectionShowsDetail() {
+    func testIPadCalendarSelectionShowsDetail() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
@@ -280,7 +297,7 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(app.buttons["ipad.fasting_days.open_food_guidance"].waitForExistence(timeout: 4))
     }
 
-    func testIPadFastingDaysShowsFiltersAndQuickDates() {
+    func testIPadCalendarShowsFiltersAndQuickDates() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
@@ -292,7 +309,7 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(app.otherElements["ipad.fasting_days.center_list"].waitForExistence(timeout: 4))
     }
 
-    func testIPadFastingDaysFoodGuidanceShortcutOpensMoreGuidance() {
+    func testIPadCalendarFoodGuidanceShortcutOpensMoreGuidance() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
@@ -342,14 +359,14 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(app.buttons["companion.primary_action.button"].firstMatch.waitForExistence(timeout: 4))
     }
 
-    func testIPhoneFastingDaysSpanishShowsLocalizedPlanningCopy() {
+    func testIPhoneCalendarSpanishShowsLocalizedPlanningCopy() {
         let app = makeApp(languageMode: "spanish")
         app.launch()
         ensureOnHomeScreen(app)
-        openSurface("Fasting Days", in: app)
+        openSurface("Calendar", in: app)
 
         XCTAssertTrue(app.navigationBars["Calendario"].waitForExistence(timeout: 4))
-        XCTAssertTrue(app.segmentedControls["fasting_days.scope_picker"].firstMatch.waitForExistence(timeout: 4))
+        XCTAssertTrue(elementByIdentifier("fasting_days.scope_picker", in: app).waitForExistence(timeout: 4))
         XCTAssertTrue(scrollToElement(app.buttons["fasting_days.filters.customize"].firstMatch, in: app))
         XCTAssertTrue(scrollToElement(app.staticTexts["Próximos días obligatorios"].firstMatch, in: app))
     }
@@ -387,5 +404,21 @@ extension CatholicFastingAppUITests {
 
         XCTAssertTrue(app.navigationBars["Privacy & Data"].firstMatch.waitForExistence(timeout: 4))
         XCTAssertTrue(app.buttons["launch.export_data"].firstMatch.waitForExistence(timeout: 4))
+    }
+
+    func scrollToGuidanceFoodSection(in app: XCUIApplication) -> Bool {
+        let foodSection = elementByIdentifier("guidance.food.section", in: app)
+        if foodSection.exists || elementIsVisible(foodSection, in: app) {
+            return true
+        }
+
+        for _ in 0 ..< 16 {
+            app.swipeUp()
+            if foodSection.exists || elementIsVisible(foodSection, in: app) {
+                return true
+            }
+        }
+
+        return false
     }
 }

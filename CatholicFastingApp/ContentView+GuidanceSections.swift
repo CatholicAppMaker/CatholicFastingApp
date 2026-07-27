@@ -335,7 +335,7 @@ enum CatholicFastingQuoteSelector {
     static func seasonalQuote(
         locale: ContentLocale,
         season: LiturgicalSeason,
-        date: Date = Date()) -> CatholicFastingQuote
+        date: Date = AppClock.now()) -> CatholicFastingQuote
     {
         let quotes = seasonalQuotes(locale: locale, season: season)
         guard !quotes.isEmpty else {
@@ -356,7 +356,7 @@ enum CatholicFastingQuoteSelector {
         for context: CatholicQuoteContext,
         locale: ContentLocale,
         season: LiturgicalSeason,
-        date: Date = Date()) -> CatholicFastingQuote
+        date: Date = AppClock.now()) -> CatholicFastingQuote
     {
         let seasonal = seasonalQuotes(locale: locale, season: season)
         let quotes = seasonal + fallbackQuotes(for: locale)
@@ -377,7 +377,7 @@ enum CatholicFastingQuoteSelector {
         return quotes[index]
     }
 
-    static func quote(for context: CatholicQuoteContext, date: Date = Date()) -> CatholicFastingQuote {
+    static func quote(for context: CatholicQuoteContext, date: Date = AppClock.now()) -> CatholicFastingQuote {
         quote(
             for: context,
             locale: .english,
@@ -410,10 +410,6 @@ enum CatholicFastingQuoteSelector {
 }
 
 extension ContentView {
-    var guidanceHeroArtwork: SacredHeroArtwork {
-        SacredHeroImageSelector.anchorArtwork(for: .guidance)
-    }
-
     var guidanceDevotionalGallerySection: some View {
         Section(localized("guidance.symbol_gallery.title", default: "Catholic Symbol Gallery")) {
             Text(

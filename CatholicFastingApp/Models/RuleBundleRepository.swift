@@ -1,6 +1,5 @@
 @preconcurrency import Foundation
 
-// swiftlint:disable nesting
 enum RuleBundleRepository {
     struct BundleSnapshot {
         let metadata: RuleBundleMetadata
@@ -8,23 +7,21 @@ enum RuleBundleRepository {
         let audit: RuleBundleAudit
     }
 
+    private struct MetadataDocument: Codable {
+        let id: String
+        let displayName: String
+        let version: String
+        let effectiveDate: String
+        let reviewedDate: String
+    }
+
+    private struct ChangeDocument: Codable {
+        let date: String
+        let title: String
+        let detail: String
+    }
+
     private struct BundleDocument: Codable {
-        struct MetadataDocument: Codable {
-            let id: String
-            let displayName: String
-            let version: String
-            let effectiveDate: String
-            let reviewedDate: String
-        }
-
-        struct ChangeDocument: Codable {
-            let date: String
-            let title: String
-            let detail: String
-        }
-
-        // swiftlint:enable nesting
-
         let metadata: MetadataDocument
         let changes: [ChangeDocument]
     }
@@ -103,7 +100,7 @@ enum RuleBundleRepository {
         .sorted { (lhs: RuleBundleChange, rhs: RuleBundleChange) in lhs.date > rhs.date }
 
         var allWarnings = warnings
-        if reviewed < Calendar.gregorian.date(byAdding: .day, value: -365, to: Date()) ?? reviewed {
+        if reviewed < Calendar.gregorian.date(byAdding: .day, value: -365, to: AppClock.now()) ?? reviewed {
             allWarnings.append("Rule bundle appears stale (reviewed over 1 year ago).")
         }
 
@@ -118,8 +115,9 @@ enum RuleBundleRepository {
             id: "fallback-us-rules",
             displayName: "Fallback U.S. Rules",
             version: "fallback-1",
-            effectiveDate: Calendar.gregorian.date(from: DateComponents(year: 2026, month: 1, day: 1)) ?? Date(),
-            reviewedDate: Date())
+            effectiveDate: Calendar.gregorian.date(
+                from: DateComponents(year: 2026, month: 1, day: 1)) ?? AppClock.now(),
+            reviewedDate: AppClock.now())
         return BundleSnapshot(
             metadata: metadata,
             changes: [],

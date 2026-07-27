@@ -2,7 +2,6 @@
 import XCTest
 
 final class GrowthContractsTests: XCTestCase {
-
     func testReviewPromptRequiresThirdSuccessfulFastAndOneTimeEligibility() {
         XCTAssertFalse(
             AppReviewPromptPolicy.shouldRequestReview(
@@ -29,6 +28,7 @@ final class GrowthContractsTests: XCTestCase {
                 completedTargetSessionCount: 3,
                 isUITest: false))
     }
+
     override func setUp() {
         super.setUp()
         beginStoreIsolation()
@@ -191,6 +191,41 @@ final class GrowthContractsTests: XCTestCase {
         XCTAssertEqual(loaded.paywallViewCount, 3)
         XCTAssertEqual(loaded.lockedUpgradeTapCount, 2)
         XCTAssertEqual(loaded.premiumPreviewSeenAt, snapshot.premiumPreviewSeenAt)
+    }
+
+    func testLocalFeatureSavesRemainIndependent() {
+        let planning = FastingPlanningData(
+            requiredGoal: 12,
+            optionalGoal: 24,
+            weeklyIntentions: [],
+            seasonCommitments: [])
+        let schedules = [
+            IntermittentSchedulePlan(
+                id: "stable-schedule",
+                name: "Friday preparation",
+                targetHours: 16,
+                startHour: 19,
+                weekdays: [6]),
+        ]
+
+        LocalFeatureStore.saveSchedules(schedules)
+        LocalFeatureStore.savePlanningData(planning)
+
+        XCTAssertEqual(LocalFeatureStore.loadPlanningData(), planning)
+        XCTAssertEqual(LocalFeatureStore.loadSchedules(), schedules)
+    }
+
+    func testCorruptedLocalFeaturePayloadsRecoverToSafeDefaults() {
+        let corruptData = Data("not-valid-json".utf8)
+        UserDefaults.standard.set(corruptData, forKey: "planning_data_v1")
+        UserDefaults.standard.set(corruptData, forKey: "intermittent_schedules_v1")
+        UserDefaults.standard.set(corruptData, forKey: "reflection_journal_v1")
+        UserDefaults.standard.set(corruptData, forKey: "premium_companion_v1")
+
+        XCTAssertEqual(LocalFeatureStore.loadPlanningData(), .default)
+        XCTAssertFalse(LocalFeatureStore.loadSchedules().isEmpty)
+        XCTAssertTrue(LocalFeatureStore.loadReflections().isEmpty)
+        XCTAssertEqual(LocalFeatureStore.loadPremiumCompanionState(), .default)
     }
 
     func testDailyQuoteReminderRefreshStateRequestsRefreshWhenSettingsChange() {

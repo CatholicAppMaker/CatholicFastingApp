@@ -39,7 +39,11 @@ final class MonetizationStore: ObservableObject {
     init() {
         if Self.usesLocalDebugPremiumOverride {
             premiumUnlocked = UserDefaults.standard.bool(forKey: Self.debugPremiumUnlockedKey)
-            statusMessage = premiumUnlocked ? "Premium unlocked for local UI testing." : ""
+            statusMessage = premiumUnlocked
+                ? localized(
+                    "premium.store.debug.unlocked",
+                    default: "Premium unlocked for local UI testing.")
+                : ""
         }
     }
 
@@ -52,8 +56,19 @@ final class MonetizationStore: ObservableObject {
             premiumUnlocked = UserDefaults.standard.bool(forKey: Self.debugPremiumUnlockedKey)
             premiumProducts = []
             tipProducts = []
-            catalogLoadState = .failed
-            statusMessage = premiumUnlocked ? "Premium unlocked for local UI testing." : ""
+            if Self.uiTestCatalogState == .offline {
+                catalogLoadState = .offline
+                statusMessage = localized(
+                    "premium.catalog.offline",
+                    default: "You appear to be offline. Premium plans need an App Store connection; your current access remains unchanged.")
+            } else {
+                catalogLoadState = .failed
+                statusMessage = premiumUnlocked
+                    ? localized(
+                        "premium.store.debug.unlocked",
+                        default: "Premium unlocked for local UI testing.")
+                    : ""
+            }
             await refreshSubscriptionHealth()
             return
         }
@@ -89,7 +104,9 @@ final class MonetizationStore: ObservableObject {
                 tipProducts = []
             }
             if premiumProducts.isEmpty {
-                statusMessage = "Premium plans are temporarily unavailable."
+                statusMessage = localized(
+                    "premium.store.catalog.unavailable",
+                    default: "Premium plans are temporarily unavailable.")
             }
             await refreshSubscriptionHealth()
         } catch {
@@ -102,7 +119,9 @@ final class MonetizationStore: ObservableObject {
                 tipProducts = []
             }
             catalogLoadState = resolution.catalogState
-            statusMessage = "Unable to load purchases right now."
+            statusMessage = localized(
+                "premium.store.catalog.load_failed",
+                default: "Unable to load purchases right now.")
             await refreshSubscriptionHealth()
         }
     }
@@ -112,9 +131,13 @@ final class MonetizationStore: ObservableObject {
             if Self.premiumProductIDs.contains(product.id) {
                 premiumUnlocked = true
                 UserDefaults.standard.set(true, forKey: Self.debugPremiumUnlockedKey)
-                statusMessage = "Premium unlocked (simulator debug purchase)."
+                statusMessage = localized(
+                    "premium.store.debug.purchase_unlocked",
+                    default: "Premium unlocked for simulator testing.")
             } else {
-                statusMessage = "Thank you for supporting this app (simulator debug tip)."
+                statusMessage = localized(
+                    "premium.store.debug.tip_received",
+                    default: "Test support purchase completed.")
             }
             await refreshSubscriptionHealth()
             return
@@ -129,26 +152,41 @@ final class MonetizationStore: ObservableObject {
             switch result {
             case .success(let verification):
                 guard case .verified(let transaction) = verification else {
-                    statusMessage = "Purchase could not be verified."
+                    statusMessage = localized(
+                        "premium.store.purchase.unverified",
+                        default: "The App Store could not verify this purchase.")
                     return
                 }
                 await transaction.finish()
                 await refreshEntitlements()
                 await refreshSubscriptionHealth()
                 if Self.premiumProductIDs.contains(product.id) {
-                    statusMessage = "Premium unlocked."
+                    statusMessage = localized(
+                        "premium.store.purchase.unlocked",
+                        default: "Premium is now active.")
                 } else {
-                    statusMessage = "Thank you for supporting this app."
+                    statusMessage = localized(
+                        "premium.store.purchase.thanks",
+                        default: "Thank you for supporting this app.")
                 }
             case .pending:
-                statusMessage = "Purchase pending approval."
+                statusMessage = localized(
+                    "premium.store.purchase.pending",
+                    default: "This purchase is awaiting approval.")
             case .userCancelled:
-                statusMessage = "Purchase cancelled."
+                statusMessage = localized(
+                    "premium.store.purchase.cancelled",
+                    default: "Purchase cancelled.")
             @unknown default:
-                statusMessage = "Purchase did not complete."
+                statusMessage = localized(
+                    "premium.store.purchase.incomplete",
+                    default: "The purchase did not complete.")
             }
         } catch {
-            statusMessage = "Purchase failed: \(error.localizedDescription)"
+            statusMessage = localizedFormat(
+                "premium.store.purchase.failed_format",
+                default: "Purchase failed: %@",
+                error.localizedDescription)
         }
     }
 
@@ -158,8 +196,12 @@ final class MonetizationStore: ObservableObject {
             await refreshSubscriptionHealth()
             statusMessage =
                 premiumUnlocked
-                    ? "Simulator debug purchase restored."
-                    : "No simulator debug premium purchase found."
+                    ? localized(
+                        "premium.store.debug.restore_found",
+                        default: "Simulator test access restored.")
+                    : localized(
+                        "premium.store.debug.restore_missing",
+                        default: "No simulator test purchase was found.")
             return
         }
 
@@ -171,9 +213,17 @@ final class MonetizationStore: ObservableObject {
             try await AppStore.sync()
             await refreshEntitlements()
             await refreshSubscriptionHealth()
-            statusMessage = premiumUnlocked ? "Purchases restored." : "No active premium purchase found."
+            statusMessage = premiumUnlocked
+                ? localized(
+                    "premium.store.restore.succeeded",
+                    default: "Purchases restored.")
+                : localized(
+                    "premium.store.restore.none_found",
+                    default: "No active Premium purchase was found.")
         } catch {
-            statusMessage = "Could not restore purchases."
+            statusMessage = localized(
+                "premium.store.restore.failed",
+                default: "Purchases could not be restored. Please try again.")
         }
     }
 
@@ -181,7 +231,9 @@ final class MonetizationStore: ObservableObject {
         #if canImport(UIKit)
         guard let scene = Self.activeWindowScene() else {
             if !openManageSubscriptionsFallback() {
-                statusMessage = "Unable to open subscription management right now."
+                statusMessage = localized(
+                    "premium.store.manage.unavailable",
+                    default: "Subscription management could not be opened.")
             }
             return
         }
@@ -189,17 +241,25 @@ final class MonetizationStore: ObservableObject {
             try await AppStore.showManageSubscriptions(in: scene)
         } catch {
             if !openManageSubscriptionsFallback() {
-                statusMessage = "Unable to open subscription settings."
+                statusMessage = localized(
+                    "premium.store.manage.unavailable",
+                    default: "Subscription management could not be opened.")
             }
         }
         #elseif canImport(AppKit)
         if Self.openManageSubscriptionsURL() {
-            statusMessage = "Opened account subscriptions in the App Store."
+            statusMessage = localized(
+                "premium.store.manage.opened",
+                default: "Account subscriptions opened in the App Store.")
         } else {
-            statusMessage = "Unable to open subscription settings."
+            statusMessage = localized(
+                "premium.store.manage.unavailable",
+                default: "Subscription management could not be opened.")
         }
         #else
-        statusMessage = "Subscription management is unavailable on this platform."
+        statusMessage = localized(
+            "premium.store.manage.unsupported",
+            default: "Subscription management is unavailable on this device.")
         #endif
     }
 
@@ -207,7 +267,9 @@ final class MonetizationStore: ObservableObject {
         guard Self.usesLocalDebugPremiumOverride else { return }
         UserDefaults.standard.removeObject(forKey: Self.debugPremiumUnlockedKey)
         premiumUnlocked = false
-        statusMessage = "Simulator debug premium reset."
+        statusMessage = localized(
+            "premium.store.debug.reset",
+            default: "Simulator test access reset.")
         await refreshSubscriptionHealth()
     }
 
@@ -278,6 +340,19 @@ final class MonetizationStore: ObservableObject {
             premiumUnlocked: premiumUnlocked)
     }
 
+    private func localized(_ key: String, default defaultValue: String) -> String {
+        AppLocalizer.localizedCurrent(key, default: defaultValue)
+    }
+
+    private func localizedFormat(
+        _ key: String,
+        default defaultValue: String,
+        _ arguments: CVarArg...) -> String
+    {
+        let format = localized(key, default: defaultValue)
+        return String(format: format, locale: AppLocalizer.currentLocale(), arguments: arguments)
+    }
+
     #if canImport(UIKit)
     private static func activeWindowScene() -> UIWindowScene? {
         UIApplication.shared.connectedScenes
@@ -288,7 +363,9 @@ final class MonetizationStore: ObservableObject {
 
     private func openManageSubscriptionsFallback() -> Bool {
         UIApplication.shared.open(UIConstants.manageSubscriptionsURL)
-        statusMessage = "Opened account subscriptions in App Store."
+        statusMessage = localized(
+            "premium.store.manage.opened",
+            default: "Account subscriptions opened in the App Store.")
         return true
     }
     #endif
@@ -328,6 +405,20 @@ final class MonetizationStore: ObservableObject {
         usesSimulatorDebugPurchases || ProcessInfo.processInfo.environment["UITEST_MODE"] == "1"
     }
 
+    private static var uiTestCatalogState: PremiumCatalogLoadState? {
+        guard ProcessInfo.processInfo.environment["UITEST_MODE"] == "1" else {
+            return nil
+        }
+        switch ProcessInfo.processInfo.environment["UITEST_PREMIUM_CATALOG_STATE"] {
+        case "offline":
+            return .offline
+        case "failed":
+            return .failed
+        default:
+            return nil
+        }
+    }
+
     private static func isNetworkFailure(_ error: Error) -> Bool {
         if let storeKitError = error as? StoreKitError,
            case .networkError = storeKitError
@@ -353,7 +444,9 @@ final class MonetizationStore: ObservableObject {
     @Published var premiumUnlocked = false
     @Published var isLoading = false
     @Published var isPurchasing = false
-    @Published var statusMessage = "Purchases unavailable on this platform."
+    @Published var statusMessage = AppLocalizer.localizedCurrent(
+        "premium.store.unsupported",
+        default: "Purchases are unavailable on this device.")
     @Published var subscriptionHealthMessage = ""
     @Published var premiumProducts: [String] = []
     @Published var tipProducts: [String] = []

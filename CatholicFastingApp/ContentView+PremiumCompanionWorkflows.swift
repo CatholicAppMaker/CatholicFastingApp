@@ -255,7 +255,10 @@ extension ContentView {
                     premiumAnalyticsSummary.missedCount,
                     premiumAnalyticsSummary.substitutedCount))
                 .font(.caption)
-            Text(localizedFormat("premium.analytics.intermittent_hits_format", default: "Intermittent target hits: %d%%", premiumAnalyticsSummary.intermittentTargetHitPercent))
+            Text(localizedFormat(
+                "premium.analytics.personal_fast_hits_format",
+                default: "Personal fast targets met: %d%%",
+                premiumAnalyticsSummary.intermittentTargetHitPercent))
                 .font(.caption)
 
             if !premiumAnalyticsSummary.seasonRows.isEmpty {

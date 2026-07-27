@@ -2,7 +2,7 @@
 
 enum PremiumDirectionSummaryEngine {
     static func summaryText(
-        date: Date = Date(),
+        date: Date = AppClock.now(),
         season: LiturgicalSeason,
         analytics: PremiumAnalyticsSummary,
         reminder: PremiumReminderRecommendation,
@@ -16,9 +16,9 @@ enum PremiumDirectionSummaryEngine {
 
         let enabledLabel = CoreLocalizer.localizedCurrent("shared.on", default: "On")
         let disabledLabel = CoreLocalizer.localizedCurrent("shared.off", default: "Off")
-        let intermittentTargetHitRate = CoreLocalizer.localizedCurrentFormat(
-            "premium.summary.metrics.intermittent",
-            default: "Intermittent target hit rate (recent): %d%%",
+        let personalFastTargetHitRate = CoreLocalizer.localizedCurrentFormat(
+            "premium.summary.metrics.personal_fast",
+            default: "Personal fast targets met (recent): %d%%",
             analytics.intermittentTargetHitPercent)
         let dailySupportLabel = CoreLocalizer.localizedCurrentFormat(
             "premium.summary.reminders.daily_support",
@@ -52,7 +52,7 @@ enum PremiumDirectionSummaryEngine {
             "- \(CoreLocalizer.localizedCurrentFormat("premium.summary.metrics.overall", default: "Overall completion: %d%%", analytics.overallCompletionPercent))",
             "- \(CoreLocalizer.localizedCurrentFormat("premium.summary.metrics.missed", default: "Missed observances logged: %d", analytics.missedCount))",
             "- \(CoreLocalizer.localizedCurrentFormat("premium.summary.metrics.substituted", default: "Substituted observances logged: %d", analytics.substitutedCount))",
-            "- \(intermittentTargetHitRate)",
+            "- \(personalFastTargetHitRate)",
             "",
             CoreLocalizer.localizedCurrent("premium.summary.reminders.heading", default: "Reminder Strategy"),
             "- \(dailySupportLabel)",

@@ -11,7 +11,7 @@ enum DailyFoodDecisionEngine {
     static func decision(
         for observances: [Observance],
         settings: RuleSettings,
-        date: Date = Date(),
+        date: Date = AppClock.now(),
         calendar: Calendar = .current) -> DailyFoodDecision
     {
         let sources = sourceLines(for: settings.regionProfile)

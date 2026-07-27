@@ -100,6 +100,7 @@ final class IntermittentFastTrackerTests: XCTestCase {
     func testSessionHistoryIsCappedAt500() {
         let tracker = IntermittentFastTracker()
         let base = Date(timeIntervalSince1970: 1_700_400_000)
+        let startTime = ProcessInfo.processInfo.systemUptime
 
         for offset in 0 ..< 520 {
             let start = base.addingTimeInterval(TimeInterval(offset * 7200))
@@ -108,7 +109,9 @@ final class IntermittentFastTrackerTests: XCTestCase {
             tracker.endFast(now: end)
         }
 
+        let elapsed = ProcessInfo.processInfo.systemUptime - startTime
         XCTAssertEqual(tracker.sessions.count, 500)
+        XCTAssertLessThan(elapsed, 15, "Capping and persisting 520 sessions should not rewrite and re-encode full history.")
 
         let reloaded = IntermittentFastTracker()
         XCTAssertEqual(reloaded.sessions.count, 500)
@@ -116,16 +119,12 @@ final class IntermittentFastTrackerTests: XCTestCase {
 
     func testStartFastClampsFutureStartToCurrentTime() {
         let tracker = IntermittentFastTracker()
-        let before = Date()
-        let future = before.addingTimeInterval(3600)
+        let evaluationDate = Date(timeIntervalSince1970: 1_800_000_000)
+        let future = evaluationDate.addingTimeInterval(3600)
 
-        tracker.startFast(now: future)
+        tracker.startFast(now: future, evaluationDate: evaluationDate)
 
-        let after = Date()
-        let actualStart = tracker.activeStart
-        XCTAssertNotNil(actualStart)
-        XCTAssertLessThanOrEqual(actualStart ?? .distantFuture, after)
-        XCTAssertGreaterThanOrEqual(actualStart ?? .distantPast, before.addingTimeInterval(-1))
+        XCTAssertEqual(tracker.activeStart, evaluationDate)
     }
 
     func testUpdateActiveStartPersistsWhileFastIsRunning() {

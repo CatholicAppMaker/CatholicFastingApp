@@ -2,11 +2,11 @@ import Foundation
 import XCTest
 
 extension CatholicFastingAppUITests {
-    func testIntermittentCanStartAndCancelFast() {
+    func testIPhoneFastCanStartAndCancel() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
-        openSurface("Track Fast", in: app)
+        openSurface("Fast", in: app)
 
         let startButton = app.buttons["intermittent.start_fast"].firstMatch
         XCTAssertTrue(scrollToElement(startButton, in: app))
@@ -18,17 +18,36 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(app.datePickers["intermittent.start_date"].firstMatch, in: app))
 
         let cancelButton = app.buttons["intermittent.cancel_fast"].firstMatch
-        XCTAssertTrue(scrollToElement(cancelButton, in: app))
-        cancelButton.tap()
+        XCTAssertTrue(scrollToElementPresence(cancelButton, in: app, maxSwipes: 8))
+        XCTAssertTrue(scrollToElement(cancelButton, in: app, maxSwipes: 20))
+        let safeTapMinimumY = usableContentViewport(in: app).minY + 44
+        if cancelButton.frame.midY < safeTapMinimumY {
+            swipePageDown(in: app)
+        }
+        XCTAssertTrue(
+            waitUntil(timeout: 3) {
+                cancelButton.isHittable && cancelButton.frame.midY >= safeTapMinimumY
+            },
+            "Cancel did not move clear of the navigation bar")
+        cancelButton.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
 
-        XCTAssertTrue(scrollToElement(app.buttons["intermittent.start_fast"].firstMatch, in: app))
+        let readyState = app.staticTexts["intermittent.no_active"].firstMatch
+        let returnedStartButton = app.buttons["intermittent.start_fast"].firstMatch
+        XCTAssertTrue(
+            waitUntil(timeout: 4) {
+                !cancelButton.exists && !elapsed.exists
+            },
+            "Cancel did not exit the active fast state")
+        XCTAssertTrue(app.navigationBars["Fast"].firstMatch.exists)
+        XCTAssertTrue(scrollToElementPresence(readyState, in: app, maxSwipes: 12))
+        XCTAssertTrue(scrollToElement(returnedStartButton, in: app, maxSwipes: 12))
     }
 
-    func testIntermittentCanEndFastAndWriteSessionHistory() {
+    func testIPhoneFastCanEndAndWriteSessionHistory() {
         let app = makeApp(seedActiveFast: true)
         app.launch()
         ensureOnHomeScreen(app)
-        openSurface("Track Fast", in: app)
+        openSurface("Fast", in: app)
 
         let noteField = app.textFields["intermittent.recap_note"].firstMatch
         XCTAssertTrue(scrollToElementPresence(noteField, in: app, maxSwipes: 8))
@@ -37,14 +56,28 @@ extension CatholicFastingAppUITests {
         let doneButton = app.buttons["intermittent.recap_note.done"].firstMatch
         XCTAssertTrue(doneButton.waitForExistence(timeout: 3))
         doneButton.tap()
-        XCTAssertTrue(waitUntil(timeout: 3, condition: { app.keyboards.count == 0 }))
+        XCTAssertTrue(waitUntil(timeout: 3, condition: { !app.keyboards.firstMatch.exists }))
 
         let endButton = app.buttons["intermittent.end_fast"].firstMatch
         XCTAssertTrue(scrollToElementPresence(endButton, in: app, maxSwipes: 8))
-        XCTAssertTrue(scrollToElement(endButton, in: app, maxSwipes: 8))
-        endButton.tap()
+        XCTAssertTrue(scrollToElement(endButton, in: app, maxSwipes: 20))
+        let safeTapMinimumY = usableContentViewport(in: app).minY + 44
+        if endButton.frame.midY < safeTapMinimumY {
+            swipePageDown(in: app)
+        }
+        XCTAssertTrue(
+            waitUntil(timeout: 3) {
+                endButton.isHittable && endButton.frame.midY >= safeTapMinimumY
+            },
+            "End & Review did not move clear of the navigation bar")
+        endButton.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
 
         let recapCard = elementByIdentifier("intermittent.recap_card", in: app)
+        XCTAssertTrue(
+            waitUntil(timeout: 4) {
+                !app.buttons["intermittent.end_fast"].firstMatch.exists || recapCard.exists
+            },
+            "End & Review did not end the active fast")
         XCTAssertTrue(scrollToElementPresence(recapCard, in: app, maxSwipes: 20))
         XCTAssertTrue(String(describing: recapCard.value).localizedCaseInsensitiveContains("Parish intention"))
         let sessionsMetric = elementByIdentifier("intermittent.metric.sessions", in: app)
@@ -54,27 +87,25 @@ extension CatholicFastingAppUITests {
         waitForExpectations(timeout: 4)
     }
 
-    func testIntermittentLockedCustomTargetCanOpenPremiumUpgrade() {
+    func testIPhoneFastLockedCustomTargetCanOpenPremiumUpgrade() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
-        openSurface("Track Fast", in: app)
+        openSurface("Fast", in: app)
 
         let unlockButton = app.buttons["intermittent.unlock_custom_targets"].firstMatch
         XCTAssertTrue(scrollToElement(unlockButton, in: app, maxSwipes: 12))
         unlockButton.tap()
 
         XCTAssertTrue(app.otherElements["surface.more.ready"].waitForExistence(timeout: 4))
-        XCTAssertTrue(
-            app.staticTexts["Premium Upgrade"].firstMatch.waitForExistence(timeout: 4)
-                || elementByIdentifier("premium.hero", in: app).waitForExistence(timeout: 4))
+        XCTAssertTrue(elementByIdentifier("premium.surface_picker", in: app).waitForExistence(timeout: 4))
     }
 
-    func testIntermittentTargetPickerVisible() {
+    func testIPhoneFastPlanningControlsAreAvailable() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
-        openSurface("Track Fast", in: app)
+        openSurface("Fast", in: app)
 
         let targetPicker = elementByIdentifier("intermittent.target_picker", in: app)
         XCTAssertTrue(scrollToElement(targetPicker, in: app))
@@ -84,39 +115,43 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(app.datePickers["intermittent.start_date"].firstMatch, in: app))
     }
 
-    func testIntermittentDefaultViewPrioritizesLiveStateAndKeepsAdvancedCollapsed() {
+    func testIPhoneFastDefaultViewPrioritizesLiveStateAndKeepsAdvancedCollapsed() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
-        openSurface("Track Fast", in: app)
+        openSurface("Fast", in: app)
 
         XCTAssertTrue(app.staticTexts["intermittent.no_active"].firstMatch.waitForExistence(timeout: 4))
         XCTAssertTrue(elementIsVisible(app.buttons["intermittent.start_fast"].firstMatch, in: app))
         XCTAssertTrue(elementIsVisible(elementByIdentifier("intermittent.first_viewport_context", in: app), in: app))
-        XCTAssertTrue(scrollToElement(elementByIdentifier("intermittent.advanced.disclosure", in: app), in: app))
+        XCTAssertTrue(
+            scrollToElement(
+                elementByIdentifier("intermittent.advanced.disclosure", in: app),
+                in: app,
+                maxSwipes: 24))
         XCTAssertFalse(app.textFields["intermittent.schedule.name"].firstMatch.exists)
     }
 
-    func testIntermittentAdvancedToolsCanExpandFromCollapsedDefault() {
+    func testIPhoneFastAdvancedToolsCanExpandFromCollapsedDefault() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
-        openSurface("Track Fast", in: app)
+        openSurface("Fast", in: app)
 
         let disclosure = elementByIdentifier("intermittent.advanced.disclosure", in: app)
-        XCTAssertTrue(scrollToElement(disclosure, in: app))
+        XCTAssertTrue(scrollToElement(disclosure, in: app, maxSwipes: 24))
         disclosure.tap()
 
         let editorToggle = elementByIdentifier("intermittent.schedule.toggle_editor", in: app)
-        XCTAssertTrue(scrollToElement(editorToggle, in: app, maxSwipes: 12))
+        XCTAssertTrue(scrollToElement(editorToggle, in: app, maxSwipes: 24))
         editorToggle.tap()
 
         let scheduleName = app.textFields["intermittent.schedule.name"].firstMatch
-        XCTAssertTrue(scrollToElementPresence(scheduleName, in: app, maxSwipes: 12))
+        XCTAssertTrue(scrollToElementPresence(scheduleName, in: app, maxSwipes: 24))
         XCTAssertTrue(scrollToElementPresence(elementByIdentifier("intermittent.history_empty", in: app), in: app, maxSwipes: 24))
     }
 
-    func testIPadTrackFastPresetSelectionStaysVisible() {
+    func testIPadFastPresetSelectionStaysVisible() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
@@ -136,22 +171,7 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(app.buttons["ipad.intermittent.start"].firstMatch, in: app))
     }
 
-    func testIPadTrackFastShowsLiveWorkspaceAndControls() {
-        let app = makeApp()
-        app.launch()
-        ensureOnHomeScreen(app)
-
-        openIPadSurface("intermittent", in: app)
-
-        XCTAssertTrue(elementByIdentifier("ipad.intermittent.live", in: app).waitForExistence(timeout: 4))
-        XCTAssertTrue(elementByIdentifier("ipad.intermittent.controls", in: app).waitForExistence(timeout: 4))
-        XCTAssertTrue(elementByIdentifier("ipad.intermittent.planning", in: app).waitForExistence(timeout: 4))
-        XCTAssertTrue(app.buttons["ipad.intermittent.advanced.disclosure"].waitForExistence(timeout: 4))
-        XCTAssertTrue(elementByIdentifier("ipad.intermittent.history", in: app).waitForExistence(timeout: 4))
-        XCTAssertTrue(scrollToElement(elementByIdentifier("ipad.intermittent.start_date", in: app), in: app))
-    }
-
-    func testIPadTrackFastKeepsStartedTimeEditableAfterStart() {
+    func testIPadFastKeepsStartedTimeEditableAfterStart() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
@@ -165,21 +185,51 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(elementByIdentifier("ipad.intermittent.start_date", in: app), in: app))
     }
 
-    func testIPadTrackFastDefaultsToLiveControlsAndCollapsedAdvancedTools() {
+    func testIPadFastCanSaveRecapNote() {
+        let app = makeApp(seedActiveFast: true)
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadSurface("intermittent", in: app)
+
+        let noteField = app.textFields["ipad.intermittent.recap_note"].firstMatch
+        XCTAssertTrue(scrollToElement(noteField, in: app))
+        noteField.tap()
+        noteField.typeText("Evening intention")
+
+        let doneButton = app.buttons["ipad.intermittent.recap_note.done"].firstMatch
+        XCTAssertTrue(doneButton.waitForExistence(timeout: 3))
+        doneButton.tap()
+        XCTAssertTrue(waitUntil(timeout: 3, condition: { !app.keyboards.firstMatch.exists }))
+
+        let endButton = app.buttons["ipad.intermittent.end"].firstMatch
+        XCTAssertTrue(scrollToElement(endButton, in: app))
+        endButton.tap()
+
+        let recapCard = elementByIdentifier("intermittent.recap_card", in: app)
+        XCTAssertTrue(scrollToElementPresence(recapCard, in: app, maxSwipes: 12))
+        XCTAssertTrue(String(describing: recapCard.value).localizedCaseInsensitiveContains("Evening intention"))
+    }
+
+    func testIPadFastDefaultsToLiveControlsAndCollapsedAdvancedTools() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
 
         openIPadSurface("intermittent", in: app)
 
+        XCTAssertTrue(elementByIdentifier("ipad.intermittent.live", in: app).waitForExistence(timeout: 4))
+        XCTAssertTrue(elementByIdentifier("ipad.intermittent.controls", in: app).waitForExistence(timeout: 4))
+        XCTAssertTrue(elementByIdentifier("ipad.intermittent.planning", in: app).waitForExistence(timeout: 4))
         XCTAssertTrue(app.staticTexts["No active fast"].firstMatch.waitForExistence(timeout: 4))
         XCTAssertTrue(scrollToElement(app.buttons["ipad.intermittent.start"].firstMatch, in: app))
         XCTAssertTrue(scrollToElement(app.buttons["ipad.intermittent.advanced.disclosure"].firstMatch, in: app))
         XCTAssertFalse(app.textFields["intermittent.schedule.name"].firstMatch.exists)
         XCTAssertTrue(scrollToElement(elementByIdentifier("ipad.intermittent.history", in: app), in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("ipad.intermittent.start_date", in: app), in: app))
     }
 
-    func testIPadTrackFastAdvancedToolsCanExpandWithoutHidingHistory() {
+    func testIPadFastAdvancedToolsCanExpandWithoutHidingHistory() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)

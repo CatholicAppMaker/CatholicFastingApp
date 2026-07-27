@@ -259,7 +259,7 @@ extension ContentView {
         simplifiedModeEnabled = false
         launchFunnelSnapshot = .default
 
-        notificationStatus = "Not scheduled"
+        notificationStatus = ""
         premiumCoachStatus = ""
         homeSurface = .today
         guidanceScenario = .normalDay
@@ -322,7 +322,7 @@ private struct DataPrivacyDetailsView: View {
                 dataLine(
                     localized(
                         "settings.privacy.stored_item_intermittent",
-                        default: "Intermittent fasting sessions and active timer state."))
+                        default: "Personal fasting sessions and active timer state."))
                 dataLine(
                     localized(
                         "settings.privacy.stored_item_funnel",

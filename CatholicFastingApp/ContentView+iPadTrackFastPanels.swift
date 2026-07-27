@@ -121,9 +121,7 @@ extension ContentView {
     }
 
     var ipadIntermittentQuickPlansCard: some View {
-        let quickPlans = [12, 14, 16, 18, 20, 24, 36]
-
-        return VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 16) {
             IPadWorkspaceHeader(
                 eyebrow: localized("ipad.intermittent.controls.eyebrow", default: "Controls"),
                 title: intermittentTracker.activeStart == nil
@@ -138,45 +136,29 @@ extension ContentView {
                 ipadIntermittentPrimaryActionRow
             }
 
-            if intermittentTracker.activeStart == nil {
-                DatePicker(
-                    localized("ipad.intermittent.controls.started", default: "Started"),
-                    selection: $intermittentManualStart,
-                    in: intermittentManualStartRange,
-                    displayedComponents: [.date, .hourAndMinute])
-                    .datePickerStyle(.compact)
-                    .environment(\.locale, contentLocale)
-                    .accessibilityIdentifier("ipad.intermittent.start_date")
-
-                Text(localized("ipad.intermittent.controls.started_hint", default: "If you already began fasting, backdate the start time here before you start the timer."))
-                    .appSupportingTextStyle()
-            } else {
-                DatePicker(
-                    localized("ipad.intermittent.controls.started", default: "Started"),
-                    selection: intermittentActiveStartBinding,
-                    in: intermittentManualStartRange,
-                    displayedComponents: [.date, .hourAndMinute])
-                    .datePickerStyle(.compact)
-                    .environment(\.locale, contentLocale)
-                    .accessibilityIdentifier("ipad.intermittent.start_date")
-
-                Text(
-                    localized(
+            IntermittentFastStartTimeControl(
+                label: localized("ipad.intermittent.controls.started", default: "Started"),
+                hint: intermittentTracker.activeStart == nil
+                    ? localized(
+                        "ipad.intermittent.controls.started_hint",
+                        default: "If you already began fasting, backdate the start time here before you start the timer.")
+                    : localized(
                         "ipad.intermittent.controls.adjust_hint",
-                        default: "If you started earlier than the timer, adjust the start time here and the live tracker updates immediately."))
-                    .appSupportingTextStyle()
-            }
+                        default: "If you started earlier than the timer, adjust the start time here and the live tracker updates immediately."),
+                selection: intermittentTracker.activeStart == nil
+                    ? $intermittentManualStart
+                    : intermittentActiveStartBinding,
+                allowedRange: intermittentManualStartRange,
+                locale: contentLocale,
+                accessibilityIdentifier: "ipad.intermittent.start_date")
 
-            Picker(localized("intermittent.controls.intention", default: "Intention"), selection: $intermittentIntentionRaw) {
-                ForEach(intermittentIntentionOptions) { option in
-                    Text(option.label).tag(option.id)
-                }
-            }
-            .pickerStyle(.menu)
-            .accessibilityIdentifier("ipad.intermittent.intention")
-
-            Text(intermittentIntentionDetail)
-                .appSupportingTextStyle()
+            IntermittentFastIntentionControl(
+                label: localized("intermittent.controls.intention", default: "Intention"),
+                options: intermittentIntentionOptions,
+                selection: $intermittentIntentionRaw,
+                detail: intermittentIntentionDetail,
+                pickerIdentifier: "ipad.intermittent.intention",
+                detailIdentifier: nil)
 
             if intermittentTracker.activeStart != nil {
                 TextField(
@@ -186,56 +168,44 @@ extension ContentView {
                     .lineLimit(2 ... 4)
                     .textInputAutocapitalization(.sentences)
                     .focused($intermittentRecapNoteFocused)
-                    .toolbar {
-                        ToolbarItemGroup(placement: .keyboard) {
-                            Spacer()
-                            Button(localized("common.done", default: "Done")) {
-                                intermittentRecapNoteFocused = false
-                            }
-                            .accessibilityIdentifier("ipad.intermittent.recap_note.done")
-                        }
-                    }
                     .accessibilityIdentifier("ipad.intermittent.recap_note")
-            }
-
-            Toggle(isOn: $intermittentTargetReminderEnabled) {
-                Text(localized("intermittent.reminder.target.label", default: "Target reminder"))
-            }
-            .onChange(of: intermittentTargetReminderEnabled) { _, _ in
-                refreshIntermittentTargetReminder()
-            }
-            .accessibilityIdentifier("ipad.intermittent.target_reminder")
-
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
-                ForEach(quickPlans, id: \.self) { hours in
-                    Button {
-                        intermittentPresetBinding.wrappedValue = hours
-                    } label: {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(localizedFormat("ipad.intermittent.plan_hours_format", default: "%dh", hours))
-                                .font(.title3.weight(.semibold))
-                            Text(intermittentPlanDescription(hours))
-                                .appSupportingTextStyle()
-                                .lineLimit(2)
+                if intermittentRecapNoteFocused {
+                    HStack {
+                        Spacer()
+                        Button(localized("common.done", default: "Done")) {
+                            intermittentRecapNoteFocused = false
                         }
-                        .frame(maxWidth: .infinity, minHeight: 72, alignment: .leading)
-                        .appInteractiveTileStyle(isSelected: intermittentTracker.presetHours == hours)
+                        .accessibilityIdentifier("ipad.intermittent.recap_note.done")
                     }
-                    .buttonStyle(.plain)
-                    .accessibilityIdentifier("ipad.intermittent.plan.\(hours)")
                 }
             }
-            .accessibilityIdentifier("ipad.intermittent.preset_picker")
+
+            IntermittentFastReminderControl(
+                isOn: $intermittentTargetReminderEnabled,
+                label: localized("intermittent.reminder.target.label", default: "Target reminder"),
+                hint: nil,
+                accessibilityIdentifier: "ipad.intermittent.target_reminder",
+                onChange: refreshIntermittentTargetReminder)
+
+            IntermittentFastQuickTargetGrid(
+                options: intermittentQuickTargetOptions,
+                selectedHours: intermittentPresetBinding,
+                presentation: .pad,
+                pickerIdentifier: "ipad.intermittent.preset_picker",
+                optionIdentifierPrefix: "ipad.intermittent.plan")
 
             if monetizationStore.premiumUnlocked {
-                Stepper(value: intermittentPresetBinding, in: 12 ... 336, step: 1) {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(localizedFormat("ipad.intermittent.controls.custom_target", default: "Custom target: %dh", intermittentTracker.presetHours))
-                        Text(localized("ipad.intermittent.controls.custom_target_detail", default: "Longer personal disciplines up to 14 days remain available here."))
-                            .appSupportingTextStyle()
-                    }
-                }
-                .accessibilityIdentifier("ipad.intermittent.custom_target")
+                IntermittentFastCustomTargetStepper(
+                    targetHours: intermittentPresetBinding,
+                    title: localizedFormat(
+                        "ipad.intermittent.controls.custom_target",
+                        default: "Custom target: %dh",
+                        intermittentTracker.presetHours),
+                    detail: localized(
+                        "ipad.intermittent.controls.custom_target_detail",
+                        default: "Longer personal disciplines up to 14 days remain available here."),
+                    presentation: .pad,
+                    accessibilityIdentifier: "ipad.intermittent.custom_target")
             } else {
                 Text(localized("ipad.intermittent.controls.custom_target_premium", default: "Custom targets above the preset plans remain a premium feature."))
                     .appSupportingTextStyle()
@@ -246,42 +216,24 @@ extension ContentView {
     }
 
     var ipadIntermittentPrimaryActionRow: some View {
-        HStack(spacing: 10) {
-            if intermittentTracker.activeStart == nil {
-                Button {
-                    startIntermittentFastFromSelectedTime()
-                } label: {
-                    Label(localized("ipad.intermittent.controls.start", default: "Start Fast"), systemImage: "play.fill")
-                }
-                .appPrimaryButtonStyle()
-                .font(.headline.weight(.semibold))
-                .frame(maxWidth: .infinity, minHeight: 58)
-                .accessibilityAddTraits(.isButton)
-                .accessibilityIdentifier("ipad.intermittent.start")
-            } else {
-                Button {
-                    endIntermittentFastWithReview()
-                } label: {
-                    Label(localized("ipad.intermittent.controls.end_review", default: "End & Review"), systemImage: "checkmark.seal.fill")
-                }
-                .appPrimaryButtonStyle(legacyTint: .green)
-                .font(.headline.weight(.semibold))
-                .frame(maxWidth: .infinity, minHeight: 58)
-                .accessibilityAddTraits(.isButton)
-                .accessibilityIdentifier("ipad.intermittent.end")
-
-                Button {
-                    cancelIntermittentFast()
-                } label: {
-                    Label(localized("ipad.intermittent.controls.cancel", default: "Cancel"), systemImage: "xmark")
-                }
-                .appSecondaryButtonStyle()
-                .font(.headline.weight(.semibold))
-                .frame(maxWidth: .infinity, minHeight: 58)
-                .accessibilityAddTraits(.isButton)
-                .accessibilityIdentifier("ipad.intermittent.cancel")
-            }
-        }
+        IntermittentFastPrimaryActions(
+            isActive: intermittentTracker.activeStart != nil,
+            start: IntermittentFastActionDescriptor(
+                title: localized("ipad.intermittent.controls.start", default: "Start Fast"),
+                systemImage: "play.fill",
+                accessibilityIdentifier: "ipad.intermittent.start"),
+            end: IntermittentFastActionDescriptor(
+                title: localized("ipad.intermittent.controls.end_review", default: "End & Review"),
+                systemImage: "checkmark.seal.fill",
+                accessibilityIdentifier: "ipad.intermittent.end"),
+            cancel: IntermittentFastActionDescriptor(
+                title: localized("ipad.intermittent.controls.cancel", default: "Cancel"),
+                systemImage: "xmark",
+                accessibilityIdentifier: "ipad.intermittent.cancel"),
+            minimumHeight: 58,
+            onStart: startIntermittentFastFromSelectedTime,
+            onEnd: endIntermittentFastWithReview,
+            onCancel: cancelIntermittentFast)
     }
 
     var ipadIntermittentPlanningCard: some View {

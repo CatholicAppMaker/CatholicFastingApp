@@ -50,11 +50,13 @@ struct CompanionDashboardCard: View {
                     .font(.headline.weight(.semibold))
                     .foregroundStyle(.primary)
                 Text(snapshot.primaryAction.detail)
-                    .appSupportingTextStyle()
+                    .font(.footnote)
+                    .foregroundStyle(.primary)
                     .lineLimit(2 ... 4)
                     .fixedSize(horizontal: false, vertical: true)
             }
             .padding(.top, 2)
+            .background(CatholicTheme.parchment)
             .accessibilityIdentifier("companion.primary_action")
 
             Button(action: onPrimaryAction) {
@@ -66,7 +68,9 @@ struct CompanionDashboardCard: View {
 
             Label(snapshot.ruleDecision.sourceLine, systemImage: "book.closed")
                 .font(.footnote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.primary)
+                .padding(.vertical, 4)
+                .background(CatholicTheme.parchment)
                 .accessibilityIdentifier("companion.rule.source")
         }
         .padding(.vertical, presentation == .workspace ? 4 : 8)
@@ -187,9 +191,19 @@ struct CompanionLiveStateCard: View {
                     .accessibilityHidden(true)
 
                 VStack(alignment: .leading, spacing: 5) {
-                    Text(localized("companion.live.eyebrow", default: "Live fasting"))
-                        .font(.body.weight(.semibold))
-                        .foregroundStyle(.primary)
+                    if dynamicTypeSize.isAccessibilitySize {
+                        VStack(alignment: .leading, spacing: 8) {
+                            liveFastingEyebrow
+                            stageBadge
+                        }
+                    } else {
+                        HStack(alignment: .firstTextBaseline, spacing: 10) {
+                            liveFastingEyebrow
+                            Spacer(minLength: 8)
+                            stageBadge
+                        }
+                    }
+
                     Text(title)
                         .font(.headline.weight(.semibold))
                         .foregroundStyle(.primary)
@@ -208,13 +222,6 @@ struct CompanionLiveStateCard: View {
                     .accessibilityValue(Text("\(Int((progress * 100).rounded()))%"))
                     .accessibilityIdentifier("companion.live.progress")
             }
-
-            Text(stageLabel)
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(CatholicTheme.primary)
-                .padding(.horizontal, 10)
-                .padding(.vertical, 5)
-                .appCapsuleGlass()
 
             LazyVGrid(
                 columns: dynamicTypeSize.isAccessibilitySize
@@ -236,6 +243,129 @@ struct CompanionLiveStateCard: View {
         .padding(.vertical, 8)
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("companion.live_state")
+    }
+
+    private var liveFastingEyebrow: some View {
+        Text(localized("companion.live.eyebrow", default: "Live fasting"))
+            .font(.body.weight(.semibold))
+            .foregroundStyle(.primary)
+    }
+
+    private var stageBadge: some View {
+        Text(stageLabel)
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(CatholicTheme.primary)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .appCapsuleGlass()
+    }
+}
+
+struct CompanionInactiveFastCard: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    let stageLabel: String
+    let targetTitle: String
+    let targetValue: String
+    let intentionTitle: String
+    let intentionValue: String
+    let actionTitle: String
+    let actionSystemImage: String
+    let onAction: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Group {
+                if dynamicTypeSize.isAccessibilitySize {
+                    VStack(alignment: .leading, spacing: 8) {
+                        inactiveFastTitle
+                        stageBadge
+                    }
+                } else {
+                    HStack(alignment: .center, spacing: 10) {
+                        inactiveFastTitle
+                        Spacer(minLength: 8)
+                        stageBadge
+                    }
+                }
+            }
+
+            Group {
+                if dynamicTypeSize.isAccessibilitySize {
+                    VStack(alignment: .leading, spacing: 8) {
+                        CompanionMetricPill(title: targetTitle, value: targetValue)
+                        CompanionMetricPill(title: intentionTitle, value: intentionValue)
+                    }
+                } else {
+                    HStack(alignment: .top, spacing: 14) {
+                        CompanionMetricPill(title: targetTitle, value: targetValue)
+
+                        Rectangle()
+                            .fill(CatholicTheme.primary.opacity(0.14))
+                            .frame(width: 1, height: 42)
+                            .accessibilityHidden(true)
+
+                        CompanionMetricPill(title: intentionTitle, value: intentionValue)
+                    }
+                }
+            }
+
+            Button(action: onAction) {
+                HStack(spacing: 8) {
+                    Image(systemName: actionSystemImage)
+                        .accessibilityHidden(true)
+                    Text(actionTitle)
+                }
+                .font(.body)
+                .foregroundStyle(.primary)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.plain)
+            .frame(minHeight: 44)
+            .background {
+                Capsule()
+                    .fill(CatholicTheme.parchment)
+                    .accessibilityHidden(true)
+            }
+            .overlay {
+                Capsule()
+                    .stroke(CatholicTheme.cardBorder, lineWidth: 1)
+                    .accessibilityHidden(true)
+            }
+            .contentShape(Capsule())
+            .accessibilityIdentifier("companion.live.action")
+        }
+        .padding(.vertical, 6)
+        .fixedSize(horizontal: false, vertical: true)
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("companion.live_state")
+    }
+
+    private var inactiveFastTitle: some View {
+        HStack(alignment: .center, spacing: 10) {
+            Image(systemName: "timer")
+                .appSymbolStyle(.prominent)
+                .foregroundStyle(CatholicTheme.accentForeground)
+                .accessibilityHidden(true)
+
+            Text(localized("intermittent.live.optional_practice", default: "Optional personal practice"))
+                .font(.headline)
+                .fontWeight(.semibold)
+                .foregroundStyle(.primary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    private var stageBadge: some View {
+        Text(stageLabel)
+            .font(.caption)
+            .fontWeight(.semibold)
+            .foregroundStyle(CatholicTheme.primary)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .appCapsuleGlass()
     }
 }
 
@@ -337,10 +467,14 @@ private struct CompanionMetricPill: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
             Text(title)
-                .appEyebrowStyle()
+                .font(.footnote)
+                .fontWeight(.semibold)
+                .foregroundStyle(.primary)
                 .textCase(.uppercase)
             Text(value)
-                .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                .font(.subheadline)
+                .fontDesign(.rounded)
+                .fontWeight(.semibold)
                 .foregroundStyle(CatholicTheme.primary)
                 .lineLimit(3)
                 .fixedSize(horizontal: false, vertical: true)

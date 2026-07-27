@@ -23,7 +23,7 @@ enum RequiredDayReminderPlanner {
 
     static func upcomingMandatoryObservances(
         from observances: [Observance],
-        now: Date = Date(),
+        now: Date = AppClock.now(),
         calendar: Calendar = .gregorian,
         limit: Int) -> [Observance]
     {

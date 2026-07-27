@@ -30,104 +30,104 @@ extension ContentView {
         optionalCount: Int,
         celebrationCount: Int) -> some View
     {
-            IPadSummaryMetricCard(
-                title: localized("ipad.fasting_days.summary.required", default: "Required"),
-                value: "\(requiredCount)",
-                subtitle: fastingDaysShowAllYearDays
-                    ? localized("ipad.fasting_days.summary.required_in_view", default: "days in view")
-                    : localized("ipad.fasting_days.summary.required_upcoming", default: "upcoming days"))
-            IPadSummaryMetricCard(
-                title: localized("ipad.fasting_days.summary.optional", default: "Optional"),
-                value: "\(optionalCount)",
-                subtitle: fastingDaysIncludeOptionalDays
-                    ? localized("ipad.fasting_days.summary.optional_included", default: "included now")
-                    : localized("ipad.fasting_days.summary.optional_hidden", default: "hidden from list"),
-                tint: CatholicTheme.accentForeground)
-            IPadSummaryMetricCard(
-                title: localized("ipad.fasting_days.summary.celebrations", default: "Celebrations"),
-                value: "\(celebrationCount)",
-                subtitle: fastingDaysIncludeFeastAndHolyDays
-                    ? localized("ipad.fasting_days.summary.celebrations_shown", default: "shown now")
-                    : localized("ipad.fasting_days.summary.celebrations_hidden", default: "hidden from list"),
-                tint: CatholicTheme.warningForeground)
+        IPadSummaryMetricCard(
+            title: localized("ipad.fasting_days.summary.required", default: "Required"),
+            value: "\(requiredCount)",
+            subtitle: fastingDaysShowAllYearDays
+                ? localized("ipad.fasting_days.summary.required_in_view", default: "days in view")
+                : localized("ipad.fasting_days.summary.required_upcoming", default: "upcoming days"))
+        IPadSummaryMetricCard(
+            title: localized("ipad.fasting_days.summary.optional", default: "Optional"),
+            value: "\(optionalCount)",
+            subtitle: fastingDaysIncludeOptionalDays
+                ? localized("ipad.fasting_days.summary.optional_included", default: "included now")
+                : localized("ipad.fasting_days.summary.optional_hidden", default: "hidden from list"),
+            tint: CatholicTheme.accentForeground)
+        IPadSummaryMetricCard(
+            title: localized("ipad.fasting_days.summary.celebrations", default: "Celebrations"),
+            value: "\(celebrationCount)",
+            subtitle: fastingDaysIncludeFeastAndHolyDays
+                ? localized("ipad.fasting_days.summary.celebrations_shown", default: "shown now")
+                : localized("ipad.fasting_days.summary.celebrations_hidden", default: "hidden from list"),
+            tint: CatholicTheme.warningForeground)
     }
 
     var ipadFastingDaysFilterRail: some View {
         let regionContext = RegionalGuidanceContextFactory.generalContext(for: settings)
 
         return VStack(alignment: .leading, spacing: 18) {
-                VStack(alignment: .leading, spacing: 14) {
-                    IPadWorkspaceHeader(
-                        eyebrow: localized("ipad.fasting_days.filters.eyebrow", default: "Filters"),
-                        title: localized("ipad.fasting_days.filters.title", default: "Refine the list"),
-                        detail: localized("ipad.fasting_days.filters.detail", default: "Keep these utility controls secondary to the selected day and next required observance."))
+            VStack(alignment: .leading, spacing: 14) {
+                IPadWorkspaceHeader(
+                    eyebrow: localized("ipad.fasting_days.filters.eyebrow", default: "Filters"),
+                    title: localized("ipad.fasting_days.filters.title", default: "Refine the list"),
+                    detail: localized("ipad.fasting_days.filters.detail", default: "Keep these utility controls secondary to the selected day and next required observance."))
 
-                    Picker(
-                        localized("ipad.fasting_days.filters.scope", default: "Scope"),
-                        selection: Binding(
-                            get: { fastingDaysShowAllYearDays ? 1 : 0 },
-                            set: { fastingDaysShowAllYearDays = $0 == 1 }))
-                    {
-                        Text(localized("ipad.fasting_days.filters.scope_upcoming", default: "Upcoming")).tag(0)
-                        Text(localized("ipad.fasting_days.filters.scope_full_year", default: "Full Year")).tag(1)
-                    }
-                    .pickerStyle(.segmented)
-                    .accessibilityIdentifier("ipad.fasting_days.scope")
+                Picker(
+                    localized("ipad.fasting_days.filters.scope", default: "Scope"),
+                    selection: Binding(
+                        get: { fastingDaysShowAllYearDays ? 1 : 0 },
+                        set: { fastingDaysShowAllYearDays = $0 == 1 }))
+                {
+                    Text(localized("ipad.fasting_days.filters.scope_upcoming", default: "Upcoming")).tag(0)
+                    Text(localized("ipad.fasting_days.filters.scope_full_year", default: "Full Year")).tag(1)
+                }
+                .pickerStyle(.segmented)
+                .accessibilityIdentifier("ipad.fasting_days.scope")
 
-                    Toggle(
-                        localized("ipad.fasting_days.filters.include_optional", default: "Include optional fasting days"),
-                        isOn: $fastingDaysIncludeOptionalDays)
-                        .accessibilityIdentifier("ipad.fasting_days.optional_toggle")
-                    Toggle(
-                        localized("ipad.fasting_days.filters.include_celebrations", default: "Include feast, holy, and memorial days"),
-                        isOn: $fastingDaysIncludeFeastAndHolyDays)
-                        .accessibilityIdentifier("ipad.fasting_days.feast_toggle")
+                Toggle(
+                    localized("ipad.fasting_days.filters.include_optional", default: "Include optional fasting days"),
+                    isOn: $fastingDaysIncludeOptionalDays)
+                    .accessibilityIdentifier("ipad.fasting_days.optional_toggle")
+                Toggle(
+                    localized("ipad.fasting_days.filters.include_celebrations", default: "Include feast, holy, and memorial days"),
+                    isOn: $fastingDaysIncludeFeastAndHolyDays)
+                    .accessibilityIdentifier("ipad.fasting_days.feast_toggle")
 
-                    Menu {
-                        ForEach(Array(UIConstants.yearRange), id: \.self) { yearOption in
-                            let yearLabel = String(yearOption)
-                            Button {
-                                year = yearOption
-                            } label: {
-                                Text(verbatim: yearLabel)
-                            }
-                        }
-                    } label: {
-                        HStack(spacing: 4) {
-                            Text(verbatim: String(year))
-                            Image(systemName: "chevron.up.chevron.down")
-                                .font(.caption2)
+                Menu {
+                    ForEach(Array(UIConstants.yearRange), id: \.self) { yearOption in
+                        let yearLabel = String(yearOption)
+                        Button {
+                            year = yearOption
+                        } label: {
+                            Text(verbatim: yearLabel)
                         }
                     }
-                    .accessibilityLabel(localized("ipad.fasting_days.filters.year", default: "Calendar year"))
-                    .accessibilityValue(Text(verbatim: String(year)))
-                    .accessibilityIdentifier("ipad.fasting_days.year")
+                } label: {
+                    HStack(spacing: 4) {
+                        Text(verbatim: String(year))
+                        Image(systemName: "chevron.up.chevron.down")
+                            .font(.caption2)
+                    }
                 }
-                .padding(18)
-                .iPadPaneCard()
+                .accessibilityLabel(localized("ipad.fasting_days.filters.year", default: "Calendar year"))
+                .accessibilityValue(Text(verbatim: String(year)))
+                .accessibilityIdentifier("ipad.fasting_days.year")
+            }
+            .padding(18)
+            .iPadPaneCard()
 
-                VStack(alignment: .leading, spacing: 12) {
-                    IPadWorkspaceHeader(
-                        eyebrow: localized("ipad.fasting_days.region.eyebrow", default: "Region"),
-                        title: regionContext.classificationLabel,
-                        detail: regionalNormSummaryLine)
-                    IPadContextBadge(text: regionContext.supportLevel.label, supportLevel: regionContext.supportLevel)
-                    DisclosureGroup(localized("ipad.fasting_days.region.notes", default: "Region notes")) {
-                        Text(regionContext.disclosureText)
-                            .appSupportingTextStyle()
-                            .padding(.top, 4)
-                    }
-                    if let url = regionContext.sourceURL {
-                        Link(
-                            regionContext.regionProfile == .canada
-                                ? localized("ipad.fasting_days.region.cccb_link", default: "Read CCCB Friday guidance")
-                                : localized("ipad.fasting_days.region.official_link", default: "Read official guidance"),
-                            destination: url)
-                            .font(.footnote.weight(.semibold))
-                    }
+            VStack(alignment: .leading, spacing: 12) {
+                IPadWorkspaceHeader(
+                    eyebrow: localized("ipad.fasting_days.region.eyebrow", default: "Region"),
+                    title: regionContext.classificationLabel,
+                    detail: regionalNormSummaryLine)
+                IPadContextBadge(text: regionContext.supportLevel.label, supportLevel: regionContext.supportLevel)
+                DisclosureGroup(localized("ipad.fasting_days.region.notes", default: "Region notes")) {
+                    Text(regionContext.disclosureText)
+                        .appSupportingTextStyle()
+                        .padding(.top, 4)
                 }
-                .padding(18)
-                .iPadPaneCard()
+                if let url = regionContext.sourceURL {
+                    Link(
+                        regionContext.regionProfile == .canada
+                            ? localized("ipad.fasting_days.region.cccb_link", default: "Read CCCB Friday guidance")
+                            : localized("ipad.fasting_days.region.official_link", default: "Read official guidance"),
+                        destination: url)
+                        .font(.footnote.weight(.semibold))
+                }
+            }
+            .padding(18)
+            .iPadPaneCard()
         }
         .accessibilityElement(children: .contain)
         .accessibilityValue(Text("\(regionContext.classificationLabel), \(regionContext.supportLevel.label)"))

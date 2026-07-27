@@ -24,7 +24,9 @@ extension View {
     }
 
     func phoneTabBarScrollClearance() -> some View {
-        contentMargins(.bottom, 12, for: .scrollContent)
+        // The iOS 26 tab bar already contributes its own safe-area inset.
+        // Adding another margin creates a visible dead band above the bar.
+        contentMargins(.bottom, 0, for: .scrollContent)
     }
 
     func appRoundedGlass(cornerRadius: CGFloat) -> some View {
@@ -157,11 +159,13 @@ private struct AppInteractiveTileModifier: ViewModifier {
             .background(
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
                     .fill(isSelected ? selectedTint.opacity(0.14) : SacredEditorialTokens.quietSurface(for: colorScheme))
-                    .allowsHitTesting(false))
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true))
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
                     .stroke(isSelected ? selectedTint.opacity(0.7) : CatholicTheme.primary.opacity(0.12), lineWidth: 1)
-                    .allowsHitTesting(false))
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true))
             .shadow(color: isSelected ? selectedTint.opacity(0.10) : .clear, radius: 10, y: 4)
     }
 }
@@ -211,12 +215,14 @@ struct AppSurfaceCardModifier: ViewModifier {
                         style == .primary
                             ? SacredEditorialTokens.raisedSurface(for: colorScheme)
                             : SacredEditorialTokens.quietSurface(for: colorScheme))
-                    .allowsHitTesting(false))
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true))
             .overlay {
                 if style == .primary {
                     RoundedRectangle(cornerRadius: resolvedCornerRadius, style: .continuous)
                         .stroke(CatholicTheme.primary.opacity(0.16), lineWidth: 1)
                         .allowsHitTesting(false)
+                        .accessibilityHidden(true)
                 }
             }
     }

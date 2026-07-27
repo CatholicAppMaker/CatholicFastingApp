@@ -69,7 +69,11 @@ extension ContentView {
 
     var dailySeasonalFormationLine: String {
         let lines = activeSeasonalContentPack.formationLines
-        guard !lines.isEmpty else { return "Offer today's discipline with prayer and charity." }
+        guard !lines.isEmpty else {
+            return localized(
+                "seasonal.formation.fallback",
+                default: "Offer today’s discipline with prayer and charity.")
+        }
         let day = liturgicalCalendar.ordinality(of: .day, in: .year, for: AppClock.now()) ?? 1
         return lines[(day - 1) % lines.count]
     }
@@ -89,7 +93,7 @@ extension ContentView {
                         hour: dailyQuoteReminderHour,
                         minute: dailyQuoteReminderMinute))
                     ?? liturgicalCalendar.date(from: DateComponents(hour: 12, minute: 0))
-                    ?? Date()
+                    ?? AppClock.now()
             },
             set: { newValue in
                 let components = liturgicalCalendar.dateComponents([.hour, .minute], from: newValue)
@@ -120,27 +124,44 @@ extension ContentView {
 
     var weeklyFormationRecapFree: String {
         if weeklyActionableObservanceCount == 0 {
-            return "No fasting obligations logged this week yet. Keep your next required day visible."
+            return localized(
+                "weekly.recap.empty",
+                default: "No fasting obligations logged this week yet. Keep your next required day visible.")
         }
-        return "This week: \(weeklyCompletedObservancesCount) of \(weeklyActionableObservanceCount) discipline days completed."
+        return localizedFormat(
+            "weekly.recap.completed_format",
+            default: "This week: %d of %d discipline days completed.",
+            weeklyCompletedObservancesCount,
+            weeklyActionableObservanceCount)
     }
 
     var weeklyFormationRecapPremium: String {
         let missed = currentYearObservances.count(where: { tracker.status(for: $0.id) == .missed })
         if missed == 0 {
-            return "Premium insight: strong consistency. Keep your reminder cadence steady."
+            return localized(
+                "weekly.premium.consistent",
+                default: "Premium insight: strong consistency. Keep your reminder cadence steady.")
         }
-        return "Premium insight: \(missed) missed day(s) this year. Use the Recovery Coach to rebuild quickly."
+        return localizedFormat(
+            "weekly.premium.missed_format",
+            default: "Premium insight: %d missed day(s) this year. Use the Recovery Coach to rebuild quickly.",
+            missed)
     }
 
     var streakResilienceMessage: String {
         if currentStreak >= 7 {
-            return "You are in a stable rhythm. Protect tomorrow with a simple plan tonight."
+            return localized(
+                "weekly.resilience.stable",
+                default: "You are in a stable rhythm. Protect tomorrow with a simple plan tonight.")
         }
         if tracker.statusesByID.values.contains(.missed) {
-            return "Missed days happen. Start a recovery substitute today and continue tomorrow."
+            return localized(
+                "weekly.resilience.recovery",
+                default: "Missed days happen. Start a recovery substitute today and continue tomorrow.")
         }
-        return "Build momentum with one completed discipline day at a time."
+        return localized(
+            "weekly.resilience.momentum",
+            default: "Build momentum with one completed discipline day at a time.")
     }
 
     var regionalNormSummaryLine: String {
@@ -209,28 +230,42 @@ extension ContentView {
     }
 
     var seasonPlanExportText: String {
-        let goalBlock =
-            """
-            Goals: required \(planningData.requiredGoal), optional \(planningData.optionalGoal). \
-            Year rhythm required \(yearlyRequiredCompletions), optional \(yearlyOptionalCompletions).
-            """
+        let goalBlock = [
+            localizedFormat(
+                "premium.season_export.goals_format",
+                default: "Goals: required %d, optional %d.",
+                planningData.requiredGoal,
+                planningData.optionalGoal),
+            localizedFormat(
+                "premium.season_export.year_rhythm_format",
+                default: "Year rhythm required %d, optional %d.",
+                yearlyRequiredCompletions,
+                yearlyOptionalCompletions),
+        ].joined(separator: "\n")
         let seasonBlock =
             currentSeasonCommitments.isEmpty
-                ? "No current season commitments set."
+                ? localized(
+                    "premium.season_export.no_commitments",
+                    default: "No current season commitments set.")
                 : currentSeasonCommitments.map { "• \($0.title)" }.joined(separator: "\n")
         let checklistBlock =
             premiumChecklist.isEmpty
-                ? "No checklist items set."
+                ? localized(
+                    "premium.season_export.no_checklist",
+                    default: "No checklist items set.")
                 : premiumChecklist.map { "\($0.isDone ? "✓" : "○") \($0.title)" }.joined(separator: "\n")
         return """
-        Catholic Fasting Plan
-        Season: \(currentLiturgicalSeason.label)
+        \(localized("premium.season_export.title", default: "Catholic Fasting Plan"))
+        \(localizedFormat(
+            "premium.season_export.season_format",
+            default: "Season: %@",
+            localizedSeasonLabel(currentLiturgicalSeason)))
         \(goalBlock)
 
-        Current Commitments:
+        \(localized("premium.season_export.commitments_heading", default: "Current Commitments:"))
         \(seasonBlock)
 
-        Premium Checklist:
+        \(localized("premium.season_export.checklist_heading", default: "Premium Checklist:"))
         \(checklistBlock)
         """
     }
@@ -245,72 +280,6 @@ extension ContentView {
                 title: title,
                 isEnabled: true))
         newSeasonCommitmentTitle = ""
-    }
-
-    func addOrUpdateIntermittentSchedulePlan() {
-        let count = intermittentSchedules.count + 1
-        let trimmedName = newIntermittentScheduleName.trimmingCharacters(in: .whitespacesAndNewlines)
-        let weekdays = Array(newIntermittentScheduleWeekdays).sorted()
-        guard !weekdays.isEmpty else { return }
-        let normalizedHour = min(max(newIntermittentScheduleStartHour, 0), 23)
-
-        if let index = intermittentSchedules.firstIndex(where: { $0.id == editingIntermittentScheduleID }) {
-            intermittentSchedules[index].name = trimmedName.isEmpty ? "Plan \(index + 1)" : trimmedName
-            intermittentSchedules[index].targetHours = intermittentTracker.presetHours
-            intermittentSchedules[index].startHour = normalizedHour
-            intermittentSchedules[index].weekdays = weekdays
-            activeIntermittentScheduleID = intermittentSchedules[index].id
-            editingIntermittentScheduleID = ""
-        } else {
-            let newPlan = IntermittentSchedulePlan(
-                id: UUID().uuidString,
-                name: trimmedName.isEmpty ? "Plan \(count)" : trimmedName,
-                targetHours: intermittentTracker.presetHours,
-                startHour: normalizedHour,
-                weekdays: weekdays)
-            intermittentSchedules.append(newPlan)
-            activeIntermittentScheduleID = newPlan.id
-        }
-
-        newIntermittentScheduleName = ""
-        newIntermittentScheduleStartHour = 20
-        newIntermittentScheduleWeekdays = [2, 4, 6]
-    }
-
-    func startEditingIntermittentSchedule(_ plan: IntermittentSchedulePlan) {
-        editingIntermittentScheduleID = plan.id
-        newIntermittentScheduleName = plan.name
-        newIntermittentScheduleStartHour = plan.startHour
-        newIntermittentScheduleWeekdays = Set(plan.weekdays)
-        intermittentTracker.setPresetHours(plan.targetHours)
-    }
-
-    func cancelEditingIntermittentSchedule() {
-        editingIntermittentScheduleID = ""
-        newIntermittentScheduleName = ""
-        newIntermittentScheduleStartHour = 20
-        newIntermittentScheduleWeekdays = [2, 4, 6]
-    }
-
-    func deleteIntermittentSchedule(_ plan: IntermittentSchedulePlan) {
-        intermittentSchedules.removeAll { $0.id == plan.id }
-        if activeIntermittentScheduleID == plan.id {
-            activeIntermittentScheduleID = ""
-        }
-        if editingIntermittentScheduleID == plan.id {
-            cancelEditingIntermittentSchedule()
-        }
-    }
-
-    func applyIntermittentSchedule(_ plan: IntermittentSchedulePlan) async {
-        intermittentTracker.setPresetHours(plan.targetHours)
-        activeIntermittentScheduleID = plan.id
-        if acceptedLegalNotice {
-            notificationStatus = await ReminderScheduler.scheduleIntermittentPlan(plan)
-        } else {
-            notificationStatus =
-                "Applied \(plan.name). Enable consent in Privacy & Data to schedule start reminders."
-        }
     }
 
     func addHouseholdProfile() {
@@ -404,7 +373,9 @@ extension ContentView {
             ReflectionJournalEntry(
                 id: UUID().uuidString,
                 createdAt: Date(),
-                title: title.isEmpty ? "Reflection" : title,
+                title: title.isEmpty
+                    ? localized("premium.journal.default_title", default: "Reflection")
+                    : title,
                 body: body),
             at: 0)
         newReflectionTitle = ""
@@ -452,7 +423,7 @@ extension ContentView {
             generatedAt: now,
             todayTitle: todayObservance.map { localizedObservanceTitle($0.title) }
                 ?? CoreLocalizer.localizedCurrent("widget.fallback.today.title", default: "No observance today"),
-            todayObligation: todayObservance?.dispositionLabel
+            todayObligation: todayObservance.map(localizedObservanceDispositionLabel)
                 ?? CoreLocalizer.localizedCurrent("widget.fallback.today.obligation", default: "No obligation"),
             nextRequiredTitle: upcomingMandatoryObservance.map { localizedObservanceTitle($0.title) }
                 ?? CoreLocalizer.localizedCurrent(
@@ -538,17 +509,6 @@ extension ContentView {
         return localized("today.hero.none_remaining", default: "No remaining required observances this year.")
     }
 
-    var todayFoodDecision: DailyFoodDecision {
-        localizedFoodDecision(todayRawFoodDecision)
-    }
-
-    var todayRawFoodDecision: DailyFoodDecision {
-        DailyFoodDecisionEngine.decision(
-            for: currentYearObservances,
-            settings: settings,
-            calendar: liturgicalCalendar)
-    }
-
     var hasConfiguredRegionProfile: Bool {
         RuleSettings.RegionProfile(rawValue: regionProfileRaw) != nil
     }
@@ -601,279 +561,6 @@ extension ContentView {
             return
         }
         tracker.setStatus(.substituted, for: target.id)
-    }
-
-    var intermittentLongestSessionText: String {
-        durationText(intermittentHabitSummary.longestDuration)
-    }
-
-    var intermittentHabitSummary: IntermittentHabitSummary {
-        IntermittentHabitSummaryEngine.summary(
-            sessions: intermittentTracker.sessions,
-            now: AppClock.now(),
-            calendar: liturgicalCalendar)
-    }
-
-    var intermittentWindowLabel: String {
-        intermittentPlanDescription(intermittentTracker.presetHours)
-    }
-
-    var intermittentPresetBinding: Binding<Int> {
-        Binding(
-            get: { intermittentTracker.presetHours },
-            set: { newValue in
-                intermittentTracker.setPresetHours(newValue)
-                refreshIntermittentTargetReminder()
-            })
-    }
-
-    var intermittentManualStartRange: ClosedRange<Date> {
-        let latest = AppClock.now()
-        let earliest = liturgicalCalendar.date(byAdding: .day, value: -14, to: latest) ?? latest
-        return earliest ... latest
-    }
-
-    var intermittentActiveStartBinding: Binding<Date> {
-        Binding(
-            get: { intermittentTracker.activeStart ?? intermittentManualStart },
-            set: { newValue in
-                intermittentManualStart = newValue
-                intermittentTracker.updateActiveStart(to: newValue)
-                intermittentManualStart = intermittentTracker.activeStart ?? newValue
-                refreshIntermittentTargetReminder()
-            })
-    }
-
-    func startIntermittentFastFromSelectedTime() {
-        intermittentTracker.startFast(now: intermittentManualStart)
-        intermittentManualStart = intermittentTracker.activeStart ?? Date()
-        intermittentRecapNote = ""
-        refreshIntermittentTargetReminder()
-    }
-
-    func endIntermittentFastWithReview() {
-        intermittentRecapNoteFocused = false
-        intermittentTracker.endFast(intentionID: intermittentIntentionRaw, note: intermittentRecapNote)
-        let didCompleteTarget = intermittentTracker.sessions.first?.completedTarget ?? false
-        let completedTargetSessionCount = intermittentTracker.sessions.count(where: \.completedTarget)
-        requestAppReviewIfEligible(
-            justCompletedTarget: didCompleteTarget,
-            completedTargetSessionCount: completedTargetSessionCount)
-        intermittentRecapNote = ""
-        resetIntermittentManualStartToNow()
-        Task {
-            notificationStatus = await ReminderScheduler.clearIntermittentTargetReminders()
-        }
-    }
-
-    func requestAppReviewIfEligible(
-        justCompletedTarget: Bool,
-        completedTargetSessionCount: Int)
-    {
-        guard AppReviewPromptPolicy.shouldRequestReview(
-            hasRequestedReview: didRequestAppReview,
-            justCompletedTarget: justCompletedTarget,
-            completedTargetSessionCount: completedTargetSessionCount,
-            isUITest: ProcessInfo.processInfo.environment["UITEST_MODE"] == "1")
-        else {
-            return
-        }
-
-        didRequestAppReview = true
-        requestReview()
-    }
-
-    func cancelIntermittentFast() {
-        intermittentRecapNoteFocused = false
-        intermittentTracker.cancelActiveFast()
-        intermittentRecapNote = ""
-        resetIntermittentManualStartToNow()
-        Task {
-            notificationStatus = await ReminderScheduler.clearIntermittentTargetReminders()
-        }
-    }
-
-    func applyIntermittentManualStartEdit() {
-        intermittentTracker.updateActiveStart(to: intermittentManualStart)
-        intermittentManualStart = intermittentTracker.activeStart ?? Date()
-        refreshIntermittentTargetReminder()
-    }
-
-    func resetIntermittentManualStartToNow() {
-        intermittentManualStart = Date()
-    }
-
-    func refreshIntermittentTargetReminder() {
-        Task {
-            notificationStatus = await ReminderScheduler.scheduleIntermittentTargetReminder(
-                enabled: intermittentTargetReminderEnabled,
-                start: intermittentTracker.activeStart,
-                targetHours: intermittentTracker.presetHours)
-        }
-    }
-
-    func durationText(_ duration: TimeInterval) -> String {
-        let totalMinutes = max(0, Int(duration / 60))
-        let hours = totalMinutes / 60
-        let minutes = totalMinutes % 60
-        return String(format: "%02dh %02dm", hours, minutes)
-    }
-
-    func countdownText(_ duration: TimeInterval) -> String {
-        let totalSeconds = max(0, Int(duration))
-        let days = totalSeconds / 86400
-        let hours = (totalSeconds % 86400) / 3600
-        let minutes = (totalSeconds % 3600) / 60
-        let seconds = totalSeconds % 60
-        if days > 0 {
-            return String(format: "%dd %02d:%02d:%02d", days, hours, minutes, seconds)
-        }
-        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
-    }
-
-    private func localizedFoodDecision(_ decision: DailyFoodDecision) -> DailyFoodDecision {
-        DailyFoodDecision(
-            obligationLine: localizedFoodDecisionText(decision.obligationLine),
-            allowed: decision.allowed.map(localizedFoodDecisionText),
-            avoid: decision.avoid.map(localizedFoodDecisionText),
-            rationale: localizedFoodDecisionRationale(decision.rationale),
-            sourceLine: localizedFoodDecisionSource(decision.sourceLine))
-    }
-
-    private var localizedFoodDecisionTextKeys: [String: String] {
-        [
-            "Medical/pastoral dispensation is enabled in your profile.": "decision.dispensation.obligation",
-            "Eat what is prudent and medically safe.": "decision.dispensation.allowed.safe",
-            "Keep prayer/charity as substitute penance.": "decision.dispensation.allowed.prayer",
-            "Avoid self-imposed rigor that harms health.": "decision.dispensation.avoid",
-            "Today requires fasting and abstinence.": "decision.fast_and_abstinence.obligation",
-            "One full meal with up to two smaller meals.": "decision.fast_and_abstinence.allowed.meals",
-            "Fish, eggs, dairy, grains, fruits, and vegetables are generally permitted.": "decision.fast_and_abstinence.allowed.foods",
-            "Meat from land animals (beef, pork, poultry).": "decision.fast_and_abstinence.avoid.meat",
-            "Eating patterns that effectively become a second full meal.": "decision.fast_and_abstinence.avoid.second_meal",
-            "Today requires abstinence from meat.": "decision.abstinence.obligation",
-            "Normal meal quantity is generally permitted.": "decision.abstinence.allowed.quantity",
-            "Today has a required observance but no mandatory food restriction.": "decision.required_no_food_restriction.obligation",
-            "Normal meals are generally permitted.": "decision.required_no_food_restriction.allowed.meals",
-            "Keep the day with prayer and Mass obligations.": "decision.required_no_food_restriction.allowed.prayer",
-            "Today may include fasting/abstinence obligations (profile incomplete).": "decision.optional_unknown.obligation",
-            "Today includes fasting/abstinence observance in your profile, but not mandatory.": "decision.optional_known.obligation",
-            "Follow age/health and pastoral guidance for your situation.": "decision.optional.allowed.guidance",
-            "If unsure, observe abstinence and a simpler meal pattern.": "decision.optional.allowed.unsure",
-            "Do not assume no obligation without confirming your profile.": "decision.optional.avoid",
-            "No mandatory food restriction today.": "decision.none.obligation",
-            "You may choose a voluntary penance.": "decision.none.allowed.penance",
-            "Today calls for Friday penance through abstinence from meat.": "decision.friday_abstinence.obligation",
-            "Today calls for Friday penance, not mandatory fasting.": "decision.friday_penance.obligation",
-            "Choose a penitential act, especially a work of charity or piety.": "decision.friday_penance.allowed.act",
-            "Do not skip Friday penance entirely.": "decision.friday_penance.avoid",
-            "Today requires Friday penance through abstinence from meat.": "decision.friday_abstinence.required_obligation",
-            "Today requires Friday penance, but not mandatory fasting.": "decision.friday_penance.required_obligation",
-            "Choose a penitential act (for example prayer, almsgiving, or another sacrifice).": "decision.friday_penance.required_act",
-        ]
-    }
-
-    private func localizedFoodDecisionText(_ text: String) -> String {
-        guard let key = localizedFoodDecisionTextKeys[text] else { return text }
-        return localized(key, default: text)
-    }
-
-    private func localizedFoodDecisionRationale(_ rationale: String) -> String {
-        if rationale == "Health and pastoral obedience take priority when obligations do not bind." {
-            return localized("decision.dispensation.rationale", default: rationale)
-        }
-        if rationale == "No mandatory fast/abstinence observance appears for today in your current profile." {
-            return localized("decision.none.rationale", default: rationale)
-        }
-        if rationale == "No specific mandatory observance was detected." {
-            return localized("decision.observance.none", default: rationale)
-        }
-
-        let unknownPrefix = "Review the age eligibility toggles in Settings so the app can determine whether "
-        let knownPrefix = "Based on your current profile, "
-        let unknownSuffix = " binds you."
-        let knownSuffix = " does not strictly bind today."
-
-        if rationale.hasPrefix(unknownPrefix), rationale.hasSuffix(unknownSuffix) {
-            let titles = String(rationale.dropFirst(unknownPrefix.count).dropLast(unknownSuffix.count))
-            return localizedFormat(
-                "decision.optional_unknown.rationale_format",
-                default: "Review the age eligibility toggles in Settings so the app can determine whether %@ binds you.",
-                localizedObservanceTitles(in: titles))
-        }
-
-        if rationale.hasPrefix(knownPrefix), rationale.hasSuffix(knownSuffix) {
-            let titles = String(rationale.dropFirst(knownPrefix.count).dropLast(knownSuffix.count))
-            return localizedFormat(
-                "decision.optional_known.rationale_format",
-                default: "Based on your current profile, %@ does not strictly bind today.",
-                localizedObservanceTitles(in: titles))
-        }
-
-        let singlePrefix = "This is based on "
-        let singleSuffix = "."
-        if rationale.hasPrefix(singlePrefix), rationale.hasSuffix(singleSuffix) {
-            let titles = String(rationale.dropFirst(singlePrefix.count).dropLast(singleSuffix.count))
-            let key = titles.contains(", ") ? "decision.observance.multi_format" : "decision.observance.single_format"
-            return localizedFormat(key, default: "This is based on %@.", localizedObservanceTitles(in: titles))
-        }
-
-        return rationale
-    }
-
-    private func localizedObservanceTitles(in text: String) -> String {
-        ObservanceLocalizationCatalog.titleDefaultsByIdentifier.values
-            .sorted { $0.count > $1.count }
-            .reduce(text) { result, defaultTitle in
-                result.replacingOccurrences(
-                    of: defaultTitle,
-                    with: localizedObservanceTitle(defaultTitle))
-            }
-    }
-
-    private func localizedFoodDecisionSource(_ sourceLine: String) -> String {
-        switch sourceLine {
-        case "Source: USCCB and pastoral guidance.":
-            localized("decision.sources.us.general", default: sourceLine)
-        case "Source: USCCB Fast & Abstinence norms.":
-            localized("decision.sources.us.fasting", default: sourceLine)
-        case "Source: USCCB Friday penance norms.":
-            localized("decision.sources.us.friday", default: sourceLine)
-        case "Source: USCCB liturgical norms.":
-            localized("decision.sources.us.holyday", default: sourceLine)
-        case "Source: CCCB Friday guidance and universal law.":
-            localized("decision.sources.ca.general", default: sourceLine)
-        case "Source: universal fast/abstinence law with Canada Friday guidance.":
-            localized("decision.sources.ca.fasting", default: sourceLine)
-        case "Source: CCCB Friday guidance.":
-            localized("decision.sources.ca.friday", default: sourceLine)
-        case "Source: universal law and the Canada national baseline.":
-            localized("decision.sources.ca.holyday", default: sourceLine)
-        case "Source: universal law and local pastoral guidance.":
-            localized("decision.sources.other.general", default: sourceLine)
-        case "Source: universal fast/abstinence law.":
-            localized("decision.sources.other.fasting", default: sourceLine)
-        case "Source: local Friday penance guidance.":
-            localized("decision.sources.other.friday", default: sourceLine)
-        case "Source: local liturgical guidance.":
-            localized("decision.sources.other.holyday", default: sourceLine)
-        default:
-            sourceLine
-        }
-    }
-
-    func intermittentPlanDescription(_ hours: Int) -> String {
-        if hours <= 24 {
-            return localizedFormat(
-                "intermittent.plan.schedule_format",
-                default: "%dh fast / %dh eating",
-                hours,
-                24 - hours)
-        }
-        return localizedFormat(
-            "intermittent.plan.target_only_format",
-            default: "%dh fast target",
-            hours)
     }
 
     var streakObservances: [Observance] {
@@ -957,37 +644,5 @@ extension ContentView {
     var canSaveReflection: Bool {
         !newReflectionTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
             || !newReflectionBody.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-    }
-
-    var canSaveIntermittentSchedule: Bool {
-        !newIntermittentScheduleWeekdays.isEmpty
-    }
-
-    var isEditingIntermittentSchedule: Bool {
-        !editingIntermittentScheduleID.isEmpty
-    }
-
-    func weekdayListText(_ weekdays: [Int]) -> String {
-        let labels =
-            weekdays
-                .map { weekdayLabel(for: $0) }
-                .filter { !$0.isEmpty }
-        return labels.isEmpty ? "Custom days" : labels.joined(separator: ", ")
-    }
-
-    func weekdayLabel(for value: Int) -> String {
-        let symbols = Calendar.current.veryShortWeekdaySymbols
-        let index = value - 1
-        guard index >= 0, index < symbols.count else { return "" }
-        return symbols[index]
-    }
-
-    func toggleIntermittentScheduleWeekday(_ weekday: Int) {
-        guard (1 ... 7).contains(weekday) else { return }
-        if newIntermittentScheduleWeekdays.contains(weekday) {
-            newIntermittentScheduleWeekdays.remove(weekday)
-        } else {
-            newIntermittentScheduleWeekdays.insert(weekday)
-        }
     }
 }

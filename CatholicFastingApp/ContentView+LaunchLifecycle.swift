@@ -41,6 +41,13 @@ extension ContentView {
         guard ProcessInfo.processInfo.environment["UITEST_MODE"] == "1" else {
             return
         }
+        if let rawURL = ProcessInfo.processInfo.environment["UITEST_DEEP_LINK_URL"],
+           let url = URL(string: rawURL)
+        {
+            guard launchExecutionState.beginUITestInitialNavigation() else { return }
+            handleDeepLink(url)
+            return
+        }
         guard let rawDestination = ProcessInfo.processInfo.environment["UITEST_INITIAL_MORE_DESTINATION"],
               let destination = MoreHubDestination(rawValue: rawDestination)
         else {

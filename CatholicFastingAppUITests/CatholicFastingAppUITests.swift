@@ -5,6 +5,16 @@ import XCTest
 final class CatholicFastingAppUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
+        addUIInterruptionMonitor(withDescription: "Dismiss optional iOS setup prompts") { alert in
+            for label in ["Not Now", "Set Up Later", "Set Up Later in Settings"] {
+                let button = alert.buttons[label].firstMatch
+                if button.exists {
+                    button.tap()
+                    return true
+                }
+            }
+            return false
+        }
         if name.contains("IPad"), UIDevice.current.userInterfaceIdiom != .pad {
             throw XCTSkip("iPad-specific UI test is skipped on non-iPad destinations.")
         }
@@ -22,11 +32,14 @@ final class CatholicFastingAppUITests: XCTestCase {
         includeUITestEnvironment: Bool = true,
         regionProfile: String? = nil,
         languageMode: String? = nil,
-        fixedDate: String? = nil,
+        fixedDate: String? = "2026-07-17",
         abstinenceAgeEligible: Bool? = nil,
         fastingAgeEligible: Bool? = nil,
         initialMoreDestination: String? = nil,
-        premiumUnlocked: Bool = false) -> XCUIApplication
+        initialDeepLink: String? = nil,
+        premiumUnlocked: Bool = false,
+        premiumCatalogState: String? = nil,
+        notificationAuthorization: String? = nil) -> XCUIApplication
     {
         let app = XCUIApplication()
         var args = ["-uitest-reset"]
@@ -67,8 +80,17 @@ final class CatholicFastingAppUITests: XCTestCase {
         if let initialMoreDestination {
             app.launchEnvironment["UITEST_INITIAL_MORE_DESTINATION"] = initialMoreDestination
         }
+        if let initialDeepLink {
+            app.launchEnvironment["UITEST_DEEP_LINK_URL"] = initialDeepLink
+        }
         if premiumUnlocked {
             app.launchEnvironment["UITEST_PREMIUM_UNLOCKED"] = "1"
+        }
+        if let premiumCatalogState {
+            app.launchEnvironment["UITEST_PREMIUM_CATALOG_STATE"] = premiumCatalogState
+        }
+        if let notificationAuthorization {
+            app.launchEnvironment["UITEST_NOTIFICATION_AUTHORIZATION"] = notificationAuthorization
         }
         return app
     }
@@ -135,9 +157,9 @@ final class CatholicFastingAppUITests: XCTestCase {
         switch label {
         case "Today":
             0
-        case "Fasting Days":
+        case "Calendar", "Fasting Days":
             1
-        case "Track Fast":
+        case "Fast", "Track Fast":
             2
         case "More":
             3
@@ -171,9 +193,9 @@ final class CatholicFastingAppUITests: XCTestCase {
         switch label {
         case "Today":
             ["Today", "Hoy", "Aujourd’hui"]
-        case "Fasting Days":
+        case "Calendar", "Fasting Days":
             ["Calendar", "Calendario", "Calendrier", "Fasting Days", "Días de ayuno", "Jours de jeûne"]
-        case "Track Fast":
+        case "Fast", "Track Fast":
             ["Fast", "Ayuno", "Jeûne", "Track Fast", "Registrar ayuno", "Suivi du jeûne"]
         case "More":
             ["More", "Más", "Plus"]
@@ -215,6 +237,18 @@ final class CatholicFastingAppUITests: XCTestCase {
         } else {
             XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 4))
         }
+    }
+
+    func returnToMoreHub(in app: XCUIApplication) {
+        let hubDestination = elementByIdentifier("more.hub.setupAndReminders", in: app)
+        if hubDestination.exists {
+            return
+        }
+
+        let backButton = app.buttons["BackButton"].firstMatch
+        XCTAssertTrue(backButton.waitForExistence(timeout: 3), "More destination is missing its Back button")
+        backButton.tap()
+        XCTAssertTrue(hubDestination.waitForExistence(timeout: 4), "Back did not return to the More hub")
     }
 
     func assertMoreDestinationOpened(_ rawValue: String, title: String, in app: XCUIApplication) {
@@ -475,9 +509,9 @@ final class CatholicFastingAppUITests: XCTestCase {
         switch label {
         case "Today":
             markerID = "surface.today.ready"
-        case "Fasting Days":
+        case "Calendar", "Fasting Days":
             markerID = "surface.fasting_days.ready"
-        case "Track Fast":
+        case "Fast", "Track Fast":
             markerID = "surface.intermittent.ready"
         case "More":
             markerID = "surface.more.ready"
@@ -492,6 +526,31 @@ final class CatholicFastingAppUITests: XCTestCase {
     {
         if elementIsVisible(element, in: app) {
             return true
+        }
+
+        let usableViewport = usableContentViewport(in: app)
+        let elementFrame = element.exists ? element.frame : .null
+        let shouldSearchEarlierContentFirst =
+            !elementFrame.isNull
+                && !elementFrame.isEmpty
+                && elementFrame.minY < usableViewport.minY
+
+        if shouldSearchEarlierContentFirst {
+            for _ in 0 ..< maxSwipes {
+                swipePageDown(in: app)
+                if elementIsVisible(element, in: app) {
+                    return true
+                }
+            }
+
+            for _ in 0 ..< maxSwipes {
+                swipePageUp(in: app)
+                if elementIsVisible(element, in: app) {
+                    return true
+                }
+            }
+
+            return elementIsVisible(element, in: app)
         }
 
         for _ in 0 ..< maxSwipes {
@@ -563,19 +622,84 @@ final class CatholicFastingAppUITests: XCTestCase {
         guard element.exists, !element.frame.isEmpty else {
             return false
         }
-        return app.frame.intersects(element.frame)
+
+        let elementFrame = element.frame
+        let appFrame = app.frame
+        guard appFrame.intersects(elementFrame) else {
+            return false
+        }
+
+        if element.elementType == .navigationBar || element.elementType == .tabBar {
+            return appFrame.contains(elementFrame)
+        }
+
+        let usableViewport = usableContentViewport(in: app)
+        return usableViewport.contains(
+            CGPoint(x: elementFrame.midX, y: elementFrame.midY))
+    }
+
+    func usableContentViewport(in app: XCUIApplication) -> CGRect {
+        let appFrame = app.frame
+        let chromePadding: CGFloat = 4
+        var minimumY = appFrame.minY
+        var maximumY = appFrame.maxY
+
+        if let navigationBarFrame = firstVisibleFrame(
+            in: app.navigationBars,
+            intersecting: appFrame)
+        {
+            minimumY = min(appFrame.maxY, navigationBarFrame.maxY + chromePadding)
+        }
+
+        if let tabBarFrame = firstVisibleFrame(
+            in: app.tabBars,
+            intersecting: appFrame)
+        {
+            maximumY = max(appFrame.minY, tabBarFrame.minY - chromePadding)
+        }
+
+        guard maximumY > minimumY else {
+            return appFrame
+        }
+
+        return CGRect(
+            x: appFrame.minX,
+            y: minimumY,
+            width: appFrame.width,
+            height: maximumY - minimumY)
+    }
+
+    func firstVisibleFrame(
+        in query: XCUIElementQuery,
+        intersecting appFrame: CGRect) -> CGRect?
+    {
+        for element in query.allElementsBoundByIndex {
+            let frame = element.frame
+            if !frame.isEmpty, appFrame.intersects(frame) {
+                return frame
+            }
+        }
+        return nil
     }
 
     func swipePageUp(in app: XCUIApplication) {
-        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.76))
-        let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.36))
-        start.press(forDuration: 0.01, thenDragTo: end)
+        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.6))
+        let end = start.withOffset(CGVector(dx: 0, dy: -100))
+        start.press(
+            forDuration: 0.05,
+            thenDragTo: end,
+            withVelocity: .slow,
+            thenHoldForDuration: 0)
     }
 
     func swipePageDown(in app: XCUIApplication) {
-        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.36))
-        let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.76))
-        start.press(forDuration: 0.01, thenDragTo: end)
+        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.4))
+        let end = start.withOffset(CGVector(dx: 0, dy: 100))
+        start.press(
+            forDuration: 0.05,
+            thenDragTo: end,
+            withVelocity: .slow,
+            thenHoldForDuration: 0)
     }
 
     func elementByIdentifier(_ identifier: String, in app: XCUIApplication) -> XCUIElement {
@@ -588,16 +712,16 @@ final class CatholicFastingAppUITests: XCTestCase {
     }
 
     func expandDisclosureGroup(_ label: String, in app: XCUIApplication) {
-        if label == "Reminder Actions",
-           elementByIdentifier("settings.quick.reminder_status", in: app).exists
-        {
-            return
-        }
-
         if let identifier = disclosureIdentifier(for: label) {
+            let identifiedButton = app.buttons[identifier].firstMatch
+            if scrollToElement(identifiedButton, in: app) {
+                identifiedButton.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.5)).tap()
+                return
+            }
+
             let identified = elementByIdentifier(identifier, in: app)
             if scrollToElement(identified, in: app) {
-                identified.tap()
+                identified.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.5)).tap()
                 return
             }
         }

@@ -155,7 +155,7 @@ extension ObservanceCalculator {
     }
 
     static func firstSundayOfAdvent(year: Int) -> Date {
-        let nov27 = canonicalDate(year: year, month: 11, day: 27) ?? Date()
+        let nov27 = canonicalDate(year: year, month: 11, day: 27) ?? AppClock.now()
         var cursor = nov27
         while Calendar.gregorian.component(.weekday, from: cursor) != 1 {
             cursor = dateByAdding(days: 1, to: cursor)
@@ -189,7 +189,7 @@ extension ObservanceCalculator {
         let month = (h + l - 7 * m + 114) / 31
         let day = ((h + l - 7 * m + 114) % 31) + 1
 
-        return canonicalDate(year: year, month: month, day: day) ?? Date()
+        return canonicalDate(year: year, month: month, day: day) ?? AppClock.now()
     }
 
     static func canonicalDate(year: Int, month: Int, day: Int) -> Date? {

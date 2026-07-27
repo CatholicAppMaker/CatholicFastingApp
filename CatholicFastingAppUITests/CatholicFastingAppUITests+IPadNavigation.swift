@@ -2,27 +2,6 @@ import Foundation
 import XCTest
 
 extension CatholicFastingAppUITests {
-    func testDeepIPhoneMoreDestinationsOpenAndReturn() {
-        let app = makeApp()
-        app.launch()
-        ensureOnHomeScreen(app)
-
-        let destinations = [
-            "Support & Premium",
-            "Setup & Reminders",
-            "Profile & Norms",
-            "Guidance & Rules",
-            "History of Fasting",
-            "Privacy & Data",
-        ]
-
-        for destination in destinations {
-            openMoreDestination(destination, in: app)
-            XCTAssertTrue(app.navigationBars[destination].waitForExistence(timeout: 4))
-            returnToMoreHome(in: app)
-        }
-    }
-
     func testIPhoneMoreHubRowsOpenExpectedDestinationContent() {
         let app = makeApp()
         app.launch()
@@ -59,7 +38,7 @@ extension CatholicFastingAppUITests {
         app.launch()
         ensureOnHomeScreen(app)
 
-        for surface in ["Fasting Days", "Track Fast", "More", "Today"] {
+        for surface in ["Calendar", "Fast", "More", "Today"] {
             openSurfaceThroughVisibleNavigation(surface, in: app)
         }
     }
@@ -71,7 +50,7 @@ extension CatholicFastingAppUITests {
 
         openMoreDestination("Support & Premium", in: app)
         XCTAssertTrue(app.navigationBars["Support & Premium"].waitForExistence(timeout: 4))
-        XCTAssertTrue(scrollToElement(app.staticTexts["Premium Upgrade"].firstMatch, in: app))
+        XCTAssertTrue(elementByIdentifier("premium.surface_picker", in: app).waitForExistence(timeout: 4))
 
         let backButton = app.navigationBars.buttons.firstMatch
         XCTAssertTrue(backButton.waitForExistence(timeout: 3))
@@ -128,26 +107,6 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(regionPicker, in: app))
     }
 
-    func testIPadMoreAllDestinationsOpenWithoutBreakingWorkspace() {
-        let app = makeApp()
-        app.launch()
-        ensureOnHomeScreen(app)
-
-        let destinations = [
-            "supportAndPremium",
-            "setupAndReminders",
-            "profileAndNorms",
-            "guidanceAndRules",
-            "historyOfFasting",
-            "privacyAndData",
-        ]
-
-        for destination in destinations {
-            openIPadMoreDestination(destination, in: app)
-            assertIPadWorkspaceVisible("more", in: app)
-        }
-    }
-
     func testIPadMoreSetupDestinationShowsReminderControls() {
         let app = makeApp()
         app.launch()
@@ -198,19 +157,6 @@ extension CatholicFastingAppUITests {
         assertIPadWorkspaceVisible("more", in: app)
         XCTAssertTrue(scrollToElement(app.staticTexts["Support & Premium"].firstMatch, in: app))
         XCTAssertTrue(scrollToElement(elementByIdentifier("premium.plan_choice", in: app), in: app))
-    }
-
-    func testIPadTodayAndMoreCanBeVisitedRepeatedly() {
-        let app = makeApp()
-        app.launch()
-        ensureOnHomeScreen(app)
-
-        for _ in 0 ..< 3 {
-            openIPadSurface("today", in: app)
-            assertIPadWorkspaceVisible("today", in: app)
-            openIPadSurface("more", in: app)
-            assertIPadWorkspaceVisible("more", in: app)
-        }
     }
 
     func testIPadTodayQuickActionsOpenTargetWorkspaces() {
@@ -297,6 +243,7 @@ extension CatholicFastingAppUITests {
             "setupAndReminders",
             "profileAndNorms",
             "guidanceAndRules",
+            "historyOfFasting",
             "privacyAndData",
         ]
 

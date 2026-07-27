@@ -1,13 +1,6 @@
 import SwiftUI
-#if canImport(TipKit)
-import TipKit
-#endif
 
 extension ContentView {
-    var dashboardHeroArtwork: SacredHeroArtwork {
-        SacredHeroImageSelector.anchorArtwork(for: .dashboard)
-    }
-
     var fastingDaysHeroArtwork: SacredHeroArtwork {
         SacredHeroImageSelector.anchorArtwork(for: .fastingDays)
     }
@@ -138,17 +131,6 @@ extension ContentView {
         }
     }
 
-    var dashboardSacredImageSection: some View {
-        Section {
-            SacredSurfaceAnchorCard(
-                assetName: dashboardHeroArtwork.assetName,
-                title: activeSeasonalContentPack.campaignTitle,
-                subtitle: activeSeasonalContentPack.campaignSubtitle,
-                imageHeight: 112,
-                accessibilityIdentifier: "dashboard.hero")
-        }
-    }
-
     var dashboardFastingQuoteSection: some View {
         Section(localized("today.quote.section", default: "Daily fasting reflection")) {
             CatholicFastingQuoteCard(quote: dashboardFastingQuote, compact: true)
@@ -199,23 +181,6 @@ extension ContentView {
             .padding(14)
             .appSurfaceCard(.utility, cornerRadius: 22)
             .accessibilityIdentifier("dashboard.today_glance")
-        }
-    }
-
-    var dashboardDevotionalGallerySection: some View {
-        Section(localized("today.gallery.title", default: "Sacred Fasting Imagery")) {
-            Text(localized("today.gallery.intro", default: "Keep these Catholic symbols in view as you pray, abstain, and fast."))
-                .appSupportingTextStyle()
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    ForEach(SacredImageryCatalog.fastingGallery) { item in
-                        SacredImageryCard(item: item)
-                    }
-                }
-                .padding(.vertical, 2)
-            }
-            .accessibilityIdentifier("dashboard.sacred_gallery")
         }
     }
 
@@ -284,43 +249,6 @@ extension ContentView {
             .accessibilityIdentifier("dashboard.plan_summary")
             .padding(14)
             .appSurfaceCard(.standard, cornerRadius: 18)
-        }
-    }
-
-    var dashboardQuickActionsSection: some View {
-        Section(localized("today.actions.title", default: "Primary Actions")) {
-            Button {
-                homeSurface = .fastingDays
-            } label: {
-                Label(localized("today.actions.fasting_days", default: "Open Calendar"), systemImage: "calendar")
-            }
-            .accessibilityIdentifier("today.quick.fasting_days")
-            .appPrimaryButtonStyle()
-            #if canImport(TipKit)
-                .popoverTip(FastingDaysFocusTip(), arrowEdge: .top)
-            #endif
-
-            Button {
-                homeSurface = .intermittent
-            } label: {
-                Label(localized("today.actions.track_fast", default: "Open Fast"), systemImage: "timer")
-            }
-            .accessibilityIdentifier("today.quick.intermittent")
-            .appSecondaryButtonStyle(legacyTint: CatholicTheme.accentForeground)
-            #if canImport(TipKit)
-                .popoverTip(IntermittentTrackerTip(), arrowEdge: .top)
-            #endif
-
-            Button {
-                homeSurface = .more
-            } label: {
-                Label(localized("today.actions.more", default: "Open More Tools"), systemImage: "ellipsis.circle")
-            }
-            .accessibilityIdentifier("today.quick.more")
-            .appSecondaryButtonStyle()
-            #if canImport(TipKit)
-                .popoverTip(MoreToolsTip(), arrowEdge: .top)
-            #endif
         }
     }
 
@@ -465,7 +393,11 @@ extension ContentView {
     var milestoneReferralSection: some View {
         if yearlyRequiredCompletions >= 3 {
             Section(localized("today.share.section", default: "Share With a Friend")) {
-                Text(localizedFormat("today.share.intro_format", default: "You have completed %d required discipline days this year. Share the app if it is helping.", yearlyRequiredCompletions))
+                Text(
+                    localizedFormat(
+                        "today.share.intro_format",
+                        default: "You have completed %d required discipline days this year. Share the app if it is helping.",
+                        yearlyRequiredCompletions))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                 ShareLink(
@@ -582,7 +514,7 @@ extension ContentView {
         if let next = upcomingMandatoryObservance {
             return localizedAbbreviatedDate(next.date)
         }
-        return "Open"
+        return localized("common.open", default: "Open")
     }
 
     private var todayAtAGlanceWeekLabel: String {

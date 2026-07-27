@@ -73,11 +73,97 @@ struct WidgetSnapshot: Codable, Equatable {
                 ?? "Stay faithful in small daily disciplines."
         localizationCode = try container.decodeIfPresent(String.self, forKey: .localizationCode) ?? "en"
     }
+
+    var activeIntermittentTargetDate: Date? {
+        WidgetActiveFastTiming.targetDate(
+            isActive: hasActiveIntermittentFast,
+            start: activeIntermittentFastStart,
+            targetHours: activeIntermittentTargetHours)
+    }
+
+    func hasReachedActiveIntermittentTarget(at date: Date) -> Bool {
+        guard let activeIntermittentTargetDate else { return false }
+        return date >= activeIntermittentTargetDate
+    }
+
+    func isCurrent(at date: Date, calendar: Calendar = .autoupdatingCurrent) -> Bool {
+        calendar.isDate(generatedAt, inSameDayAs: date)
+    }
+}
+
+enum WidgetActiveFastTiming {
+    static func targetDate(isActive: Bool, start: Date?, targetHours: Int) -> Date? {
+        guard isActive, let start, (1 ... 168).contains(targetHours) else { return nil }
+        return start.addingTimeInterval(TimeInterval(targetHours) * 3600)
+    }
+}
+
+enum WidgetTimelineSchedule {
+    static func nextRefreshDate(
+        after date: Date,
+        activeFastTargetDate: Date?,
+        calendar: Calendar = .autoupdatingCurrent) -> Date
+    {
+        let intervalRefresh = calendar.date(byAdding: .minute, value: 30, to: date)
+            ?? date.addingTimeInterval(30 * 60)
+        let nextDay = calendar.date(
+            byAdding: .day,
+            value: 1,
+            to: calendar.startOfDay(for: date))
+
+        return [intervalRefresh, nextDay, activeFastTargetDate]
+            .compactMap(\.self)
+            .filter { $0 > date }
+            .min()
+            ?? intervalRefresh
+    }
+}
+
+enum WidgetLocalizationCode {
+    private static let supportedCodes: Set<String> = ["en", "es", "fr-CA"]
+
+    static func candidates(for requestedCode: String) -> [String] {
+        let trimmed = requestedCode.trimmingCharacters(in: .whitespacesAndNewlines)
+        let normalizedMode: String = switch trimmed.lowercased() {
+        case "english":
+            "en"
+        case "spanish":
+            "es"
+        case "frenchcanadian":
+            "fr-CA"
+        default:
+            trimmed.replacingOccurrences(of: "_", with: "-")
+        }
+
+        let components = normalizedMode.split(separator: "-", omittingEmptySubsequences: true)
+        guard let languageComponent = components.first else { return ["en"] }
+
+        let language = languageComponent.lowercased()
+        let region = components.dropFirst().first.map { $0.uppercased() }
+        let canonical = region.map { "\(language)-\($0)" } ?? language
+
+        let candidates: [String] = switch language {
+        case "fr":
+            region == nil ? ["fr-CA", "fr"] : [canonical, "fr-CA", "fr"]
+        case "es", "en":
+            region == nil ? [language] : [canonical, language]
+        default:
+            region == nil ? [language] : [canonical, language]
+        }
+
+        var seen = Set<String>()
+        return candidates.filter { seen.insert($0).inserted }
+    }
+
+    static func resolvedSupportedCode(for requestedCode: String) -> String {
+        candidates(for: requestedCode).first(where: supportedCodes.contains) ?? "en"
+    }
 }
 
 enum WidgetSnapshotContract {
     static let appGroupIdentifier = "group.com.kevpierce.CatholicFastingApp"
     static let snapshotKey = "widget_snapshot"
+    static let localizationCodeKey = "widget_localization_code"
     static let widgetKind = "CatholicFastingWidget"
 }
 
@@ -103,8 +189,10 @@ enum WidgetSnapshotStore {
         guard let data = try? JSONEncoder().encode(snapshot) else { return }
         if let sharedDefaults {
             sharedDefaults.set(data, forKey: WidgetSnapshotContract.snapshotKey)
+            sharedDefaults.set(snapshot.localizationCode, forKey: WidgetSnapshotContract.localizationCodeKey)
         } else {
             UserDefaults.standard.set(data, forKey: WidgetSnapshotContract.snapshotKey)
+            UserDefaults.standard.set(snapshot.localizationCode, forKey: WidgetSnapshotContract.localizationCodeKey)
         }
 
         #if os(iOS) && canImport(WidgetKit)
@@ -119,9 +207,16 @@ enum WidgetSnapshotStore {
         return try? JSONDecoder().decode(WidgetSnapshot.self, from: data)
     }
 
+    static func fallbackLocalizationCode() -> String? {
+        sharedDefaults?.string(forKey: WidgetSnapshotContract.localizationCodeKey)
+            ?? UserDefaults.standard.string(forKey: WidgetSnapshotContract.localizationCodeKey)
+    }
+
     static func clear() {
         sharedDefaults?.removeObject(forKey: WidgetSnapshotContract.snapshotKey)
+        sharedDefaults?.removeObject(forKey: WidgetSnapshotContract.localizationCodeKey)
         UserDefaults.standard.removeObject(forKey: WidgetSnapshotContract.snapshotKey)
+        UserDefaults.standard.removeObject(forKey: WidgetSnapshotContract.localizationCodeKey)
 
         #if os(iOS) && canImport(WidgetKit)
         WidgetCenter.shared.reloadTimelines(ofKind: WidgetSnapshotContract.widgetKind)
