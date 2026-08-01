@@ -7,7 +7,7 @@ extension ContentView {
     var ipadMoreWorkspace: some View {
         GeometryReader { geometry in
             let stacked = geometry.size.width < 700 || dynamicTypeSize.isAccessibilitySize
-            let destination = selectedMoreDestination ?? MoreHubDestination.allCases.first ?? .supportAndPremium
+            let destination = navigationState.selectedMoreDestination ?? MoreHubDestination.allCases.first ?? .supportAndPremium
 
             Group {
                 if stacked {

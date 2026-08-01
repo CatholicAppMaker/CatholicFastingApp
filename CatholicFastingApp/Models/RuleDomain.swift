@@ -75,17 +75,6 @@ struct RuleSettings: Hashable {
                 "Other U.S. Province"
             }
         }
-
-        var suggestedAscension: AscensionObservance? {
-            switch self {
-            case .custom:
-                nil
-            case .boston, .hartford, .newYork, .newark, .omaha, .philadelphia:
-                .thursday
-            case .otherUSProvince:
-                .sunday
-            }
-        }
     }
 
     enum AscensionObservance: String, CaseIterable, Identifiable {

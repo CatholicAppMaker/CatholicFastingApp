@@ -32,7 +32,7 @@ extension ContentView {
 
     func openPremiumUpgrade(focusingOn surface: PremiumEntitlementSurface? = nil) {
         if let surface {
-            selectedPremiumToolDestination = premiumToolDestination(for: surface)
+            navigationState.selectedPremiumToolDestination = premiumToolDestination(for: surface)
         }
         launchFunnelSnapshot.lockedUpgradeTapCount += 1
         supportPremiumSurfaceRaw = SupportPremiumSurface.upgrade.rawValue
@@ -194,226 +194,82 @@ extension ContentView {
         .accessibilityIdentifier("premium.journey")
     }
 
-    @ViewBuilder
     var premiumStoreFeedbackSection: some View {
-        if !monetizationStore.subscriptionHealthMessage.isEmpty {
-            Text(monetizationStore.subscriptionHealthMessage)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .accessibilityIdentifier("premium.subscription_health")
-        }
-
-        if !monetizationStore.statusMessage.isEmpty {
-            Text(monetizationStore.statusMessage)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .accessibilityIdentifier("premium.status")
-        }
+        PremiumStoreFeedbackView(
+            subscriptionHealthMessage: monetizationStore.subscriptionHealthMessage,
+            statusMessage: monetizationStore.statusMessage)
     }
 
     var premiumActiveStateCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(localized("premium.active.label", default: "Premium is active."))
-                .appSupportingTextStyle()
-                .accessibilityIdentifier("premium.active_summary")
-
-            Button(localized("premium.active.open_tools", default: "Open Formation Tools")) {
+        PremiumActiveStateCard(
+            summary: localized("premium.active.label", default: "Premium is active."),
+            buttonTitle: localized("premium.active.open_tools", default: "Open Formation Tools"),
+            onOpenTools: {
                 supportPremiumSurfaceRaw = SupportPremiumSurface.tools.rawValue
-            }
-            .appPrimaryButtonStyle()
-            .accessibilityIdentifier("premium.open_tools")
-        }
-        .padding(14)
-        .appSurfaceCard(.primary, cornerRadius: 18)
-    }
-
-    var premiumUpgradeHeroCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            SacredSurfaceAnchorCard(
-                assetName: moreDestinationHeroItem(for: .supportAndPremium).assetName,
-                title: monetizationStore.premiumUnlocked
-                    ? localized("premium.hero.active_title", default: "Guided Formation Active")
-                    : localized("premium.hero.title", default: "Guided Seasonal Formation"),
-                subtitle: monetizationStore.premiumUnlocked
-                    ? localized("premium.hero.active_subtitle", default: "Keep this week's rhythm, recovery, reflection, and review in one focused Catholic workflow.")
-                    : localized("premium.hero.subtitle", default: "Keep the current season's next faithful action visible, with tools that support it."),
-                imageHeight: 112,
-                accessibilityIdentifier: "premium.hero")
-
-            CatholicFastingQuoteCard(
-                quote: guidanceFastingQuote,
-                compact: true)
-                .accessibilityIdentifier("premium.quote")
-        }
+            })
     }
 
     var premiumStatusSummaryCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(alignment: .top, spacing: 10) {
-                Image(systemName: monetizationStore.premiumUnlocked ? "checkmark.seal.fill" : "star.circle.fill")
-                    .appSymbolStyle(.prominent)
-                    .foregroundStyle(monetizationStore.premiumUnlocked ? CatholicTheme.successForeground : CatholicTheme.primary)
-
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(monetizationStore.premiumUnlocked ? localized("premium.active.title", default: "Premium active") : premiumOfferCatalog.title)
-                        .appSectionTitleStyle(serif: true)
-                    Text(
-                        monetizationStore.premiumUnlocked
-                            ? localized("premium.active.summary", default: "Your guided journey, reminders, reflection, and export tools are unlocked.")
-                            : localized("premium.locked.summary", default: "Stay steady through the Church year with one weekly formation path, reminders, and review."))
-                        .appLeadTextStyle()
-                }
-            }
-
-            if monetizationStore.premiumUnlocked {
-                Button(localized("premium.active.open_tools", default: "Open Formation Tools")) {
-                    supportPremiumSurfaceRaw = SupportPremiumSurface.tools.rawValue
-                }
-                .appPrimaryButtonStyle()
-                .accessibilityIdentifier("premium.open_tools")
-            } else {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(localized("premium.locked.adds", default: "Guided formation adds:"))
-                        .appEyebrowStyle()
-                        .foregroundStyle(CatholicTheme.primary)
-
-                    ForEach(premiumOfferCatalog.pillars) { pillar in
-                        HStack(alignment: .top, spacing: 10) {
-                            Image(systemName: premiumIconName(for: pillar.requiredSurface))
-                                .foregroundStyle(CatholicTheme.primary)
-                                .frame(width: 18)
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(pillar.title)
-                                    .font(.subheadline.weight(.semibold))
-                                Text(pillar.subtitle)
-                                    .appSupportingTextStyle()
-                            }
-                        }
-                    }
-                }
-            }
-
-            VStack(alignment: .leading, spacing: 8) {
-                Text(localized("premium.trust.title", default: "Why users upgrade"))
-                    .appEyebrowStyle()
-
-                HStack(spacing: 8) {
-                    premiumTrustPill(text: localized("premium.trust.local_only", default: "Local-only data"), systemImage: "lock.shield")
-                    premiumTrustPill(text: localized("premium.trust.no_ads", default: "No ads"), systemImage: "nosign")
-                    premiumTrustPill(text: localized("premium.trust.cancel_anytime", default: "Cancel anytime"), systemImage: "creditcard")
-                }
-            }
-        }
-        .padding(14)
-        .appSurfaceCard(.utility, cornerRadius: 16)
-        .appRoundedGlass(cornerRadius: 16)
+        PremiumStatusSummaryCard(
+            isUnlocked: monetizationStore.premiumUnlocked,
+            title: monetizationStore.premiumUnlocked
+                ? localized("premium.active.title", default: "Premium active")
+                : premiumOfferCatalog.title,
+            summary: monetizationStore.premiumUnlocked
+                ? localized("premium.active.summary", default: "Your guided journey, reminders, reflection, and export tools are unlocked.")
+                : localized("premium.locked.summary", default: "Stay steady through the Church year with one weekly formation path, reminders, and review."),
+            openToolsTitle: localized("premium.active.open_tools", default: "Open Formation Tools"),
+            lockedAddsTitle: localized("premium.locked.adds", default: "Guided formation adds:"),
+            pillars: premiumOfferCatalog.pillars,
+            trustTitle: localized("premium.trust.title", default: "Why users upgrade"),
+            localOnlyTitle: localized("premium.trust.local_only", default: "Local-only data"),
+            noAdsTitle: localized("premium.trust.no_ads", default: "No ads"),
+            cancelAnytimeTitle: localized("premium.trust.cancel_anytime", default: "Cancel anytime"),
+            iconName: premiumIconName,
+            onOpenTools: {
+                supportPremiumSurfaceRaw = SupportPremiumSurface.tools.rawValue
+            })
     }
 
     func premiumJourneyCard(sample: Bool) -> some View {
         let journey = premiumGuidedJourneyWeek
         let previewActions = sample ? Array(journey.actions.prefix(3)) : journey.actions
 
-        return VStack(alignment: .leading, spacing: 10) {
-            Text(
-                sample
-                    ? localized("premium.journey.preview_title", default: "Preview Guided Seasonal Formation")
-                    : localized("premium.journey.current_title", default: "Your Guided Seasonal Journey"))
-                .appSectionTitleStyle(serif: true)
-                .accessibilityIdentifier(sample ? "premium.journey.preview_title" : "premium.journey.current_title")
-
-            Text(
-                sample
-                    ? localized(
-                        "premium.journey.preview_intro",
-                        default: "This preview shows how premium turns the current season into one weekly rhythm for fasting, prayer, mercy, and review.")
-                    : localized(
-                        "premium.journey.current_intro",
-                        default: "Premium keeps the current week and next faithful action visible without rebuilding the whole plan."))
-                .appSupportingTextStyle()
-                .accessibilityIdentifier(sample ? "premium.journey.preview_intro" : "premium.journey.current_intro")
-
-            VStack(alignment: .leading, spacing: 6) {
-                Text(
-                    sample
-                        ? localizedFormat("premium.journey.preview_week_format", default: "Preview journey week: %@", journey.title)
-                        : localizedFormat("premium.journey.current_week_format", default: "Current journey week: %@", journey.title))
-                    .font(.subheadline.weight(.semibold))
-                    .accessibilityIdentifier(sample ? "premium.journey.preview_week" : "premium.journey.current_week")
-                Text(
-                    sample
-                        ? localized("premium.journey.preview_eyebrow", default: "Seasonal rhythm")
-                        : localized("premium.journey.current_eyebrow", default: "Current weekly rhythm"))
-                    .appEyebrowStyle()
-                    .accessibilityIdentifier(sample ? "premium.journey.preview_eyebrow" : "premium.journey.current_eyebrow")
-                Text(journey.summary)
-                    .appSupportingTextStyle()
-
-                ForEach(previewActions, id: \.id) { action in
-                    HStack(alignment: .top, spacing: 8) {
-                        Image(systemName: sample ? "circle" : (isPremiumJourneyActionCompleted(action) ? "checkmark.circle.fill" : "circle"))
-                            .foregroundStyle(sample ? CatholicTheme.primary : (isPremiumJourneyActionCompleted(action) ? CatholicTheme.successForeground : CatholicTheme.primary))
-                            .padding(.top, 2)
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(action.category.label)
-                                .appEyebrowStyle()
-                            Text(action.title)
-                                .font(.subheadline.weight(.semibold))
-                            Text(action.detail)
-                                .appSupportingTextStyle()
-                        }
-                    }
+        return PremiumJourneyCard(
+            isSample: sample,
+            title: sample
+                ? localized("premium.journey.preview_title", default: "Preview Guided Seasonal Formation")
+                : localized("premium.journey.current_title", default: "Your Guided Seasonal Journey"),
+            intro: sample
+                ? localized(
+                    "premium.journey.preview_intro",
+                    default: "This preview shows how premium turns the current season into one weekly rhythm for fasting, prayer, mercy, and review.")
+                : localized(
+                    "premium.journey.current_intro",
+                    default: "Premium keeps the current week and next faithful action visible without rebuilding the whole plan."),
+            weekTitle: sample
+                ? localizedFormat("premium.journey.preview_week_format", default: "Preview journey week: %@", journey.title)
+                : localizedFormat("premium.journey.current_week_format", default: "Current journey week: %@", journey.title),
+            eyebrow: sample
+                ? localized("premium.journey.preview_eyebrow", default: "Seasonal rhythm")
+                : localized("premium.journey.current_eyebrow", default: "Current weekly rhythm"),
+            summary: journey.summary,
+            actions: previewActions,
+            completionSummary: sample ? nil : premiumJourneyCompletionSummary,
+            nextStep: sample ? nil : premiumGuidedJourneyNextAction.map {
+                localizedFormat("premium.journey.next_step_format", default: "Next step: %@", $0.title)
+            },
+            previewHint: sample
+                ? localized(
+                    "premium.journey.preview_hint",
+                    default: "Preview only. Unlock premium below to keep the current week, carry the journey through the season, and review the rhythm gently.")
+                : nil,
+            isCompleted: isPremiumJourneyActionCompleted,
+            onAppear: {
+                if launchFunnelSnapshot.premiumPreviewSeenAt == nil {
+                    launchFunnelSnapshot.premiumPreviewSeenAt = Date()
                 }
-            }
-
-            if sample {
-                Text(
-                    localized(
-                        "premium.journey.preview_hint",
-                        default: "Preview only. Unlock premium below to keep the current week, carry the journey through the season, and review the rhythm gently."))
-                    .appSupportingTextStyle()
-            } else {
-                Text(premiumJourneyCompletionSummary)
-                    .appSupportingTextStyle()
-                if let nextAction = premiumGuidedJourneyNextAction {
-                    Text(localizedFormat("premium.journey.next_step_format", default: "Next step: %@", nextAction.title))
-                        .appEyebrowStyle()
-                }
-            }
-        }
-        .padding(14)
-        .appSurfaceCard(sample ? .standard : .primary, cornerRadius: 16)
-        .appRoundedGlass(cornerRadius: 16)
-        .accessibilityIdentifier("premium.sample_preview")
-        .onAppear {
-            if launchFunnelSnapshot.premiumPreviewSeenAt == nil {
-                launchFunnelSnapshot.premiumPreviewSeenAt = Date()
-            }
-        }
-    }
-
-    func premiumPillarCard(for pillar: SubscriptionOfferCatalog.Pillar) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Label(pillar.title, systemImage: premiumIconName(for: pillar.requiredSurface))
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(CatholicTheme.primary)
-
-            Text(pillar.subtitle)
-                .appSupportingTextStyle()
-
-            ForEach(pillar.outcomes, id: \.self) { outcome in
-                HStack(alignment: .top, spacing: 8) {
-                    Image(systemName: "circle.fill")
-                        .appSymbolStyle(.subtle)
-                        .foregroundStyle(CatholicTheme.accentForeground)
-                        .padding(.top, 5)
-                    Text(outcome)
-                        .appSupportingTextStyle()
-                }
-            }
-        }
-        .padding(12)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .appSurfaceCard(.utility, cornerRadius: 14)
+            })
     }
 
     #if canImport(StoreKit)
@@ -504,56 +360,27 @@ extension ContentView {
     }
 
     var premiumLegalSupportCard: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text(localized("premium.legal.title", default: "Restore / Manage / Legal"))
-                .appEyebrowStyle()
-
-            Text(localized("premium.legal.summary", default: "Use these after choosing a plan if you need to restore billing or open legal links."))
-                .appSupportingTextStyle()
-                .foregroundStyle(.secondary)
-
-            Button(localized("premium.legal.restore", default: "Restore Purchases")) {
+        PremiumLegalSupportCard(
+            title: localized("premium.legal.title", default: "Restore / Manage / Legal"),
+            summary: localized(
+                "premium.legal.summary",
+                default: "Use these after choosing a plan if you need to restore billing or open legal links."),
+            restoreTitle: localized("premium.legal.restore", default: "Restore Purchases"),
+            manageTitle: localized("premium.legal.manage", default: "Manage Subscription"),
+            termsTitle: localized("premium.legal.terms", default: "Terms of Use (EULA)"),
+            privacyTitle: localized("premium.legal.privacy", default: "Privacy Policy"),
+            supportTitle: localized("premium.legal.support", default: "Support"),
+            isPurchasing: monetizationStore.isPurchasing,
+            onRestore: {
                 Task {
                     await monetizationStore.restorePurchases()
                 }
-            }
-            .appSecondaryButtonStyle()
-            .disabled(monetizationStore.isPurchasing)
-            .accessibilityIdentifier("premium.restore")
-
-            Button(localized("premium.legal.manage", default: "Manage Subscription")) {
+            },
+            onManage: {
                 Task {
                     await monetizationStore.openManageSubscriptions()
                 }
-            }
-            .appSecondaryButtonStyle()
-            .disabled(monetizationStore.isPurchasing)
-            .accessibilityIdentifier("premium.manage")
-
-            Link(localized("premium.legal.terms", default: "Terms of Use (EULA)"), destination: UIConstants.termsOfUseURL)
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(CatholicTheme.primary)
-                .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
-                .contentShape(Rectangle())
-                .accessibilityIdentifier("premium.legal.terms")
-            Link(localized("premium.legal.privacy", default: "Privacy Policy"), destination: UIConstants.privacyPolicyURL)
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(CatholicTheme.primary)
-                .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
-                .contentShape(Rectangle())
-                .accessibilityIdentifier("premium.legal.privacy")
-            Link(localized("premium.legal.support", default: "Support"), destination: UIConstants.supportSiteURL)
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(CatholicTheme.primary)
-                .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
-                .contentShape(Rectangle())
-                .accessibilityIdentifier("premium.legal.support")
-        }
-        .padding(14)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .appSurfaceCard(.utility, cornerRadius: 16)
-        .accessibilityElement(children: .contain)
-        .accessibilityIdentifier("premium.legal_actions")
+            })
     }
 
     func premiumIconName(for surface: PremiumEntitlementSurface) -> String {
@@ -568,36 +395,4 @@ extension ContentView {
             "square.and.arrow.up"
         }
     }
-
-    func premiumTrustPill(text: String, systemImage: String) -> some View {
-        HStack(spacing: 6) {
-            Image(systemName: systemImage)
-            Text(text)
-        }
-        .font(.caption2.weight(.semibold))
-        .foregroundStyle(CatholicTheme.primary)
-        .padding(.horizontal, 10)
-        .padding(.vertical, 7)
-        .background(CatholicTheme.accent.opacity(0.12), in: Capsule(style: .continuous))
-        .appCapsuleGlass()
-    }
-
-    #if canImport(StoreKit)
-    private func subscriptionPeriodSuffix(for product: Product) -> String {
-        guard let period = product.subscription?.subscriptionPeriod else { return "" }
-        let unitText =
-            switch period.unit {
-            case .day: "day"
-            case .week: "week"
-            case .month: "month"
-            case .year: "year"
-            @unknown default: "period"
-            }
-        let count = period.value
-        if count == 1 {
-            return " per \(unitText)"
-        }
-        return " per \(count) \(unitText)s"
-    }
-    #endif
 }

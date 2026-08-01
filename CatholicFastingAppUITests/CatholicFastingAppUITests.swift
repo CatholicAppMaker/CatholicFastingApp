@@ -669,6 +669,58 @@ final class CatholicFastingAppUITests: XCTestCase {
             height: maximumY - minimumY)
     }
 
+    func assertPhoneSurfaceFillsViewport(
+        _ surface: String,
+        anchor: XCUIElement,
+        in app: XCUIApplication,
+        maximumBottomGap: CGFloat = 180,
+        requiresFullVisibility: Bool = false,
+        file: StaticString = #filePath,
+        line: UInt = #line)
+    {
+        let tabBar = app.tabBars.firstMatch
+        XCTAssertTrue(
+            anchor.waitForExistence(timeout: 4),
+            "\(surface) is missing its first-viewport anchor",
+            file: file,
+            line: line)
+        XCTAssertTrue(
+            tabBar.waitForExistence(timeout: 4),
+            "\(surface) is missing the phone tab bar",
+            file: file,
+            line: line)
+        let usableViewport = usableContentViewport(in: app)
+        XCTAssertTrue(
+            usableViewport.intersects(anchor.frame),
+            "\(surface) does not expose meaningful content near the bottom of its initial viewport",
+            file: file,
+            line: line)
+
+        let usableBottom = tabBar.frame.minY - 8
+        if requiresFullVisibility {
+            XCTAssertLessThanOrEqual(
+                anchor.frame.maxY,
+                usableBottom,
+                "\(surface) primary action overlaps the floating tab bar",
+                file: file,
+                line: line)
+            XCTAssertTrue(
+                anchor.isHittable,
+                "\(surface) primary action is not reachable in the initial viewport",
+                file: file,
+                line: line)
+        }
+
+        let visibleAnchorBottom = min(anchor.frame.maxY, usableBottom)
+        let bottomGap = usableBottom - visibleAnchorBottom
+        XCTAssertLessThanOrEqual(
+            bottomGap,
+            maximumBottomGap,
+            "\(surface) leaves an excessive \(Int(bottomGap.rounded()))-point dead band above the tab bar",
+            file: file,
+            line: line)
+    }
+
     func firstVisibleFrame(
         in query: XCUIElementQuery,
         intersecting appFrame: CGRect) -> CGRect?

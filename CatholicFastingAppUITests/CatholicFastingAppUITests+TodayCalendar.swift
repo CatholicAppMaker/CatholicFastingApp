@@ -119,23 +119,29 @@ extension CatholicFastingAppUITests {
         XCTAssertFalse(elementIsVisible(elementByIdentifier("companion.formation", in: app), in: app))
     }
 
-    func testPhoneTodayOptionalFastActionStaysAboveTabBar() {
+    func testPhonePrimarySurfacesFillViewportAboveTabBar() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)
-        openSurface("Today", in: app)
 
-        let action = app.buttons["companion.live.action"].firstMatch
-        let tabBar = app.tabBars.firstMatch
-        XCTAssertTrue(action.waitForExistence(timeout: 4))
-        XCTAssertTrue(tabBar.waitForExistence(timeout: 4))
-
-        let usableBottom = tabBar.frame.minY - 8
-        XCTAssertLessThanOrEqual(
-            action.frame.maxY,
-            usableBottom,
-            "Today’s personal-fast action is clipped or pushed into the tab-bar dead band")
-        XCTAssertTrue(action.isHittable, "Today’s personal-fast action is not reachable in the initial viewport")
+        for surface in ["Today", "Calendar", "Fast", "More"] {
+            openSurface(surface, in: app)
+            let anchor: XCUIElement = switch surface {
+            case "Today":
+                app.buttons["companion.live.action"].firstMatch
+            case "Calendar":
+                elementByIdentifier("fasting_days.hero", in: app)
+            case "Fast":
+                elementByIdentifier("intermittent.first_viewport_context", in: app)
+            default:
+                elementByIdentifier("more.hub.historyOfFasting", in: app)
+            }
+            assertPhoneSurfaceFillsViewport(
+                surface,
+                anchor: anchor,
+                in: app,
+                requiresFullVisibility: surface == "Today")
+        }
     }
 
     func testIPhoneLiturgicalThemeToggleExplainsOrdinaryTimeFallback() {

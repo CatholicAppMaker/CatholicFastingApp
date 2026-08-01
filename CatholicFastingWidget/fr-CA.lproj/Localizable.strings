@@ -7,4 +7,5 @@
 "widget.fallback.today.obligation" = "Aucune obligation";
 "widget.fallback.next_required" = "Aucune observance obligatoire à venir";
 "widget.fast.active" = "Jeûne actif";
+"widget.fast.active_target" = "Jeûne actif. Objectif à %@";
 "widget.fast.target_reached" = "Objectif de jeûne atteint";

@@ -4,63 +4,28 @@ import SwiftUI
 import UIKit
 #endif
 
-#if canImport(UserNotifications)
-import UserNotifications
-#endif
-#if canImport(TipKit)
-import TipKit
-#endif
-
 struct ContentView: View {
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.requestReview) var requestReview
+    @ScaledMetric(relativeTo: .title2) var regularLiveTrackerCountdownSize: CGFloat = 30
+    @ScaledMetric(relativeTo: .title3) var compactLiveTrackerCountdownSize: CGFloat = 25
     @State var year = Calendar.gregorian.component(.year, from: AppClock.now())
     @StateObject var tracker = FastTracker()
     @StateObject var penanceNotes = FridayPenanceNotes()
     @StateObject var intermittentTracker = IntermittentFastTracker()
     @StateObject var monetizationStore = MonetizationStore()
-    @State var notificationStatus = ""
-    @State var premiumCoachStatus = ""
-    @State var showDeleteDataConfirm = false
-    @State var guidanceScenario: GuidanceScenario = .normalDay
-    @State var homeSurface: HomeSurface = .today
-    @State var selectedMoreDestination: MoreHubDestination? = .supportAndPremium
-    @State var moreNavigationPath: [MoreHubDestination] = []
-    @State var pendingPhoneMoreDestination: MoreHubDestination?
-    @State var selectedPremiumToolDestination: PremiumToolDestination? = .planner
-    @State var selectedFastingObservanceID = ""
+    @State var navigationState = AppNavigationState()
+    @State var fastPresentation = FastPresentationState()
+    @State var premiumPresentation = PremiumPresentationState()
+    @State var feedback = AppFeedbackState()
     @State var launchExecutionState = AppLaunchExecutionState()
-    @State var planningData = LocalFeatureStore.loadPlanningData()
-    @State var intermittentSchedules = LocalFeatureStore.loadSchedules()
-    @State var activeIntermittentScheduleID = LocalFeatureStore.loadActiveScheduleID() ?? ""
-    @State var editingIntermittentScheduleID = ""
-    @State var intermittentShowScheduleEditor = false
-    @State var newIntermittentScheduleName = ""
-    @State var newIntermittentScheduleStartHour = 20
-    @State var newIntermittentScheduleWeekdays: Set<Int> = [2, 4, 6]
-    @State var intermittentManualStart = AppClock.now()
-    @State var intermittentRecapNote = ""
-    @FocusState var intermittentRecapNoteFocused: Bool
-    @State var lastTargetReachedHapticKey = ""
-    @State var lastEatingWindowClosedHapticKey = ""
-    @State var householdProfiles = LocalFeatureStore.loadProfiles()
-    @State var activeHouseholdProfileID = LocalFeatureStore.loadActiveProfileID() ?? ""
-    @State var devotionalFavorites = LocalFeatureStore.loadDevotionalFavorites()
-    @State var reflectionEntries = LocalFeatureStore.loadReflections()
-    @State var premiumChecklist = LocalFeatureStore.loadChecklist()
-    @State var premiumCompanion = LocalFeatureStore.loadPremiumCompanionState()
-    @State var newHouseholdProfileName = ""
-    @State var newSeasonCommitmentTitle = ""
-    @State var newReflectionTitle = ""
-    @State var newReflectionBody = ""
-    @State var newVirtueNote = ""
-    @State var selectedVirtue = "Temperance"
-    @State var premiumHouseholdImportCode = ""
-    @State var premiumHouseholdExportCode = ""
-    @State var premiumCompanionStatus = ""
     @State var launchFunnelSnapshot = LocalFeatureStore.loadLaunchFunnelSnapshot()
+    @State var planningSession = PlanningSessionState()
+    @State var profileSession = ProfileSessionState()
+    @State var premiumSession = PremiumSessionState()
+    @FocusState var intermittentRecapNoteFocused: Bool
 
     @AppStorage(StorageKeys.age14OrOlderForAbstinence) var age14OrOlderForAbstinence =
         DefaultValues.age14OrOlderForAbstinence
@@ -120,10 +85,6 @@ struct ContentView: View {
                 ?? .substitutePenance,
             calendarMode: RuleSettings.CalendarMode(rawValue: calendarModeRaw) ?? .usccb,
             regionProfile: RuleSettings.RegionProfile(rawValue: regionProfileRaw) ?? .us)
-    }
-
-    var provinceSelection: RuleSettings.USProvincePreset {
-        RuleSettings.USProvincePreset(rawValue: provinceRaw) ?? .otherUSProvince
     }
 
     var languageMode: LanguageMode {
@@ -187,5 +148,22 @@ struct ContentView: View {
         }
         #endif
         return .phone
+    }
+
+    var body: some View {
+        Group {
+            if didCompleteOnboarding {
+                applyRootLifecycleHandlers(
+                    to: Group {
+                        if appLayoutProfile.usesSplitViewShell {
+                            ipadRootScaffold
+                        } else {
+                            tabRootScaffold
+                        }
+                    })
+            } else {
+                onboardingLaunchRoot
+            }
+        }
     }
 }

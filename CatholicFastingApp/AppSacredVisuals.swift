@@ -199,51 +199,6 @@ struct SacredIdentityThumbnail: View {
     }
 }
 
-struct SacredMasthead: View {
-    let assetName: String
-    let seasonLabel: String
-    var height: CGFloat = 92
-    var accessibilityIdentifier: String?
-
-    var body: some View {
-        ZStack(alignment: .bottom) {
-            Group {
-                if SacredImageAssetResolver.hasAsset(named: assetName) {
-                    Image(assetName)
-                        .resizable()
-                        .scaledToFill()
-                } else {
-                    LinearGradient(
-                        colors: [CatholicTheme.action, CatholicTheme.accent],
-                        startPoint: .leading,
-                        endPoint: .trailing)
-                }
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .clipped()
-
-            LinearGradient(
-                colors: [Color.clear, CatholicTheme.action.opacity(0.20)],
-                startPoint: .bottom,
-                endPoint: .top)
-
-            Rectangle()
-                .fill(CatholicTheme.action.opacity(0.72))
-                .frame(height: 2)
-        }
-        .frame(height: height)
-        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-        .overlay {
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .stroke(CatholicTheme.accent.opacity(0.44), lineWidth: 1)
-        }
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(
-            "\(AppLocalizer.localizedCurrent("shared.app_title", default: "Catholic Fasting")), \(seasonLabel)")
-        .modifier(AccessibilityIDModifier(id: accessibilityIdentifier))
-    }
-}
-
 struct SacredHeroCard: View {
     let assetName: String
     let title: String

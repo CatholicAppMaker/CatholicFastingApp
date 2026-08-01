@@ -2,19 +2,19 @@ import SwiftUI
 
 extension ContentView {
     func addOrUpdateIntermittentSchedulePlan() {
-        let count = intermittentSchedules.count + 1
-        let trimmedName = newIntermittentScheduleName.trimmingCharacters(in: .whitespacesAndNewlines)
-        let weekdays = Array(newIntermittentScheduleWeekdays).sorted()
+        let count = planningSession.schedules.count + 1
+        let trimmedName = fastPresentation.scheduleName.trimmingCharacters(in: .whitespacesAndNewlines)
+        let weekdays = Array(fastPresentation.scheduleWeekdays).sorted()
         guard !weekdays.isEmpty else { return }
-        let normalizedHour = min(max(newIntermittentScheduleStartHour, 0), 23)
+        let normalizedHour = min(max(fastPresentation.scheduleStartHour, 0), 23)
 
-        if let index = intermittentSchedules.firstIndex(where: { $0.id == editingIntermittentScheduleID }) {
-            intermittentSchedules[index].name = trimmedName.isEmpty ? "Plan \(index + 1)" : trimmedName
-            intermittentSchedules[index].targetHours = intermittentTracker.presetHours
-            intermittentSchedules[index].startHour = normalizedHour
-            intermittentSchedules[index].weekdays = weekdays
-            activeIntermittentScheduleID = intermittentSchedules[index].id
-            editingIntermittentScheduleID = ""
+        if let index = planningSession.schedules.firstIndex(where: { $0.id == fastPresentation.editingScheduleID }) {
+            planningSession.schedules[index].name = trimmedName.isEmpty ? "Plan \(index + 1)" : trimmedName
+            planningSession.schedules[index].targetHours = intermittentTracker.presetHours
+            planningSession.schedules[index].startHour = normalizedHour
+            planningSession.schedules[index].weekdays = weekdays
+            planningSession.activeScheduleID = planningSession.schedules[index].id
+            fastPresentation.editingScheduleID = ""
         } else {
             let newPlan = IntermittentSchedulePlan(
                 id: UUID().uuidString,
@@ -22,47 +22,47 @@ extension ContentView {
                 targetHours: intermittentTracker.presetHours,
                 startHour: normalizedHour,
                 weekdays: weekdays)
-            intermittentSchedules.append(newPlan)
-            activeIntermittentScheduleID = newPlan.id
+            planningSession.schedules.append(newPlan)
+            planningSession.activeScheduleID = newPlan.id
         }
 
-        newIntermittentScheduleName = ""
-        newIntermittentScheduleStartHour = 20
-        newIntermittentScheduleWeekdays = [2, 4, 6]
+        fastPresentation.scheduleName = ""
+        fastPresentation.scheduleStartHour = 20
+        fastPresentation.scheduleWeekdays = [2, 4, 6]
     }
 
     func startEditingIntermittentSchedule(_ plan: IntermittentSchedulePlan) {
-        editingIntermittentScheduleID = plan.id
-        newIntermittentScheduleName = plan.name
-        newIntermittentScheduleStartHour = plan.startHour
-        newIntermittentScheduleWeekdays = Set(plan.weekdays)
+        fastPresentation.editingScheduleID = plan.id
+        fastPresentation.scheduleName = plan.name
+        fastPresentation.scheduleStartHour = plan.startHour
+        fastPresentation.scheduleWeekdays = Set(plan.weekdays)
         intermittentTracker.setPresetHours(plan.targetHours)
     }
 
     func cancelEditingIntermittentSchedule() {
-        editingIntermittentScheduleID = ""
-        newIntermittentScheduleName = ""
-        newIntermittentScheduleStartHour = 20
-        newIntermittentScheduleWeekdays = [2, 4, 6]
+        fastPresentation.editingScheduleID = ""
+        fastPresentation.scheduleName = ""
+        fastPresentation.scheduleStartHour = 20
+        fastPresentation.scheduleWeekdays = [2, 4, 6]
     }
 
     func deleteIntermittentSchedule(_ plan: IntermittentSchedulePlan) {
-        intermittentSchedules.removeAll { $0.id == plan.id }
-        if activeIntermittentScheduleID == plan.id {
-            activeIntermittentScheduleID = ""
+        planningSession.schedules.removeAll { $0.id == plan.id }
+        if planningSession.activeScheduleID == plan.id {
+            planningSession.activeScheduleID = ""
         }
-        if editingIntermittentScheduleID == plan.id {
+        if fastPresentation.editingScheduleID == plan.id {
             cancelEditingIntermittentSchedule()
         }
     }
 
     func applyIntermittentSchedule(_ plan: IntermittentSchedulePlan) async {
         intermittentTracker.setPresetHours(plan.targetHours)
-        activeIntermittentScheduleID = plan.id
+        planningSession.activeScheduleID = plan.id
         if acceptedLegalNotice {
-            notificationStatus = await ReminderScheduler.scheduleIntermittentPlan(plan)
+            feedback.notificationStatus = await ReminderScheduler.scheduleIntermittentPlan(plan)
         } else {
-            notificationStatus = localizedFormat(
+            feedback.notificationStatus = localizedFormat(
                 "reminder.status.plan_applied_consent_required_format",
                 default: "Applied %@. Enable consent in Privacy & Data to schedule start reminders.",
                 plan.name)
@@ -101,19 +101,19 @@ extension ContentView {
 
     var intermittentActiveStartBinding: Binding<Date> {
         Binding(
-            get: { intermittentTracker.activeStart ?? intermittentManualStart },
+            get: { intermittentTracker.activeStart ?? fastPresentation.manualStart },
             set: { newValue in
-                intermittentManualStart = newValue
+                fastPresentation.manualStart = newValue
                 intermittentTracker.updateActiveStart(to: newValue)
-                intermittentManualStart = intermittentTracker.activeStart ?? newValue
+                fastPresentation.manualStart = intermittentTracker.activeStart ?? newValue
                 refreshIntermittentTargetReminder()
             })
     }
 
     func startIntermittentFastFromSelectedTime() {
-        intermittentTracker.startFast(now: intermittentManualStart)
-        intermittentManualStart = intermittentTracker.activeStart ?? AppClock.now()
-        intermittentRecapNote = ""
+        intermittentTracker.startFast(now: fastPresentation.manualStart)
+        fastPresentation.manualStart = intermittentTracker.activeStart ?? AppClock.now()
+        fastPresentation.recapNote = ""
         refreshIntermittentTargetReminder()
     }
 
@@ -122,17 +122,17 @@ extension ContentView {
         intermittentTracker.endFast(
             now: AppClock.now(),
             intentionID: intermittentIntentionRaw,
-            note: intermittentRecapNote)
-        homeSurface = .intermittent
+            note: fastPresentation.recapNote)
+        navigationState.homeSurface = .intermittent
         let didCompleteTarget = intermittentTracker.sessions.first?.completedTarget ?? false
         let completedTargetSessionCount = intermittentTracker.sessions.count(where: \.completedTarget)
         requestAppReviewIfEligible(
             justCompletedTarget: didCompleteTarget,
             completedTargetSessionCount: completedTargetSessionCount)
-        intermittentRecapNote = ""
+        fastPresentation.recapNote = ""
         resetIntermittentManualStartToNow()
         Task {
-            notificationStatus = await ReminderScheduler.clearIntermittentTargetReminders()
+            feedback.notificationStatus = await ReminderScheduler.clearIntermittentTargetReminders()
         }
     }
 
@@ -156,27 +156,21 @@ extension ContentView {
     func cancelIntermittentFast() {
         intermittentRecapNoteFocused = false
         intermittentTracker.cancelActiveFast()
-        homeSurface = .intermittent
-        intermittentRecapNote = ""
+        navigationState.homeSurface = .intermittent
+        fastPresentation.recapNote = ""
         resetIntermittentManualStartToNow()
         Task {
-            notificationStatus = await ReminderScheduler.clearIntermittentTargetReminders()
+            feedback.notificationStatus = await ReminderScheduler.clearIntermittentTargetReminders()
         }
     }
 
-    func applyIntermittentManualStartEdit() {
-        intermittentTracker.updateActiveStart(to: intermittentManualStart)
-        intermittentManualStart = intermittentTracker.activeStart ?? AppClock.now()
-        refreshIntermittentTargetReminder()
-    }
-
     func resetIntermittentManualStartToNow() {
-        intermittentManualStart = AppClock.now()
+        fastPresentation.manualStart = AppClock.now()
     }
 
     func refreshIntermittentTargetReminder() {
         Task {
-            notificationStatus = await ReminderScheduler.scheduleIntermittentTargetReminder(
+            feedback.notificationStatus = await ReminderScheduler.scheduleIntermittentTargetReminder(
                 enabled: intermittentTargetReminderEnabled,
                 start: intermittentTracker.activeStart,
                 targetHours: intermittentTracker.presetHours)
@@ -217,11 +211,11 @@ extension ContentView {
     }
 
     var canSaveIntermittentSchedule: Bool {
-        !newIntermittentScheduleWeekdays.isEmpty
+        !fastPresentation.scheduleWeekdays.isEmpty
     }
 
     var isEditingIntermittentSchedule: Bool {
-        !editingIntermittentScheduleID.isEmpty
+        !fastPresentation.editingScheduleID.isEmpty
     }
 
     func weekdayListText(_ weekdays: [Int]) -> String {
@@ -243,10 +237,10 @@ extension ContentView {
 
     func toggleIntermittentScheduleWeekday(_ weekday: Int) {
         guard (1 ... 7).contains(weekday) else { return }
-        if newIntermittentScheduleWeekdays.contains(weekday) {
-            newIntermittentScheduleWeekdays.remove(weekday)
+        if fastPresentation.scheduleWeekdays.contains(weekday) {
+            fastPresentation.scheduleWeekdays.remove(weekday)
         } else {
-            newIntermittentScheduleWeekdays.insert(weekday)
+            fastPresentation.scheduleWeekdays.insert(weekday)
         }
     }
 }

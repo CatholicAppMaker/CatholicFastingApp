@@ -1,19 +1,6 @@
 import SwiftUI
 
 extension HomeSurface {
-    var ipadLayout: IPadWorkspaceLayout {
-        switch self {
-        case .today:
-            .dashboard
-        case .fastingDays:
-            .planningTriptych
-        case .intermittent:
-            .controlCenter
-        case .more:
-            .settingsDetail
-        }
-    }
-
     var ipadSubtitle: String {
         switch self {
         case .today:
@@ -42,15 +29,15 @@ extension ContentView {
             List {
                 ForEach(HomeSurface.primarySurfaces) { surface in
                     Button {
-                        homeSurface = surface
+                        navigationState.homeSurface = surface
                     } label: {
                         IPadSidebarRow(
                             title: localizedHomeSurfaceLabel(surface),
                             systemImage: surface.iconName,
-                            isSelected: homeSurface == surface)
+                            isSelected: navigationState.homeSurface == surface)
                     }
                     .buttonStyle(.plain)
-                    .appSelectedAccessibility(homeSurface == surface)
+                    .appSelectedAccessibility(navigationState.homeSurface == surface)
                     .accessibilityHint(surface.ipadSubtitle)
                     .accessibilityIdentifier("ipad.sidebar.\(surface.rawValue)")
                 }
@@ -67,7 +54,7 @@ extension ContentView {
             .appListBackground()
         } detail: {
             NavigationStack {
-                ipadSurfaceWorkspace(for: homeSurface)
+                ipadSurfaceWorkspace(for: navigationState.homeSurface)
             }
         }
         .navigationSplitViewStyle(.balanced)
@@ -121,7 +108,7 @@ extension ContentView {
     }
 
     func selectedFastingObservance(from items: [Observance]) -> Observance? {
-        if let selected = items.first(where: { $0.id == selectedFastingObservanceID }) {
+        if let selected = items.first(where: { $0.id == navigationState.selectedFastingObservanceID }) {
             return selected
         }
         return items.first
@@ -129,14 +116,10 @@ extension ContentView {
 
     func selectDefaultFastingObservance(from items: [Observance]) {
         guard !items.isEmpty else {
-            selectedFastingObservanceID = ""
+            navigationState.selectedFastingObservanceID = ""
             return
         }
-        guard !items.contains(where: { $0.id == selectedFastingObservanceID }) else { return }
-        selectedFastingObservanceID = items[0].id
-    }
-
-    var regionSpecificGuidanceFooter: String {
-        RegionalGuidanceContextFactory.generalContext(for: settings).disclosureText
+        guard !items.contains(where: { $0.id == navigationState.selectedFastingObservanceID }) else { return }
+        navigationState.selectedFastingObservanceID = items[0].id
     }
 }

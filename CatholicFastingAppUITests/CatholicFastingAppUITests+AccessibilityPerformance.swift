@@ -33,6 +33,34 @@ extension CatholicFastingAppUITests {
         try auditIPadWorkspace("more")
     }
 
+    func testIPadActiveFastRemainsUsableWithAccessibilitySettings() {
+        let app = makeApp(seedActiveFast: true, fixedDate: "2026-07-17")
+        app.launchArguments += [
+            "-UIPreferredContentSizeCategoryName",
+            "UICTContentSizeCategoryAccessibilityExtraExtraExtraLarge",
+            "-UIAccessibilityDarkerSystemColorsEnabled", "YES",
+            "-UIAccessibilityButtonShapesEnabled", "YES",
+            "-UIAccessibilityReduceMotionEnabled", "YES",
+        ]
+        app.launch()
+        ensureOnHomeScreen(app)
+        openIPadSurface("intermittent", in: app)
+
+        let livePanel = elementByIdentifier("ipad.intermittent.live", in: app)
+        let endButton = app.buttons["ipad.intermittent.end"].firstMatch
+        let cancelButton = app.buttons["ipad.intermittent.cancel"].firstMatch
+        XCTAssertTrue(livePanel.waitForExistence(timeout: 4))
+        XCTAssertTrue(endButton.waitForExistence(timeout: 4))
+        XCTAssertTrue(cancelButton.waitForExistence(timeout: 4))
+        XCTAssertTrue(elementIsVisible(endButton, in: app))
+        XCTAssertTrue(elementIsVisible(cancelButton, in: app))
+        XCTAssertTrue(
+            app.staticTexts
+                .matching(NSPredicate(format: "label BEGINSWITH %@", "This tracker does not create a Church obligation."))
+                .firstMatch
+                .exists)
+    }
+
     func testIPhoneAccessibilityTextSizeKeepsPrimaryActionsReachable() {
         let app = makeApp(fixedDate: "2026-07-17")
         app.launchArguments += [
@@ -78,6 +106,31 @@ extension CatholicFastingAppUITests {
         }
     }
 
+    func testIPadFrenchCanadianAccessibilityTextSizeKeepsLocalizedWorkspacesUsable() {
+        let app = makeApp(languageMode: "frenchCanadian", fixedDate: "2026-07-17")
+        app.launchArguments += [
+            "-UIPreferredContentSizeCategoryName",
+            "UICTContentSizeCategoryAccessibilityExtraExtraExtraLarge",
+        ]
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        for surface in ["today", "fasting_days", "intermittent", "more"] {
+            openIPadSurface(surface, in: app)
+            assertIPadWorkspaceVisible(surface, in: app)
+        }
+
+        openIPadSurface("intermittent", in: app)
+        XCTAssertTrue(elementByIdentifier("ipad.intermittent.live", in: app).waitForExistence(timeout: 4))
+        XCTAssertTrue(app.staticTexts["Définissez un objectif et commencez quand vous êtes prêt."].firstMatch.exists)
+
+        openIPadSurface("more", in: app)
+        XCTAssertTrue(
+            app.buttons["ipad.more.destination.supportAndPremium"].firstMatch.waitForExistence(timeout: 4)
+                || app.buttons["ipad.more.compact.supportAndPremium"].firstMatch.waitForExistence(timeout: 4))
+        XCTAssertFalse(app.staticTexts["Support & Premium"].firstMatch.exists)
+    }
+
     func testIPadUpcomingCalendarNeverDefaultsToPastObservance() {
         let app = makeApp(fixedDate: "2026-07-17")
         app.launch()
@@ -103,12 +156,14 @@ extension CatholicFastingAppUITests {
 
     func testIOS26AccessibilityArtifactPolicyIsNarrow() {
         XCTAssertTrue(Self.isKnownIOS26AccessibilityArtifact(
+            operatingSystemMajorVersion: 26,
             auditType: .contrast,
             label: "",
             identifier: "",
             elementExists: false,
             frame: .zero))
         XCTAssertTrue(Self.isKnownIOS26AccessibilityArtifact(
+            operatingSystemMajorVersion: 26,
             auditType: .elementDetection,
             label: "",
             identifier: "",
@@ -116,30 +171,42 @@ extension CatholicFastingAppUITests {
             frame: nil))
 
         XCTAssertFalse(Self.isKnownIOS26AccessibilityArtifact(
+            operatingSystemMajorVersion: 27,
+            auditType: .contrast,
+            label: "",
+            identifier: "",
+            elementExists: false,
+            frame: .zero))
+        XCTAssertFalse(Self.isKnownIOS26AccessibilityArtifact(
+            operatingSystemMajorVersion: 26,
             auditType: .dynamicType,
             label: "",
             identifier: "",
             elementExists: false,
             frame: .zero))
         XCTAssertFalse(Self.isKnownIOS26AccessibilityArtifact(
+            operatingSystemMajorVersion: 26,
             auditType: .contrast,
             label: "Visible content",
             identifier: "",
             elementExists: false,
             frame: .zero))
         XCTAssertFalse(Self.isKnownIOS26AccessibilityArtifact(
+            operatingSystemMajorVersion: 26,
             auditType: .contrast,
             label: "",
             identifier: "app.content",
             elementExists: false,
             frame: .zero))
         XCTAssertFalse(Self.isKnownIOS26AccessibilityArtifact(
+            operatingSystemMajorVersion: 26,
             auditType: .contrast,
             label: "",
             identifier: "",
             elementExists: true,
             frame: .zero))
         XCTAssertFalse(Self.isKnownIOS26AccessibilityArtifact(
+            operatingSystemMajorVersion: 26,
             auditType: .elementDetection,
             label: "",
             identifier: "",
@@ -226,6 +293,7 @@ extension CatholicFastingAppUITests {
                     + "detail=\(issue.detailedDescription)")
 
             let isAllowedArtifact = Self.isKnownIOS26AccessibilityArtifact(
+                operatingSystemMajorVersion: ProcessInfo.processInfo.operatingSystemVersion.majorVersion,
                 auditType: issue.auditType,
                 label: label,
                 identifier: identifier,
@@ -244,12 +312,16 @@ extension CatholicFastingAppUITests {
     }
 
     static func isKnownIOS26AccessibilityArtifact(
+        operatingSystemMajorVersion: Int,
         auditType: XCUIAccessibilityAuditType,
         label: String,
         identifier: String,
         elementExists: Bool,
         frame: CGRect?) -> Bool
     {
+        guard operatingSystemMajorVersion == 26 else {
+            return false
+        }
         let isEligibleAuditType = auditType == .contrast || auditType == .elementDetection
         let hasNoAccessibleIdentity = label.isEmpty && identifier.isEmpty
         let hasNoResolvableFrame = frame == nil || frame == .zero || frame?.isEmpty == true

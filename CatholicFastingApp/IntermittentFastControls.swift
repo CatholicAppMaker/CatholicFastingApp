@@ -43,6 +43,8 @@ enum IntermittentFastControlPresentation: Equatable {
 }
 
 struct IntermittentFastQuickTargetGrid: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     let options: [IntermittentFastTargetOption]
     @Binding var selectedHours: Int
     let presentation: IntermittentFastControlPresentation
@@ -51,7 +53,7 @@ struct IntermittentFastQuickTargetGrid: View {
 
     var body: some View {
         LazyVGrid(
-            columns: presentation.columns,
+            columns: resolvedColumns,
             spacing: presentation.gridSpacing)
         {
             ForEach(options) { option in
@@ -68,7 +70,7 @@ struct IntermittentFastQuickTargetGrid: View {
                     }
                     .frame(
                         maxWidth: .infinity,
-                        minHeight: presentation.minimumTileHeight,
+                        minHeight: dynamicTypeSize.isAccessibilitySize ? nil : presentation.minimumTileHeight,
                         alignment: .leading)
                     .appInteractiveTileStyle(
                         isSelected: selectedHours == option.hours,
@@ -82,19 +84,27 @@ struct IntermittentFastQuickTargetGrid: View {
         .accessibilityIdentifier(pickerIdentifier)
     }
 
+    private var resolvedColumns: [GridItem] {
+        if dynamicTypeSize.isAccessibilitySize {
+            return [GridItem(.flexible())]
+        }
+        return presentation.columns
+    }
+
     @ViewBuilder
     private func targetDetail(_ detail: String) -> some View {
         switch presentation {
         case .phone:
             Text(detail)
                 .font(.caption2)
-                .foregroundStyle(.secondary)
-                .lineLimit(2)
+                .foregroundStyle(CatholicTheme.secondaryInk)
+                .lineLimit(dynamicTypeSize.isAccessibilitySize ? nil : 2)
                 .fixedSize(horizontal: false, vertical: true)
         case .pad:
             Text(detail)
                 .appSupportingTextStyle()
-                .lineLimit(2)
+                .lineLimit(dynamicTypeSize.isAccessibilitySize ? nil : 2)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 }
@@ -277,5 +287,152 @@ struct IntermittentFastPrimaryActions: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.82)
         }
+    }
+}
+
+struct IntermittentFastFirstViewportContext: View {
+    let optionalPracticeLabel: String
+    let intentionText: String
+    let prudenceText: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 5) {
+            Label(optionalPracticeLabel, systemImage: "person.crop.circle.badge.checkmark")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(CatholicTheme.primary)
+            Text(intentionText)
+                .font(.subheadline.weight(.medium))
+            Text(prudenceText)
+                .appSupportingTextStyle()
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("intermittent.first_viewport_context")
+    }
+}
+
+struct IntermittentFastMetricValue: Identifiable {
+    let id: String
+    let title: String
+    let value: String
+    var accessibilityIdentifier: String?
+}
+
+struct IntermittentFastMetricGrid: View {
+    let metrics: [IntermittentFastMetricValue]
+    let stacked: Bool
+
+    var body: some View {
+        Group {
+            if stacked {
+                VStack(spacing: 8) {
+                    metricViews
+                }
+            } else {
+                HStack(spacing: 8) {
+                    metricViews
+                }
+            }
+        }
+    }
+
+    private var metricViews: some View {
+        ForEach(metrics) { metric in
+            if let accessibilityIdentifier = metric.accessibilityIdentifier {
+                IntermittentFastMetricChip(title: metric.title, value: metric.value)
+                    .accessibilityIdentifier(accessibilityIdentifier)
+            } else {
+                IntermittentFastMetricChip(title: metric.title, value: metric.value)
+            }
+        }
+    }
+}
+
+private struct IntermittentFastMetricChip: View {
+    let title: String
+    let value: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(title)
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(.primary)
+                .textCase(.uppercase)
+            Text(value)
+                .font(.system(.title3, design: .rounded).weight(.semibold))
+                .foregroundStyle(CatholicTheme.primary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .appSurfaceCard(.utility, cornerRadius: 14)
+    }
+}
+
+struct IntermittentFastSessionRecapView: View {
+    let recap: IntermittentFastSessionRecap
+    let session: IntermittentFastSession
+    let elapsedTitle: String
+    let elapsedValue: String
+    let targetTitle: String
+    let targetValue: String
+    let intentionTitle: String
+    let intentionValue: String
+    let savedNoteText: String?
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .top, spacing: 10) {
+                Image(systemName: recap.completedTarget ? "checkmark.seal.fill" : "arrow.clockwise.circle.fill")
+                    .imageScale(.large)
+                    .foregroundStyle(recap.completedTarget ? CatholicTheme.successForeground : CatholicTheme.warningForeground)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(recap.title)
+                        .font(.headline.weight(.semibold))
+                        .foregroundStyle(CatholicTheme.primary)
+                    Text(recap.encouragement)
+                        .appSupportingTextStyle()
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .layoutPriority(1)
+                Spacer(minLength: 0)
+            }
+
+            HStack(spacing: 8) {
+                recapMetric(title: elapsedTitle, value: elapsedValue)
+                recapMetric(title: targetTitle, value: targetValue)
+                recapMetric(title: intentionTitle, value: intentionValue)
+            }
+
+            if let savedNoteText {
+                Text(savedNoteText)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityIdentifier("intermittent.recap_note.saved")
+            }
+
+            Text(recap.suggestedNextAction)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(CatholicTheme.primary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(14)
+        .appSurfaceCard(.primary, cornerRadius: 16)
+        .accessibilityValue(Text(session.note ?? ""))
+        .accessibilityIdentifier("intermittent.recap_card")
+    }
+
+    private func recapMetric(title: String, value: String) -> some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(title)
+                .appEyebrowStyle()
+                .textCase(.uppercase)
+            Text(value)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(CatholicTheme.primary)
+                .lineLimit(2)
+                .minimumScaleFactor(0.8)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }

@@ -37,151 +37,117 @@ extension ContentView {
     }
 
     var planningProgressSection: some View {
-        Section(localized("today.plan_snapshot.section", default: "Year Plan Snapshot")) {
-            Text(
-                localizedFormat(
-                    "today.plan_snapshot.progress_format",
-                    default: "Required: %d/%d • Optional: %d/%d",
-                    yearlyRequiredCompletions,
-                    planningData.requiredGoal,
-                    yearlyOptionalCompletions,
-                    planningData.optionalGoal))
-                .font(.subheadline)
-            ProgressView(value: requirementGoalProgress)
-                .tint(CatholicTheme.primary)
-            ProgressView(value: optionalGoalProgress)
-                .tint(CatholicTheme.accent)
-            if currentSeasonCommitments.isEmpty {
-                Text(localizedFormat("today.plan_snapshot.empty_format", default: "No active commitments for %@.", localizedSeasonLabel(currentLiturgicalSeason)))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            } else {
-                ForEach(currentSeasonCommitments.prefix(3)) { commitment in
-                    Label(commitment.title, systemImage: "checkmark.circle")
-                        .font(.caption)
-                }
-            }
-        }
+        DashboardPlanningProgressSection(
+            sectionTitle: localized("today.plan_snapshot.section", default: "Year Plan Snapshot"),
+            progressSummary: localizedFormat(
+                "today.plan_snapshot.progress_format",
+                default: "Required: %d/%d • Optional: %d/%d",
+                yearlyRequiredCompletions,
+                planningSession.data.requiredGoal,
+                yearlyOptionalCompletions,
+                planningSession.data.optionalGoal),
+            requiredProgress: requirementGoalProgress,
+            optionalProgress: optionalGoalProgress,
+            emptyCommitmentsText: currentSeasonCommitments.isEmpty
+                ? localizedFormat(
+                    "today.plan_snapshot.empty_format",
+                    default: "No active commitments for %@.",
+                    localizedSeasonLabel(currentLiturgicalSeason))
+                : nil,
+            commitments: currentSeasonCommitments.prefix(3).map { .init(id: $0.id, title: $0.title) })
     }
 
     var personalInsightsSection: some View {
-        Section(localized("today.insights.section", default: "Personal Insights (Local)")) {
-            Text(localizedFormat("today.insights.completions_format", default: "This month completions: %d", monthlyCompletionCount))
-            Text(localizedFormat("today.insights.hit_rate_format", default: "Recent intermittent hit-rate: %d%%", intermittentHitRatePercent))
-            Text(localizedFormat("today.insights.steady_days_format", default: "Current rhythm: %d day(s)", currentStreak))
-        }
+        DashboardTextLinesSection(
+            sectionTitle: localized("today.insights.section", default: "Personal Insights (Local)"),
+            lines: [
+                localizedFormat("today.insights.completions_format", default: "This month completions: %d", monthlyCompletionCount),
+                localizedFormat("today.insights.hit_rate_format", default: "Recent intermittent hit-rate: %d%%", intermittentHitRatePercent),
+                localizedFormat("today.insights.steady_days_format", default: "Current rhythm: %d day(s)", currentStreak),
+            ])
     }
 
     var accessibilitySupportSection: some View {
-        Section(localized("today.accessibility.section", default: "Accessibility Support")) {
-            if simplifiedModeEnabled {
-                Text(localized("today.accessibility.simplified_enabled", default: "Simplified mode is enabled."))
-                    .foregroundStyle(CatholicTheme.primary)
-            }
-        }
+        DashboardAccessibilitySupportSection(
+            sectionTitle: localized("today.accessibility.section", default: "Accessibility Support"),
+            simplifiedModeMessage: simplifiedModeEnabled
+                ? localized("today.accessibility.simplified_enabled", default: "Simplified mode is enabled.")
+                : nil)
     }
 
     var unofficialAppNoticeSection: some View {
-        Section(localized("today.notice.section", default: "Important Notice")) {
-            Text(
-                localized(
-                    "today.notice.independent",
-                    default: "This is an independent devotional app. It is not an official app of the Catholic Church, USCCB, the Vatican, or any diocese/parish."))
-                .font(.subheadline)
-                .foregroundStyle(CatholicTheme.primary)
-
-            Text(
-                localized(
-                    "today.notice.follow_authority",
-                    default: "Always follow your pastor, local bishop, and legitimate Church authority when guidance differs."))
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .accessibilityIdentifier("notice.unofficial")
-        }
+        DashboardNoticeSection(
+            sectionTitle: localized("today.notice.section", default: "Important Notice"),
+            independentNotice: localized(
+                "today.notice.independent",
+                default: "This is an independent devotional app. It is not an official app of the Catholic Church, USCCB, the Vatican, or any diocese/parish."),
+            authorityNotice: localized(
+                "today.notice.follow_authority",
+                default: "Always follow your pastor, local bishop, and legitimate Church authority when guidance differs."))
     }
 
     @ViewBuilder
     var setupProgressSection: some View {
         if !isQuickSetupComplete {
-            Section(localized("today.setup.title", default: "Finish Setup")) {
-                Text(localized("today.setup.intro", default: "Complete these once for clearer, safer guidance."))
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                Text(localizedFormat("today.setup.progress_format", default: "Setup checklist: %d/%d", setupChecklistCompleted, setupChecklistTotal))
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(CatholicTheme.primary)
-                    .accessibilityIdentifier("today.setup.progress")
-
-                setupChecklistRow(
-                    title: localized("today.setup.consent", default: "Pastoral consent acknowledged"),
-                    isComplete: hasConfiguredConsent)
-                setupChecklistRow(
-                    title: localized("today.setup.region", default: "Region profile selected"),
-                    isComplete: hasConfiguredRegionProfile)
-                setupChecklistRow(
-                    title: localized("today.setup.reminders", default: "Reminder plan selected"),
-                    isComplete: hasConfiguredReminderPlan)
-
-                Button(localized("today.setup.open", default: "Open Quick Setup")) {
-                    navigateToMoreDestination(.setupAndReminders)
-                }
-                .appPrimaryButtonStyle()
-                .accessibilityIdentifier("today.setup.open_quick_setup")
-            }
+            DashboardSetupProgressSection(
+                sectionTitle: localized("today.setup.title", default: "Finish Setup"),
+                intro: localized("today.setup.intro", default: "Complete these once for clearer, safer guidance."),
+                progress: localizedFormat(
+                    "today.setup.progress_format",
+                    default: "Setup checklist: %d/%d",
+                    setupChecklistCompleted,
+                    setupChecklistTotal),
+                items: [
+                    .init(
+                        id: "consent",
+                        title: localized("today.setup.consent", default: "Pastoral consent acknowledged"),
+                        isComplete: hasConfiguredConsent),
+                    .init(
+                        id: "region",
+                        title: localized("today.setup.region", default: "Region profile selected"),
+                        isComplete: hasConfiguredRegionProfile),
+                    .init(
+                        id: "reminders",
+                        title: localized("today.setup.reminders", default: "Reminder plan selected"),
+                        isComplete: hasConfiguredReminderPlan),
+                ],
+                openTitle: localized("today.setup.open", default: "Open Quick Setup"),
+                openSetup: { navigateToMoreDestination(.setupAndReminders) })
         }
     }
 
     var dashboardFastingQuoteSection: some View {
-        Section(localized("today.quote.section", default: "Daily fasting reflection")) {
-            CatholicFastingQuoteCard(quote: dashboardFastingQuote, compact: true)
-                .accessibilityIdentifier("dashboard.quote")
-        }
+        DashboardQuoteSection(
+            sectionTitle: localized("today.quote.section", default: "Daily fasting reflection"),
+            quote: dashboardFastingQuote,
+            accessibilityIdentifier: "dashboard.quote")
     }
 
     var fastingDaysFastingQuoteSection: some View {
-        Section(localized("fasting_days.quote.section", default: "Fasting reflection")) {
-            CatholicFastingQuoteCard(quote: fastingDaysFastingQuote, compact: true)
-                .accessibilityIdentifier("fasting_days.quote")
-        }
+        DashboardQuoteSection(
+            sectionTitle: localized("fasting_days.quote.section", default: "Fasting reflection"),
+            quote: fastingDaysFastingQuote,
+            accessibilityIdentifier: "fasting_days.quote")
     }
 
     var intermittentFastingQuoteSection: some View {
-        Section(localized("intermittent.quote.section", default: "Fasting intention")) {
-            CatholicFastingQuoteCard(quote: intermittentFastingQuote, compact: true)
-                .accessibilityIdentifier("intermittent.quote")
-        }
+        DashboardQuoteSection(
+            sectionTitle: localized("intermittent.quote.section", default: "Fasting intention"),
+            quote: intermittentFastingQuote,
+            accessibilityIdentifier: "intermittent.quote")
     }
 
     var todayTenSecondSection: some View {
-        Section {
-            VStack(alignment: .leading, spacing: 12) {
-                Text(localized("today.glance.title", default: "Today at a Glance"))
-                    .appEyebrowStyle()
-                    .foregroundStyle(CatholicTheme.primary)
-
-                HStack(spacing: 8) {
-                    MetricTile(title: localized("today.metric.next", default: "Next"), value: todayAtAGlanceNextLabel)
-                    MetricTile(title: localized("today.metric.week", default: "Week"), value: todayAtAGlanceWeekLabel)
-                }
-
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(localized("today.metric.rhythm", default: "Current rhythm"))
-                        .appEyebrowStyle()
-                    Text(localizedFormat("today.glance.rhythm_value_format", default: "%d day(s)", currentStreak))
-                        .appSectionTitleStyle()
-                    Text(streakResilienceMessage)
-                        .appLeadTextStyle()
-                    Text(monetizationStore.premiumUnlocked ? weeklyFormationRecapPremium : weeklyFormationRecapFree)
-                        .appSupportingTextStyle()
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(12)
-                .appSurfaceCard(.utility, cornerRadius: 16)
-            }
-            .padding(14)
-            .appSurfaceCard(.utility, cornerRadius: 22)
-            .accessibilityIdentifier("dashboard.today_glance")
-        }
+        TodayAtAGlanceSection(
+            sectionTitle: localized("today.glance.title", default: "Today at a Glance"),
+            nextTitle: localized("today.metric.next", default: "Next"),
+            nextValue: todayAtAGlanceNextLabel,
+            weekTitle: localized("today.metric.week", default: "Week"),
+            weekValue: todayAtAGlanceWeekLabel,
+            rhythmTitle: localized("today.metric.rhythm", default: "Current rhythm"),
+            rhythmValue: localizedFormat("today.glance.rhythm_value_format", default: "%d day(s)", currentStreak),
+            resilienceMessage: streakResilienceMessage,
+            formationRecap: monetizationStore.premiumUnlocked ? weeklyFormationRecapPremium : weeklyFormationRecapFree)
     }
 
     var readinessMarkers: some View {
@@ -198,7 +164,7 @@ extension ContentView {
     }
 
     var surfaceReadyIdentifier: String {
-        switch homeSurface {
+        switch navigationState.homeSurface {
         case .today:
             "surface.today.ready"
         case .fastingDays:
@@ -221,293 +187,131 @@ extension ContentView {
     }
 
     var dashboardHeroSection: some View {
-        Section {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack(spacing: 8) {
-                    Image(systemName: "cross.fill")
-                        .appSymbolStyle(.standard)
-                    Text(localized("today.hero.title", default: "Daily Catholic Fasting Plan"))
-                        .appSectionTitleStyle(serif: true)
-                }
-                Text(heroSummaryText)
-                    .appLeadTextStyle()
-                Text(localized("today.hero.subtitle", default: "Offer each observance with prayer, fasting, and charity."))
-                    .appSupportingTextStyle()
-                    .foregroundStyle(.secondary)
-                ProgressView(value: completionRateValue)
-                    .tint(CatholicTheme.accent)
-                Text(
-                    localizedFormat(
-                        "today.plan_snapshot.progress_format",
-                        default: "Required: %d/%d • Optional: %d/%d",
-                        yearlyRequiredCompletions,
-                        planningData.requiredGoal,
-                        yearlyOptionalCompletions,
-                        planningData.optionalGoal))
-                    .appSupportingTextStyle()
-            }
-            .accessibilityIdentifier("dashboard.plan_summary")
-            .padding(14)
-            .appSurfaceCard(.standard, cornerRadius: 18)
-        }
+        DashboardHeroSection(
+            title: localized("today.hero.title", default: "Daily Catholic Fasting Plan"),
+            summary: heroSummaryText,
+            subtitle: localized("today.hero.subtitle", default: "Offer each observance with prayer, fasting, and charity."),
+            completionRate: completionRateValue,
+            progressSummary: localizedFormat(
+                "today.plan_snapshot.progress_format",
+                default: "Required: %d/%d • Optional: %d/%d",
+                yearlyRequiredCompletions,
+                planningSession.data.requiredGoal,
+                yearlyOptionalCompletions,
+                planningSession.data.optionalGoal))
     }
 
     var todayDecisionCardSection: some View {
         let decision = todayFoodDecision
-        return Section {
-            VStack(alignment: .leading, spacing: 14) {
-                HStack(alignment: .top, spacing: 10) {
-                    Image(systemName: todayDecisionIconName)
-                        .appSymbolStyle(.prominent)
-                        .foregroundStyle(todayDecisionTint)
-                        .padding(.top, 1)
-
-                    VStack(alignment: .leading, spacing: 5) {
-                        Text(localized("today.decision.eyebrow", default: "Today's fasting rule"))
-                            .appEyebrowStyle()
-                            .textCase(.uppercase)
-                            .foregroundStyle(CatholicTheme.primary)
-
-                        Text(decision.obligationLine)
-                            .font(.system(.title3, design: .serif).weight(.bold))
-                            .foregroundStyle(CatholicTheme.primary)
-                            .accessibilityIdentifier("today.decision.obligation")
-
-                        Text(decision.rationale)
-                            .appSupportingTextStyle()
-                    }
-                }
-
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(localized("today.decision.next_action", default: "Next action"))
-                        .appEyebrowStyle()
-                        .textCase(.uppercase)
-                    Text(todayDecisionNextActionText)
-                        .appLeadTextStyle()
-                }
-                .padding(12)
-                .appSurfaceCard(.utility, cornerRadius: 16)
-                .accessibilityIdentifier("today.decision.next_action")
-
-                if !decision.avoid.isEmpty {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(localized("today.food.avoid", default: "Avoid today"))
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(.secondary)
-                            .textCase(.uppercase)
-                        ForEach(decision.avoid, id: \.self) { item in
-                            Label(item, systemImage: "xmark.circle.fill")
-                        }
-                    }
-                }
-
-                if !decision.allowed.isEmpty {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(localized("today.food.okay", default: "Okay today"))
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(.secondary)
-                            .textCase(.uppercase)
-                        ForEach(decision.allowed, id: \.self) { item in
-                            Label(item, systemImage: "checkmark.circle.fill")
-                        }
-                    }
-                }
-
-                Button {
-                    navigateToMoreDestination(.guidanceAndRules)
-                } label: {
-                    Label(localized("today.food.open_guidance", default: "Open full food guidance"), systemImage: "book.closed")
-                }
-                .accessibilityIdentifier("today.decision.open_full_food_guidance")
-
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(localized("today.food.common_questions", default: "Common food questions"))
-                        .appEyebrowStyle()
-                        .textCase(.uppercase)
-                    Label(localized("today.food.common.chicken", default: "Chicken and turkey count as meat."), systemImage: "xmark.circle")
-                    Label(localized("today.food.common.dairy", default: "Eggs, milk, butter, and cheese are generally permitted."), systemImage: "checkmark.circle")
-                    Label(localized("today.food.common.fish", default: "Fish and shellfish are generally permitted."), systemImage: "checkmark.circle")
-                    Label(
-                        localized("today.food.common.broth", default: "Broths and gravies may be technically permitted, but many Catholics still avoid them in stricter practice."),
-                        systemImage: "questionmark.circle")
-                        .foregroundStyle(.secondary)
-                }
-                .padding(12)
-                .appSurfaceCard(.utility, cornerRadius: 16)
-                .accessibilityIdentifier("today.decision.common_food_questions")
-
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(decision.sourceLine)
-                        .appSupportingTextStyle()
-
-                    Link(
-                        regionProfile == .canada
-                            ? localized("today.food.link.cccb", default: "Read CCCB Friday guidance")
-                            : localized("today.food.link.usccb", default: "Read official USCCB fast/abstinence guidance"),
-                        destination: regionProfile == .canada ? UIConstants.cccbKeepingFridayURL : UIConstants.usccbFastAbstinenceURL)
-                        .font(.footnote.weight(.semibold))
-                }
-                .padding(12)
-                .appSurfaceCard(.utility, cornerRadius: 16)
-            }
-            .padding(14)
-            .appSurfaceCard(.standard, cornerRadius: 20)
-        }
+        return TodayDecisionCardSection(
+            eyebrow: localized("today.decision.eyebrow", default: "Today's fasting rule"),
+            obligation: decision.obligationLine,
+            rationale: decision.rationale,
+            iconName: todayDecisionIconName,
+            tint: todayDecisionTint,
+            nextActionTitle: localized("today.decision.next_action", default: "Next action"),
+            nextAction: todayDecisionNextActionText,
+            avoidTitle: localized("today.food.avoid", default: "Avoid today"),
+            avoidItems: decision.avoid,
+            allowedTitle: localized("today.food.okay", default: "Okay today"),
+            allowedItems: decision.allowed,
+            guidanceTitle: localized("today.food.open_guidance", default: "Open full food guidance"),
+            commonQuestionsTitle: localized("today.food.common_questions", default: "Common food questions"),
+            chickenAnswer: localized("today.food.common.chicken", default: "Chicken and turkey count as meat."),
+            dairyAnswer: localized("today.food.common.dairy", default: "Eggs, milk, butter, and cheese are generally permitted."),
+            fishAnswer: localized("today.food.common.fish", default: "Fish and shellfish are generally permitted."),
+            brothAnswer: localized(
+                "today.food.common.broth",
+                default: "Broths and gravies may be technically permitted, but many Catholics still avoid them in stricter practice."),
+            sourceLine: decision.sourceLine,
+            sourceLinkTitle: regionProfile == .canada
+                ? localized("today.food.link.cccb", default: "Read CCCB Friday guidance")
+                : localized("today.food.link.usccb", default: "Read official USCCB fast/abstinence guidance"),
+            sourceURL: regionProfile == .canada ? UIConstants.cccbKeepingFridayURL : UIConstants.usccbFastAbstinenceURL,
+            openGuidance: { navigateToMoreDestination(.guidanceAndRules) })
     }
 
     @ViewBuilder
     var todayRecoverySection: some View {
         if let plan = missedDayRecoveryPlan {
-            Section(localized("today.recovery.section", default: "Recovery Plan")) {
-                Text(plan.titleLine)
-                    .font(.headline)
-                    .foregroundStyle(CatholicTheme.primary)
-                    .accessibilityIdentifier("today.recovery.title")
-                Text(plan.summaryLine)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                ForEach(plan.steps, id: \.self) { step in
-                    Label(step, systemImage: "arrow.forward.circle")
-                }
-                Text(plan.nextRequiredLine)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-
-                Button(localized("today.recovery.mark", default: "Mark Today as Recovery Substitute")) {
-                    logRecoverySubstituteForToday()
-                }
-                .accessibilityIdentifier("today.recovery.mark_substitute")
-                .appPrimaryButtonStyle(legacyTint: CatholicTheme.accentForeground)
-                .disabled(!canLogRecoverySubstituteToday)
-
-                Button(localized("today.recovery.focus", default: "Focus Required Days")) {
-                    focusFastingDaysOnUpcomingRequired()
-                }
-                .accessibilityIdentifier("today.recovery.open_fasting_days")
-                .appSecondaryButtonStyle()
-            }
+            TodayRecoverySection(
+                sectionTitle: localized("today.recovery.section", default: "Recovery Plan"),
+                title: plan.titleLine,
+                summary: plan.summaryLine,
+                steps: plan.steps,
+                nextRequired: plan.nextRequiredLine,
+                markTitle: localized("today.recovery.mark", default: "Mark Today as Recovery Substitute"),
+                canMark: canLogRecoverySubstituteToday,
+                focusTitle: localized("today.recovery.focus", default: "Focus Required Days"),
+                markRecovery: logRecoverySubstituteForToday,
+                focusRequiredDays: focusFastingDaysOnUpcomingRequired)
         }
     }
 
     @ViewBuilder
     var milestoneReferralSection: some View {
         if yearlyRequiredCompletions >= 3 {
-            Section(localized("today.share.section", default: "Share With a Friend")) {
-                Text(
-                    localizedFormat(
-                        "today.share.intro_format",
-                        default: "You have completed %d required discipline days this year. Share the app if it is helping.",
-                        yearlyRequiredCompletions))
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                ShareLink(
-                    item: localizedFormat(
-                        "today.share.message_format",
-                        default: "Catholic Fasting helps me stay steady with daily fasting guidance, planning, and tracking. Learn more: %@",
-                        UIConstants.supportSiteURL.absoluteString),
-                    subject: Text(localized("today.share.subject", default: "Catholic Fasting App")))
-                {
-                    Label(localized("today.share.button", default: "Share App"), systemImage: "square.and.arrow.up")
-                }
-                .appSecondaryButtonStyle()
-            }
+            DashboardReferralSection(
+                sectionTitle: localized("today.share.section", default: "Share With a Friend"),
+                introduction: localizedFormat(
+                    "today.share.intro_format",
+                    default: "You have completed %d required discipline days this year. Share the app if it is helping.",
+                    yearlyRequiredCompletions),
+                shareItem: localizedFormat(
+                    "today.share.message_format",
+                    default: "Catholic Fasting helps me stay steady with daily fasting guidance, planning, and tracking. Learn more: %@",
+                    UIConstants.supportSiteURL.absoluteString),
+                subject: localized("today.share.subject", default: "Catholic Fasting App"),
+                buttonTitle: localized("today.share.button", default: "Share App"))
         }
     }
 
     var dashboardSeasonSection: some View {
-        Section(localized("today.season.section", default: "Liturgical Season")) {
-            HStack(alignment: .top, spacing: 10) {
-                Image(systemName: "sparkles")
-                    .font(.headline.weight(.semibold))
-                    .foregroundStyle(CatholicTheme.accentForeground)
-                    .padding(.top, 2)
-
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(localizedSeasonLabel(currentLiturgicalSeason))
-                        .font(.system(.headline, design: .serif))
-                        .foregroundStyle(CatholicTheme.primary)
-                    Text(localized("today.season.intro", default: "Offer your fasting with the spirit of this season through prayer, sacrifice, and charity."))
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-            }
-            .padding(.vertical, 6)
-            .padding(.horizontal, 8)
-            .background(CatholicTheme.parchment.opacity(0.92), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-            .overlay(
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(CatholicTheme.accent.opacity(0.10)))
-            .overlay(
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .stroke(CatholicTheme.cardBorder.opacity(0.6), lineWidth: 1))
-            .appRoundedGlass(cornerRadius: 12)
-        }
+        DashboardSeasonSection(
+            sectionTitle: localized("today.season.section", default: "Liturgical Season"),
+            season: localizedSeasonLabel(currentLiturgicalSeason),
+            introduction: localized(
+                "today.season.intro",
+                default: "Offer your fasting with the spirit of this season through prayer, sacrifice, and charity."))
     }
 
     var dashboardHighlightsSection: some View {
-        Section(localized("today.overview.section", default: "Overview")) {
-            Text(localizedFormat("today.overview.completion_format", default: "Completion rate: %@", completionRateText))
-                .foregroundStyle(CatholicTheme.primary)
-            Text(localizedFormat("today.overview.rhythm_format", default: "Current rhythm: %d day(s)", currentStreak))
-                .foregroundStyle(CatholicTheme.primary.opacity(0.9))
-            if let next = upcomingMandatoryObservance {
-                Text(
-                    localizedFormat(
-                        "today.overview.next_required_format",
-                        default: "Next required: %@ • %@",
-                        localizedObservanceTitle(next.title),
-                        localizedAbbreviatedDate(next.date)))
-                    .foregroundStyle(CatholicTheme.dangerForeground)
-            } else {
-                Text(localized("today.overview.none", default: "No upcoming required observances this year."))
-                    .foregroundStyle(.secondary)
-            }
-            Button(localized("today.overview.open_view", default: "Open Calendar")) {
-                homeSurface = .fastingDays
-            }
-            .accessibilityIdentifier("dashboard.open_fasting_days")
-            .appPrimaryButtonStyle()
-            Button(localized("today.overview.focus_required", default: "Focus Required (Next 30 Days)")) {
-                focusFastingDaysOnUpcomingRequired()
-            }
-            .accessibilityIdentifier("dashboard.focus_required")
-            .appSecondaryButtonStyle(legacyTint: CatholicTheme.accentForeground)
-        }
+        DashboardOverviewSection(
+            sectionTitle: localized("today.overview.section", default: "Overview"),
+            completionText: localizedFormat("today.overview.completion_format", default: "Completion rate: %@", completionRateText),
+            rhythmText: localizedFormat("today.overview.rhythm_format", default: "Current rhythm: %d day(s)", currentStreak),
+            nextRequiredText: dashboardNextRequiredText,
+            hasUpcomingRequired: upcomingMandatoryObservance != nil,
+            openTitle: localized("today.overview.open_view", default: "Open Calendar"),
+            openIdentifier: "dashboard.open_fasting_days",
+            focusTitle: localized("today.overview.focus_required", default: "Focus Required (Next 30 Days)"),
+            openCalendar: { navigationState.homeSurface = .fastingDays },
+            focusRequired: focusFastingDaysOnUpcomingRequired)
     }
 
     var todaySimpleSummarySection: some View {
-        Section(localized("today.summary.section", default: "Today Summary")) {
-            Text(localizedFormat("today.overview.completion_format", default: "Completion rate: %@", completionRateText))
-                .foregroundStyle(CatholicTheme.primary)
-            Text(localizedFormat("today.overview.rhythm_format", default: "Current rhythm: %d day(s)", currentStreak))
-                .foregroundStyle(CatholicTheme.primary.opacity(0.9))
-            if let next = upcomingMandatoryObservance {
-                Text(
-                    localizedFormat(
-                        "today.overview.next_required_format",
-                        default: "Next required: %@ • %@",
-                        localizedObservanceTitle(next.title),
-                        localizedAbbreviatedDate(next.date)))
-                    .foregroundStyle(CatholicTheme.dangerForeground)
-            } else {
-                Text(localized("today.overview.none", default: "No upcoming required observances this year."))
-                    .foregroundStyle(.secondary)
-            }
-            Button(localized("today.actions.fasting_days", default: "Open Calendar")) {
-                homeSurface = .fastingDays
-            }
-            .appPrimaryButtonStyle()
-            .accessibilityIdentifier("today.simple.open_fasting_days")
-        }
+        DashboardOverviewSection(
+            sectionTitle: localized("today.summary.section", default: "Today Summary"),
+            completionText: localizedFormat("today.overview.completion_format", default: "Completion rate: %@", completionRateText),
+            rhythmText: localizedFormat("today.overview.rhythm_format", default: "Current rhythm: %d day(s)", currentStreak),
+            nextRequiredText: dashboardNextRequiredText,
+            hasUpcomingRequired: upcomingMandatoryObservance != nil,
+            openTitle: localized("today.actions.fasting_days", default: "Open Calendar"),
+            openIdentifier: "today.simple.open_fasting_days",
+            focusTitle: nil,
+            openCalendar: { navigationState.homeSurface = .fastingDays },
+            focusRequired: nil)
     }
 
-    private func setupChecklistRow(title: String, isComplete: Bool) -> some View {
-        Label {
-            Text(title)
-        } icon: {
-            Image(systemName: isComplete ? "checkmark.circle.fill" : "circle")
-                .foregroundStyle(isComplete ? CatholicTheme.successForeground : Color.secondary)
+    private var dashboardNextRequiredText: String {
+        guard let next = upcomingMandatoryObservance else {
+            return localized("today.overview.none", default: "No upcoming required observances this year.")
         }
+        return localizedFormat(
+            "today.overview.next_required_format",
+            default: "Next required: %@ • %@",
+            localizedObservanceTitle(next.title),
+            localizedAbbreviatedDate(next.date))
     }
 
     private var todayAtAGlanceNextLabel: String {

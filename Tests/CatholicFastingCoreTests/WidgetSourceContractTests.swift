@@ -31,6 +31,19 @@ final class WidgetSourceContractTests: XCTestCase {
             "The widget locale must resolve through the supported localization bundle contract.")
     }
 
+    func testSmallWidgetAccessibilityIncludesActiveFastTarget() throws {
+        let source = try String(
+            contentsOf: repositoryRoot()
+                .appendingPathComponent("CatholicFastingWidget")
+                .appendingPathComponent("CatholicFastingWidget.swift"),
+            encoding: .utf8)
+
+        XCTAssertTrue(source.contains("parts.append(activeFastAccessibilityStatus)"))
+        XCTAssertTrue(source.contains("entry.activeIntermittentTargetDate"))
+        XCTAssertTrue(source.contains(#""widget.fast.active_target""#))
+        XCTAssertTrue(source.contains(".locale(widgetLocale)"))
+    }
+
     private func appSource(_ filename: String) throws -> String {
         try String(
             contentsOf: repositoryRoot()

@@ -1,4 +1,4 @@
-import SwiftUI
+import Foundation
 
 extension ContentView {
     var premiumSeasonPlan: PremiumSeasonPlan {
@@ -6,11 +6,11 @@ extension ContentView {
     }
 
     var selectedPremiumTemplate: PremiumRuleTemplate {
-        PremiumRuleTemplate(rawValue: premiumCompanion.templateRawValue) ?? .steady
+        PremiumRuleTemplate(rawValue: premiumSession.companion.templateRawValue) ?? .steady
     }
 
     var selectedPremiumSeasonProgram: PremiumSeasonProgram {
-        PremiumSeasonProgram(rawValue: premiumCompanion.seasonProgramRawValue) ?? .liturgicalRhythm
+        PremiumSeasonProgram(rawValue: premiumSession.companion.seasonProgramRawValue) ?? .liturgicalRhythm
     }
 
     var premiumProgramWeek: Int {
@@ -18,7 +18,7 @@ extension ContentView {
         let days =
             liturgicalCalendar.dateComponents(
                 [.day],
-                from: liturgicalCalendar.startOfDay(for: premiumCompanion.seasonProgramStartDate),
+                from: liturgicalCalendar.startOfDay(for: premiumSession.companion.seasonProgramStartDate),
                 to: liturgicalCalendar.startOfDay(for: now)).day ?? 0
         return max(1, (days / 7) + 1)
     }
@@ -28,9 +28,9 @@ extension ContentView {
             season: currentLiturgicalSeason,
             settings: settings,
             template: selectedPremiumTemplate,
-            optionalDisciplinesPerWeek: premiumCompanion.optionalDisciplinesPerWeek,
-            fixedFastWeekday: premiumCompanion.fixedFastWeekday,
-            protectFeastDays: premiumCompanion.protectFeastDays)
+            optionalDisciplinesPerWeek: premiumSession.companion.optionalDisciplinesPerWeek,
+            fixedFastWeekday: premiumSession.companion.fixedFastWeekday,
+            protectFeastDays: premiumSession.companion.protectFeastDays)
     }
 
     var premiumReminderRecommendation: PremiumReminderRecommendation {
@@ -41,7 +41,7 @@ extension ContentView {
 
     var premiumConditionRuleRecommendation: PremiumReminderRecommendation {
         PremiumConditionReminderAdvisor.applyRules(
-            premiumCompanion.conditionRules,
+            premiumSession.companion.conditionRules,
             hasUpcomingRequiredDays: upcomingMandatoryObservance != nil)
     }
 
@@ -73,7 +73,7 @@ extension ContentView {
     var premiumJourneyProgress: GuidedSeasonalJourneyProgress {
         GuidedSeasonalJourneyEngine.progress(
             for: premiumGuidedJourneyWeek,
-            completedActionKeys: premiumCompanion.completedProgramActions)
+            completedActionKeys: premiumSession.companion.completedProgramActions)
     }
 
     var premiumGuidedJourneyNextAction: GuidedSeasonalJourneyAction? {
@@ -183,7 +183,7 @@ extension ContentView {
         morningReminderEnabled = recommendation.shouldEnableMorning
         eveningReminderEnabled = recommendation.shouldEnableEvening
         syncReminderTierFromCurrentToggleState()
-        premiumCoachStatus = recommendation.summaryLine
+        feedback.premiumCoachStatus = recommendation.summaryLine
     }
 
     func applyPremiumConditionRules() {
@@ -192,39 +192,27 @@ extension ContentView {
         morningReminderEnabled = recommendation.shouldEnableMorning
         eveningReminderEnabled = recommendation.shouldEnableEvening
         syncReminderTierFromCurrentToggleState()
-        premiumCompanionStatus = recommendation.summaryLine
+        premiumPresentation.companionStatus = recommendation.summaryLine
     }
 
     func applyPremiumRuleTemplate(_ template: PremiumRuleTemplate) {
-        premiumCompanion.templateRawValue = template.rawValue
+        premiumSession.companion.templateRawValue = template.rawValue
         switch template {
         case .beginner:
-            premiumCompanion.optionalDisciplinesPerWeek = 1
+            premiumSession.companion.optionalDisciplinesPerWeek = 1
         case .steady:
-            premiumCompanion.optionalDisciplinesPerWeek = 2
+            premiumSession.companion.optionalDisciplinesPerWeek = 2
         case .disciplined:
-            premiumCompanion.optionalDisciplinesPerWeek = 3
+            premiumSession.companion.optionalDisciplinesPerWeek = 3
         case .traditional:
-            premiumCompanion.optionalDisciplinesPerWeek = 4
+            premiumSession.companion.optionalDisciplinesPerWeek = 4
         case .custom:
             break
         }
-        premiumCompanionStatus = localizedFormat(
+        premiumPresentation.companionStatus = localizedFormat(
             "premium.status.template_applied_format",
             default: "%@ template applied.",
             template.label)
-    }
-
-    func togglePremiumSeasonProgramAction(_ action: String) {
-        let key = GuidedSeasonalJourneyEngine.actionKey(
-            program: selectedPremiumSeasonProgram,
-            week: premiumProgramWeek,
-            actionID: action)
-        if premiumCompanion.completedProgramActions.contains(key) {
-            premiumCompanion.completedProgramActions.removeAll { $0 == key }
-        } else {
-            premiumCompanion.completedProgramActions.append(key)
-        }
     }
 
     func isPremiumSeasonProgramActionCompleted(_ action: String) -> Bool {
@@ -232,11 +220,7 @@ extension ContentView {
             program: selectedPremiumSeasonProgram,
             week: premiumProgramWeek,
             actionID: action)
-        return premiumCompanion.completedProgramActions.contains(key)
-    }
-
-    func togglePremiumJourneyAction(_ action: GuidedSeasonalJourneyAction) {
-        togglePremiumSeasonProgramAction(action.id)
+        return premiumSession.companion.completedProgramActions.contains(key)
     }
 
     func isPremiumJourneyActionCompleted(_ action: GuidedSeasonalJourneyAction) -> Bool {
@@ -244,58 +228,58 @@ extension ContentView {
     }
 
     func addPremiumVirtueLog() {
-        let trimmed = newVirtueNote.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmed = premiumPresentation.newVirtueNote.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
-        premiumCompanion.virtueLogs.insert(
+        premiumSession.companion.virtueLogs.insert(
             PremiumVirtueLog(
                 id: UUID().uuidString,
                 createdAt: Date(),
-                virtue: selectedVirtue,
+                virtue: premiumPresentation.selectedVirtue,
                 note: trimmed),
             at: 0)
-        newVirtueNote = ""
+        premiumPresentation.newVirtueNote = ""
     }
 
     func deletePremiumVirtueLog(_ log: PremiumVirtueLog) {
-        premiumCompanion.virtueLogs.removeAll { $0.id == log.id }
+        premiumSession.companion.virtueLogs.removeAll { $0.id == log.id }
     }
 
     func generatePremiumHouseholdShareCode() {
         let packet = PremiumHouseholdSharePacket(
             generatedAt: Date(),
-            planningData: planningData,
-            schedules: intermittentSchedules,
-            checklist: premiumChecklist)
+            planningData: planningSession.data,
+            schedules: planningSession.schedules,
+            checklist: premiumSession.checklist)
         guard let data = try? JSONEncoder().encode(packet) else {
-            premiumCompanionStatus = localized(
+            premiumPresentation.companionStatus = localized(
                 "premium.status.household_export_failed",
                 default: "The household share code could not be created.")
             return
         }
-        premiumHouseholdExportCode = data.base64EncodedString()
-        premiumCompanionStatus = localized(
+        premiumPresentation.householdExportCode = data.base64EncodedString()
+        premiumPresentation.companionStatus = localized(
             "premium.status.household_export_ready",
             default: "Household share code created.")
     }
 
     func importPremiumHouseholdShareCode() {
-        let code = premiumHouseholdImportCode.trimmingCharacters(in: .whitespacesAndNewlines)
+        let code = premiumPresentation.householdImportCode.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !code.isEmpty, let data = Data(base64Encoded: code) else {
-            premiumCompanionStatus = localized(
+            premiumPresentation.companionStatus = localized(
                 "premium.status.household_import_invalid",
                 default: "Enter a valid household share code.")
             return
         }
         guard let packet = try? JSONDecoder().decode(PremiumHouseholdSharePacket.self, from: data) else {
-            premiumCompanionStatus = localized(
+            premiumPresentation.companionStatus = localized(
                 "premium.status.household_import_failed",
                 default: "The household share code could not be read.")
             return
         }
-        planningData = packet.planningData
-        intermittentSchedules = packet.schedules
-        premiumChecklist = packet.checklist
-        premiumCompanionStatus = localized(
+        planningSession.data = packet.planningData
+        planningSession.schedules = packet.schedules
+        premiumSession.checklist = packet.checklist
+        premiumPresentation.companionStatus = localized(
             "premium.status.household_imported",
             default: "Household settings imported on this device.")
     }

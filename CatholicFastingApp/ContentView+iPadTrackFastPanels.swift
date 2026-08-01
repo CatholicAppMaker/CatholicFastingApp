@@ -49,16 +49,16 @@ extension ContentView {
                                 .foregroundStyle(CatholicTheme.primary)
                             Text(localizedFormat("ipad.intermittent.live.started", default: "Started %@", localizedAbbreviatedDateTime(start)))
                                 .font(.subheadline)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(CatholicTheme.secondaryInk)
                             Text(localizedFormat("ipad.intermittent.live.ends", default: "Target ends %@", localizedAbbreviatedDateTime(targetDate)))
                                 .font(.subheadline)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(CatholicTheme.secondaryInk)
                             Text(
                                 progress >= 1
                                     ? localized("ipad.intermittent.live.can_end", default: "You can end the fast now.")
                                     : localized("ipad.intermittent.live.keep_going", default: "Keep going to complete this target."))
                                 .appSupportingTextStyle()
-                                .foregroundStyle(progress >= 1 ? CatholicTheme.successForeground : .secondary)
+                                .foregroundStyle(progress >= 1 ? CatholicTheme.successForeground : CatholicTheme.secondaryInk)
                         }
                         Spacer(minLength: 0)
                     }
@@ -92,7 +92,7 @@ extension ContentView {
                                     .foregroundStyle(CatholicTheme.primary)
                                 Text(localizedFormat("ipad.intermittent.live.last_ended", default: "Last fast ended %@", localizedAbbreviatedDateTime(latestSession.end)))
                                     .font(.subheadline)
-                                    .foregroundStyle(.secondary)
+                                    .foregroundStyle(CatholicTheme.secondaryInk)
                                 Text(
                                     eatingSeconds > 0
                                         ? localizedFormat("ipad.intermittent.live.window_closes", default: "Eating window closes in %@.", countdownText(remaining))
@@ -111,7 +111,7 @@ extension ContentView {
                         .foregroundStyle(CatholicTheme.primary)
                     Text(localized("ipad.intermittent.live.empty_detail", default: "Choose a quick plan below, then start when ready."))
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(CatholicTheme.secondaryInk)
                     intermittentFirstViewportContext
                 }
             }
@@ -146,7 +146,7 @@ extension ContentView {
                         "ipad.intermittent.controls.adjust_hint",
                         default: "If you started earlier than the timer, adjust the start time here and the live tracker updates immediately."),
                 selection: intermittentTracker.activeStart == nil
-                    ? $intermittentManualStart
+                    ? $fastPresentation.manualStart
                     : intermittentActiveStartBinding,
                 allowedRange: intermittentManualStartRange,
                 locale: contentLocale,
@@ -163,7 +163,7 @@ extension ContentView {
             if intermittentTracker.activeStart != nil {
                 TextField(
                     localized("intermittent.recap.note.placeholder", default: "Optional note after this fast"),
-                    text: $intermittentRecapNote,
+                    text: $fastPresentation.recapNote,
                     axis: .vertical)
                     .lineLimit(2 ... 4)
                     .textInputAutocapitalization(.sentences)
@@ -263,11 +263,11 @@ extension ContentView {
             }
 
             Text(
-                notificationStatus.isEmpty
+                feedback.notificationStatus.isEmpty
                     ? localized(
                         "ipad.intermittent.planning.notification_empty",
                         default: "Reminder status will appear after scheduling.")
-                    : notificationStatus)
+                    : feedback.notificationStatus)
                 .appSupportingTextStyle()
                 .padding(12)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -321,77 +321,7 @@ extension ContentView {
 
     var ipadIntermittentScheduleControls: some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack(alignment: .top, spacing: 12) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(localized("intermittent.schedules.section", default: "Custom Schedules"))
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(CatholicTheme.primary)
-
-                    Text(localized("intermittent.schedules.intro", default: "Save reusable plans locally on this device."))
-                        .appSupportingTextStyle()
-                }
-                Spacer(minLength: 0)
-                scheduleEditorToggleButton
-            }
-
-            if intermittentSchedules.isEmpty {
-                Text(localized("intermittent.schedules.empty", default: "No saved schedules yet."))
-                    .appSupportingTextStyle()
-            } else {
-                ForEach(intermittentSchedules) { plan in
-                    intermittentScheduleSummaryRow(plan)
-                }
-            }
-
-            if intermittentShowScheduleEditor || isEditingIntermittentSchedule {
-                VStack(alignment: .leading, spacing: 12) {
-                    Divider()
-
-                    TextField(localized("intermittent.schedules.name_placeholder", default: "Schedule name (optional)"), text: $newIntermittentScheduleName)
-                        .textInputAutocapitalization(.words)
-                        .autocorrectionDisabled()
-                        .textFieldStyle(.roundedBorder)
-                        .accessibilityIdentifier("intermittent.schedule.name")
-
-                    Stepper(
-                        localizedFormat(
-                            "intermittent.schedules.start_hour_format",
-                            default: "Start hour: %@",
-                            String(format: "%02d:00", newIntermittentScheduleStartHour)),
-                        value: $newIntermittentScheduleStartHour,
-                        in: 0 ... 23)
-                        .accessibilityIdentifier("intermittent.schedule.start_hour")
-
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(localized("intermittent.schedules.days", default: "Days"))
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(.secondary)
-                        HStack(spacing: 6) {
-                            ForEach(1 ... 7, id: \.self) { weekday in
-                                let selected = newIntermittentScheduleWeekdays.contains(weekday)
-                                Button(weekdayLabel(for: weekday)) {
-                                    toggleIntermittentScheduleWeekday(weekday)
-                                }
-                                .buttonStyle(.borderedProminent)
-                                .tint(selected ? CatholicTheme.primary : .gray.opacity(0.35))
-                            }
-                        }
-                    }
-                    .accessibilityIdentifier("intermittent.schedule.weekdays")
-
-                    Button(
-                        isEditingIntermittentSchedule
-                            ? localized("intermittent.schedules.update", default: "Update Schedule")
-                            : localized("intermittent.schedules.save_current", default: "Save Current Plan as Schedule"))
-                    {
-                        addOrUpdateIntermittentSchedulePlan()
-                        intermittentShowScheduleEditor = false
-                    }
-                    .appPrimaryButtonStyle()
-                    .disabled(!canSaveIntermittentSchedule)
-                    .accessibilityIdentifier("intermittent.schedule.add")
-                }
-            }
+            intermittentScheduleEditor(presentation: .pad)
         }
         .padding(12)
         .appSurfaceCard(.utility, cornerRadius: 14)

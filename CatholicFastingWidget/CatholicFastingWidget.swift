@@ -1,3 +1,4 @@
+import Foundation
 import SwiftUI
 import WidgetKit
 
@@ -160,19 +161,21 @@ private struct CatholicFastingWidgetView: View {
 
     private var mediumContent: some View {
         HStack(alignment: .top, spacing: 16) {
-            VStack(alignment: .leading, spacing: 7) {
+            VStack(alignment: .leading, spacing: 5) {
                 Text(WidgetLocalization.text("widget.section.today.upper", default: "TODAY", code: entry.localizationCode))
                     .font(.caption2.weight(.bold))
                     .foregroundStyle(secondaryStyle)
                 Text(entry.todayObligation)
                     .font(.system(.headline, design: .serif).weight(.bold))
                     .lineLimit(3)
+                    .layoutPriority(2)
                 Text(entry.todayTitle)
                     .font(.caption)
                     .foregroundStyle(secondaryStyle)
                     .lineLimit(2)
                 if entry.hasActiveIntermittentFast {
                     activeFastStatus
+                        .layoutPriority(1)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -216,18 +219,33 @@ private struct CatholicFastingWidgetView: View {
             entry.todayTitle,
         ]
         if entry.hasActiveIntermittentFast {
-            let fastStatus = entry.hasReachedActiveIntermittentTarget(at: entry.date)
-                ? WidgetLocalization.text(
-                    "widget.fast.target_reached",
-                    default: "Fast target reached",
-                    code: entry.localizationCode)
-                : WidgetLocalization.text(
-                    "widget.fast.active",
-                    default: "Fast active",
-                    code: entry.localizationCode)
-            parts.append(fastStatus)
+            parts.append(activeFastAccessibilityStatus)
         }
         return parts.joined(separator: ". ")
+    }
+
+    private var activeFastAccessibilityStatus: String {
+        guard let target = entry.activeIntermittentTargetDate else {
+            return WidgetLocalization.text(
+                "widget.fast.active",
+                default: "Fast active",
+                code: entry.localizationCode)
+        }
+        if entry.hasReachedActiveIntermittentTarget(at: entry.date) {
+            return WidgetLocalization.text(
+                "widget.fast.target_reached",
+                default: "Fast target reached",
+                code: entry.localizationCode)
+        }
+
+        let targetTime = target.formatted(
+            Date.FormatStyle(date: .omitted, time: .shortened)
+                .locale(widgetLocale))
+        let format = WidgetLocalization.text(
+            "widget.fast.active_target",
+            default: "Fast active. Target %@",
+            code: entry.localizationCode)
+        return String(format: format, locale: widgetLocale, targetTime)
     }
 
     @ViewBuilder
@@ -242,19 +260,20 @@ private struct CatholicFastingWidgetView: View {
                 }
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(secondaryStyle)
-                .lineLimit(1)
+                .lineLimit(2)
             } else {
                 Text(WidgetLocalization.text(
                     "widget.fast.target_reached", default: "Fast target reached", code: entry.localizationCode))
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(secondaryStyle)
-                    .lineLimit(1)
+                    .lineLimit(2)
             }
         } else {
             Text(WidgetLocalization.text(
                 "widget.fast.active", default: "Fast active", code: entry.localizationCode))
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(secondaryStyle)
+                .lineLimit(2)
         }
     }
 }

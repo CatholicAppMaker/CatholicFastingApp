@@ -69,67 +69,6 @@ enum PremiumDirectionSummaryEngine {
     }
 }
 
-enum PremiumFastPrepGuidanceEngine {
-    static func prepAndRefeed(
-        targetHours: Int,
-        hasMedicalDispensation: Bool) -> [String]
-    {
-        if hasMedicalDispensation {
-            return [
-                CoreLocalizer.localizedCurrent(
-                    "premium.fastprep.medical.prep",
-                    default: "Prep: choose medically safe meals and hydration."),
-                CoreLocalizer.localizedCurrent(
-                    "premium.fastprep.medical.during",
-                    default: "During: prioritize stability and avoid unsafe restriction."),
-                CoreLocalizer.localizedCurrent(
-                    "premium.fastprep.medical.refeed",
-                    default: "Refeed: return to normal meals gradually as advised."),
-            ]
-        }
-
-        if targetHours <= 18 {
-            return [
-                CoreLocalizer.localizedCurrent(
-                    "premium.fastprep.short.prep",
-                    default: "Prep: hydrate and simplify your final meal."),
-                CoreLocalizer.localizedCurrent(
-                    "premium.fastprep.short.during",
-                    default: "During: keep prayer cues tied to hunger moments."),
-                CoreLocalizer.localizedCurrent(
-                    "premium.fastprep.short.refeed",
-                    default: "Refeed: break gradually with a simple, moderate meal."),
-            ]
-        }
-
-        if targetHours <= 36 {
-            return [
-                CoreLocalizer.localizedCurrent(
-                    "premium.fastprep.medium.prep",
-                    default: "Prep: increase hydration the day before."),
-                CoreLocalizer.localizedCurrent(
-                    "premium.fastprep.medium.during",
-                    default: "During: keep intensity moderate and avoid overexertion."),
-                CoreLocalizer.localizedCurrent(
-                    "premium.fastprep.medium.refeed",
-                    default: "Refeed: start light, then full meal after 30-60 minutes."),
-            ]
-        }
-
-        return [
-            CoreLocalizer.localizedCurrent(
-                "premium.fastprep.long.prep",
-                default: "Prep: plan schedule, hydration, and pastoral prudence."),
-            CoreLocalizer.localizedCurrent(
-                "premium.fastprep.long.during",
-                default: "During: monitor energy and stop if health concerns arise."),
-            CoreLocalizer.localizedCurrent(
-                "premium.fastprep.long.refeed",
-                default: "Refeed: start very gently, then normalize in stages."),
-        ]
-    }
-}
-
 enum PremiumMotivationEngine {
     static func line(
         season: LiturgicalSeason,

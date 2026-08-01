@@ -58,7 +58,7 @@ extension View {
 
     func appLeadTextStyle() -> some View {
         font(.subheadline)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(CatholicTheme.secondaryInk)
             .lineSpacing(1.5)
     }
 
@@ -174,30 +174,6 @@ enum AppSurfaceCardStyle {
     case primary
     case standard
     case utility
-
-    var fillOpacity: Double {
-        switch self {
-        case .primary: 0.94
-        case .standard: 0.88
-        case .utility: 0.80
-        }
-    }
-
-    var tintOpacity: Double {
-        switch self {
-        case .primary: 0.11
-        case .standard: 0.045
-        case .utility: 0.018
-        }
-    }
-
-    var strokeOpacity: Double {
-        switch self {
-        case .primary: 0.50
-        case .standard: 0.34
-        case .utility: 0.22
-        }
-    }
 }
 
 struct AppSurfaceCardModifier: ViewModifier {

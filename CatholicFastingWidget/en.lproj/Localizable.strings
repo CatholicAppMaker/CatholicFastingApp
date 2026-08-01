@@ -7,4 +7,5 @@
 "widget.fallback.today.obligation" = "No obligation";
 "widget.fallback.next_required" = "No upcoming required observance";
 "widget.fast.active" = "Fast active";
+"widget.fast.active_target" = "Fast active. Target %@";
 "widget.fast.target_reached" = "Fast target reached";

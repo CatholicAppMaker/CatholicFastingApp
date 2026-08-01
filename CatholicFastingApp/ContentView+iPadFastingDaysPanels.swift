@@ -156,9 +156,9 @@ extension ContentView {
                     IPadKeyDateChip(
                         title: localizedObservanceTitle(observance.title),
                         subtitle: localizedAbbreviatedDate(observance.date),
-                        isSelected: selectedFastingObservanceID == observance.id)
+                        isSelected: navigationState.selectedFastingObservanceID == observance.id)
                     {
-                        selectedFastingObservanceID = observance.id
+                        navigationState.selectedFastingObservanceID = observance.id
                     }
                 }
             }
@@ -179,14 +179,14 @@ extension ContentView {
                     ForEach(observances) { observance in
                         let context = RegionalGuidanceContextFactory.presentationContext(for: observance, settings: settings)
                         Button {
-                            selectedFastingObservanceID = observance.id
+                            navigationState.selectedFastingObservanceID = observance.id
                         } label: {
                             IPadObservanceSelectionRow(
                                 context: context,
-                                isSelected: selectedFastingObservanceID == observance.id)
+                                isSelected: navigationState.selectedFastingObservanceID == observance.id)
                         }
                         .buttonStyle(.plain)
-                        .appSelectedAccessibility(selectedFastingObservanceID == observance.id)
+                        .appSelectedAccessibility(navigationState.selectedFastingObservanceID == observance.id)
                         .accessibilityIdentifier("ipad.fasting_days.row.\(observance.id)")
                         Divider()
                     }

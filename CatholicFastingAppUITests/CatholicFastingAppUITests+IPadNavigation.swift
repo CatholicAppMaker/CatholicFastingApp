@@ -1,7 +1,32 @@
 import Foundation
+import UIKit
 import XCTest
 
 extension CatholicFastingAppUITests {
+    func testIPadPrimaryWorkspacesAdaptAcrossRotation() {
+        let app = makeApp(fixedDate: "2026-07-17")
+        app.launch()
+        ensureOnHomeScreen(app)
+        defer {
+            XCUIDevice.shared.orientation = .portrait
+        }
+
+        for orientation in [UIDeviceOrientation.landscapeLeft, .portrait] {
+            XCUIDevice.shared.orientation = orientation
+            XCTAssertTrue(waitUntil(timeout: 5) {
+                let frame = app.windows.firstMatch.frame
+                return orientation.isLandscape
+                    ? frame.width > frame.height
+                    : frame.height > frame.width
+            })
+
+            for surface in ["today", "fasting_days", "intermittent", "more"] {
+                openIPadSurface(surface, in: app)
+                assertIPadWorkspaceVisible(surface, in: app)
+            }
+        }
+    }
+
     func testIPhoneMoreHubRowsOpenExpectedDestinationContent() {
         let app = makeApp()
         app.launch()

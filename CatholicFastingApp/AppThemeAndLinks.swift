@@ -192,6 +192,17 @@ enum CatholicTheme {
         #endif
     }
 
+    /// Secondary editorial copy that remains readable over every seasonal parchment.
+    static var secondaryInk: Color {
+        #if canImport(UIKit)
+        adaptiveColor(
+            light: UIColor(red: 0.29, green: 0.26, blue: 0.22, alpha: 1),
+            dark: UIColor(red: 0.29, green: 0.26, blue: 0.22, alpha: 1))
+        #else
+        Color(red: 0.29, green: 0.26, blue: 0.22)
+        #endif
+    }
+
     static var parchmentShade: Color {
         activePalette.parchmentShade
     }

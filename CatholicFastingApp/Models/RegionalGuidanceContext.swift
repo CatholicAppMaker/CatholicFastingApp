@@ -42,43 +42,6 @@ struct ObservancePresentationContext: Hashable {
     let nextActionText: String
 }
 
-enum PremiumWorkspaceSection: String, CaseIterable, Identifiable {
-    case dashboard
-    case planning
-    case reminders
-    case reflection
-    case analytics
-    case export
-
-    var id: String {
-        rawValue
-    }
-
-    var title: String {
-        switch self {
-        case .dashboard:
-            "Dashboard"
-        case .planning:
-            "Planning"
-        case .reminders:
-            "Reminders"
-        case .reflection:
-            "Reflection"
-        case .analytics:
-            "Analytics"
-        case .export:
-            "Export"
-        }
-    }
-}
-
-enum IPadWorkspaceLayout: String {
-    case dashboard
-    case planningTriptych
-    case controlCenter
-    case settingsDetail
-}
-
 enum RegionalGuidanceContextFactory {
     static func generalContext(for settings: RuleSettings) -> RegionalRuleContext {
         switch settings.regionProfile {

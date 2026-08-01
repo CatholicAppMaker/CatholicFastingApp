@@ -66,13 +66,13 @@ extension ContentView {
             HStack(spacing: 10) {
                 IPadSummaryMetricCard(
                     title: localized("ipad.today.planning.required_goal", default: "Required goal"),
-                    value: "\(yearlyRequiredCompletions)/\(planningData.requiredGoal)",
+                    value: "\(yearlyRequiredCompletions)/\(planningSession.data.requiredGoal)",
                     subtitle: localized(
                         "ipad.today.planning.required_goal_detail",
                         default: "required days logged"))
                 IPadSummaryMetricCard(
                     title: localized("ipad.today.planning.optional_goal", default: "Optional goal"),
-                    value: "\(yearlyOptionalCompletions)/\(planningData.optionalGoal)",
+                    value: "\(yearlyOptionalCompletions)/\(planningSession.data.optionalGoal)",
                     subtitle: localized("ipad.today.planning.optional_goal_detail", default: "optional disciplines logged"),
                     tint: CatholicTheme.accentForeground)
             }

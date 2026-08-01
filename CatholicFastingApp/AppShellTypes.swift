@@ -1,5 +1,63 @@
 import Foundation
 
+struct AppNavigationState {
+    var homeSurface: HomeSurface = .today
+    var selectedMoreDestination: MoreHubDestination? = .supportAndPremium
+    var morePath: [MoreHubDestination] = []
+    var pendingPhoneMoreDestination: MoreHubDestination?
+    var selectedPremiumToolDestination: PremiumToolDestination? = .planner
+    var selectedFastingObservanceID = ""
+}
+
+struct FastPresentationState {
+    var editingScheduleID = ""
+    var showsScheduleEditor = false
+    var scheduleName = ""
+    var scheduleStartHour = 20
+    var scheduleWeekdays: Set<Int> = [2, 4, 6]
+    var manualStart = AppClock.now()
+    var recapNote = ""
+    var lastTargetReachedHapticKey = ""
+    var lastEatingWindowClosedHapticKey = ""
+}
+
+struct PremiumPresentationState {
+    var newHouseholdProfileName = ""
+    var newSeasonCommitmentTitle = ""
+    var newReflectionTitle = ""
+    var newReflectionBody = ""
+    var newVirtueNote = ""
+    var selectedVirtue = "Temperance"
+    var householdImportCode = ""
+    var householdExportCode = ""
+    var companionStatus = ""
+}
+
+struct AppFeedbackState {
+    var notificationStatus = ""
+    var premiumCoachStatus = ""
+    var showsDeleteDataConfirmation = false
+    var guidanceScenario: GuidanceScenario = .normalDay
+}
+
+struct PlanningSessionState {
+    var data = LocalFeatureStore.loadPlanningData()
+    var schedules = LocalFeatureStore.loadSchedules()
+    var activeScheduleID = LocalFeatureStore.loadActiveScheduleID() ?? ""
+}
+
+struct ProfileSessionState {
+    var householdProfiles = LocalFeatureStore.loadProfiles()
+    var activeHouseholdProfileID = LocalFeatureStore.loadActiveProfileID() ?? ""
+    var devotionalFavorites = LocalFeatureStore.loadDevotionalFavorites()
+}
+
+struct PremiumSessionState {
+    var reflections = LocalFeatureStore.loadReflections()
+    var checklist = LocalFeatureStore.loadChecklist()
+    var companion = LocalFeatureStore.loadPremiumCompanionState()
+}
+
 enum HomeSurface: String, CaseIterable, Identifiable {
     case today
     case fastingDays

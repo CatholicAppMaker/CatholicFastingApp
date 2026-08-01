@@ -96,7 +96,7 @@ extension ContentView {
     var dataManagementSection: some View {
         Section(localized("settings.data_management.title", default: "Data Management")) {
             Button(role: .destructive) {
-                showDeleteDataConfirm = true
+                feedback.showsDeleteDataConfirmation = true
             } label: {
                 Text(localized("settings.data_management.delete_all", default: "Delete All App Data"))
             }
@@ -105,7 +105,7 @@ extension ContentView {
                 localized(
                     "settings.data_management.delete_all_confirm",
                     default: "Delete all app data on this device?"),
-                isPresented: $showDeleteDataConfirm,
+                isPresented: $feedback.showsDeleteDataConfirmation,
                 titleVisibility: .visible)
             {
                 Button(
@@ -159,19 +159,19 @@ extension ContentView {
             "friday_notes": penanceNotes.exportPayload(),
             "intermittent_fast": intermittentTracker.exportPayload(),
             "premium_companion": [
-                "template": premiumCompanion.templateRawValue,
-                "optional_disciplines_per_week": premiumCompanion.optionalDisciplinesPerWeek,
-                "fixed_fast_weekday": premiumCompanion.fixedFastWeekday,
-                "protect_feast_days": premiumCompanion.protectFeastDays,
+                "template": premiumSession.companion.templateRawValue,
+                "optional_disciplines_per_week": premiumSession.companion.optionalDisciplinesPerWeek,
+                "fixed_fast_weekday": premiumSession.companion.fixedFastWeekday,
+                "protect_feast_days": premiumSession.companion.protectFeastDays,
                 "condition_rules": [
-                    "remind_if_unlogged_by_noon": premiumCompanion.conditionRules.remindIfUnloggedByNoon,
-                    "required_days_double_reminder": premiumCompanion.conditionRules.requiredDaysDoubleReminder,
-                    "milestone_nudges_for_active_fast": premiumCompanion.conditionRules.milestoneNudgesForActiveFast,
+                    "remind_if_unlogged_by_noon": premiumSession.companion.conditionRules.remindIfUnloggedByNoon,
+                    "required_days_double_reminder": premiumSession.companion.conditionRules.requiredDaysDoubleReminder,
+                    "milestone_nudges_for_active_fast": premiumSession.companion.conditionRules.milestoneNudgesForActiveFast,
                 ],
-                "season_program": premiumCompanion.seasonProgramRawValue,
-                "season_program_start_at": UIConstants.exportISO8601.string(from: premiumCompanion.seasonProgramStartDate),
-                "completed_program_actions": premiumCompanion.completedProgramActions,
-                "virtue_logs_count": premiumCompanion.virtueLogs.count,
+                "season_program": premiumSession.companion.seasonProgramRawValue,
+                "season_program_start_at": UIConstants.exportISO8601.string(from: premiumSession.companion.seasonProgramStartDate),
+                "completed_program_actions": premiumSession.companion.completedProgramActions,
+                "virtue_logs_count": premiumSession.companion.virtueLogs.count,
             ],
             "launch_funnel_snapshot": [
                 "started_at": UIConstants.exportISO8601.string(from: launchFunnelSnapshot.startedAt),
@@ -209,30 +209,30 @@ extension ContentView {
         LocalFeatureStore.clearAll()
         WidgetSnapshotStore.clear()
 
-        planningData = .default
-        intermittentSchedules = LocalFeatureStore.loadSchedules()
-        activeIntermittentScheduleID = LocalFeatureStore.loadActiveScheduleID() ?? ""
-        editingIntermittentScheduleID = ""
-        newIntermittentScheduleName = ""
-        newIntermittentScheduleStartHour = 20
-        newIntermittentScheduleWeekdays = [2, 4, 6]
-        lastTargetReachedHapticKey = ""
-        lastEatingWindowClosedHapticKey = ""
-        householdProfiles = LocalFeatureStore.loadProfiles()
-        activeHouseholdProfileID = LocalFeatureStore.loadActiveProfileID() ?? ""
-        devotionalFavorites = []
-        reflectionEntries = []
-        premiumChecklist = LocalFeatureStore.loadChecklist()
-        premiumCompanion = LocalFeatureStore.loadPremiumCompanionState()
-        newHouseholdProfileName = ""
-        newSeasonCommitmentTitle = ""
-        newReflectionTitle = ""
-        newReflectionBody = ""
-        newVirtueNote = ""
-        selectedVirtue = "Temperance"
-        premiumHouseholdImportCode = ""
-        premiumHouseholdExportCode = ""
-        premiumCompanionStatus = ""
+        planningSession.data = .default
+        planningSession.schedules = LocalFeatureStore.loadSchedules()
+        planningSession.activeScheduleID = LocalFeatureStore.loadActiveScheduleID() ?? ""
+        fastPresentation.editingScheduleID = ""
+        fastPresentation.scheduleName = ""
+        fastPresentation.scheduleStartHour = 20
+        fastPresentation.scheduleWeekdays = [2, 4, 6]
+        fastPresentation.lastTargetReachedHapticKey = ""
+        fastPresentation.lastEatingWindowClosedHapticKey = ""
+        profileSession.householdProfiles = LocalFeatureStore.loadProfiles()
+        profileSession.activeHouseholdProfileID = LocalFeatureStore.loadActiveProfileID() ?? ""
+        profileSession.devotionalFavorites = []
+        premiumSession.reflections = []
+        premiumSession.checklist = LocalFeatureStore.loadChecklist()
+        premiumSession.companion = LocalFeatureStore.loadPremiumCompanionState()
+        premiumPresentation.newHouseholdProfileName = ""
+        premiumPresentation.newSeasonCommitmentTitle = ""
+        premiumPresentation.newReflectionTitle = ""
+        premiumPresentation.newReflectionBody = ""
+        premiumPresentation.newVirtueNote = ""
+        premiumPresentation.selectedVirtue = "Temperance"
+        premiumPresentation.householdImportCode = ""
+        premiumPresentation.householdExportCode = ""
+        premiumPresentation.companionStatus = ""
 
         age14OrOlderForAbstinence = DefaultValues.age14OrOlderForAbstinence
         age18OrOlderForFasting = DefaultValues.age18OrOlderForFasting
@@ -259,10 +259,10 @@ extension ContentView {
         simplifiedModeEnabled = false
         launchFunnelSnapshot = .default
 
-        notificationStatus = ""
-        premiumCoachStatus = ""
-        homeSurface = .today
-        guidanceScenario = .normalDay
+        feedback.notificationStatus = ""
+        feedback.premiumCoachStatus = ""
+        navigationState.homeSurface = .today
+        feedback.guidanceScenario = .normalDay
 
         persistWidgetSnapshot()
     }

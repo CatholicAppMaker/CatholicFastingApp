@@ -151,6 +151,50 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElementPresence(elementByIdentifier("intermittent.history_empty", in: app), in: app, maxSwipes: 24))
     }
 
+    func testIPhoneFastCanCreateApplyAndDeleteNamedSchedule() {
+        let app = makeApp()
+        app.launch()
+        ensureOnHomeScreen(app)
+        openSurface("Fast", in: app)
+
+        let disclosure = elementByIdentifier("intermittent.advanced.disclosure", in: app)
+        XCTAssertTrue(scrollToElement(disclosure, in: app, maxSwipes: 24))
+        disclosure.tap()
+
+        let editorToggle = elementByIdentifier("intermittent.schedule.toggle_editor", in: app)
+        XCTAssertTrue(scrollToElement(editorToggle, in: app, maxSwipes: 24))
+        editorToggle.tap()
+
+        let scheduleName = app.textFields["intermittent.schedule.name"].firstMatch
+        XCTAssertTrue(scrollToElementPresence(scheduleName, in: app, maxSwipes: 12))
+        scheduleName.tap()
+        scheduleName.typeText("Friday Rhythm")
+        let returnKey = app.keyboards.buttons["return"].firstMatch
+        if returnKey.exists {
+            returnKey.tap()
+        }
+
+        let saveButton = app.buttons["intermittent.schedule.add"].firstMatch
+        XCTAssertTrue(scrollToElement(saveButton, in: app, maxSwipes: 12))
+        saveButton.tap()
+
+        let savedSchedule = app.staticTexts["Friday Rhythm"].firstMatch
+        XCTAssertTrue(scrollToElementPresence(savedSchedule, in: app, maxSwipes: 12))
+        XCTAssertTrue(app.staticTexts["Applied"].firstMatch.waitForExistence(timeout: 3))
+
+        let actions = elementByIdentifier("intermittent.schedule.actions", in: app)
+        XCTAssertTrue(scrollToElement(actions, in: app, maxSwipes: 12))
+        actions.tap()
+
+        let deleteButton = app.buttons["Delete"].firstMatch
+        XCTAssertTrue(deleteButton.waitForExistence(timeout: 3))
+        deleteButton.tap()
+
+        XCTAssertTrue(
+            waitUntil(timeout: 3) { !savedSchedule.exists },
+            "Deleting the saved schedule did not remove its row")
+    }
+
     func testIPadFastPresetSelectionStaysVisible() {
         let app = makeApp()
         app.launch()

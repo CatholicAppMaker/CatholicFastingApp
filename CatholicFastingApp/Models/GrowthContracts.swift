@@ -146,14 +146,6 @@ struct LaunchFunnelSnapshot: Codable, Equatable {
         premiumPreviewSeenAt: nil,
         purchaseStartedAt: nil,
         premiumUnlockedAt: nil)
-
-    var selectedRegion: RuleSettings.RegionProfile {
-        RuleSettings.RegionProfile(rawValue: selectedRegionRaw) ?? .us
-    }
-
-    var selectedReminderTier: ReminderTier {
-        ReminderTier(rawValue: selectedReminderTierRaw) ?? .balanced
-    }
 }
 
 /// Keeps the system review request tied to a meaningful success moment rather

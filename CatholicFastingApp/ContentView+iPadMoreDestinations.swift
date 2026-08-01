@@ -22,16 +22,16 @@ extension ContentView {
 
                     ForEach(destinations) { destination in
                         Button {
-                            selectedMoreDestination = destination
+                            navigationState.selectedMoreDestination = destination
                         } label: {
                             AppDestinationRowCard(
                                 title: localizedMoreDestinationTitle(destination),
                                 subtitle: localizedMoreDestinationSubtitle(destination),
                                 systemImage: destination.iconName,
-                                isSelected: selectedMoreDestination == destination)
+                                isSelected: navigationState.selectedMoreDestination == destination)
                         }
                         .buttonStyle(.plain)
-                        .appSelectedAccessibility(selectedMoreDestination == destination)
+                        .appSelectedAccessibility(navigationState.selectedMoreDestination == destination)
                         .accessibilityIdentifier("ipad.more.compact.\(destination.rawValue)")
                     }
                 }
@@ -51,16 +51,16 @@ extension ContentView {
                             .foregroundStyle(.secondary)
                         ForEach(destinations) { destination in
                             Button {
-                                selectedMoreDestination = destination
+                                navigationState.selectedMoreDestination = destination
                             } label: {
                                 AppDestinationRowCard(
                                     title: localizedMoreDestinationTitle(destination),
                                     subtitle: localizedMoreDestinationSubtitle(destination),
                                     systemImage: destination.iconName,
-                                    isSelected: selectedMoreDestination == destination)
+                                    isSelected: navigationState.selectedMoreDestination == destination)
                             }
                             .buttonStyle(.plain)
-                            .appSelectedAccessibility(selectedMoreDestination == destination)
+                            .appSelectedAccessibility(navigationState.selectedMoreDestination == destination)
                             .accessibilityIdentifier("ipad.more.destination.\(destination.rawValue)")
                         }
                     }

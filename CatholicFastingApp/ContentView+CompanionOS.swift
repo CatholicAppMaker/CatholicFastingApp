@@ -120,7 +120,7 @@ extension ContentView {
                 actionTitle: localized("companion.live.open_tracker", default: "Open Fast"),
                 actionSystemImage: "timer")
             {
-                homeSurface = .intermittent
+                navigationState.homeSurface = .intermittent
             }
         case .targetReached(_, let targetHours, let elapsed, let progress, let stage):
             CompanionLiveStateCard(
@@ -137,7 +137,7 @@ extension ContentView {
                 actionTitle: localized("companion.live.end_fast", default: "Open to End Fast"),
                 actionSystemImage: "stop.fill")
             {
-                homeSurface = .intermittent
+                navigationState.homeSurface = .intermittent
             }
         case .completedRecap(let recap):
             CompanionLiveStateCard(
@@ -158,7 +158,7 @@ extension ContentView {
                 actionTitle: localized("companion.live.review_recap", default: "Review Recap"),
                 actionSystemImage: "checkmark.seal")
             {
-                homeSurface = .intermittent
+                navigationState.homeSurface = .intermittent
             }
         case .eatingWindow(let latestSession, let elapsedSinceEnd, let suggestedNextStart):
             CompanionLiveStateCard(
@@ -185,7 +185,7 @@ extension ContentView {
                 actionTitle: localized("companion.live.open_tracker", default: "Open Fast"),
                 actionSystemImage: "timer")
             {
-                homeSurface = .intermittent
+                navigationState.homeSurface = .intermittent
             }
         case .inactive(let targetHours, _):
             CompanionInactiveFastCard(
@@ -197,7 +197,7 @@ extension ContentView {
                 actionTitle: localized("today.actions.track_fast", default: "Open Fast"),
                 actionSystemImage: "play.fill")
             {
-                homeSurface = .intermittent
+                navigationState.homeSurface = .intermittent
             }
         }
     }
@@ -219,11 +219,11 @@ extension ContentView {
     func performCompanionAction(_ action: CompanionNextAction) {
         switch action.destination {
         case .today:
-            homeSurface = .today
+            navigationState.homeSurface = .today
         case .fastingDays:
             focusFastingDaysOnUpcomingRequired()
         case .trackFast:
-            homeSurface = .intermittent
+            navigationState.homeSurface = .intermittent
         case .guidance:
             navigateToMoreDestination(.guidanceAndRules)
         case .setup:
@@ -236,7 +236,7 @@ extension ContentView {
         case .journal:
             navigateToMoreDestination(.supportAndPremium)
             supportPremiumSurfaceRaw = SupportPremiumSurface.tools.rawValue
-            selectedPremiumToolDestination = .journal
+            navigationState.selectedPremiumToolDestination = .journal
         }
     }
 

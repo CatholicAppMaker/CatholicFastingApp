@@ -58,10 +58,6 @@ enum ObservanceCalculator {
         RuleBundleRepository.snapshot().metadata
     }
 
-    static func ruleBundleChanges() -> [RuleBundleChange] {
-        RuleBundleRepository.snapshot().changes
-    }
-
     static func ruleBundleAudit() -> RuleBundleAudit {
         RuleBundleRepository.snapshot().audit
     }

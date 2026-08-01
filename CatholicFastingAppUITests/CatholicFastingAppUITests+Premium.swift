@@ -101,7 +101,7 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(elementByIdentifier("premium.sample_preview", in: app), in: app))
     }
 
-    func testIPadMoreCompactPremiumShowsPlansAndLegal() {
+    func testIPadMorePremiumShowsPlansAndLegal() {
         let app = makeApp()
         app.launch()
         ensureOnHomeScreen(app)

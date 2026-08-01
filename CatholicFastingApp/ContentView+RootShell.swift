@@ -11,16 +11,6 @@ extension ContentView {
             default: "One calm place for setup, guidance, privacy, and premium support.")
     }
 
-    func localizedMoreHubLeadTitle() -> String {
-        localized("more.hub.lead.title", default: "Choose one focused page")
-    }
-
-    func localizedMoreHubLeadDetail() -> String {
-        localized(
-            "more.hub.lead.detail",
-            default: "Setup, guidance, privacy, and premium support stay grouped here instead of one long settings screen.")
-    }
-
     func localizedHomeSurfaceLabel(_ surface: HomeSurface) -> String {
         switch surface {
         case .today:
@@ -108,30 +98,13 @@ extension ContentView {
     }
 
     var tabRootView: some View {
-        TabView(selection: $homeSurface) {
+        TabView(selection: $navigationState.homeSurface) {
             todayPhoneTab
             fastingDaysPhoneTab
             intermittentPhoneTab
             morePhoneTab
         }
         .toolbarBackground(.hidden, for: .tabBar)
-    }
-
-    var body: some View {
-        Group {
-            if didCompleteOnboarding {
-                applyRootLifecycleHandlers(
-                    to: Group {
-                        if appLayoutProfile.usesSplitViewShell {
-                            ipadRootScaffold
-                        } else {
-                            tabRootScaffold
-                        }
-                    })
-            } else {
-                onboardingLaunchRoot
-            }
-        }
     }
 
     var tabRootScaffold: some View {
@@ -144,66 +117,49 @@ extension ContentView {
     }
 
     var todayPhoneTab: some View {
-        NavigationStack {
-            todaySurfaceList
-                .navigationTitle(localizedHomeSurfaceLabel(.today))
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar { phoneTabToolbar }
-        }
-        .phoneNavigationDestinations(for: self)
-        .tabItem {
-            Label(localizedHomeSurfaceLabel(.today), systemImage: HomeSurface.today.iconName)
-        }
-        .tag(HomeSurface.today)
-        .accessibilityIdentifier("tab.today")
+        PhoneNavigationTab(
+            title: localizedHomeSurfaceLabel(.today),
+            surface: .today,
+            content: { todaySurfaceList },
+            toolbar: { phoneTabToolbar },
+            more: moreDestinationList,
+            premium: premiumToolList,
+            history: fastingHistoryArticleDetail)
     }
 
     var fastingDaysPhoneTab: some View {
-        NavigationStack {
-            fastingDaysSurfaceList
-                .navigationTitle(localizedHomeSurfaceLabel(.fastingDays))
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar { phoneTabToolbar }
-        }
-        .phoneNavigationDestinations(for: self)
-        .tabItem {
-            Label(localizedHomeSurfaceLabel(.fastingDays), systemImage: HomeSurface.fastingDays.iconName)
-        }
-        .tag(HomeSurface.fastingDays)
-        .accessibilityIdentifier("tab.fasting_days")
+        PhoneNavigationTab(
+            title: localizedHomeSurfaceLabel(.fastingDays),
+            surface: .fastingDays,
+            content: { fastingDaysSurfaceList },
+            toolbar: { phoneTabToolbar },
+            more: moreDestinationList,
+            premium: premiumToolList,
+            history: fastingHistoryArticleDetail)
     }
 
     var intermittentPhoneTab: some View {
-        NavigationStack {
-            intermittentSurfaceList
-                .navigationTitle(localizedHomeSurfaceLabel(.intermittent))
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar { phoneTabToolbar }
-        }
-        .phoneNavigationDestinations(for: self)
-        .tabItem {
-            Label(localizedHomeSurfaceLabel(.intermittent), systemImage: HomeSurface.intermittent.iconName)
-        }
-        .tag(HomeSurface.intermittent)
-        .accessibilityIdentifier("tab.intermittent")
+        PhoneNavigationTab(
+            title: localizedHomeSurfaceLabel(.intermittent),
+            surface: .intermittent,
+            content: { intermittentSurfaceList },
+            toolbar: { phoneTabToolbar },
+            more: moreDestinationList,
+            premium: premiumToolList,
+            history: fastingHistoryArticleDetail)
     }
 
     var morePhoneTab: some View {
-        NavigationStack(path: $moreNavigationPath) {
-            moreSurfaceList
-                .navigationTitle(localizedHomeSurfaceLabel(.more))
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar { phoneTabToolbar }
-                .onAppear {
-                    openPendingPhoneMoreDestinationIfNeeded()
-                }
-                .phoneNavigationDestinations(for: self)
-        }
-        .tabItem {
-            Label(localizedHomeSurfaceLabel(.more), systemImage: HomeSurface.more.iconName)
-        }
-        .tag(HomeSurface.more)
-        .accessibilityIdentifier("tab.more")
+        PhonePathNavigationTab(
+            title: localizedHomeSurfaceLabel(.more),
+            surface: .more,
+            path: $navigationState.morePath,
+            content: { moreSurfaceList },
+            toolbar: { phoneTabToolbar },
+            more: moreDestinationList,
+            premium: premiumToolList,
+            history: fastingHistoryArticleDetail,
+            onAppear: openPendingPhoneMoreDestinationIfNeeded)
     }
 
     @ToolbarContentBuilder
@@ -221,116 +177,6 @@ extension ContentView {
 
     func applyRootLifecycleHandlers(to content: some View) -> some View {
         applyPersistenceHandlers(to: applyCoreLifecycleHandlers(to: content))
-    }
-
-    func applyCoreLifecycleHandlers(to content: some View) -> some View {
-        content
-            .onOpenURL { url in
-                handleDeepLink(url)
-            }
-            .onChange(of: acceptedLegalNotice) { _, newValue in
-                acceptedLegalNoticeAt = newValue ? UIConstants.exportISO8601.string(from: Date()) : ""
-                Task {
-                    await refreshDailyQuoteReminderIfNeeded()
-                    notificationStatus = await ReminderScheduler.notificationSummary()
-                }
-            }
-            .task {
-                prepareLocalLaunchStateIfNeeded()
-                applyUITestInitialNavigationIfNeeded()
-            }
-            .onChange(of: didCompleteOnboarding) { _, completed in
-                guard completed else { return }
-                Task {
-                    await runDeferredPlatformStartupIfNeeded()
-                }
-            }
-            .onChange(of: homeSurface) { _, newValue in
-                if newValue == .fastingDays, launchFunnelSnapshot.firstActionCompletedAt == nil {
-                    launchFunnelSnapshot.firstActionCompletedAt = Date()
-                }
-                if newValue == .more {
-                    openPendingPhoneMoreDestinationIfNeeded()
-                }
-                if newValue == .more, selectedMoreDestination == .supportAndPremium {
-                    Task {
-                        await refreshStoreCatalogIfNeeded()
-                    }
-                }
-            }
-            .onChange(of: selectedMoreDestination) { _, newValue in
-                guard homeSurface == .more, newValue == .supportAndPremium else { return }
-                Task {
-                    await refreshStoreCatalogIfNeeded()
-                }
-            }
-            .onChange(of: supportPremiumSurfaceRaw) { _, newValue in
-                if newValue == SupportPremiumSurface.upgrade.rawValue {
-                    if launchFunnelSnapshot.paywallSeenAt == nil {
-                        launchFunnelSnapshot.paywallSeenAt = Date()
-                    }
-                    launchFunnelSnapshot.paywallViewCount += 1
-                    Task {
-                        await refreshStoreCatalogIfNeeded()
-                    }
-                }
-            }
-            .onChange(of: monetizationStore.isPurchasing) { _, isPurchasing in
-                if isPurchasing, launchFunnelSnapshot.purchaseStartedAt == nil {
-                    launchFunnelSnapshot.purchaseStartedAt = Date()
-                }
-            }
-            .onChange(of: monetizationStore.premiumUnlocked) { _, unlocked in
-                if unlocked, launchFunnelSnapshot.premiumUnlockedAt == nil {
-                    launchFunnelSnapshot.premiumUnlockedAt = Date()
-                }
-                if unlocked {
-                    supportPremiumSurfaceRaw = SupportPremiumSurface.tools.rawValue
-                }
-            }
-            .onChange(of: scenePhase) { _, newValue in
-                if newValue == .active {
-                    Task {
-                        prepareLocalLaunchStateIfNeeded()
-                        await runDeferredPlatformStartupIfNeeded()
-                        if launchExecutionState.hasRunDeferredStartup {
-                            await refreshReminderIntegrationsIfNeeded()
-                        }
-                    }
-                } else if newValue == .background {
-                    saveAdvancedState()
-                }
-            }
-    }
-
-    var onboardingLaunchRoot: some View {
-        OnboardingView(
-            age14OrOlderForAbstinence: $age14OrOlderForAbstinence,
-            age18OrOlderForFasting: $age18OrOlderForFasting,
-            medicalDispensation: $medicalDispensation,
-            languageModeRaw: $languageModeRaw,
-            regionProfileRaw: $regionProfileRaw,
-            fridayModeRaw: $fridayModeRaw,
-            reminderTierRaw: $reminderTierRaw,
-            dailyReminderSupportEnabled: $dailyReminderSupportEnabled,
-            morningReminderEnabled: $morningReminderEnabled,
-            eveningReminderEnabled: $eveningReminderEnabled,
-            dailyQuoteReminderEnabled: $dailyQuoteReminderEnabled,
-            dailyQuoteReminderHour: $dailyQuoteReminderHour,
-            dailyQuoteReminderMinute: $dailyQuoteReminderMinute,
-            intermittentIntentionRaw: $intermittentIntentionRaw,
-            acceptedLegalNotice: $acceptedLegalNotice)
-        {
-            didCompleteOnboarding = true
-            launchFunnelSnapshot.completedOnboardingAt = Date()
-            Task {
-                await runDeferredPlatformStartupIfNeeded()
-            }
-        }
-        .appRootBackground()
-        .task {
-            prepareLocalLaunchStateIfNeeded()
-        }
     }
 
     func applyPersistenceHandlers(to content: some View) -> some View {
@@ -361,178 +207,60 @@ extension ContentView {
             }
     }
 
-    func applyLaunchPersistenceHandlers(to content: some View) -> some View {
-        content
-            .onChange(of: regionProfileRaw) { _, newValue in
-                launchFunnelSnapshot.selectedRegionRaw = newValue
-            }
-            .onChange(of: reminderTierRaw) { _, newValue in
-                launchFunnelSnapshot.selectedReminderTierRaw = newValue
-            }
-            .onChange(of: dailyReminderSupportEnabled) { _, _ in
-                syncReminderTierFromCurrentToggleState()
-            }
-            .onChange(of: morningReminderEnabled) { _, _ in
-                syncReminderTierFromCurrentToggleState()
-            }
-            .onChange(of: eveningReminderEnabled) { _, _ in
-                syncReminderTierFromCurrentToggleState()
-            }
-            .onChange(of: dailyQuoteReminderEnabled) { _, _ in
-                Task {
-                    await scheduleDailyQuoteReminderFromCurrentSettings()
-                }
-            }
-            .onChange(of: dailyQuoteReminderHour) { _, _ in
-                guard acceptedLegalNotice, dailyQuoteReminderEnabled else { return }
-                Task {
-                    await scheduleDailyQuoteReminderFromCurrentSettings()
-                }
-            }
-            .onChange(of: dailyQuoteReminderMinute) { _, _ in
-                guard acceptedLegalNotice, dailyQuoteReminderEnabled else { return }
-                Task {
-                    await scheduleDailyQuoteReminderFromCurrentSettings()
-                }
-            }
-            .onChange(of: languageModeRaw) { _, _ in
-                guard acceptedLegalNotice, dailyQuoteReminderEnabled else { return }
-                Task {
-                    await scheduleDailyQuoteReminderFromCurrentSettings()
-                }
-            }
-    }
-
-    func applyStateSavePersistenceHandlers(to content: some View) -> some View {
-        content
-            .onChange(of: planningData) { _, newValue in
-                LocalFeatureStore.savePlanningData(newValue)
-            }
-            .onChange(of: intermittentSchedules) { _, newValue in
-                LocalFeatureStore.saveSchedules(newValue)
-            }
-            .onChange(of: activeIntermittentScheduleID) { _, newValue in
-                LocalFeatureStore.saveActiveScheduleID(newValue)
-            }
-            .onChange(of: householdProfiles) { _, newValue in
-                LocalFeatureStore.saveProfiles(newValue)
-            }
-            .onChange(of: activeHouseholdProfileID) { _, newValue in
-                LocalFeatureStore.saveActiveProfileID(newValue)
-            }
-            .onChange(of: devotionalFavorites) { _, newValue in
-                LocalFeatureStore.saveDevotionalFavorites(newValue)
-            }
-            .onChange(of: reflectionEntries) { _, newValue in
-                LocalFeatureStore.saveReflections(newValue)
-            }
-            .onChange(of: premiumChecklist) { _, newValue in
-                LocalFeatureStore.saveChecklist(newValue)
-            }
-            .onChange(of: premiumCompanion) { _, newValue in
-                LocalFeatureStore.savePremiumCompanionState(newValue)
-            }
-            .onChange(of: launchFunnelSnapshot) { _, newValue in
-                LocalFeatureStore.saveLaunchFunnelSnapshot(newValue)
-            }
-            .onDisappear {
-                saveAdvancedState()
-            }
-    }
-
-    func saveAdvancedState() {
-        LocalFeatureStore.savePlanningData(planningData)
-        LocalFeatureStore.saveSchedules(intermittentSchedules)
-        LocalFeatureStore.saveActiveScheduleID(activeIntermittentScheduleID)
-        LocalFeatureStore.saveProfiles(householdProfiles)
-        LocalFeatureStore.saveActiveProfileID(activeHouseholdProfileID)
-        LocalFeatureStore.saveDevotionalFavorites(devotionalFavorites)
-        LocalFeatureStore.saveReflections(reflectionEntries)
-        LocalFeatureStore.saveChecklist(premiumChecklist)
-        LocalFeatureStore.savePremiumCompanionState(premiumCompanion)
-        LocalFeatureStore.saveLaunchFunnelSnapshot(launchFunnelSnapshot)
-    }
-
     @ViewBuilder
     var seasonBadge: some View {
         let localizedSeason = localizedSeasonLabel(currentLiturgicalSeason)
-        let content = HStack(spacing: 6) {
-            Image(systemName: "cross.case.fill")
-                .foregroundStyle(CatholicTheme.seasonAccent)
-                .accessibilityHidden(true)
-            if liturgicalSeasonColorsEnabled, !dynamicTypeSize.isAccessibilitySize {
-                Text(localizedSeason)
-                    .font(.caption2.weight(.bold))
-                    .foregroundStyle(CatholicTheme.seasonAccent)
-                    .lineLimit(1)
-                    .fixedSize(horizontal: true, vertical: false)
-            }
-        }
-        .padding(.horizontal, 9)
-        .padding(.vertical, 5)
-        .allowsHitTesting(false)
-        .accessibilityIdentifier("home.season_badge")
-        .accessibilityAddTraits(.isStaticText)
-        .accessibilityLabel(
-            localizedFormat(
+        PhoneSeasonBadge(
+            localizedSeason: localizedSeason,
+            showsSeasonName: liturgicalSeasonColorsEnabled && !dynamicTypeSize.isAccessibilitySize,
+            accessibilityLabel: localizedFormat(
                 "home.season_badge.accessibility",
                 default: "Liturgical season %@",
                 localizedSeason))
-
-        content.appCapsuleGlass()
     }
 
     var phoneBrandMark: some View {
-        Image("CFAMark")
-            .renderingMode(.template)
-            .resizable()
-            .scaledToFit()
-            .frame(width: 26, height: 26)
-            .foregroundStyle(CatholicTheme.primary)
-            .allowsHitTesting(false)
-            .accessibilityIdentifier("home.brand_mark")
-            .accessibilityLabel(localized("shared.app_full_title", default: "Catholic Fasting App"))
+        PhoneBrandMark(
+            accessibilityLabel: localized("shared.app_full_title", default: "Catholic Fasting App"))
     }
 
     var todaySurfaceList: some View {
-        List {
+        PhoneSurfaceList {
             todaySurfaceSections
         }
-        .listStyle(.plain)
-        .listSectionSpacing(SacredEditorialTokens.sectionSpacing)
-        .appListBackground()
-        .phoneTabBarScrollClearance()
     }
 
     var fastingDaysSurfaceList: some View {
-        List {
+        PhoneSurfaceList {
             fastingDaysSurfaceSections
         }
-        .listStyle(.plain)
-        .listSectionSpacing(SacredEditorialTokens.sectionSpacing)
-        .appListBackground()
-        .phoneTabBarScrollClearance()
     }
 
     var intermittentSurfaceList: some View {
-        List {
+        PhoneSurfaceList {
             intermittentSurfaceSections
         }
-        .listStyle(.plain)
-        .listSectionSpacing(SacredEditorialTokens.sectionSpacing)
         .scrollDismissesKeyboard(.immediately)
-        .appListBackground()
-        .phoneTabBarScrollClearance()
     }
 
     var moreSurfaceList: some View {
-        List {
-            moreSurfaceSections
+        PhoneSurfaceList {
+            MoreHubSections(
+                heroTitle: localizedMoreHubHeroTitle(),
+                heroSubtitle: localizedMoreHubHeroSubtitle(),
+                destinations: MoreHubDestination.allCases.map { destination in
+                    MoreHubDestinationPresentation(
+                        destination: destination,
+                        title: localizedMoreDestinationTitle(destination),
+                        subtitle: localizedMoreDestinationSubtitle(destination))
+                },
+                quote: guidanceFastingQuote,
+                quoteSectionTitle: localized("more.quote.section", default: "Guidance reflection"),
+                unofficialNotice: { unofficialAppNoticeSection },
+                selectDestination: { destination in
+                    navigationState.morePath.append(destination)
+                })
         }
-        .listStyle(.plain)
-        .listSectionSpacing(SacredEditorialTokens.sectionSpacing)
-        .appListBackground()
-        .phoneTabBarScrollClearance()
     }
 
     @ViewBuilder
@@ -582,52 +310,8 @@ extension ContentView {
         intermittentFastingQuoteSection
     }
 
-    @ViewBuilder
-    var moreSurfaceSections: some View {
-        moreHubSacredAnchorSection
-        moreHubSection
-        unofficialAppNoticeSection
-    }
-
-    var moreHubSacredAnchorSection: some View {
-        Section {
-            SacredSurfaceAnchorCard(
-                assetName: "GuidanceSacred",
-                title: localizedMoreHubHeroTitle(),
-                subtitle: localizedMoreHubHeroSubtitle(),
-                imageHeight: 88,
-                cornerRadius: 16,
-                accessibilityIdentifier: "more.hub.hero")
-        }
-    }
-
-    @ViewBuilder
-    var moreHubSection: some View {
-        Section {
-            ForEach(MoreHubDestination.allCases) { destination in
-                Button {
-                    moreNavigationPath.append(destination)
-                } label: {
-                    AppDestinationRowCard(
-                        title: localizedMoreDestinationTitle(destination),
-                        subtitle: localizedMoreDestinationSubtitle(destination),
-                        systemImage: destination.iconName,
-                        showsChevron: true,
-                        usesPrimarySubtitle: true)
-                }
-                .buttonStyle(.plain)
-                .accessibilityIdentifier("more.hub.\(destination.rawValue)")
-            }
-        }
-
-        Section(localized("more.quote.section", default: "Guidance reflection")) {
-            CatholicFastingQuoteCard(quote: guidanceFastingQuote, compact: true)
-                .accessibilityIdentifier("more.hub.quote")
-        }
-    }
-
     func moreDestinationList(for destination: MoreHubDestination) -> some View {
-        List {
+        PhoneDestinationSurface(title: localizedMoreDestinationTitle(destination)) {
             switch destination {
             case .supportAndPremium:
                 premiumSurfacePickerSection
@@ -676,12 +360,6 @@ extension ContentView {
                 moreDestinationHeroSection(for: destination)
             }
         }
-        .listStyle(.plain)
-        .listSectionSpacing(SacredEditorialTokens.sectionSpacing)
-        .appListBackground()
-        .phoneTabBarScrollClearance()
-        .navigationTitle(localizedMoreDestinationTitle(destination))
-        .navigationBarTitleDisplayMode(.inline)
     }
 
     @ViewBuilder
@@ -707,30 +385,17 @@ extension ContentView {
     }
 
     func premiumToolIntroSection(for destination: PremiumToolDestination) -> some View {
-        Section {
-            VStack(alignment: .leading, spacing: 10) {
-                Label(localizedPremiumToolTitle(destination), systemImage: destination.iconName)
-                    .font(.system(.headline, design: .serif))
-                    .foregroundStyle(CatholicTheme.primary)
-                Text(localizedPremiumToolSubtitle(destination))
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
-            .padding(.vertical, 6)
-        }
+        PremiumToolIntroSection(
+            title: localizedPremiumToolTitle(destination),
+            subtitle: localizedPremiumToolSubtitle(destination),
+            iconName: destination.iconName)
     }
 
     func premiumToolList(for destination: PremiumToolDestination) -> some View {
-        List {
+        PhoneDestinationSurface(title: localizedPremiumToolTitle(destination)) {
             premiumToolIntroSection(for: destination)
             premiumToolSections(for: destination)
         }
-        .listStyle(.plain)
-        .listSectionSpacing(SacredEditorialTokens.sectionSpacing)
-        .appListBackground()
-        .phoneTabBarScrollClearance()
-        .navigationTitle(localizedPremiumToolTitle(destination))
-        .navigationBarTitleDisplayMode(.inline)
     }
 
     func moreDestinationHeroItem(for destination: MoreHubDestination) -> SacredImageryItem {
@@ -770,39 +435,25 @@ extension ContentView {
     }
 
     func openPendingPhoneMoreDestinationIfNeeded() {
-        guard !appLayoutProfile.usesSplitViewShell, homeSurface == .more, let destination = pendingPhoneMoreDestination else {
+        guard !appLayoutProfile.usesSplitViewShell, navigationState.homeSurface == .more, let destination = navigationState.pendingPhoneMoreDestination else {
             return
         }
-        pendingPhoneMoreDestination = nil
-        moreNavigationPath = [destination]
+        navigationState.pendingPhoneMoreDestination = nil
+        navigationState.morePath = [destination]
     }
 
     func navigateToMoreDestination(_ destination: MoreHubDestination) {
-        selectedMoreDestination = destination
+        navigationState.selectedMoreDestination = destination
         if appLayoutProfile.usesSplitViewShell {
-            homeSurface = .more
+            navigationState.homeSurface = .more
             return
         }
 
-        pendingPhoneMoreDestination = destination
-        if homeSurface == .more {
+        navigationState.pendingPhoneMoreDestination = destination
+        if navigationState.homeSurface == .more {
             openPendingPhoneMoreDestinationIfNeeded()
         } else {
-            homeSurface = .more
-        }
-    }
-}
-
-private extension View {
-    func phoneNavigationDestinations(for contentView: ContentView) -> some View {
-        navigationDestination(for: MoreHubDestination.self) { destination in
-            contentView.moreDestinationList(for: destination)
-        }
-        .navigationDestination(for: PremiumToolDestination.self) { destination in
-            contentView.premiumToolList(for: destination)
-        }
-        .navigationDestination(for: FastingHistoryArticle.self) { article in
-            contentView.fastingHistoryArticleDetail(article)
+            navigationState.homeSurface = .more
         }
     }
 }
