@@ -9,7 +9,7 @@
 ## Pre-Launch (T-7 to T-1)
 
 1. Run validation:
-   - `swift test`
+   - `swift test --scratch-path /private/tmp/CatholicFastingSwiftPM`
    - `xcodebuild -project CatholicFastingApp.xcodeproj -scheme CatholicFastingApp -destination 'platform=iOS Simulator,name=iPhone 17' build`
    - `xcodebuild -project CatholicFastingApp.xcodeproj -scheme CatholicFastingApp -destination 'platform=iOS Simulator,name=iPhone 17' -only-testing:CatholicFastingAppUITests test`
 2. Verify legal package checklist completion.

@@ -26,14 +26,14 @@ That script runs:
 ```bash
 xcodebuild -project CatholicFastingApp.xcodeproj -scheme CatholicFastingMacApp -destination 'platform=macOS,arch=arm64' CODE_SIGNING_ALLOWED=NO build
 xcodebuild -project CatholicFastingApp.xcodeproj -scheme CatholicFastingMacAppTests -destination 'platform=macOS,arch=arm64' CODE_SIGNING_ALLOWED=NO test
-swift test
+swift test --scratch-path /private/tmp/CatholicFastingSwiftPM
 ```
 
 It then attempts the signed UI-test lane with provisioning enabled. If signing is not ready, it
 prints the likely blocker and skips the UI lane instead of failing with an opaque `xcodebuild` log.
 
-The script uses a dedicated DerivedData directory for the signed UI lane so the runner does not
-inherit stale unsigned products from the hosted-test lane. It also strips the known Apple
+The script uses dedicated DerivedData and SwiftPM scratch directories so the runner does not
+inherit stale unsigned products or Desktop File Provider metadata. It also strips the known Apple
 `linkd.autoShortcut` hosted-test chatter from the canonical output so local runs stay focused on
 actionable failures.
 

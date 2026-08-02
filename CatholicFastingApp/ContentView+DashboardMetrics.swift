@@ -174,9 +174,15 @@ extension ContentView {
 
     var setupChecklistCompleted: Int {
         var completed = 0
-        if hasConfiguredConsent { completed += 1 }
-        if hasConfiguredRegionProfile { completed += 1 }
-        if hasConfiguredReminderPlan { completed += 1 }
+        if hasConfiguredConsent {
+            completed += 1
+        }
+        if hasConfiguredRegionProfile {
+            completed += 1
+        }
+        if hasConfiguredReminderPlan {
+            completed += 1
+        }
         return completed
     }
 

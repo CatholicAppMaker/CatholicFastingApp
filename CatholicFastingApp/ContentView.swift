@@ -151,19 +151,17 @@ struct ContentView: View {
     }
 
     var body: some View {
-        Group {
-            if didCompleteOnboarding {
-                applyRootLifecycleHandlers(
-                    to: Group {
-                        if appLayoutProfile.usesSplitViewShell {
-                            ipadRootScaffold
-                        } else {
-                            tabRootScaffold
-                        }
-                    })
-            } else {
-                onboardingLaunchRoot
-            }
+        if didCompleteOnboarding {
+            applyRootLifecycleHandlers(
+                to: Group {
+                    if appLayoutProfile.usesSplitViewShell {
+                        ipadRootScaffold
+                    } else {
+                        tabRootScaffold
+                    }
+                })
+        } else {
+            onboardingLaunchRoot
         }
     }
 }

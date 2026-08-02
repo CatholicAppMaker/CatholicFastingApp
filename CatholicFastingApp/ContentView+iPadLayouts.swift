@@ -101,7 +101,9 @@ extension ContentView {
             }
         }
         let sorted = filtered.sorted { lhs, rhs in
-            if lhs.date == rhs.date { return lhs.id < rhs.id }
+            if lhs.date == rhs.date {
+                return lhs.id < rhs.id
+            }
             return lhs.date < rhs.date
         }
         return fastingDaysShowAllYearDays ? sorted : Array(sorted.prefix(36))

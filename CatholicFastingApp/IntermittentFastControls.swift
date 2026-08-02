@@ -323,15 +323,13 @@ struct IntermittentFastMetricGrid: View {
     let stacked: Bool
 
     var body: some View {
-        Group {
-            if stacked {
-                VStack(spacing: 8) {
-                    metricViews
-                }
-            } else {
-                HStack(spacing: 8) {
-                    metricViews
-                }
+        if stacked {
+            VStack(spacing: 8) {
+                metricViews
+            }
+        } else {
+            HStack(spacing: 8) {
+                metricViews
             }
         }
     }

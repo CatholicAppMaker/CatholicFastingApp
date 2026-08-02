@@ -41,7 +41,9 @@ let iconSets: [(name: String, palette: Palette)] = [
 ]
 
 func iconPixels(from filename: String) -> Int? {
-    if filename == "icon-1024.png" { return 1024 }
+    if filename == "icon-1024.png" {
+        return 1024
+    }
     guard let dash = filename.firstIndex(of: "-") else { return nil }
     let tail = filename[filename.index(after: dash)...]
     let valueText = tail.split(separator: "@").first?.split(separator: ".png").first ?? ""
@@ -50,8 +52,12 @@ func iconPixels(from filename: String) -> Int? {
     var scale = 1.0
     if let at = filename.firstIndex(of: "@") {
         let suffix = filename[filename.index(after: at)...]
-        if suffix.hasPrefix("2x") { scale = 2.0 }
-        if suffix.hasPrefix("3x") { scale = 3.0 }
+        if suffix.hasPrefix("2x") {
+            scale = 2.0
+        }
+        if suffix.hasPrefix("3x") {
+            scale = 3.0
+        }
     }
     return Int((points * scale).rounded())
 }

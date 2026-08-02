@@ -253,7 +253,7 @@ run_xcodebuild_step "macOS build" \
 run_xcodebuild_step "macOS hosted tests" \
 	-project CatholicFastingApp.xcodeproj -scheme CatholicFastingMacAppTests -destination 'platform=macOS,arch=arm64' -derivedDataPath "$MAC_DERIVED_DATA" -scmProvider system CODE_SIGNING_ALLOWED=NO COMPILER_INDEX_STORE_ENABLE=NO test
 
-run_step "Swift package tests" swift test
+run_step "Swift package tests" swift test --scratch-path /private/tmp/CatholicFastingSwiftPM
 
 ui_log="$(mktemp)"
 reset_xcode_build_services

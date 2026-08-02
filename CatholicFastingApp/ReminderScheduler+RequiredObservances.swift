@@ -149,7 +149,9 @@ extension ReminderScheduler {
 
         var scheduled = 0
         for observance in candidates {
-            if scheduled >= additionalSlots { break }
+            if scheduled >= additionalSlots {
+                break
+            }
             let identifier = "\(requiredReminderPrefix)\(observance.id)"
             guard !existingRequiredIDs.contains(identifier) else { continue }
 

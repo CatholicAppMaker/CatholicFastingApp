@@ -78,18 +78,17 @@ struct CompanionDashboardCard: View {
         .accessibilityIdentifier("companion.dashboard")
     }
 
+    @ViewBuilder
     private func guidanceHeader(horizontal: Bool) -> some View {
-        Group {
-            if horizontal {
-                HStack(alignment: .top, spacing: presentation == .workspace ? 18 : 12) {
-                    sacredAnchor
-                    guidanceCopy
-                }
-            } else {
-                VStack(alignment: .leading, spacing: 10) {
-                    sacredAnchor
-                    guidanceCopy
-                }
+        if horizontal {
+            HStack(alignment: .top, spacing: presentation == .workspace ? 18 : 12) {
+                sacredAnchor
+                guidanceCopy
+            }
+        } else {
+            VStack(alignment: .leading, spacing: 10) {
+                sacredAnchor
+                guidanceCopy
             }
         }
     }
