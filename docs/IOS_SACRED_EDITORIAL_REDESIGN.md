@@ -86,7 +86,7 @@ target.
 
 The [US App Store listing](https://apps.apple.com/us/app/catholic-fasting-app/id6759585549) was
 rechecked on July 26, 2026 and identifies Store version 5.0, released June 16. The local project is
-also version 5.0, build 12.
+now version 6.0, build 5.
 
 | Surface | Task clarity 30 | Accessibility 20 | Native fit 20 | Density 15 | Brand 10 | Risk 5 | Weighted |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |

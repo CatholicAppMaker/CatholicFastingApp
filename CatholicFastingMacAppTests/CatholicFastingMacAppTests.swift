@@ -534,8 +534,8 @@ final class CatholicFastingMacAppTests: XCTestCase {
         #else
         XCTAssertEqual(Bundle.main.bundleIdentifier, "com.kevpierce.CatholicFastingApp")
         #endif
-        XCTAssertEqual(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String, "5.0")
-        XCTAssertEqual(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String, "10")
+		XCTAssertEqual(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String, "6.0")
+		XCTAssertEqual(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String, "5")
     }
 
     func testDeleteAllDataResetsDefaultsAndLocalStores() {
