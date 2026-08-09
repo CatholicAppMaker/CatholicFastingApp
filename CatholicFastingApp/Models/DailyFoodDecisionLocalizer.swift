@@ -115,6 +115,7 @@ enum DailyFoodDecisionLocalizer {
         observanceTitle: (_ title: String) -> String) -> DailyFoodDecision
     {
         DailyFoodDecision(
+            category: decision.category,
             obligationLine: localizedText(decision.obligationLine, value: value),
             allowed: decision.allowed.map { localizedText($0, value: value) },
             avoid: decision.avoid.map { localizedText($0, value: value) },

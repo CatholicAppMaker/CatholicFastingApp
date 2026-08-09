@@ -87,9 +87,8 @@ extension ContentView {
                 }
                 #endif
             }
-            .padding(18)
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .iPadPaneCard()
         .accessibilityIdentifier("ipad.more.premium")
     }
 
@@ -119,11 +118,10 @@ extension ContentView {
                 .appSurfaceCard(.primary, cornerRadius: 16)
                 .accessibilityIdentifier("premium.plan_choice_state")
             } else if monetizationStore.isLoading {
-                HStack(spacing: 8) {
-                    ProgressView()
-                    Text(localized("premium.upgrade.loading", default: "Loading purchases…"))
-                        .appSupportingTextStyle()
+                VStack {
+                    premiumCatalogLoadingPlaceholder
                 }
+                .accessibilityElement(children: .contain)
                 .accessibilityIdentifier("premium.plan_choice_state")
             } else if monetizationStore.premiumProducts.isEmpty {
                 VStack(alignment: .leading, spacing: 10) {
@@ -145,6 +143,8 @@ extension ContentView {
                     ipadCompactPremiumOfferCard(product: product, offer: premiumOfferCatalog.offer(for: product.id))
                 }
             }
+
+            premiumTrustStatements
         }
     }
     #endif

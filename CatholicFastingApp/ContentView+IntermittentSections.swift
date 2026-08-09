@@ -76,6 +76,7 @@ extension ContentView {
                 title: sessionsTitle,
                 value: "\(intermittentTracker.sessions.count)",
                 detail: localized("intermittent.metric.sessions.detail", default: "saved locally"),
+                tone: .primary,
                 accessibilityIdentifier: "intermittent.metric.sessions",
                 accessibilityLabel: sessionsTitle,
                 accessibilityValue: "\(intermittentTracker.sessions.count)"),
@@ -83,12 +84,14 @@ extension ContentView {
                 id: "target",
                 title: localized("intermittent.metric.target", default: "Target"),
                 value: intermittentWindowLabel,
-                detail: localized("intermittent.metric.target.detail", default: "active fasting window")),
+                detail: localized("intermittent.metric.target.detail", default: "active fasting window"),
+                tone: .information),
             IntermittentFastOverviewMetric(
                 id: "longest",
                 title: localized("intermittent.metric.longest", default: "Longest"),
                 value: intermittentLongestSessionText,
-                detail: localized("intermittent.metric.longest.detail", default: "best recent duration")),
+                detail: localized("intermittent.metric.longest.detail", default: "best recent duration"),
+                tone: .success),
         ]
     }
 

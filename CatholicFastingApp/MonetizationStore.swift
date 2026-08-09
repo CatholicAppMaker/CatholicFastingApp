@@ -70,12 +70,18 @@ final class MonetizationStore: ObservableObject {
             premiumUnlocked = Self.localDebugPremiumUnlocked
             premiumProducts = []
             tipProducts = []
-            if Self.uiTestCatalogState == .offline {
+            isLoading = false
+            switch Self.uiTestCatalogState {
+            case .loading:
+                isLoading = true
+                catalogLoadState = .loading
+                statusMessage = ""
+            case .offline:
                 catalogLoadState = .offline
                 statusMessage = localized(
                     "premium.catalog.offline",
                     default: "You appear to be offline. Premium plans need an App Store connection; your current access remains unchanged.")
-            } else {
+            case .idle, .loaded, .failed, nil:
                 catalogLoadState = .failed
                 statusMessage = premiumUnlocked
                     ? localized(
@@ -432,10 +438,16 @@ final class MonetizationStore: ObservableObject {
     }
 
     private static var uiTestCatalogState: PremiumCatalogLoadState? {
-        guard ProcessInfo.processInfo.environment["UITEST_MODE"] == "1" else {
+        uiTestCatalogStateOverride(environment: ProcessInfo.processInfo.environment)
+    }
+
+    static func uiTestCatalogStateOverride(environment: [String: String]) -> PremiumCatalogLoadState? {
+        guard environment["UITEST_MODE"] == "1" else {
             return nil
         }
-        switch ProcessInfo.processInfo.environment["UITEST_PREMIUM_CATALOG_STATE"] {
+        switch environment["UITEST_PREMIUM_CATALOG_STATE"] {
+        case "loading":
+            return .loading
         case "offline":
             return .offline
         case "failed":

@@ -24,6 +24,7 @@ enum DailyFoodDecisionEngine {
 
         if settings.hasMedicalDispensation {
             return DailyFoodDecision(
+                category: .medicalDispensation,
                 obligationLine: "Medical/pastoral dispensation is enabled in your profile.",
                 allowed: ["Eat what is prudent and medically safe.", "Keep prayer/charity as substitute penance."],
                 avoid: ["Avoid self-imposed rigor that harms health."],
@@ -43,6 +44,7 @@ enum DailyFoodDecisionEngine {
 
         if requiresFasting, requiresAbstinence {
             return DailyFoodDecision(
+                category: .fastAndAbstinence,
                 obligationLine: "Today requires fasting and abstinence.",
                 allowed: [
                     "One full meal with up to two smaller meals.",
@@ -58,6 +60,7 @@ enum DailyFoodDecisionEngine {
 
         if requiresAbstinence {
             return DailyFoodDecision(
+                category: .abstinence,
                 obligationLine: "Today requires abstinence from meat.",
                 allowed: [
                     "Normal meal quantity is generally permitted.",
@@ -77,6 +80,7 @@ enum DailyFoodDecisionEngine {
 
         if !mandatoryToday.isEmpty {
             return DailyFoodDecision(
+                category: .requiredNoFoodRestriction,
                 obligationLine: "Today has a required observance but no mandatory food restriction.",
                 allowed: ["Normal meals are generally permitted.", "Keep the day with prayer and Mass obligations."],
                 avoid: [],
@@ -97,6 +101,7 @@ enum DailyFoodDecisionEngine {
                     : "Based on your current profile, \(titles) does not strictly bind today."
 
             return DailyFoodDecision(
+                category: .optionalFastOrAbstinence,
                 obligationLine: obligationLine,
                 allowed: [
                     "Follow age/health and pastoral guidance for your situation.",
@@ -108,6 +113,7 @@ enum DailyFoodDecisionEngine {
         }
 
         return DailyFoodDecision(
+            category: .unrestricted,
             obligationLine: "No mandatory food restriction today.",
             allowed: ["Normal meals are generally permitted.", "You may choose a voluntary penance."],
             avoid: [],
@@ -146,6 +152,7 @@ enum DailyFoodDecisionEngine {
         if settings.regionProfile == .canada {
             if settings.fridayOutsideLentMode == .abstainFromMeat {
                 return DailyFoodDecision(
+                    category: .fridayPenance,
                     obligationLine: "Today calls for Friday penance through abstinence from meat.",
                     allowed: [
                         "Normal meal quantity is generally permitted.",
@@ -157,6 +164,7 @@ enum DailyFoodDecisionEngine {
             }
 
             return DailyFoodDecision(
+                category: .fridayPenance,
                 obligationLine: "Today calls for Friday penance, not mandatory fasting.",
                 allowed: [
                     "Normal meals are generally permitted.",
@@ -169,6 +177,7 @@ enum DailyFoodDecisionEngine {
 
         if settings.fridayOutsideLentMode == .abstainFromMeat {
             return DailyFoodDecision(
+                category: .fridayPenance,
                 obligationLine: "Today requires Friday penance through abstinence from meat.",
                 allowed: [
                     "Normal meal quantity is generally permitted.",
@@ -180,6 +189,7 @@ enum DailyFoodDecisionEngine {
         }
 
         return DailyFoodDecision(
+            category: .fridayPenance,
             obligationLine: "Today requires Friday penance, but not mandatory fasting.",
             allowed: [
                 "Normal meals are generally permitted.",

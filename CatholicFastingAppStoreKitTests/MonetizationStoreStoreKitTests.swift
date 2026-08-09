@@ -122,6 +122,29 @@ final class MonetizationStoreStoreKitTests: XCTestCase {
         XCTAssertEqual(store.catalogLoadState, .offline)
     }
 
+    func testUITestCatalogOverridesKeepLoadingOfflineAndFailureDistinct() {
+        func environment(_ state: String) -> [String: String] {
+            [
+                "UITEST_MODE": "1",
+                "UITEST_PREMIUM_CATALOG_STATE": state,
+            ]
+        }
+
+        XCTAssertEqual(
+            MonetizationStore.uiTestCatalogStateOverride(environment: environment("loading")),
+            .loading)
+        XCTAssertEqual(
+            MonetizationStore.uiTestCatalogStateOverride(environment: environment("offline")),
+            .offline)
+        XCTAssertEqual(
+            MonetizationStore.uiTestCatalogStateOverride(environment: environment("failed")),
+            .failed)
+        XCTAssertNil(
+            MonetizationStore.uiTestCatalogStateOverride(
+                environment: ["UITEST_PREMIUM_CATALOG_STATE": "loading"]),
+            "Catalog overrides must remain unavailable outside UI-test mode")
+    }
+
     func testPendingPurchaseMapsToPendingStatusWithoutStoreKitDialog() async throws {
         let session = try makeSession()
         defer { reset(session) }

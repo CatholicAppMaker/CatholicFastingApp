@@ -253,6 +253,38 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(retry, in: app))
         XCTAssertTrue(retry.isHittable)
     }
+
+    func testIPhonePremiumLoadingAndFrenchCanadianTrustRemainAccessibleAtXXXL() {
+        let app = makeApp(
+            languageMode: "frenchCanadian",
+            premiumCatalogState: "loading")
+        app.launchArguments += [
+            "-UIPreferredContentSizeCategoryName",
+            "UICTContentSizeCategoryAccessibilityExtraExtraExtraLarge",
+        ]
+        app.launch()
+        ensureOnHomeScreen(app)
+        openMoreDestination("Support & Premium", in: app)
+
+        assertPremiumLoadingPlaceholder(in: app)
+        assertPremiumTrustStatements(in: app)
+    }
+
+    func testIPadPremiumLoadingAndFrenchCanadianTrustRemainAccessibleAtXXXL() {
+        let app = makeApp(
+            languageMode: "frenchCanadian",
+            premiumCatalogState: "loading")
+        app.launchArguments += [
+            "-UIPreferredContentSizeCategoryName",
+            "UICTContentSizeCategoryAccessibilityExtraExtraExtraLarge",
+        ]
+        app.launch()
+        ensureOnHomeScreen(app)
+        openIPadMoreDestination("supportAndPremium", in: app)
+
+        assertPremiumLoadingPlaceholder(in: app)
+        assertPremiumTrustStatements(in: app)
+    }
 }
 
 private extension CatholicFastingAppUITests {
@@ -276,5 +308,42 @@ private extension CatholicFastingAppUITests {
         XCTAssertTrue(
             button.label.contains(expectedPrice),
             "Expected \(productID) to display \(expectedPrice), got: \(button.label)")
+    }
+
+    func assertPremiumLoadingPlaceholder(in app: XCUIApplication) {
+        let loading = elementByIdentifier("premium.catalog.loading", in: app)
+        XCTAssertTrue(scrollToElement(loading, in: app), "Premium loading placeholder is not reachable")
+        XCTAssertTrue(loading.label.localizedCaseInsensitiveContains("chargement"))
+        XCTAssertFalse(app.buttons["premium.catalog.retry"].firstMatch.exists)
+        XCTAssertFalse(elementByIdentifier("premium.catalog.recovery", in: app).exists)
+    }
+
+    func assertPremiumTrustStatements(in app: XCUIApplication) {
+        let group = elementByIdentifier("premium.trust", in: app)
+        XCTAssertTrue(scrollToElement(group, in: app), "Premium trust statements are not reachable")
+
+        let identifiers = [
+            "premium.trust.local_only",
+            "premium.trust.no_ads",
+            "premium.trust.cancel_anytime",
+        ]
+        let statements = identifiers.map { elementByIdentifier($0, in: app) }
+        for statement in statements {
+            XCTAssertTrue(statement.exists, "Missing Premium trust statement \(statement.identifier)")
+            XCTAssertTrue(
+                elementIsVisible(statement, in: app),
+                "Premium trust statement \(statement.identifier) is clipped or outside the viewport")
+            XCTAssertTrue(
+                app.frame.contains(statement.frame),
+                "Premium trust statement \(statement.identifier) extends outside the app frame")
+        }
+
+        for firstIndex in statements.indices {
+            for secondIndex in statements.indices where secondIndex > firstIndex {
+                XCTAssertFalse(
+                    statements[firstIndex].frame.intersects(statements[secondIndex].frame),
+                    "Premium trust statements overlap at accessibility text sizes")
+            }
+        }
     }
 }

@@ -1287,6 +1287,8 @@
 "today.decision.next_action.friday" = "Elija ahora la penitencia de hoy para que el viernes no quede olvidado.";
 "today.decision.next_action.dispensation" = "Siga la guía médica y pastoral, luego elija una oración o caridad prudente como sustituto.";
 "today.decision.next_action.clear" = "Las comidas normales generalmente están permitidas. Mantenga visible el próximo día obligatorio y elija una penitencia voluntaria solo si es prudente.";
+"today.decision.next_action.required_no_food_restriction" = "Cumpla la observancia obligatoria de hoy mediante la oración y la Misa; no se requiere restricción alimentaria.";
+"today.decision.next_action.optional" = "Revise su perfil y la guía pastoral antes de elegir una práctica de ayuno opcional.";
 "intermittent.controls.intention" = "Intención";
 "intermittent.controls.end_review" = "Terminar y revisar";
 "intermittent.recap.note.label" = "Nota de revisión";

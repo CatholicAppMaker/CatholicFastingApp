@@ -237,30 +237,34 @@ extension ContentView {
     }
 
     var ipadIntermittentPlanningCard: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        let summary = intermittentHabitSummary
+
+        return VStack(alignment: .leading, spacing: 14) {
             IPadWorkspaceHeader(
                 eyebrow: localized("ipad.intermittent.planning.eyebrow", default: "Planning"),
                 title: localized("ipad.intermittent.planning.title", default: "Current plan"),
                 detail: localized("ipad.intermittent.planning.detail", default: "Keep the current rhythm visible without crowding the live tracker."))
                 .accessibilityIdentifier("ipad.intermittent.planning")
 
-            HStack(spacing: 10) {
-                let summary = intermittentHabitSummary
-                IPadSummaryMetricCard(
-                    title: localized("ipad.intermittent.planning.streak", default: "Streak"),
-                    value: localizedFormat("intermittent.rhythm.days_format", default: "%d day(s)", summary.currentStreakDays),
-                    subtitle: localized("intermittent.rhythm.current_streak_detail", default: "steady continuity"))
-                IPadSummaryMetricCard(
-                    title: localized("ipad.intermittent.planning.weekly", default: "Weekly rhythm"),
-                    value: "\(summary.weeklySessionCount)",
-                    subtitle: localized("intermittent.rhythm.weekly_detail", default: "sessions this week"),
-                    tint: CatholicTheme.accentForeground)
-                IPadSummaryMetricCard(
-                    title: localized("ipad.intermittent.planning.hit_rate", default: "Target met"),
-                    value: "\(summary.targetHitPercent)%",
-                    subtitle: intermittentWindowLabel,
-                    tint: CatholicTheme.warningForeground)
+            if dynamicTypeSize.isAccessibilitySize {
+                VStack(alignment: .leading, spacing: 0) {
+                    ipadIntermittentPlanningStreakMetric(summary: summary)
+                    SacredEditorialRule()
+                    ipadIntermittentPlanningWeeklyMetric(summary: summary)
+                    SacredEditorialRule()
+                    ipadIntermittentPlanningHitRateMetric(summary: summary)
+                }
+            } else {
+                HStack(spacing: 0) {
+                    ipadIntermittentPlanningStreakMetric(summary: summary)
+                    ipadInlineMetricDivider
+                    ipadIntermittentPlanningWeeklyMetric(summary: summary)
+                    ipadInlineMetricDivider
+                    ipadIntermittentPlanningHitRateMetric(summary: summary)
+                }
             }
+
+            SacredEditorialRule()
 
             Text(
                 feedback.notificationStatus.isEmpty
@@ -269,12 +273,46 @@ extension ContentView {
                         default: "Reminder status will appear after scheduling.")
                     : feedback.notificationStatus)
                 .appSupportingTextStyle()
-                .padding(12)
+                .padding(.horizontal, 12)
+                .padding(.top, 2)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .appSurfaceCard(.utility, cornerRadius: 14)
         }
         .padding(18)
         .iPadPaneCard()
+    }
+
+    private func ipadIntermittentPlanningStreakMetric(summary: IntermittentHabitSummary) -> some View {
+        IPadSummaryMetricCard(
+            title: localized("ipad.intermittent.planning.streak", default: "Streak"),
+            value: localizedFormat("intermittent.rhythm.days_format", default: "%d day(s)", summary.currentStreakDays),
+            subtitle: localized("intermittent.rhythm.current_streak_detail", default: "steady continuity"),
+            presentation: .inline)
+    }
+
+    private func ipadIntermittentPlanningWeeklyMetric(summary: IntermittentHabitSummary) -> some View {
+        IPadSummaryMetricCard(
+            title: localized("ipad.intermittent.planning.weekly", default: "Weekly rhythm"),
+            value: "\(summary.weeklySessionCount)",
+            subtitle: localized("intermittent.rhythm.weekly_detail", default: "sessions this week"),
+            tint: CatholicTheme.accentForeground,
+            presentation: .inline)
+    }
+
+    private func ipadIntermittentPlanningHitRateMetric(summary: IntermittentHabitSummary) -> some View {
+        IPadSummaryMetricCard(
+            title: localized("ipad.intermittent.planning.hit_rate", default: "Target met"),
+            value: "\(summary.targetHitPercent)%",
+            subtitle: intermittentWindowLabel,
+            tint: CatholicTheme.warningForeground,
+            presentation: .inline)
+    }
+
+    private var ipadInlineMetricDivider: some View {
+        Rectangle()
+            .fill(CatholicTheme.primary.opacity(SacredEditorialTokens.hairlineOpacity))
+            .frame(width: 1)
+            .padding(.vertical, 6)
+            .accessibilityHidden(true)
     }
 
     var ipadIntermittentAdvancedToolsCard: some View {

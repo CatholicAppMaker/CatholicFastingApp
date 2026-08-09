@@ -173,6 +173,7 @@ final class CompanionSnapshotEngineTests: XCTestCase {
             calendar: .gregorian))
 
         XCTAssertTrue(snapshot.ruleDecision.obligationLine.localizedCaseInsensitiveContains("dispensation"))
+        XCTAssertEqual(snapshot.ruleDecision.category, .medicalDispensation)
         XCTAssertEqual(snapshot.primaryAction.destination, .guidance)
     }
 

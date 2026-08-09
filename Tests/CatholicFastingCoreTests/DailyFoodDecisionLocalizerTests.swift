@@ -2,8 +2,28 @@
 import XCTest
 
 final class DailyFoodDecisionLocalizerTests: XCTestCase {
+    func testLocalizationPreservesEveryCategoryAcrossSupportedLanguages() {
+        for category in DailyFoodDecision.Category.allCases {
+            let decision = DailyFoodDecision(
+                category: category,
+                obligationLine: "Future obligation",
+                allowed: [],
+                avoid: [],
+                rationale: "Future rationale",
+                sourceLine: "Future source")
+
+            for languageMode in ["system", "spanish", "frenchCanadian"] {
+                let localized = DailyFoodDecisionLocalizer.localized(
+                    decision,
+                    languageMode: languageMode)
+                XCTAssertEqual(localized.category, category)
+            }
+        }
+    }
+
     func testExplicitSelectedLanguageLocalizesEveryDecisionField() throws {
         let decision = DailyFoodDecision(
+            category: .fastAndAbstinence,
             obligationLine: "Today requires fasting and abstinence.",
             allowed: [
                 "One full meal with up to two smaller meals.",
@@ -36,6 +56,7 @@ final class DailyFoodDecisionLocalizerTests: XCTestCase {
             ])
         XCTAssertEqual(localized.rationale, "Esto se basa en Miércoles de Ceniza.")
         XCTAssertEqual(localized.sourceLine, "Fuente: normas de ayuno y abstinencia de la USCCB.")
+        XCTAssertEqual(localized.category, .fastAndAbstinence)
     }
 
     func testCurrentLanguagePathMatchesExplicitSelectedLanguagePath() throws {
@@ -44,6 +65,7 @@ final class DailyFoodDecisionLocalizerTests: XCTestCase {
         defaults.set("frenchCanadian", forKey: "language_mode")
 
         let decision = DailyFoodDecision(
+            category: .optionalFastOrAbstinence,
             obligationLine: "Today may include fasting/abstinence obligations (profile incomplete).",
             allowed: ["Follow age/health and pastoral guidance for your situation."],
             avoid: ["Do not assume no obligation without confirming your profile."],
@@ -70,12 +92,14 @@ final class DailyFoodDecisionLocalizerTests: XCTestCase {
     func testKnownOptionalAndMultipleObservanceRationalesRemainLocalized() throws {
         let bundle = try appResourceBundle()
         let known = DailyFoodDecision(
+            category: .optionalFastOrAbstinence,
             obligationLine: "",
             allowed: [],
             avoid: [],
             rationale: "Based on your current profile, Good Friday does not strictly bind today.",
             sourceLine: "")
         let multiple = DailyFoodDecision(
+            category: .fastAndAbstinence,
             obligationLine: "",
             allowed: [],
             avoid: [],
@@ -98,6 +122,7 @@ final class DailyFoodDecisionLocalizerTests: XCTestCase {
 
     func testUnknownEngineOutputPassesThroughUnchanged() throws {
         let decision = DailyFoodDecision(
+            category: .unrestricted,
             obligationLine: "Future obligation",
             allowed: ["Future allowance"],
             avoid: ["Future avoidance"],
@@ -134,6 +159,7 @@ final class DailyFoodDecisionLocalizerTests: XCTestCase {
         line: UInt = #line)
     {
         XCTAssertEqual(lhs.obligationLine, rhs.obligationLine, file: file, line: line)
+        XCTAssertEqual(lhs.category, rhs.category, file: file, line: line)
         XCTAssertEqual(lhs.allowed, rhs.allowed, file: file, line: line)
         XCTAssertEqual(lhs.avoid, rhs.avoid, file: file, line: line)
         XCTAssertEqual(lhs.rationale, rhs.rationale, file: file, line: line)

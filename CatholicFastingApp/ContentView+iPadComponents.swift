@@ -107,10 +107,16 @@ struct IPadWorkspaceHeader: View {
 }
 
 struct IPadSummaryMetricCard: View {
+    enum Presentation {
+        case card
+        case inline
+    }
+
     let title: String
     let value: String
     var subtitle: String?
     var tint: Color = CatholicTheme.primary
+    var presentation: Presentation = .card
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -127,7 +133,20 @@ struct IPadSummaryMetricCard: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(14)
-        .appSurfaceCard(.utility, cornerRadius: 14)
+        .modifier(IPadSummaryMetricPresentationModifier(presentation: presentation))
+    }
+}
+
+private struct IPadSummaryMetricPresentationModifier: ViewModifier {
+    let presentation: IPadSummaryMetricCard.Presentation
+
+    func body(content: Content) -> some View {
+        switch presentation {
+        case .card:
+            content.appSurfaceCard(.utility, cornerRadius: 14)
+        case .inline:
+            content
+        }
     }
 }
 
@@ -135,36 +154,25 @@ struct IPadContextBadge: View {
     let text: String
     let supportLevel: RegionalSupportLevel
 
-    var tint: Color {
+    private var tone: AppSemanticTone {
         switch supportLevel {
         case .full:
-            .green
+            .success
         case .partial:
-            .orange
+            .warning
         case .informational:
-            .blue
-        }
-    }
-
-    var foregroundTint: Color {
-        switch supportLevel {
-        case .full:
-            CatholicTheme.successForeground
-        case .partial:
-            CatholicTheme.warningForeground
-        case .informational:
-            CatholicTheme.infoForeground
+            .information
         }
     }
 
     var body: some View {
         Text(text)
             .font(.caption2.weight(.semibold))
-            .foregroundStyle(foregroundTint)
+            .foregroundStyle(tone.foreground)
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
-            .background(Capsule().fill(tint.opacity(0.14)))
-            .overlay(Capsule().stroke(tint.opacity(0.3), lineWidth: 1))
+            .background(Capsule().fill(tone.fill))
+            .overlay(Capsule().stroke(tone.stroke, lineWidth: 1))
     }
 }
 

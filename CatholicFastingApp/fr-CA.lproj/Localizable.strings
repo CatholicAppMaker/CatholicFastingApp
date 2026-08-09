@@ -1082,6 +1082,8 @@
 "today.decision.next_action.friday" = "Choisissez maintenant la pénitence d’aujourd’hui afin que le vendredi ne soit pas oublié.";
 "today.decision.next_action.dispensation" = "Suivez les conseils médicaux et pastoraux, puis choisissez une prière ou une charité prudente comme substitut.";
 "today.decision.next_action.clear" = "Les repas normaux sont généralement permis. Gardez le prochain jour obligatoire visible et choisissez une pénitence volontaire seulement si cela est prudent.";
+"today.decision.next_action.required_no_food_restriction" = "Respectez l’observance obligatoire d’aujourd’hui par la prière et la messe; aucune restriction alimentaire n’est requise.";
+"today.decision.next_action.optional" = "Vérifiez votre profil et les conseils pastoraux avant de choisir une pratique de jeûne facultative.";
 "intermittent.controls.intention" = "Intention";
 "intermittent.controls.end_review" = "Terminer et revoir";
 "intermittent.recap.note.label" = "Note de révision";

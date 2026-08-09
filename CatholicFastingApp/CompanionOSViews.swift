@@ -132,20 +132,15 @@ struct CompanionDashboardCard: View {
     }
 
     private var iconName: String {
-        if snapshot.ruleDecision.obligationLine.localizedCaseInsensitiveContains("dispensation") {
-            return "cross.case.fill"
-        }
-        if snapshot.ruleDecision.hasMandatoryObservance {
-            return "exclamationmark.circle.fill"
-        }
-        return "checkmark.circle.fill"
+        decisionPresentation.symbolName
     }
 
     private var iconTint: Color {
-        if snapshot.ruleDecision.hasMandatoryObservance {
-            return CatholicTheme.dangerForeground
-        }
-        return CatholicTheme.successForeground
+        decisionPresentation.tone.foreground
+    }
+
+    private var decisionPresentation: DailyFoodDecisionPresentation {
+        .presentation(for: snapshot.ruleDecision.category)
     }
 
     private var primaryActionIconName: String {

@@ -158,11 +158,7 @@ extension ContentView {
                     .appSupportingTextStyle()
                     .accessibilityIdentifier("premium.upgrade_summary")
                 if monetizationStore.isLoading {
-                    HStack(spacing: 8) {
-                        ProgressView()
-                        Text(localized("premium.upgrade.loading", default: "Loading purchases…"))
-                    }
-                    .font(.caption)
+                    premiumCatalogLoadingPlaceholder
                 } else if !monetizationStore.premiumProducts.isEmpty {
                     ForEach(monetizationStore.premiumProducts, id: \.id) { product in
                         let offer = premiumOfferCatalog.offer(for: product.id)
@@ -277,6 +273,19 @@ extension ContentView {
             onOpenTools: {
                 supportPremiumSurfaceRaw = SupportPremiumSurface.tools.rawValue
             })
+    }
+
+    var premiumTrustStatements: some View {
+        PremiumTrustStatements(
+            title: localized("premium.trust.title", default: "Why users upgrade"),
+            localOnlyTitle: localized("premium.trust.local_only", default: "Local-only data"),
+            noAdsTitle: localized("premium.trust.no_ads", default: "No ads"),
+            cancelAnytimeTitle: localized("premium.trust.cancel_anytime", default: "Cancel anytime"))
+    }
+
+    var premiumCatalogLoadingPlaceholder: some View {
+        PremiumCatalogLoadingPlaceholder(
+            accessibilityLabel: localized("premium.upgrade.loading", default: "Loading purchases…"))
     }
 
     func premiumJourneyCard(sample: Bool) -> some View {

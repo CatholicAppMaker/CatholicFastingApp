@@ -44,18 +44,126 @@ struct PremiumActiveStateCard: View {
 private struct PremiumTrustPill: View {
     let text: String
     let systemImage: String
+    let identifier: String
 
     var body: some View {
         HStack(spacing: 6) {
             Image(systemName: systemImage)
             Text(text)
+                .fixedSize(horizontal: false, vertical: true)
         }
         .font(.caption2.weight(.semibold))
         .foregroundStyle(CatholicTheme.primary)
         .padding(.horizontal, 10)
         .padding(.vertical, 7)
         .background(CatholicTheme.accent.opacity(0.12), in: Capsule(style: .continuous))
-        .appCapsuleGlass()
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier(identifier)
+    }
+}
+
+struct PremiumTrustStatements: View {
+    let title: String
+    let localOnlyTitle: String
+    let noAdsTitle: String
+    let cancelAnytimeTitle: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .appEyebrowStyle()
+
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 8) {
+                    localOnlyPill
+                        .fixedSize(horizontal: true, vertical: false)
+                    noAdsPill
+                        .fixedSize(horizontal: true, vertical: false)
+                    cancelAnytimePill
+                        .fixedSize(horizontal: true, vertical: false)
+                }
+
+                VStack(alignment: .leading, spacing: 8) {
+                    localOnlyPill
+                    noAdsPill
+                    cancelAnytimePill
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("premium.trust")
+    }
+
+    private var localOnlyPill: some View {
+        PremiumTrustPill(
+            text: localOnlyTitle,
+            systemImage: "lock.shield",
+            identifier: "premium.trust.local_only")
+    }
+
+    private var noAdsPill: some View {
+        PremiumTrustPill(
+            text: noAdsTitle,
+            systemImage: "nosign",
+            identifier: "premium.trust.no_ads")
+    }
+
+    private var cancelAnytimePill: some View {
+        PremiumTrustPill(
+            text: cancelAnytimeTitle,
+            systemImage: "creditcard",
+            identifier: "premium.trust.cancel_anytime")
+    }
+}
+
+struct PremiumCatalogLoadingPlaceholder: View {
+    let accessibilityLabel: String
+
+    var body: some View {
+        VStack(spacing: 10) {
+            ForEach(0 ..< 2, id: \.self) { index in
+                placeholderOffer(isPrimary: index == 0)
+            }
+        }
+        .redacted(reason: .placeholder)
+        .allowsHitTesting(false)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilityLabel)
+        .accessibilityIdentifier("premium.catalog.loading")
+    }
+
+    private func placeholderOffer(isPrimary: Bool) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Premium yearly plan")
+                        .appSectionTitleStyle(serif: isPrimary)
+                    Text("$00.00")
+                        .appMetricValueStyle()
+                    Text("Auto-renewing subscription")
+                        .appSupportingTextStyle()
+                }
+
+                Spacer()
+
+                if isPrimary {
+                    Text("Best value")
+                        .font(.caption2.weight(.semibold))
+                }
+            }
+
+            Text("A steady formation rhythm throughout the Church year.")
+                .appSupportingTextStyle()
+                .lineLimit(2)
+
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(CatholicTheme.primary.opacity(0.16))
+                .frame(height: 44)
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .appSurfaceCard(isPrimary ? .primary : .standard, cornerRadius: 16)
     }
 }
 
@@ -114,20 +222,14 @@ struct PremiumStatusSummaryCard: View {
                 }
             }
 
-            VStack(alignment: .leading, spacing: 8) {
-                Text(trustTitle)
-                    .appEyebrowStyle()
-
-                HStack(spacing: 8) {
-                    PremiumTrustPill(text: localOnlyTitle, systemImage: "lock.shield")
-                    PremiumTrustPill(text: noAdsTitle, systemImage: "nosign")
-                    PremiumTrustPill(text: cancelAnytimeTitle, systemImage: "creditcard")
-                }
-            }
+            PremiumTrustStatements(
+                title: trustTitle,
+                localOnlyTitle: localOnlyTitle,
+                noAdsTitle: noAdsTitle,
+                cancelAnytimeTitle: cancelAnytimeTitle)
         }
         .padding(14)
         .appSurfaceCard(.utility, cornerRadius: 16)
-        .appRoundedGlass(cornerRadius: 16)
     }
 }
 
@@ -185,7 +287,6 @@ struct PremiumJourneyCard: View {
         }
         .padding(14)
         .appSurfaceCard(isSample ? .standard : .primary, cornerRadius: 16)
-        .appRoundedGlass(cornerRadius: 16)
         .accessibilityIdentifier("premium.sample_preview")
         .onAppear(perform: onAppear)
     }

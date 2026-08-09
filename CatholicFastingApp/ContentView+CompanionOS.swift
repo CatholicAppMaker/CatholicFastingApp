@@ -17,22 +17,22 @@ extension ContentView {
             calendar: liturgicalCalendar))
     }
 
-    var companionDashboardSection: some View {
+    func companionDashboardSection(snapshot: CompanionSnapshot) -> some View {
         Section {
             CompanionDashboardCard(
-                snapshot: companionSnapshot,
-                todayLabel: companionTodayLabel,
-                nextRequiredLabel: companionNextRequiredLabel,
+                snapshot: snapshot,
+                todayLabel: companionTodayLabel(snapshot: snapshot),
+                nextRequiredLabel: companionNextRequiredLabel(snapshot: snapshot),
                 seasonLabel: localizedSeasonLabel(currentLiturgicalSeason))
             {
-                performCompanionAction(companionSnapshot.primaryAction)
+                performCompanionAction(snapshot.primaryAction)
             }
         }
     }
 
-    var companionLiveStateSection: some View {
+    func companionLiveStateSection(snapshot: CompanionSnapshot) -> some View {
         Section {
-            companionLiveStateCard
+            companionLiveStateCard(snapshot: snapshot)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 // List can under-measure conditional cards on iOS 26; keep the
                 // action and metrics inside the first measured row.
@@ -41,30 +41,30 @@ extension ContentView {
         }
     }
 
-    var companionFormationSection: some View {
+    func companionFormationSection(snapshot: CompanionSnapshot) -> some View {
         Section {
-            CompanionFormationCard(formation: companionSnapshot.formation) {
+            CompanionFormationCard(formation: snapshot.formation) {
                 openCompanionFormation()
             }
         }
     }
 
-    func companionIPadEditorialLayout(stacked: Bool) -> some View {
+    func companionIPadEditorialLayout(stacked: Bool, snapshot: CompanionSnapshot) -> some View {
         Group {
             if stacked {
                 VStack(alignment: .leading, spacing: 20) {
-                    companionIPadDashboardCard
+                    companionIPadDashboardCard(snapshot: snapshot)
                     ipadTodayQuickActionsCard
                     SacredEditorialRule()
-                    companionLiveStateCard
+                    companionLiveStateCard(snapshot: snapshot)
                     SacredEditorialRule()
-                    companionIPadFormationCard
+                    companionIPadFormationCard(snapshot: snapshot)
                     companionIPadPremiumToolsCard
                 }
             } else {
                 HStack(alignment: .top, spacing: 24) {
                     VStack(alignment: .leading, spacing: 18) {
-                        companionIPadDashboardCard
+                        companionIPadDashboardCard(snapshot: snapshot)
                         ipadTodayQuickActionsCard
                     }
                     .frame(maxWidth: .infinity, alignment: .top)
@@ -75,9 +75,9 @@ extension ContentView {
                         .accessibilityHidden(true)
 
                     VStack(alignment: .leading, spacing: 18) {
-                        companionLiveStateCard
+                        companionLiveStateCard(snapshot: snapshot)
                         SacredEditorialRule()
-                        companionIPadFormationCard
+                        companionIPadFormationCard(snapshot: snapshot)
                         companionIPadPremiumToolsCard
                     }
                     .frame(minWidth: 310, idealWidth: 340, maxWidth: 380, alignment: .top)
@@ -86,27 +86,27 @@ extension ContentView {
         }
     }
 
-    var companionIPadDashboardCard: some View {
+    func companionIPadDashboardCard(snapshot: CompanionSnapshot) -> some View {
         CompanionDashboardCard(
-            snapshot: companionSnapshot,
-            todayLabel: companionTodayLabel,
-            nextRequiredLabel: companionNextRequiredLabel,
+            snapshot: snapshot,
+            todayLabel: companionTodayLabel(snapshot: snapshot),
+            nextRequiredLabel: companionNextRequiredLabel(snapshot: snapshot),
             seasonLabel: localizedSeasonLabel(currentLiturgicalSeason),
             presentation: .workspace)
         {
-            performCompanionAction(companionSnapshot.primaryAction)
+            performCompanionAction(snapshot.primaryAction)
         }
     }
 
-    var companionIPadFormationCard: some View {
-        CompanionFormationCard(formation: companionSnapshot.formation) {
+    func companionIPadFormationCard(snapshot: CompanionSnapshot) -> some View {
+        CompanionFormationCard(formation: snapshot.formation) {
             openCompanionFormation()
         }
     }
 
     @ViewBuilder
-    var companionLiveStateCard: some View {
-        switch companionSnapshot.liveFast.progress {
+    func companionLiveStateCard(snapshot: CompanionSnapshot) -> some View {
+        switch snapshot.liveFast.progress {
         case .active(_, let targetHours, let elapsed, let remaining, let progress, let stage):
             CompanionLiveStateCard(
                 title: localized("companion.live.active.title", default: "Fast in progress"),
@@ -204,15 +204,15 @@ extension ContentView {
         }
     }
 
-    private var companionTodayLabel: String {
-        if let first = companionSnapshot.ruleDecision.todayTitles.first {
+    private func companionTodayLabel(snapshot: CompanionSnapshot) -> String {
+        if let first = snapshot.ruleDecision.todayTitles.first {
             return localizedObservanceTitle(first)
         }
         return localized("companion.today.clear", default: "No required day")
     }
 
-    private var companionNextRequiredLabel: String {
-        guard let next = companionSnapshot.nextRequiredObservance else {
+    private func companionNextRequiredLabel(snapshot: CompanionSnapshot) -> String {
+        guard let next = snapshot.nextRequiredObservance else {
             return localized("companion.next_required.none", default: "None ahead")
         }
         return localizedAbbreviatedDate(next.date)

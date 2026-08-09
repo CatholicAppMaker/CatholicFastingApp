@@ -5,6 +5,7 @@ struct IntermittentFastOverviewMetric: Identifiable {
     let title: String
     let value: String
     let detail: String
+    let tone: AppSemanticTone
     var accessibilityIdentifier: String?
     var accessibilityLabel: String?
     var accessibilityValue: String?
@@ -95,7 +96,8 @@ struct IntermittentFastOverviewSection: View {
         let tile = MetricTile(
             title: metric.title,
             value: metric.value,
-            detail: metric.detail)
+            detail: metric.detail,
+            tone: metric.tone)
 
         if let accessibilityIdentifier = metric.accessibilityIdentifier {
             tile

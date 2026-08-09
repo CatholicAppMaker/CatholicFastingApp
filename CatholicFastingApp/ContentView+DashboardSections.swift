@@ -203,14 +203,17 @@ extension ContentView {
 
     var todayDecisionCardSection: some View {
         let decision = todayFoodDecision
+        let presentation = DailyFoodDecisionPresentation.presentation(for: decision.category)
         return TodayDecisionCardSection(
             eyebrow: localized("today.decision.eyebrow", default: "Today's fasting rule"),
             obligation: decision.obligationLine,
             rationale: decision.rationale,
-            iconName: todayDecisionIconName,
-            tint: todayDecisionTint,
+            iconName: presentation.symbolName,
+            tint: presentation.tone.foreground,
             nextActionTitle: localized("today.decision.next_action", default: "Next action"),
-            nextAction: todayDecisionNextActionText,
+            nextAction: localized(
+                presentation.nextActionLocalizationKey,
+                default: presentation.nextActionDefaultValue),
             avoidTitle: localized("today.food.avoid", default: "Avoid today"),
             avoidItems: decision.avoid,
             allowedTitle: localized("today.food.okay", default: "Okay today"),
@@ -331,46 +334,5 @@ extension ContentView {
 
     private var weeklyDisciplineGoal: Int {
         max(1, weeklyActionableObservanceCount)
-    }
-
-    private var todayDecisionIconName: String {
-        let line = todayRawFoodDecision.obligationLine.lowercased()
-        if line.contains("dispensation") {
-            return "cross.case.fill"
-        }
-        if line.contains("fasting") || line.contains("abstinence") {
-            return "exclamationmark.circle.fill"
-        }
-        if line.contains("friday penance") {
-            return "hand.raised.fill"
-        }
-        return "checkmark.circle.fill"
-    }
-
-    private var todayDecisionTint: Color {
-        let line = todayRawFoodDecision.obligationLine.lowercased()
-        if line.contains("fasting") || line.contains("abstinence") {
-            return CatholicTheme.dangerForeground
-        }
-        if line.contains("friday penance") {
-            return CatholicTheme.warningForeground
-        }
-        return CatholicTheme.successForeground
-    }
-
-    private var todayDecisionNextActionText: String {
-        let line = todayRawFoodDecision.obligationLine.lowercased()
-        if line.contains("fasting") || line.contains("abstinence") {
-            return localized("today.decision.next_action.required", default: "Review the food guidance below, then keep the day with prayer, fasting, and charity.")
-        }
-        if line.contains("friday penance") {
-            return localized("today.decision.next_action.friday", default: "Choose today's penance now so Friday does not become an afterthought.")
-        }
-        if line.contains("dispensation") {
-            return localized("today.decision.next_action.dispensation", default: "Follow health and pastoral guidance, then choose a prudent prayer or charity substitute.")
-        }
-        return localized(
-            "today.decision.next_action.clear",
-            default: "Normal meals are generally permitted. Keep the next required day visible and choose voluntary penance only if prudent.")
     }
 }

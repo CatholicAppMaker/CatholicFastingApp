@@ -34,10 +34,16 @@ struct StatusTag: View {
 }
 
 struct MetricTile: View {
+    enum Presentation {
+        case card
+        case inline
+    }
+
     let title: String
     let value: String
     var detail: String?
-    var accent: Color?
+    var tone: AppSemanticTone = .primary
+    var presentation: Presentation = .card
 
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
@@ -46,7 +52,7 @@ struct MetricTile: View {
                 .textCase(.uppercase)
             Text(value)
                 .font(.system(.title3, design: .rounded).weight(.bold))
-                .foregroundStyle(accent ?? tileTint)
+                .foregroundStyle(tone.foreground)
             if let detail {
                 Text(detail)
                     .appSupportingTextStyle()
@@ -57,19 +63,19 @@ struct MetricTile: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 12)
         .padding(.vertical, detail == nil ? 10 : 12)
-        .appSurfaceCard(.utility, cornerRadius: 14)
+        .modifier(MetricTilePresentationModifier(presentation: presentation))
     }
+}
 
-    private var tileTint: Color {
-        switch title {
-        case "Required":
-            .red
-        case "Done":
-            .green
-        case "Streak":
-            CatholicTheme.accentForeground
-        default:
-            CatholicTheme.primary
+private struct MetricTilePresentationModifier: ViewModifier {
+    let presentation: MetricTile.Presentation
+
+    func body(content: Content) -> some View {
+        switch presentation {
+        case .card:
+            content.appSurfaceCard(.utility, cornerRadius: 14)
+        case .inline:
+            content
         }
     }
 }

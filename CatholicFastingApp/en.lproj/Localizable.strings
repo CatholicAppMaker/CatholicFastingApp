@@ -358,6 +358,8 @@
 "today.decision.next_action.friday" = "Choose today's penance now so Friday does not become an afterthought.";
 "today.decision.next_action.dispensation" = "Follow health and pastoral guidance, then choose a prudent prayer or charity substitute.";
 "today.decision.next_action.clear" = "Normal meals are generally permitted. Keep the next required day visible and choose voluntary penance only if prudent.";
+"today.decision.next_action.required_no_food_restriction" = "Keep today's required observance through prayer and Mass; no food restriction is required.";
+"today.decision.next_action.optional" = "Review your profile and pastoral guidance before choosing an optional fasting practice.";
 "intermittent.controls.intention" = "Intention";
 "intermittent.controls.end_review" = "End & Review";
 "intermittent.recap.note.label" = "Review note";

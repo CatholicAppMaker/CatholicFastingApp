@@ -306,3 +306,28 @@ enum CatholicTheme {
             cardBorder: Color(red: 0.49, green: 0.56, blue: 0.49))
     }
 }
+
+extension AppSemanticTone {
+    var foreground: Color {
+        switch self {
+        case .primary:
+            CatholicTheme.primary
+        case .success:
+            CatholicTheme.successForeground
+        case .warning:
+            CatholicTheme.warningForeground
+        case .information:
+            CatholicTheme.infoForeground
+        case .danger:
+            CatholicTheme.dangerForeground
+        }
+    }
+
+    var fill: Color {
+        foreground.opacity(0.12)
+    }
+
+    var stroke: Color {
+        foreground.opacity(0.28)
+    }
+}

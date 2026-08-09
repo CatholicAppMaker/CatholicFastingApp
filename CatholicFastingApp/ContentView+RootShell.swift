@@ -263,8 +263,10 @@ extension ContentView {
 
     @ViewBuilder
     var todaySurfaceSections: some View {
-        companionDashboardSection
-        companionLiveStateSection
+        let snapshot = companionSnapshot
+
+        companionDashboardSection(snapshot: snapshot)
+        companionLiveStateSection(snapshot: snapshot)
         todayDecisionCardSection
         todaySection
         todayRecoverySection
@@ -274,7 +276,7 @@ extension ContentView {
         if simplifiedModeEnabled {
             todaySimpleSummarySection
         } else {
-            companionFormationSection
+            companionFormationSection(snapshot: snapshot)
             planningProgressSection
             setupProgressSection
             todayTenSecondSection

@@ -154,6 +154,8 @@ struct DashboardReferralSection: View {
 }
 
 struct TodayAtAGlanceSection: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     let sectionTitle: String
     let nextTitle: String
     let nextValue: String
@@ -171,10 +173,21 @@ struct TodayAtAGlanceSection: View {
                     .appEyebrowStyle()
                     .foregroundStyle(CatholicTheme.primary)
 
-                HStack(spacing: 8) {
-                    MetricTile(title: nextTitle, value: nextValue)
-                    MetricTile(title: weekTitle, value: weekValue)
+                if dynamicTypeSize.isAccessibilitySize {
+                    VStack(alignment: .leading, spacing: 0) {
+                        nextMetricTile
+                        SacredEditorialRule()
+                        weekMetricTile
+                    }
+                } else {
+                    HStack(spacing: 0) {
+                        nextMetricTile
+                        verticalMetricDivider
+                        weekMetricTile
+                    }
                 }
+
+                SacredEditorialRule()
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text(rhythmTitle)
@@ -187,13 +200,37 @@ struct TodayAtAGlanceSection: View {
                         .appSupportingTextStyle()
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(12)
-                .appSurfaceCard(.utility, cornerRadius: 16)
+                .padding(.horizontal, 12)
+                .padding(.top, 2)
             }
             .padding(14)
             .appSurfaceCard(.utility, cornerRadius: 22)
             .accessibilityIdentifier("dashboard.today_glance")
         }
+    }
+
+    private var nextMetricTile: some View {
+        MetricTile(
+            title: nextTitle,
+            value: nextValue,
+            tone: .primary,
+            presentation: .inline)
+    }
+
+    private var weekMetricTile: some View {
+        MetricTile(
+            title: weekTitle,
+            value: weekValue,
+            tone: .information,
+            presentation: .inline)
+    }
+
+    private var verticalMetricDivider: some View {
+        Rectangle()
+            .fill(CatholicTheme.primary.opacity(SacredEditorialTokens.hairlineOpacity))
+            .frame(width: 1)
+            .padding(.vertical, 6)
+            .accessibilityHidden(true)
     }
 }
 

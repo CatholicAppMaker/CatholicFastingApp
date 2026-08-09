@@ -30,6 +30,7 @@ struct CompanionNextAction: Hashable, Identifiable {
 }
 
 struct CompanionRuleDecision: Hashable {
+    let category: DailyFoodDecision.Category
     let obligationLine: String
     let rationale: String
     let sourceLine: String
@@ -123,6 +124,7 @@ enum CompanionSnapshotEngine {
             calendar: calendar)
         let localizedDecision = DailyFoodDecisionLocalizer.localizedCurrent(decision)
         let ruleDecision = CompanionRuleDecision(
+            category: localizedDecision.category,
             obligationLine: localizedDecision.obligationLine,
             rationale: localizedDecision.rationale,
             sourceLine: localizedDecision.sourceLine,
