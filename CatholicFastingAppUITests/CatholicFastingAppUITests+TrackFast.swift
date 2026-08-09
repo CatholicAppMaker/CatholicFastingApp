@@ -182,7 +182,7 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElementPresence(savedSchedule, in: app, maxSwipes: 12))
         XCTAssertTrue(app.staticTexts["Applied"].firstMatch.waitForExistence(timeout: 3))
 
-        let actions = elementByIdentifier("intermittent.schedule.actions", in: app)
+        let actions = app.buttons["Actions for Friday Rhythm"].firstMatch
         XCTAssertTrue(scrollToElement(actions, in: app, maxSwipes: 12))
         actions.tap()
 

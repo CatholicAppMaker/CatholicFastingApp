@@ -63,18 +63,14 @@ extension ContentView {
                 title: localized("ipad.today.planning.title", default: "Year and season snapshot"),
                 detail: localized("ipad.today.planning.detail", default: "See the yearly rhythm without leaving the dashboard."))
 
-            HStack(spacing: 10) {
-                IPadSummaryMetricCard(
-                    title: localized("ipad.today.planning.required_goal", default: "Required goal"),
-                    value: "\(yearlyRequiredCompletions)/\(planningSession.data.requiredGoal)",
-                    subtitle: localized(
-                        "ipad.today.planning.required_goal_detail",
-                        default: "required days logged"))
-                IPadSummaryMetricCard(
-                    title: localized("ipad.today.planning.optional_goal", default: "Optional goal"),
-                    value: "\(yearlyOptionalCompletions)/\(planningSession.data.optionalGoal)",
-                    subtitle: localized("ipad.today.planning.optional_goal_detail", default: "optional disciplines logged"),
-                    tint: CatholicTheme.accentForeground)
+            if dynamicTypeSize.isAccessibilitySize {
+                VStack(alignment: .leading, spacing: 10) {
+                    ipadTodayPlanningMetricCards
+                }
+            } else {
+                HStack(spacing: 10) {
+                    ipadTodayPlanningMetricCards
+                }
             }
 
             ProgressView(value: requirementGoalProgress)
@@ -98,6 +94,21 @@ extension ContentView {
         .iPadPaneCard()
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("ipad.today.planning")
+    }
+
+    @ViewBuilder
+    private var ipadTodayPlanningMetricCards: some View {
+        IPadSummaryMetricCard(
+            title: localized("ipad.today.planning.required_goal", default: "Required goal"),
+            value: "\(yearlyRequiredCompletions)/\(planningSession.data.requiredGoal)",
+            subtitle: localized(
+                "ipad.today.planning.required_goal_detail",
+                default: "required days logged"))
+        IPadSummaryMetricCard(
+            title: localized("ipad.today.planning.optional_goal", default: "Optional goal"),
+            value: "\(yearlyOptionalCompletions)/\(planningSession.data.optionalGoal)",
+            subtitle: localized("ipad.today.planning.optional_goal_detail", default: "optional disciplines logged"),
+            tint: CatholicTheme.accentForeground)
     }
 
     var ipadTodayRecoveryCard: some View {

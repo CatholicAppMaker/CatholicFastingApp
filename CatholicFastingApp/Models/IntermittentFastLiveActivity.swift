@@ -12,6 +12,7 @@ struct IntermittentFastActivityAttributes: ActivityAttributes {
     }
 
     let title: String
+    let localizationCode: String?
 }
 
 enum IntermittentFastLiveActivityManager {
@@ -22,10 +23,12 @@ enum IntermittentFastLiveActivityManager {
     static func start(start: Date, targetHours: Int) async {
         guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
         await endAll()
+        let localizationCode = CoreLocalizer.currentLocalizationCode()
         let attributes = IntermittentFastActivityAttributes(
             title: CoreLocalizer.localizedCurrent(
                 "fast.live_activity.title",
-                default: "Personal Fast"))
+                default: "Personal Fast"),
+            localizationCode: localizationCode)
         let state = IntermittentFastActivityAttributes.ContentState(
             start: start,
             targetDate: start.addingTimeInterval(TimeInterval(targetHours * 3600)),

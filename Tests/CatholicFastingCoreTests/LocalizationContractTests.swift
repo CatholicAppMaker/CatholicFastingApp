@@ -139,13 +139,15 @@ final class LocalizationContractTests: XCTestCase {
     }
 
     func testEveryWidgetSourceLocalizationKeyExistsInEverySupportedLocale() throws {
-        let widgetSource = try String(
-            contentsOf: repoRoot()
-                .appendingPathComponent("CatholicFastingWidget")
-                .appendingPathComponent("CatholicFastingWidget.swift"),
-            encoding: .utf8)
+        let widgetDirectory = repoRoot().appendingPathComponent("CatholicFastingWidget")
+        let widgetSource = try FileManager.default
+            .contentsOfDirectory(at: widgetDirectory, includingPropertiesForKeys: nil)
+            .filter { $0.pathExtension == "swift" }
+            .sorted { $0.lastPathComponent < $1.lastPathComponent }
+            .map { try String(contentsOf: $0, encoding: .utf8) }
+            .joined(separator: "\n")
         let keyExpression = try NSRegularExpression(
-            pattern: #"(?:\bWidgetLocalization\.text|\.(?:configurationDisplayName|description))\s*\(\s*\"((?:\\.|[^\"\\])*)\""#)
+            pattern: #"\"((?:widget|fast\.live_activity)\.[^\"]+)\""#)
         let sourceKeys = Set(matches(of: keyExpression, in: widgetSource).compactMap(\.first))
         let localizations = try loadLocalizations(in: "CatholicFastingWidget")
 

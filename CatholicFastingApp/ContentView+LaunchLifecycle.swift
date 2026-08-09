@@ -41,6 +41,18 @@ extension ContentView {
         guard ProcessInfo.processInfo.environment["UITEST_MODE"] == "1" else {
             return
         }
+        if ProcessInfo.processInfo.environment["UITEST_COMPANION_ACTION"] == "journal" {
+            guard launchExecutionState.beginUITestInitialNavigation() else { return }
+            performCompanionAction(
+                CompanionNextAction(
+                    id: "uitest-journal",
+                    title: "Journal",
+                    detail: "Open Journal",
+                    destination: .journal,
+                    priority: .high,
+                    requiresPremium: true))
+            return
+        }
         if let rawURL = ProcessInfo.processInfo.environment["UITEST_DEEP_LINK_URL"],
            let url = URL(string: rawURL)
         {
@@ -141,7 +153,14 @@ extension ContentView {
                     launchFunnelSnapshot.firstActionCompletedAt = Date()
                 }
                 if newValue == .more {
+                    let hasPendingPhoneNavigation = !navigationState.pendingPhoneNavigationPath.isEmpty
                     openPendingPhoneMoreDestinationIfNeeded()
+                    if !appLayoutProfile.usesSplitViewShell,
+                       !hasPendingPhoneNavigation,
+                       !navigationState.morePath.isEmpty
+                    {
+                        navigationState.morePath = []
+                    }
                 }
                 if newValue == .more, navigationState.selectedMoreDestination == .supportAndPremium {
                     Task {
@@ -178,9 +197,6 @@ extension ContentView {
             .onChange(of: monetizationStore.premiumUnlocked) { _, unlocked in
                 if unlocked, launchFunnelSnapshot.premiumUnlockedAt == nil {
                     launchFunnelSnapshot.premiumUnlockedAt = Date()
-                }
-                if unlocked {
-                    supportPremiumSurfaceRaw = SupportPremiumSurface.tools.rawValue
                 }
             }
     }

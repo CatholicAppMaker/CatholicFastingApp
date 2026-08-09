@@ -61,9 +61,6 @@
             default = "NO">
          </TestPlanReference>
       </TestPlans>
-      <StoreKitConfigurationFileReference
-         identifier = "../../../CatholicFastingApp/Premium.storekit">
-      </StoreKitConfigurationFileReference>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -85,9 +82,6 @@
             ReferencedContainer = "container:CatholicFastingApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <StoreKitConfigurationFileReference
-         identifier = "../../../CatholicFastingApp/Premium.storekit">
-      </StoreKitConfigurationFileReference>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

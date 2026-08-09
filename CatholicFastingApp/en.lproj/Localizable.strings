@@ -640,6 +640,7 @@
 "intermittent.recovery.none" = "No immediate recovery actions needed.";
 "intermittent.recovery.section" = "Recovery Guidance";
 "intermittent.schedules.applied" = "Applied";
+"intermittent.schedules.actions_format" = "Actions for %@";
 "intermittent.schedules.cancel_edit" = "Cancel Edit";
 "intermittent.schedules.days" = "Days";
 "intermittent.schedules.delete" = "Delete";

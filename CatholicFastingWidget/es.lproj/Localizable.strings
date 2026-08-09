@@ -9,3 +9,12 @@
 "widget.fast.active" = "Ayuno activo";
 "widget.fast.active_target" = "Ayuno activo. Objetivo a las %@";
 "widget.fast.target_reached" = "Objetivo de ayuno alcanzado";
+"fast.live_activity.title" = "Ayuno personal";
+"fast.live_activity.fasting" = "Ayuno en curso";
+"fast.live_activity.target_reached" = "Objetivo alcanzado";
+"fast.live_activity.keep_going" = "Continúe para completar este plan.";
+"fast.live_activity.end_anytime" = "Puede terminar el ayuno cuando esté listo.";
+"fast.live_activity.elapsed" = "Transcurrido";
+"fast.live_activity.remaining" = "Restante";
+"fast.live_activity.started" = "Comenzó";
+"fast.live_activity.target" = "Objetivo";

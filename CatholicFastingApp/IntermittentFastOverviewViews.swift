@@ -156,6 +156,7 @@ private struct IntermittentFastRhythmInsight: View {
         .background(CatholicTheme.parchment.opacity(0.72), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .stroke(CatholicTheme.cardBorder.opacity(0.22), lineWidth: 1))
+                .stroke(CatholicTheme.cardBorder.opacity(0.22), lineWidth: 1)
+                .accessibilityHidden(true))
     }
 }

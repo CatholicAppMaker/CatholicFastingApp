@@ -13,6 +13,10 @@ extension ContentView {
         monetizationStore.premiumUnlocked
     }
 
+    func hasPremiumEntitlement(_: PremiumToolDestination) -> Bool {
+        monetizationStore.premiumUnlocked
+    }
+
     func premiumToolDestination(for surface: PremiumEntitlementSurface) -> PremiumToolDestination {
         switch surface {
         case .planning:
@@ -77,22 +81,66 @@ extension ContentView {
 
     var premiumToolsHubSection: some View {
         Section(localized("premium.tools.formation", default: "Formation Tools")) {
-            ForEach(PremiumEntitlementSurface.allCases) { surface in
-                let destination = premiumToolDestination(for: surface)
-                NavigationLink(value: destination) {
+            ForEach(PremiumToolDestination.allCases) { destination in
+                NavigationLink(value: PhoneNavigationRoute.premium(destination)) {
                     VStack(alignment: .leading, spacing: 4) {
-                        Label(surface.title, systemImage: destination.iconName)
+                        Label(
+                            localizedPremiumToolTitle(destination),
+                            systemImage: destination.iconName)
                             .font(.headline)
                             .foregroundStyle(CatholicTheme.primary)
-                        Text(surface.guidance)
+                        Text(localizedPremiumToolSubtitle(destination))
                             .appSupportingTextStyle()
                     }
                     .padding(.vertical, 2)
                 }
-                .disabled(!hasPremiumEntitlement(surface))
-                .accessibilityIdentifier("premium.tool.\(surface.rawValue)")
+                .disabled(!hasPremiumEntitlement(destination))
+                .accessibilityIdentifier("premium.tool.\(destination.rawValue)")
             }
         }
+    }
+
+    var companionIPadPremiumToolsCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            IPadWorkspaceHeader(
+                eyebrow: localized("premium.tools.formation", default: "Formation Tools"),
+                title: monetizationStore.premiumUnlocked
+                    ? localized("premium.active.title", default: "Premium active")
+                    : localized("premium.plan_choice.title", default: "Plan choice"),
+                detail: monetizationStore.premiumUnlocked
+                    ? localized(
+                        "premium.active.summary",
+                        default: "Your guided journey, reminders, reflection, and export tools are unlocked.")
+                    : localized(
+                        "premium.locked.summary",
+                        default: "Stay steady through the Church year with one weekly formation path, reminders, and review."),
+                serifTitle: true)
+
+            if monetizationStore.premiumUnlocked {
+                ForEach(PremiumToolDestination.allCases) { destination in
+                    NavigationLink(destination: premiumToolList(for: destination)) {
+                        AppDestinationRowCard(
+                            title: localizedPremiumToolTitle(destination),
+                            subtitle: localizedPremiumToolSubtitle(destination),
+                            systemImage: destination.iconName,
+                            showsChevron: true,
+                            usesPrimarySubtitle: true)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("ipad.premium.tool.\(destination.rawValue)")
+                }
+            } else {
+                Button(localized("premium.tools.go_to_upgrade", default: "Go to Upgrade")) {
+                    openPremiumUpgrade(focusingOn: .planning)
+                }
+                .appPrimaryButtonStyle()
+                .accessibilityIdentifier("ipad.premium.tools.upgrade")
+            }
+        }
+        .padding(18)
+        .iPadPaneCard(.utility)
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("ipad.premium.tools")
     }
 
     var premiumAndSupportSection: some View {
@@ -330,6 +378,7 @@ extension ContentView {
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
         .appSurfaceCard(offer?.isPrimaryAnchor == true ? .primary : .standard, cornerRadius: 16)
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("premium.offer.\(product.id)")
     }
     #endif

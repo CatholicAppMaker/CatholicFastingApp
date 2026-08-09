@@ -9,3 +9,12 @@
 "widget.fast.active" = "Fast active";
 "widget.fast.active_target" = "Fast active. Target %@";
 "widget.fast.target_reached" = "Fast target reached";
+"fast.live_activity.title" = "Personal Fast";
+"fast.live_activity.fasting" = "Fasting in progress";
+"fast.live_activity.target_reached" = "Target reached";
+"fast.live_activity.keep_going" = "Keep going to complete this plan.";
+"fast.live_activity.end_anytime" = "You can end the fast when ready.";
+"fast.live_activity.elapsed" = "Elapsed";
+"fast.live_activity.remaining" = "Remaining";
+"fast.live_activity.started" = "Started";
+"fast.live_activity.target" = "Target";

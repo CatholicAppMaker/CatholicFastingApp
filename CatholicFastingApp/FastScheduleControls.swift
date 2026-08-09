@@ -9,6 +9,7 @@ struct IntermittentScheduleCopy {
     let weekdaysTitle: String
     let weekdayLabel: (Int) -> String
     let applied: String
+    let actionsForSchedule: (String) -> String
     let planSummary: (IntermittentSchedulePlan) -> String
     let hideEditor: String
     let newSchedule: String
@@ -218,7 +219,8 @@ struct IntermittentScheduleEditor: View {
                     .font(.title3)
                     .foregroundStyle(CatholicTheme.primary)
             }
-            .accessibilityIdentifier("intermittent.schedule.actions")
+            .accessibilityLabel(copy.actionsForSchedule(plan.name))
+            .accessibilityIdentifier("intermittent.schedule.actions.\(plan.id)")
         }
         .padding(.vertical, 4)
     }

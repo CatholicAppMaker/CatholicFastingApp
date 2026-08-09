@@ -16,6 +16,7 @@ struct PhoneNavigationTab<Content: View, ToolbarItems: ToolbarContent, MoreView:
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar { toolbar }
         }
+        .appPhoneNavigationChrome()
         .phoneNavigationDestinations(
             more: more,
             premium: premium,
@@ -27,7 +28,7 @@ struct PhoneNavigationTab<Content: View, ToolbarItems: ToolbarContent, MoreView:
 struct PhonePathNavigationTab<Content: View, ToolbarItems: ToolbarContent, MoreView: View, PremiumView: View, HistoryView: View>: View {
     let title: String
     let surface: HomeSurface
-    @Binding var path: [MoreHubDestination]
+    @Binding var path: [PhoneNavigationRoute]
     @ViewBuilder let content: Content
     @ToolbarContentBuilder let toolbar: ToolbarItems
     let more: (MoreHubDestination) -> MoreView
@@ -42,11 +43,12 @@ struct PhonePathNavigationTab<Content: View, ToolbarItems: ToolbarContent, MoreV
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar { toolbar }
                 .onAppear(perform: onAppear)
-                .phoneNavigationDestinations(
+                .phonePathNavigationDestinations(
                     more: more,
                     premium: premium,
                     history: history)
         }
+        .appPhoneNavigationChrome()
         .phoneTabItem(title: title, surface: surface)
     }
 }
@@ -215,6 +217,25 @@ private struct PhoneNavigationDestinationsModifier<MoreView: View, PremiumView: 
     }
 }
 
+private struct PhonePathNavigationDestinationsModifier<MoreView: View, PremiumView: View, HistoryView: View>: ViewModifier {
+    let more: (MoreHubDestination) -> MoreView
+    let premium: (PremiumToolDestination) -> PremiumView
+    let history: (FastingHistoryArticle) -> HistoryView
+
+    func body(content: Content) -> some View {
+        content.navigationDestination(for: PhoneNavigationRoute.self) { route in
+            switch route {
+            case .more(let destination):
+                more(destination)
+            case .premium(let destination):
+                premium(destination)
+            case .history(let article):
+                history(article)
+            }
+        }
+    }
+}
+
 private extension View {
     func phoneTabItem(title: String, surface: HomeSurface) -> some View {
         tabItem {
@@ -231,6 +252,18 @@ private extension View {
     {
         modifier(
             PhoneNavigationDestinationsModifier(
+                more: more,
+                premium: premium,
+                history: history))
+    }
+
+    func phonePathNavigationDestinations(
+        more: @escaping (MoreHubDestination) -> some View,
+        premium: @escaping (PremiumToolDestination) -> some View,
+        history: @escaping (FastingHistoryArticle) -> some View) -> some View
+    {
+        modifier(
+            PhonePathNavigationDestinationsModifier(
                 more: more,
                 premium: premium,
                 history: history))

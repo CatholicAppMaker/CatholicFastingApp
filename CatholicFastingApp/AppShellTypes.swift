@@ -3,8 +3,8 @@ import Foundation
 struct AppNavigationState {
     var homeSurface: HomeSurface = .today
     var selectedMoreDestination: MoreHubDestination? = .supportAndPremium
-    var morePath: [MoreHubDestination] = []
-    var pendingPhoneMoreDestination: MoreHubDestination?
+    var morePath: [PhoneNavigationRoute] = []
+    var pendingPhoneNavigationPath: [PhoneNavigationRoute] = []
     var selectedPremiumToolDestination: PremiumToolDestination? = .planner
     var selectedFastingObservanceID = ""
 }
@@ -200,4 +200,10 @@ enum PremiumToolDestination: String, CaseIterable, Hashable, Identifiable {
         case .export: "square.and.arrow.up"
         }
     }
+}
+
+enum PhoneNavigationRoute: Hashable {
+    case more(MoreHubDestination)
+    case premium(PremiumToolDestination)
+    case history(FastingHistoryArticle)
 }

@@ -42,6 +42,43 @@ extension CatholicFastingAppUITests {
         }
     }
 
+    func testIPhoneChromeScreenshots() throws {
+        try XCTSkipIf(
+            AppStoreScreenshotConfig.load() == nil,
+            "Run through scripts/generate_app_store_screenshots.sh to enable screenshot capture.")
+
+        let config = AppStoreScreenshotConfig.load()
+        let app = makeApp(
+            regionProfile: config?.regionProfile,
+            languageMode: config?.languageMode,
+            premiumUnlocked: true)
+        defer { app.terminate() }
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openSurface("Fast", in: app)
+        XCTAssertTrue(app.otherElements["surface.intermittent.ready"].waitForExistence(timeout: 4))
+        app.swipeUp()
+        try captureCurrentScreen("06-chrome-fast-scrolled", in: app)
+
+        openSurface("Calendar", in: app)
+        XCTAssertTrue(app.otherElements["surface.fasting_days.ready"].waitForExistence(timeout: 4))
+        app.swipeUp()
+        try captureCurrentScreen("07-chrome-calendar-scrolled", in: app)
+
+        openMoreDestination("Support & Premium", in: app)
+        let toolsSegment = app.buttons["Premium Tools"].firstMatch
+        guard revealAndTapForScreenshot(toolsSegment, named: "Premium Tools", in: app) else { return }
+        app.swipeUp()
+        try captureCurrentScreen("08-chrome-more-premium-scrolled", in: app)
+
+        let plannerRow = elementByIdentifier("premium.tool.planner", in: app)
+        guard revealAndTapForScreenshot(plannerRow, named: "Planner", in: app) else { return }
+        XCTAssertTrue(elementByIdentifier("premium.planner", in: app).waitForExistence(timeout: 4))
+        app.swipeUp()
+        try captureCurrentScreen("09-chrome-premium-planner-scrolled", in: app)
+    }
+
     func testIPadAppStoreScreenshots() throws {
         try XCTSkipIf(
             AppStoreScreenshotConfig.load() == nil,
@@ -82,6 +119,37 @@ extension CatholicFastingAppUITests {
             XCTAssertTrue(app.otherElements["home.ready"].waitForExistence(timeout: 4))
             XCTAssertTrue(app.otherElements["ipad.more.premium"].waitForExistence(timeout: 4))
         }
+    }
+
+    func testIPadChromeScreenshots() throws {
+        try XCTSkipIf(
+            AppStoreScreenshotConfig.load() == nil,
+            "Run through scripts/generate_app_store_screenshots.sh to enable screenshot capture.")
+
+        let config = AppStoreScreenshotConfig.load()
+        let app = makeApp(
+            seedActiveFast: true,
+            regionProfile: config?.regionProfile,
+            languageMode: config?.languageMode,
+            premiumUnlocked: true)
+        defer { app.terminate() }
+        app.launch()
+        ensureOnHomeScreen(app)
+
+        openIPadSurface("intermittent", in: app)
+        XCTAssertTrue(elementByIdentifier("ipad.intermittent.live", in: app).waitForExistence(timeout: 4))
+        app.swipeUp()
+        try captureCurrentScreen("06-chrome-fast-scrolled", in: app)
+
+        openIPadSurface("fastingDays", in: app)
+        XCTAssertTrue(app.otherElements["surface.fasting_days.ready"].waitForExistence(timeout: 4))
+        app.swipeUp()
+        try captureCurrentScreen("07-chrome-calendar-scrolled", in: app)
+
+        openIPadMoreDestination("supportAndPremium", in: app)
+        XCTAssertTrue(app.otherElements["ipad.more.premium"].waitForExistence(timeout: 4))
+        app.swipeUp()
+        try captureCurrentScreen("08-chrome-more-premium-scrolled", in: app)
     }
 
     func testIPhoneFastQAScreenshots() throws {
@@ -249,6 +317,28 @@ extension CatholicFastingAppUITests {
         try writeAppStoreScreenshot(named: name)
     }
 
+    private func captureCurrentScreen(_ name: String, in app: XCUIApplication) throws {
+        dismissSystemNotificationBanner(in: app)
+        waitForAppStoreScreenshotSettling()
+        try writeAppStoreScreenshot(named: name, attachToResult: false)
+    }
+
+    private func revealAndTapForScreenshot(
+        _ element: XCUIElement,
+        named name: String,
+        in app: XCUIApplication) -> Bool
+    {
+        if !element.waitForExistence(timeout: 1) || !element.isHittable {
+            app.swipeUp()
+        }
+        guard element.waitForExistence(timeout: 2), element.isHittable else {
+            XCTFail("Could not reveal \(name) with one deterministic swipe.")
+            return false
+        }
+        element.tap()
+        return true
+    }
+
     private func dismissSystemNotificationBanner(in app: XCUIApplication) {
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         let banner = springboard.otherElements["NotificationShortLookView"].firstMatch
@@ -264,7 +354,7 @@ extension CatholicFastingAppUITests {
         RunLoop.current.run(until: Date().addingTimeInterval(0.6))
     }
 
-    private func writeAppStoreScreenshot(named name: String) throws {
+    private func writeAppStoreScreenshot(named name: String, attachToResult: Bool = true) throws {
         guard let config = AppStoreScreenshotConfig.load() else {
             throw XCTSkip("App Store screenshot config is required.")
         }
@@ -281,7 +371,12 @@ extension CatholicFastingAppUITests {
         let screenshot = XCUIScreen.main.screenshot()
         let destination = rawDirectory.appendingPathComponent("\(name).png")
         try screenshot.pngRepresentation.write(to: destination, options: [.atomic])
-        add(XCTAttachment(screenshot: screenshot))
+        if attachToResult {
+            let attachment = XCTAttachment(screenshot: screenshot)
+            attachment.name = "App Store screenshot: \(name)"
+            attachment.lifetime = .keepAlways
+            add(attachment)
+        }
     }
 
     private var appStoreScreenshotDeviceDirectory: String {

@@ -1,6 +1,19 @@
 import SwiftUI
+#if canImport(UIKit)
+import UIKit
+#endif
 
 extension View {
+    @MainActor
+    func appPhoneNavigationChrome() -> some View {
+        modifier(PhoneNavigationChromeModifier())
+    }
+
+    @MainActor
+    func appPhoneTabChrome() -> some View {
+        modifier(PhoneTabChromeModifier())
+    }
+
     func appPrimaryButtonStyle(legacyTint: Color = CatholicTheme.action) -> some View {
         tint(legacyTint)
             .buttonStyle(.glassProminent)
@@ -93,6 +106,207 @@ extension View {
         modifier(AppSelectedAccessibilityModifier(isSelected: isSelected))
     }
 }
+
+@MainActor
+private struct PhoneNavigationChromeModifier: ViewModifier {
+    @Environment(\.colorScheme) private var colorScheme
+
+    func body(content: Content) -> some View {
+        content
+            .toolbarBackground(
+                opaqueChromeSurface(for: colorScheme),
+                for: .navigationBar)
+            .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+        #if canImport(UIKit)
+            .background {
+                OpaqueNavigationBarConfigurator(
+                    backgroundColor: opaqueChromeUIColor(for: colorScheme))
+                    .frame(width: 0, height: 0)
+            }
+        #endif
+    }
+}
+
+@MainActor
+private struct PhoneTabChromeModifier: ViewModifier {
+    @Environment(\.colorScheme) private var colorScheme
+
+    func body(content: Content) -> some View {
+        content
+            .toolbarBackground(
+                opaqueChromeSurface(for: colorScheme),
+                for: .tabBar)
+            .toolbarBackgroundVisibility(.visible, for: .tabBar)
+        #if canImport(UIKit)
+            .background {
+                OpaqueTabBarConfigurator(
+                    backgroundColor: opaqueChromeUIColor(for: colorScheme))
+                    .frame(width: 0, height: 0)
+            }
+        #endif
+    }
+}
+
+@MainActor
+private func opaqueChromeSurface(for colorScheme: ColorScheme) -> Color {
+    #if canImport(UIKit)
+    Color(uiColor: opaqueChromeUIColor(for: colorScheme))
+    #else
+    SacredEditorialTokens.raisedSurface(for: colorScheme)
+    #endif
+}
+
+#if canImport(UIKit)
+@MainActor
+private func opaqueChromeUIColor(for colorScheme: ColorScheme) -> UIColor {
+    let designSurface = UIColor(SacredEditorialTokens.raisedSurface(for: colorScheme))
+    let traits = UITraitCollection(
+        userInterfaceStyle: colorScheme == .dark ? .dark : .light)
+    return designSurface.resolvedColor(with: traits).withAlphaComponent(1)
+}
+
+@MainActor
+private final class ChromeAppearanceHostController: UIViewController {
+    var applyChromeAppearance: ((UIViewController) -> Bool)?
+    private var hasAppliedChromeAppearance = false
+
+    override func didMove(toParent parent: UIViewController?) {
+        super.didMove(toParent: parent)
+        hasAppliedChromeAppearance = false
+        refreshChromeAppearance()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        hasAppliedChromeAppearance = false
+        refreshChromeAppearance()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        if !hasAppliedChromeAppearance {
+            refreshChromeAppearance()
+        }
+    }
+
+    func refreshChromeAppearance() {
+        hasAppliedChromeAppearance = applyChromeAppearance?(self) ?? false
+    }
+}
+
+private extension UIViewController {
+    func nearestTabBarController() -> UITabBarController? {
+        var currentController: UIViewController? = self
+
+        while let controller = currentController {
+            if let tabBarController = controller as? UITabBarController {
+                return tabBarController
+            }
+
+            if let tabBarController = controller.tabBarController {
+                return tabBarController
+            }
+
+            currentController = controller.parent
+        }
+
+        return nil
+    }
+
+    func nearestNavigationController() -> UINavigationController? {
+        var currentController: UIViewController? = self
+
+        while let controller = currentController {
+            if let navigationController = controller as? UINavigationController {
+                return navigationController
+            }
+
+            if let navigationController = controller.navigationController {
+                return navigationController
+            }
+
+            currentController = controller.parent
+        }
+
+        return nil
+    }
+}
+
+@MainActor
+private struct OpaqueTabBarConfigurator: UIViewControllerRepresentable {
+    let backgroundColor: UIColor
+
+    func makeUIViewController(context: Context) -> ChromeAppearanceHostController {
+        let viewController = ChromeAppearanceHostController()
+        configure(viewController)
+        return viewController
+    }
+
+    func updateUIViewController(_ viewController: ChromeAppearanceHostController, context: Context) {
+        configure(viewController)
+    }
+
+    private func configure(_ viewController: ChromeAppearanceHostController) {
+        viewController.applyChromeAppearance = { [backgroundColor] controller in
+            guard let tabBar = controller.nearestTabBarController()?.tabBar else {
+                return false
+            }
+
+            let appearance = UITabBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = backgroundColor
+            appearance.backgroundEffect = nil
+            tabBar.isTranslucent = false
+            tabBar.standardAppearance = appearance
+            tabBar.scrollEdgeAppearance = appearance
+            return true
+        }
+
+        viewController.refreshChromeAppearance()
+    }
+}
+
+@MainActor
+private struct OpaqueNavigationBarConfigurator: UIViewControllerRepresentable {
+    let backgroundColor: UIColor
+
+    func makeUIViewController(context: Context) -> ChromeAppearanceHostController {
+        let viewController = ChromeAppearanceHostController()
+        configure(viewController)
+        return viewController
+    }
+
+    func updateUIViewController(_ viewController: ChromeAppearanceHostController, context: Context) {
+        configure(viewController)
+    }
+
+    private func configure(_ viewController: ChromeAppearanceHostController) {
+        viewController.applyChromeAppearance = { [backgroundColor] controller in
+            guard let navigationBar = controller.nearestNavigationController()?.navigationBar else {
+                return false
+            }
+
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = backgroundColor
+            appearance.backgroundEffect = nil
+            navigationBar.isTranslucent = false
+            navigationBar.standardAppearance = appearance
+            navigationBar.scrollEdgeAppearance = appearance
+            navigationBar.compactAppearance = appearance
+
+            if #available(iOS 15.0, macCatalyst 15.0, *) {
+                navigationBar.compactScrollEdgeAppearance = appearance
+            }
+
+            return true
+        }
+
+        viewController.refreshChromeAppearance()
+    }
+}
+#endif
 
 enum AppSymbolRole {
     case prominent

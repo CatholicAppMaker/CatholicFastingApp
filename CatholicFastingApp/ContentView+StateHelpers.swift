@@ -5,6 +5,10 @@ extension ContentView {
         guard let target = AppDeepLinkTarget.parse(url: url) else { return }
         switch target {
         case .surface(let surface):
+            if surface == .more {
+                navigationState.morePath = []
+                navigationState.pendingPhoneNavigationPath = []
+            }
             navigationState.homeSurface = surface
         case .settings:
             navigateToMoreDestination(.setupAndReminders)

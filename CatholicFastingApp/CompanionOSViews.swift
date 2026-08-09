@@ -334,6 +334,7 @@ struct CompanionInactiveFastCard: View {
                     .accessibilityHidden(true)
             }
             .contentShape(Capsule())
+            .accessibilityLabel(Text(actionTitle))
             .accessibilityIdentifier("companion.live.action")
         }
         .padding(.vertical, 6)

@@ -135,6 +135,7 @@ extension ContentView {
 
                 Divider()
                     .overlay(CatholicTheme.cardBorder.opacity(0.35))
+                    .accessibilityHidden(true)
 
                 intermittentQuickTargetTiles
                 intermittentCustomTargetControl

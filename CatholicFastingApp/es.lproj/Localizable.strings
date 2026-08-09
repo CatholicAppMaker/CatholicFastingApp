@@ -910,6 +910,7 @@
 "intermittent.schedules.days" = "Días";
 "intermittent.schedules.empty" = "Todavía no hay horarios guardados.";
 "intermittent.schedules.applied" = "Aplicado";
+"intermittent.schedules.actions_format" = "Acciones para %@";
 "intermittent.schedules.plan_summary_format" = "Meta %dh • Inicio %@ • Días %@";
 "intermittent.schedules.use" = "Usar";
 "intermittent.schedules.edit" = "Editar";

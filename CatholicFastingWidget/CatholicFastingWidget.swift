@@ -98,7 +98,7 @@ private struct Provider: TimelineProvider {
     }
 }
 
-private enum WidgetLocalization {
+enum WidgetLocalization {
     static func text(_ key: String, default defaultValue: String, code: String? = nil) -> String {
         let requestedCode = code ?? Locale.current.identifier
         for candidate in WidgetLocalizationCode.candidates(for: requestedCode) {

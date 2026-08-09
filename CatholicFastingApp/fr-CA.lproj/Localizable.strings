@@ -910,6 +910,7 @@
 "intermittent.schedules.days" = "Jours";
 "intermittent.schedules.empty" = "Aucun horaire enregistré pour l’instant.";
 "intermittent.schedules.applied" = "Appliqué";
+"intermittent.schedules.actions_format" = "Actions pour %@";
 "intermittent.schedules.plan_summary_format" = "Cible %dh • Départ %@ • Jours %@";
 "intermittent.schedules.use" = "Utiliser";
 "intermittent.schedules.edit" = "Modifier";

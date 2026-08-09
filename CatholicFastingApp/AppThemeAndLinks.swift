@@ -72,7 +72,9 @@ enum AppDeepLinkTarget: Equatable {
             .surface(.intermittent)
         case "premium", "support-premium", "support", "toolkit":
             .premium
-        case "more", "settings":
+        case "more":
+            .surface(.more)
+        case "settings":
             .settings
         default:
             nil

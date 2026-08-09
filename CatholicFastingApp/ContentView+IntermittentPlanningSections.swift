@@ -130,6 +130,12 @@ extension ContentView {
             weekdaysTitle: localized("intermittent.schedules.days", default: "Days"),
             weekdayLabel: weekdayLabel,
             applied: localized("intermittent.schedules.applied", default: "Applied"),
+            actionsForSchedule: { name in
+                localizedFormat(
+                    "intermittent.schedules.actions_format",
+                    default: "Actions for %@",
+                    name)
+            },
             planSummary: { plan in
                 localizedFormat(
                     "intermittent.schedules.plan_summary_format",
@@ -167,12 +173,14 @@ extension ContentView {
         ZStack {
             Circle()
                 .stroke(CatholicTheme.cardBorder.opacity(0.3), lineWidth: liveTrackerRingStroke)
+                .accessibilityHidden(true)
             Circle()
                 .trim(from: 0, to: progress)
                 .stroke(
                     reached ? .green : CatholicTheme.accent,
                     style: StrokeStyle(lineWidth: liveTrackerRingStroke, lineCap: .round))
                 .rotationEffect(.degrees(-90))
+                .accessibilityHidden(true)
             VStack(spacing: 2) {
                 Text(
                     reached
@@ -270,12 +278,14 @@ extension ContentView {
         ZStack {
             Circle()
                 .stroke(CatholicTheme.cardBorder.opacity(0.3), lineWidth: liveTrackerRingStroke)
+                .accessibilityHidden(true)
             Circle()
                 .trim(from: 0, to: progress)
                 .stroke(
                     hasEatingWindow ? CatholicTheme.accentForeground : CatholicTheme.primary,
                     style: StrokeStyle(lineWidth: liveTrackerRingStroke, lineCap: .round))
                 .rotationEffect(.degrees(-90))
+                .accessibilityHidden(true)
             VStack(spacing: 2) {
                 Text(
                     hasEatingWindow

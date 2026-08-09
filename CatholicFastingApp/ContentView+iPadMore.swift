@@ -63,6 +63,8 @@ extension ContentView {
 
                 ipadPremiumFormationPreviewCard
 
+                companionIPadPremiumToolsCard
+
                 if !monetizationStore.tipProducts.isEmpty {
                     VStack(alignment: .leading, spacing: 10) {
                         Text(localized("ipad.more.tips.title", default: "Optional support tips"))

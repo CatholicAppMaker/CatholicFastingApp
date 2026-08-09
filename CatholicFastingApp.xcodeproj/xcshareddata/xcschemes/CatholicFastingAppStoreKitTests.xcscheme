@@ -29,9 +29,9 @@
             buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A00000000000000000000027"
-               BuildableName = "CatholicFastingAppUITests.xctest"
-               BlueprintName = "CatholicFastingAppUITests"
+               BlueprintIdentifier = "F6000000000000000000000B"
+               BuildableName = "CatholicFastingAppStoreKitTests.xctest"
+               BlueprintName = "CatholicFastingAppStoreKitTests"
                ReferencedContainer = "container:CatholicFastingApp.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -51,16 +51,19 @@
             ReferencedContainer = "container:CatholicFastingApp.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <TestPlans>
-         <TestPlanReference
-            reference = "container:CatholicFastingApp.xctestplan"
-            default = "YES">
-         </TestPlanReference>
-         <TestPlanReference
-            reference = "container:CatholicFastingAppScreenshots.xctestplan"
-            default = "NO">
-         </TestPlanReference>
-      </TestPlans>
+      <Testables>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "F6000000000000000000000B"
+               BuildableName = "CatholicFastingAppStoreKitTests.xctest"
+               BlueprintName = "CatholicFastingAppStoreKitTests"
+               ReferencedContainer = "container:CatholicFastingApp.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+      </Testables>
       <StoreKitConfigurationFileReference
          identifier = "../../../CatholicFastingApp/Premium.storekit">
       </StoreKitConfigurationFileReference>
@@ -106,8 +109,7 @@
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
-   <AnalyzeAction
-      buildConfiguration = "Debug">
+   <AnalyzeAction buildConfiguration = "Debug">
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Release"

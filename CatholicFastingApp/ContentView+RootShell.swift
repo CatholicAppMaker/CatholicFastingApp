@@ -104,7 +104,7 @@ extension ContentView {
             intermittentPhoneTab
             morePhoneTab
         }
-        .toolbarBackground(.hidden, for: .tabBar)
+        .appPhoneTabChrome()
     }
 
     var tabRootScaffold: some View {
@@ -167,12 +167,10 @@ extension ContentView {
         ToolbarItem(placement: .topBarLeading) {
             phoneBrandMark
         }
-        .sharedBackgroundVisibility(.hidden)
 
         ToolbarItem(placement: .topBarTrailing) {
             seasonBadge
         }
-        .sharedBackgroundVisibility(.hidden)
     }
 
     func applyRootLifecycleHandlers(to content: some View) -> some View {
@@ -258,7 +256,7 @@ extension ContentView {
                 quoteSectionTitle: localized("more.quote.section", default: "Guidance reflection"),
                 unofficialNotice: { unofficialAppNoticeSection },
                 selectDestination: { destination in
-                    navigationState.morePath.append(destination)
+                    navigationState.morePath.append(.more(destination))
                 })
         }
     }
@@ -435,11 +433,15 @@ extension ContentView {
     }
 
     func openPendingPhoneMoreDestinationIfNeeded() {
-        guard !appLayoutProfile.usesSplitViewShell, navigationState.homeSurface == .more, let destination = navigationState.pendingPhoneMoreDestination else {
+        guard
+            !appLayoutProfile.usesSplitViewShell,
+            navigationState.homeSurface == .more,
+            !navigationState.pendingPhoneNavigationPath.isEmpty
+        else {
             return
         }
-        navigationState.pendingPhoneMoreDestination = nil
-        navigationState.morePath = [destination]
+        navigationState.morePath = navigationState.pendingPhoneNavigationPath
+        navigationState.pendingPhoneNavigationPath = []
     }
 
     func navigateToMoreDestination(_ destination: MoreHubDestination) {
@@ -449,7 +451,34 @@ extension ContentView {
             return
         }
 
-        navigationState.pendingPhoneMoreDestination = destination
+        navigationState.pendingPhoneNavigationPath = [.more(destination)]
+        if navigationState.homeSurface == .more {
+            openPendingPhoneMoreDestinationIfNeeded()
+        } else {
+            navigationState.homeSurface = .more
+        }
+    }
+
+    func navigateToPremiumTool(_ destination: PremiumToolDestination) {
+        guard monetizationStore.premiumUnlocked else {
+            supportPremiumSurfaceRaw = SupportPremiumSurface.upgrade.rawValue
+            navigateToMoreDestination(.supportAndPremium)
+            return
+        }
+
+        navigationState.selectedMoreDestination = .supportAndPremium
+        navigationState.selectedPremiumToolDestination = destination
+        supportPremiumSurfaceRaw = SupportPremiumSurface.tools.rawValue
+
+        guard !appLayoutProfile.usesSplitViewShell else {
+            navigationState.homeSurface = .more
+            return
+        }
+
+        navigationState.pendingPhoneNavigationPath = [
+            .more(.supportAndPremium),
+            .premium(destination),
+        ]
         if navigationState.homeSurface == .more {
             openPendingPhoneMoreDestinationIfNeeded()
         } else {

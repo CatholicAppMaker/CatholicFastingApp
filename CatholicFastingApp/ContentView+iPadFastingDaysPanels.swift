@@ -255,9 +255,9 @@ extension ContentView {
                             }
                             HStack(spacing: 10) {
                                 Button(localized("ipad.fasting_days.log.missed", default: "Missed")) { tracker.setStatus(.missed, for: selected.id) }
-                                    .appSecondaryButtonStyle(legacyTint: .orange)
+                                    .appSecondaryButtonStyle(legacyTint: CatholicTheme.warningForeground)
                                 Button(localized("ipad.fasting_days.log.reset", default: "Reset")) { tracker.setStatus(.notStarted, for: selected.id) }
-                                    .appSecondaryButtonStyle(legacyTint: .gray)
+                                    .appSecondaryButtonStyle(legacyTint: CatholicTheme.secondaryInk)
                             }
                         }
                     } else {
@@ -267,10 +267,10 @@ extension ContentView {
                             Button(localized("ipad.fasting_days.log.substitute", default: "Substitute")) { tracker.setStatus(.substituted, for: selected.id) }
                                 .appSecondaryButtonStyle()
                             Button(localized("ipad.fasting_days.log.missed", default: "Missed")) { tracker.setStatus(.missed, for: selected.id) }
-                                .appSecondaryButtonStyle(legacyTint: .orange)
+                                .appSecondaryButtonStyle(legacyTint: CatholicTheme.warningForeground)
                         }
                         Button(localized("ipad.fasting_days.log.reset", default: "Reset")) { tracker.setStatus(.notStarted, for: selected.id) }
-                            .appSecondaryButtonStyle(legacyTint: .gray)
+                            .appSecondaryButtonStyle(legacyTint: CatholicTheme.secondaryInk)
                     }
 
                     TextField(localized("ipad.fasting_days.log.note", default: "Add a note for this day"), text: noteBinding(for: selected.id), axis: .vertical)

@@ -45,44 +45,12 @@ struct FastingDaysScopeControl: View {
     let fullYearTitle: String
 
     var body: some View {
-        HStack(spacing: 4) {
-            option(title: upcomingTitle, value: 0)
-            option(title: fullYearTitle, value: 1)
+        Picker(title, selection: $selection) {
+            Text(upcomingTitle).tag(0)
+            Text(fullYearTitle).tag(1)
         }
-        .padding(3)
-        .background(
-            Capsule()
-                .fill(Color.secondary.opacity(0.12))
-                .accessibilityHidden(true))
-        .accessibilityRepresentation {
-            // The custom capsule remains visual-only to accessibility. A native
-            // Picker supplies equivalent state and semantic Dynamic Type behavior.
-            Picker(title, selection: $selection) {
-                Text(upcomingTitle).tag(0)
-                Text(fullYearTitle).tag(1)
-            }
-            .pickerStyle(.menu)
-        }
+        .pickerStyle(.segmented)
         .accessibilityIdentifier("fasting_days.scope_picker")
-    }
-
-    private func option(title: String, value: Int) -> some View {
-        Button {
-            selection = value
-        } label: {
-            Text(title)
-                .font(.body)
-                .foregroundStyle(.primary)
-                .frame(maxWidth: .infinity)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 7)
-                .background(
-                    Capsule()
-                        .fill(selection == value ? CatholicTheme.parchment : Color.clear)
-                        .accessibilityHidden(true))
-        }
-        .buttonStyle(.plain)
-        .appSelectedAccessibility(selection == value)
     }
 }
 

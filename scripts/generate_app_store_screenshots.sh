@@ -16,6 +16,9 @@ SKIP_CAPTURE=0
 CAPTURE_ONLY=0
 CAPTURE_IPHONE=1
 CAPTURE_IPAD=1
+CHROME_ONLY=0
+IPHONE_ONLY_REQUESTED=0
+IPAD_ONLY_REQUESTED=0
 
 usage() {
 	cat <<'USAGE'
@@ -27,6 +30,7 @@ Usage:
 Options:
   --skip-capture          Render final PNGs from existing raw screenshots only.
   --capture-only          Capture raw simulator screenshots without rendering finals.
+  --chrome-only           Capture only the fast chrome-evidence set in one app launch.
   --iphone-only           Capture/render only the iPhone screenshot set.
   --ipad-only             Capture/render only the iPad screenshot set.
   --locale LOCALE         Locale set to generate. Supported: en-US, fr-CA, es-MX.
@@ -41,6 +45,7 @@ Environment overrides:
   IPHONE_DEVICE, IPAD_DEVICE
   SCREENSHOT_IOS_VERSION=26.5   Override the simulator iOS runtime.
   SCREENSHOT_RESET_SIMULATOR=0   Reuse simulator state instead of erasing before capture.
+                                 Chrome-only defaults to reuse; full capture defaults to erase.
   DEVELOPER_DIR                  Optional Xcode developer dir. If unset, the script
                                  auto-detects /Applications/Xcode*.app for capture.
 USAGE
@@ -56,12 +61,19 @@ while [[ $# -gt 0 ]]; do
 		CAPTURE_ONLY=1
 		shift
 		;;
+	--chrome-only)
+		CHROME_ONLY=1
+		CAPTURE_ONLY=1
+		shift
+		;;
 	--iphone-only)
+		IPHONE_ONLY_REQUESTED=1
 		CAPTURE_IPHONE=1
 		CAPTURE_IPAD=0
 		shift
 		;;
 	--ipad-only)
+		IPAD_ONLY_REQUESTED=1
 		CAPTURE_IPHONE=0
 		CAPTURE_IPAD=1
 		shift
@@ -98,6 +110,16 @@ while [[ $# -gt 0 ]]; do
 		;;
 	esac
 done
+
+if [[ "$IPHONE_ONLY_REQUESTED" -eq 1 && "$IPAD_ONLY_REQUESTED" -eq 1 ]]; then
+	echo "--iphone-only and --ipad-only cannot be combined." >&2
+	exit 2
+fi
+
+if [[ "$SKIP_CAPTURE" -eq 1 && "$CAPTURE_ONLY" -eq 1 ]]; then
+	echo "--skip-capture cannot be combined with --capture-only or --chrome-only." >&2
+	exit 2
+fi
 
 require_tool() {
 	if ! command -v "$1" >/dev/null 2>&1; then
@@ -256,7 +278,8 @@ PY
 run_capture() {
 	local device_spec="$1"
 	local device_dir="$2"
-	local test_name="$3"
+	shift 2
+	local test_names=("$@")
 	local device_name="${device_spec%%|*}"
 	local remainder="${device_spec#*|}"
 	local device_udid="${remainder%%|*}"
@@ -264,6 +287,20 @@ run_capture() {
 	local result_bundle="$RESULTS_DIR/$device_dir.xcresult"
 	local raw_final="$OUTPUT_ROOT/$device_dir/raw"
 	local raw_tmp
+	local reset_simulator_default=1
+	local capture_timeout_default=900
+	local test_allowance_default=600
+
+	if [[ "$CHROME_ONLY" -eq 1 ]]; then
+		reset_simulator_default=0
+		capture_timeout_default=180
+		test_allowance_default=120
+	fi
+
+	if [[ "${#test_names[@]}" -eq 0 ]]; then
+		echo "No XCTest selectors were supplied for $device_dir." >&2
+		return 2
+	fi
 
 	rm -rf "$result_bundle"
 	mkdir -p "$raw_final" "$RESULTS_DIR"
@@ -286,22 +323,27 @@ with open(config_path, "w", encoding="utf-8") as handle:
     handle.write("\n")
 PY
 
-	if [[ "${SCREENSHOT_RESET_SIMULATOR:-1}" == "1" ]]; then
+	if [[ "${SCREENSHOT_RESET_SIMULATOR:-$reset_simulator_default}" == "1" ]]; then
 		xcrun simctl shutdown "$device_udid" >/dev/null 2>&1 || true
 		xcrun simctl erase "$device_udid" >/dev/null 2>&1 || true
 	fi
 
 	local capture_status=0
+	local selectors=()
+	local test_name
+	for test_name in "${test_names[@]}"; do
+		selectors+=("-only-testing:CatholicFastingAppUITests/CatholicFastingAppUITests/$test_name")
+	done
 	OS_ACTIVITY_MODE=disable \
-		run_with_timeout "${SCREENSHOT_CAPTURE_TIMEOUT_SECONDS:-900}" xcodebuild test \
+		run_with_timeout "${SCREENSHOT_CAPTURE_TIMEOUT_SECONDS:-$capture_timeout_default}" xcodebuild test \
 		-project "$ROOT_DIR/CatholicFastingApp.xcodeproj" \
 		-scheme CatholicFastingApp \
 		-destination "platform=iOS Simulator,id=$device_udid" \
 		-destination-timeout 120 \
-		-only-testing:"CatholicFastingAppUITests/CatholicFastingAppUITests/$test_name" \
+		"${selectors[@]}" \
 		-parallel-testing-enabled NO \
 		-test-timeouts-enabled YES \
-		-default-test-execution-time-allowance "${SCREENSHOT_TEST_EXECUTION_TIME_ALLOWANCE:-180}" \
+		-default-test-execution-time-allowance "${SCREENSHOT_TEST_EXECUTION_TIME_ALLOWANCE:-$test_allowance_default}" \
 		-resultBundlePath "$result_bundle" || capture_status=$?
 	rm -f "$SCREENSHOT_CONFIG_PATH"
 	if [[ "$capture_status" -ne 0 ]]; then
@@ -310,8 +352,27 @@ PY
 		return "$capture_status"
 	fi
 
+	local expected_shots=(
+		06-chrome-fast-scrolled
+		07-chrome-calendar-scrolled
+		08-chrome-more-premium-scrolled
+	)
+	if [[ "$CHROME_ONLY" -eq 0 ]]; then
+		expected_shots=(
+			01-today
+			02-track-fast
+			03-privacy
+			04-fasting-days
+			05-premium
+			"${expected_shots[@]}"
+		)
+	fi
+	if [[ "$device_dir" == "iphone-17-pro-max" ]]; then
+		expected_shots+=(09-chrome-premium-planner-scrolled)
+	fi
+
 	local shot
-	for shot in 01-today 02-track-fast 03-privacy 04-fasting-days 05-premium; do
+	for shot in "${expected_shots[@]}"; do
 		if [[ ! -f "$raw_tmp/$shot.png" ]]; then
 			rm -rf "$raw_tmp"
 			echo "Capture did not produce expected raw screenshot: $shot.png" >&2
@@ -320,7 +381,9 @@ PY
 		fi
 	done
 
-	rm -f "$raw_final"/[0-9][0-9]-*.png
+	for shot in "${expected_shots[@]}"; do
+		rm -f "$raw_final/$shot.png"
+	done
 	mv "$raw_tmp"/*.png "$raw_final/"
 	rmdir "$raw_tmp"
 }
@@ -548,28 +611,37 @@ render_device_set() {
 
 configure_locale
 
-require_tool magick
-
-FONT_BOLD="${APP_STORE_SCREENSHOT_FONT_BOLD:-$(choose_file "/Library/Fonts/SF-Pro-Display-Bold.otf" "/System/Library/Fonts/Supplemental/Arial Bold.ttf")}"
-FONT_SEMIBOLD="${APP_STORE_SCREENSHOT_FONT_SEMIBOLD:-$(choose_file "/Library/Fonts/SF-Pro-Display-Semibold.otf" "/System/Library/Fonts/Supplemental/Arial Bold.ttf")}"
-
 if [[ "$SKIP_CAPTURE" -eq 0 ]]; then
+	require_tool python3
 	require_tool xcrun
 	require_tool xcodebuild
 	configure_developer_dir_for_capture
 
-	IPHONE_DEVICE="$(choose_simulator "$IPHONE_DEVICE" "iPhone 17 Pro Max" "iPhone 16 Pro Max" "iPhone 15 Pro Max")"
-	IPAD_DEVICE="$(choose_simulator "$IPAD_DEVICE" "iPad Pro 13-inch (M5)" "iPad Pro 13-inch (M4)" "iPad Air 13-inch (M4)")"
-
 	if [[ "$CAPTURE_IPHONE" -eq 1 ]]; then
-		run_capture "$IPHONE_DEVICE" "iphone-17-pro-max" "testIPhoneAppStoreScreenshots"
+		IPHONE_DEVICE="$(choose_simulator "$IPHONE_DEVICE" "iPhone 17 Pro Max" "iPhone 16 Pro Max" "iPhone 15 Pro Max")"
+		if [[ "$CHROME_ONLY" -eq 1 ]]; then
+			run_capture "$IPHONE_DEVICE" "iphone-17-pro-max" "testIPhoneChromeScreenshots"
+		else
+			run_capture "$IPHONE_DEVICE" "iphone-17-pro-max" \
+				"testIPhoneAppStoreScreenshots" "testIPhoneChromeScreenshots"
+		fi
 	fi
 	if [[ "$CAPTURE_IPAD" -eq 1 ]]; then
-		run_capture "$IPAD_DEVICE" "ipad-pro-13" "testIPadAppStoreScreenshots"
+		IPAD_DEVICE="$(choose_simulator "$IPAD_DEVICE" "iPad Pro 13-inch (M5)" "iPad Pro 13-inch (M4)" "iPad Air 13-inch (M4)")"
+		if [[ "$CHROME_ONLY" -eq 1 ]]; then
+			run_capture "$IPAD_DEVICE" "ipad-pro-13" "testIPadChromeScreenshots"
+		else
+			run_capture "$IPAD_DEVICE" "ipad-pro-13" \
+				"testIPadAppStoreScreenshots" "testIPadChromeScreenshots"
+		fi
 	fi
 fi
 
 if [[ "$CAPTURE_ONLY" -eq 0 ]]; then
+	require_tool magick
+	FONT_BOLD="${APP_STORE_SCREENSHOT_FONT_BOLD:-$(choose_file "/Library/Fonts/SF-Pro-Display-Bold.otf" "/System/Library/Fonts/Supplemental/Arial Bold.ttf")}"
+	FONT_SEMIBOLD="${APP_STORE_SCREENSHOT_FONT_SEMIBOLD:-$(choose_file "/Library/Fonts/SF-Pro-Display-Semibold.otf" "/System/Library/Fonts/Supplemental/Arial Bold.ttf")}"
+
 	if [[ "$CAPTURE_IPHONE" -eq 1 ]]; then
 		render_device_set "iphone-17-pro-max" compose_phone
 	fi

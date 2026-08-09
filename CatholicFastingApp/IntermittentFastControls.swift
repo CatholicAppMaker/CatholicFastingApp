@@ -255,7 +255,12 @@ struct IntermittentFastPrimaryActions: View {
         action: @escaping () -> Void) -> some View
     {
         Button(action: action) {
-            actionLabel(descriptor)
+            if isActive {
+                actionLabel(descriptor)
+            } else {
+                actionLabel(descriptor)
+                    .foregroundStyle(.white)
+            }
         }
         .appPrimaryButtonStyle(legacyTint: isActive ? .green : CatholicTheme.action)
         .font(.headline.weight(.semibold))

@@ -11,6 +11,18 @@ import UIKit
 
 #if canImport(StoreKit)
 @MainActor
+protocol MonetizationPurchaseClient {
+    func purchase(_ product: Product) async throws -> Product.PurchaseResult
+}
+
+@MainActor
+struct LiveMonetizationPurchaseClient: MonetizationPurchaseClient {
+    func purchase(_ product: Product) async throws -> Product.PurchaseResult {
+        try await product.purchase()
+    }
+}
+
+@MainActor
 final class MonetizationStore: ObservableObject {
     static let premiumCatalog = SubscriptionOfferCatalog.catholicFasting
     static let premiumMonthlyID = "com.kevpierce.catholicfasting.premium.monthly.v3"
@@ -33,12 +45,14 @@ final class MonetizationStore: ObservableObject {
     @Published private(set) var catalogLoadState: PremiumCatalogLoadState = .idle
 
     private static let debugPremiumUnlockedKey = "debug_simulator_premium_unlocked"
+    private let purchaseClient: any MonetizationPurchaseClient
     private var updatesTask: Task<Void, Never>?
     private var hasStartedTransactionMonitoring = false
 
-    init() {
+    init(purchaseClient: (any MonetizationPurchaseClient)? = nil) {
+        self.purchaseClient = purchaseClient ?? LiveMonetizationPurchaseClient()
         if Self.usesLocalDebugPremiumOverride {
-            premiumUnlocked = UserDefaults.standard.bool(forKey: Self.debugPremiumUnlockedKey)
+            premiumUnlocked = Self.localDebugPremiumUnlocked
             statusMessage = premiumUnlocked
                 ? localized(
                     "premium.store.debug.unlocked",
@@ -53,7 +67,7 @@ final class MonetizationStore: ObservableObject {
 
     func refreshCatalogAndEntitlements() async {
         if Self.usesLocalDebugPremiumOverride {
-            premiumUnlocked = UserDefaults.standard.bool(forKey: Self.debugPremiumUnlockedKey)
+            premiumUnlocked = Self.localDebugPremiumUnlocked
             premiumProducts = []
             tipProducts = []
             if Self.uiTestCatalogState == .offline {
@@ -148,7 +162,7 @@ final class MonetizationStore: ObservableObject {
         defer { isPurchasing = false }
 
         do {
-            let result = try await product.purchase()
+            let result = try await purchaseClient.purchase(product)
             switch result {
             case .success(let verification):
                 guard case .verified(let transaction) = verification else {
@@ -192,7 +206,7 @@ final class MonetizationStore: ObservableObject {
 
     func restorePurchases() async {
         if Self.usesLocalDebugPremiumOverride {
-            premiumUnlocked = UserDefaults.standard.bool(forKey: Self.debugPremiumUnlockedKey)
+            premiumUnlocked = Self.localDebugPremiumUnlocked
             await refreshSubscriptionHealth()
             statusMessage =
                 premiumUnlocked
@@ -284,7 +298,7 @@ final class MonetizationStore: ObservableObject {
 
     private func refreshEntitlements() async {
         if Self.usesLocalDebugPremiumOverride {
-            premiumUnlocked = UserDefaults.standard.bool(forKey: Self.debugPremiumUnlockedKey)
+            premiumUnlocked = Self.localDebugPremiumUnlocked
             return
         }
 
@@ -393,16 +407,28 @@ final class MonetizationStore: ObservableObject {
         }
     }
 
-    private static var usesSimulatorDebugPurchases: Bool {
-        #if DEBUG && targetEnvironment(simulator)
-        true
-        #else
-        false
-        #endif
+    private static var usesLocalDebugPremiumOverride: Bool {
+        ProcessInfo.processInfo.environment["UITEST_MODE"] == "1"
+            || explicitPremiumUnlockOverride != nil
     }
 
-    private static var usesLocalDebugPremiumOverride: Bool {
-        usesSimulatorDebugPurchases || ProcessInfo.processInfo.environment["UITEST_MODE"] == "1"
+    private static var localDebugPremiumUnlocked: Bool {
+        explicitPremiumUnlockOverride
+            ?? UserDefaults.standard.bool(forKey: debugPremiumUnlockedKey)
+    }
+
+    private static var explicitPremiumUnlockOverride: Bool? {
+        guard let rawValue = ProcessInfo.processInfo.environment["UITEST_PREMIUM_UNLOCKED"] else {
+            return nil
+        }
+        switch rawValue.lowercased() {
+        case "1", "true", "yes":
+            return true
+        case "0", "false", "no":
+            return false
+        default:
+            return nil
+        }
     }
 
     private static var uiTestCatalogState: PremiumCatalogLoadState? {

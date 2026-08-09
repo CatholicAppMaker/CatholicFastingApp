@@ -5,5 +5,6 @@ import WidgetKit
 struct CatholicFastingWidgetBundle: WidgetBundle {
     var body: some Widget {
         CatholicFastingWidget()
+        IntermittentFastActivityWidget()
     }
 }

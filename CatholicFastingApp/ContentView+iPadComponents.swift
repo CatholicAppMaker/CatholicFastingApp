@@ -32,9 +32,12 @@ struct IPadSidebarRow: View {
             Text(title)
                 .font(.body.weight(isSelected ? .semibold : .regular))
                 .foregroundStyle(isSelected ? Color.white : Color.primary)
-                .lineLimit(1)
+                .lineLimit(2)
+                .fixedSize(horizontal: false, vertical: true)
+                .layoutPriority(1)
         }
         .padding(.horizontal, 12)
+        .padding(.vertical, 6)
         .frame(minHeight: 48)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background {
@@ -119,7 +122,7 @@ struct IPadSummaryMetricCard: View {
             if let subtitle {
                 Text(subtitle)
                     .appSupportingTextStyle()
-                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

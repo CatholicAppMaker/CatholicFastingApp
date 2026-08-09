@@ -12,29 +12,54 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install Swift source-quality tools
         run: brew install swiftformat swiftlint
-      - name: Verify formatting
-        run: swiftformat . --lint
-      - name: Verify lint
-        run: swiftlint lint --config .swiftlint.yml --strict --no-cache
-
-  swift-package:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Swift test
-        run: swift test -Xswiftc -warnings-as-errors
+      - name: Run lightweight quality gate
+        run: |
+          chmod +x scripts/quality-gate.sh
+          ./scripts/quality-gate.sh
 
   ios-ui:
     runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [release-phone, release-ipad]
     steps:
       - uses: actions/checkout@v4
-      - name: Run deterministic iOS UI tests
+      - name: Run deterministic iOS ${{ matrix.suite }} tests
         run: |
           chmod +x scripts/run_ios_tests.sh
-          ./scripts/run_ios_tests.sh
+          TEST_SUITE=${{ matrix.suite }} ./scripts/run_ios_tests.sh
       - name: Upload xcresult bundles
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ios-xcresults
-          path: /tmp/CatholicFastingAppTestResults/*.xcresult
+          name: ios-${{ matrix.suite }}-xcresults
+          path: /tmp/CatholicFastingAppTestResults/ui-tests-${{ matrix.suite }}-*.xcresult
+
+  ios-storekit:
+    # Xcode 26.3+ currently regresses CLI-driven SKTestSession configuration
+    # (SKInternalErrorDomain Code=3). Keep the deterministic transaction lane
+    # on the last unaffected Xcode until Apple ships a verified fix.
+    runs-on: macos-26
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify pinned StoreKit toolchain
+        run: |
+          test -x "$DEVELOPER_DIR/usr/bin/xcodebuild"
+          test "$(xcodebuild -version | sed -n '1p')" = "Xcode 26.2"
+      - name: Run rendered StoreKit catalog and price UI test
+        run: |
+          chmod +x scripts/run_ios_tests.sh
+          TEST_SUITE=storekit-ui ./scripts/run_ios_tests.sh
+      - name: Run local StoreKit same-process transaction tests
+        run: |
+          chmod +x scripts/run_ios_tests.sh
+          TEST_SUITE=storekit ./scripts/run_ios_tests.sh
+      - name: Upload StoreKit xcresult bundles
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-storekit-xcresults
+          path: /tmp/CatholicFastingAppTestResults/ui-tests-storekit-*.xcresult

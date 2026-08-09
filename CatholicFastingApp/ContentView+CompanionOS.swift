@@ -59,6 +59,7 @@ extension ContentView {
                     companionLiveStateCard
                     SacredEditorialRule()
                     companionIPadFormationCard
+                    companionIPadPremiumToolsCard
                 }
             } else {
                 HStack(alignment: .top, spacing: 24) {
@@ -77,6 +78,7 @@ extension ContentView {
                         companionLiveStateCard
                         SacredEditorialRule()
                         companionIPadFormationCard
+                        companionIPadPremiumToolsCard
                     }
                     .frame(minWidth: 310, idealWidth: 340, maxWidth: 380, alignment: .top)
                 }
@@ -234,9 +236,7 @@ extension ContentView {
                 ? SupportPremiumSurface.tools.rawValue
                 : SupportPremiumSurface.upgrade.rawValue
         case .journal:
-            navigateToMoreDestination(.supportAndPremium)
-            supportPremiumSurfaceRaw = SupportPremiumSurface.tools.rawValue
-            navigationState.selectedPremiumToolDestination = .journal
+            navigateToPremiumTool(.journal)
         }
     }
 

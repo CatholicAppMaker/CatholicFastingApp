@@ -25,13 +25,18 @@ extension CatholicFastingAppUITests {
     }
 
     func testIPhoneMoreAndPremiumDeepLinkAliasesOpenExpectedDestinations() {
-        for alias in ["more", "settings"] {
+        let destinations: [(alias: String, marker: String)] = [
+            ("more", "surface.more.ready"),
+            ("settings", "settings.quick.language"),
+        ]
+
+        for destination in destinations {
+            let alias = destination.alias
             let app = makeApp(initialDeepLink: "catholicfasting://\(alias)")
             app.launch()
             XCTAssertTrue(
-                elementByIdentifier("settings.quick.language", in: app)
-                    .waitForExistence(timeout: 5),
-                "Deep-link alias \(alias) did not open Setup & Reminders")
+                elementByIdentifier(destination.marker, in: app).waitForExistence(timeout: 5),
+                "Deep-link alias \(alias) did not open \(destination.marker)")
             app.terminate()
         }
 
@@ -52,6 +57,16 @@ extension CatholicFastingAppUITests {
 
         XCTAssertTrue(app.otherElements["surface.today.ready"].waitForExistence(timeout: 5))
         XCTAssertTrue(elementByIdentifier("companion.dashboard", in: app).waitForExistence(timeout: 5))
+    }
+
+    func testIPhonePremiumCompanionJournalActionOpensJournalDirectly() {
+        let app = makeApp(premiumUnlocked: true)
+        app.launchEnvironment["UITEST_COMPANION_ACTION"] = "journal"
+        app.launch()
+
+        XCTAssertTrue(app.navigationBars["Journal"].waitForExistence(timeout: 5))
+        XCTAssertTrue(elementByIdentifier("premium.reflection", in: app).waitForExistence(timeout: 5))
+        XCTAssertFalse(elementByIdentifier("premium.surface_picker", in: app).exists)
     }
 
     func testIPadCanonicalDeepLinksOpenExpectedWorkspaces() {

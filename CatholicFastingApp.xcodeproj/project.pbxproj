@@ -147,6 +147,9 @@
 		A000000000000000000000C5 /* CatholicFastingAppUITests+OnboardingSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D5 /* CatholicFastingAppUITests+OnboardingSetup.swift */; };
 		A000000000000000000000C6 /* CatholicFastingAppUITests+TodayCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D6 /* CatholicFastingAppUITests+TodayCalendar.swift */; };
 		A000000000000000000000C7 /* CatholicFastingAppUITests+Premium.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D7 /* CatholicFastingAppUITests+Premium.swift */; };
+		F6000000000000000000000F /* CatholicFastingAppUITests+CompanionPremium.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60000000000000000000010 /* CatholicFastingAppUITests+CompanionPremium.swift */; };
+		F60000000000000000000001 /* MonetizationStoreStoreKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60000000000000000000003 /* MonetizationStoreStoreKitTests.swift */; };
+		F60000000000000000000002 /* Premium.storekit in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000098 /* Premium.storekit */; };
 		A000000000000000000000C8 /* CatholicFastingAppUITests+TrackFast.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D8 /* CatholicFastingAppUITests+TrackFast.swift */; };
 		A000000000000000000000C9 /* CatholicFastingAppUITests+IPadNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D9 /* CatholicFastingAppUITests+IPadNavigation.swift */; };
 		A00000000000000000000150 /* CatholicFastingAppUITests+AppStoreScreenshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000151 /* CatholicFastingAppUITests+AppStoreScreenshots.swift */; };
@@ -170,6 +173,7 @@
 		A00000000000000000000104 /* PremiumSubscriptionHealthEvaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000105 /* PremiumSubscriptionHealthEvaluator.swift */; };
 		A00000000000000000000106 /* IntermittentFastSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000107 /* IntermittentFastSession.swift */; };
 		A00000000000000000000108 /* IntermittentFastLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000109 /* IntermittentFastLiveActivity.swift */; };
+		A000000000000000000001B0 /* IntermittentFastActivityWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000001B1 /* IntermittentFastActivityWidget.swift */; };
 		A0000000000000000000010A /* MonetizationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000010B /* MonetizationStore.swift */; };
 		A0000000000000000000010C /* AppTipsAndShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000010D /* AppTipsAndShortcuts.swift */; };
 		A0000000000000000000010E /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000010F /* OnboardingView.swift */; };
@@ -242,6 +246,13 @@
 			remoteInfo = CatholicFastingMacWidget;
 		};
 		A0000000000000000000002B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A00000000000000000000007 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A00000000000000000000006;
+			remoteInfo = CatholicFastingApp;
+		};
+		F60000000000000000000005 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A00000000000000000000007 /* Project object */;
 			proxyType = 1;
@@ -364,6 +375,8 @@
 		A00000000000000000000021 /* CatholicFastingAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatholicFastingAppUITests.swift; sourceTree = "<group>"; };
 		B6000000000000000000000C /* CatholicFastingAppUITests+AccessibilityPerformance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CatholicFastingAppUITests+AccessibilityPerformance.swift"; sourceTree = "<group>"; };
 		A00000000000000000000022 /* CatholicFastingAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CatholicFastingAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F60000000000000000000003 /* MonetizationStoreStoreKitTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MonetizationStoreStoreKitTests.swift; sourceTree = "<group>"; };
+		F60000000000000000000004 /* CatholicFastingAppStoreKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CatholicFastingAppStoreKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A00000000000000000000023 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A00000000000000000000031 /* RuleDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuleDomain.swift; sourceTree = "<group>"; };
 		A00000000000000000000033 /* ObservanceCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservanceCalculator.swift; sourceTree = "<group>"; };
@@ -417,6 +430,7 @@
 		A00000000000000000000094 /* ContentView+RootShell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+RootShell.swift"; sourceTree = "<group>"; };
 		A0000000000000000000016F /* PhoneShellComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneShellComponents.swift; sourceTree = "<group>"; };
 		A00000000000000000000098 /* Premium.storekit */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Premium.storekit; sourceTree = "<group>"; };
+		A00000000000000000000190 /* Version.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Version.xcconfig; sourceTree = "<group>"; };
 		A0000000000000000000009A /* ContentView+PremiumCompanionSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+PremiumCompanionSections.swift"; sourceTree = "<group>"; };
 		A00000000000000000000171 /* PremiumCompanionViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumCompanionViews.swift; sourceTree = "<group>"; };
 		A0000000000000000000009B /* GrowthContracts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthContracts.swift; sourceTree = "<group>"; };
@@ -444,6 +458,7 @@
 		A000000000000000000000D5 /* CatholicFastingAppUITests+OnboardingSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CatholicFastingAppUITests+OnboardingSetup.swift"; sourceTree = "<group>"; };
 		A000000000000000000000D6 /* CatholicFastingAppUITests+TodayCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CatholicFastingAppUITests+TodayCalendar.swift"; sourceTree = "<group>"; };
 		A000000000000000000000D7 /* CatholicFastingAppUITests+Premium.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CatholicFastingAppUITests+Premium.swift"; sourceTree = "<group>"; };
+		F60000000000000000000010 /* CatholicFastingAppUITests+CompanionPremium.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CatholicFastingAppUITests+CompanionPremium.swift"; sourceTree = "<group>"; };
 		A000000000000000000000D8 /* CatholicFastingAppUITests+TrackFast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CatholicFastingAppUITests+TrackFast.swift"; sourceTree = "<group>"; };
 		A000000000000000000000D9 /* CatholicFastingAppUITests+IPadNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CatholicFastingAppUITests+IPadNavigation.swift"; sourceTree = "<group>"; };
 		A00000000000000000000151 /* CatholicFastingAppUITests+AppStoreScreenshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CatholicFastingAppUITests+AppStoreScreenshots.swift"; sourceTree = "<group>"; };
@@ -467,6 +482,7 @@
 		A00000000000000000000105 /* PremiumSubscriptionHealthEvaluator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumSubscriptionHealthEvaluator.swift; sourceTree = "<group>"; };
 		A00000000000000000000107 /* IntermittentFastSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntermittentFastSession.swift; sourceTree = "<group>"; };
 		A00000000000000000000109 /* IntermittentFastLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntermittentFastLiveActivity.swift; sourceTree = "<group>"; };
+		A000000000000000000001B1 /* IntermittentFastActivityWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntermittentFastActivityWidget.swift; sourceTree = "<group>"; };
 		A0000000000000000000010B /* MonetizationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonetizationStore.swift; sourceTree = "<group>"; };
 		A0000000000000000000010D /* AppTipsAndShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTipsAndShortcuts.swift; sourceTree = "<group>"; };
 		A0000000000000000000010F /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -562,6 +578,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F60000000000000000000009 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A0000000000000000000007C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -643,6 +666,7 @@
 		962E391862E7BD7C36E11534 /* Configurations */ = {
 			isa = PBXGroup;
 			children = (
+				A00000000000000000000190 /* Version.xcconfig */,
 				C54FE4736FBE5560B0CCD947 /* macOS */,
 			);
 			path = Configurations;
@@ -670,6 +694,7 @@
 				3EBD5D8C3BBAAC15BA999471 /* Frameworks */,
 				A8390C23115CC1358837F634 /* CatholicFastingMacAppUITests */,
 				9F4AF320CDE1B34F50354A8D /* CatholicFastingMacAppTests */,
+				F60000000000000000000007 /* CatholicFastingAppStoreKitTests */,
 				962E391862E7BD7C36E11534 /* Configurations */,
 			);
 			sourceTree = "<group>";
@@ -684,6 +709,7 @@
 				5F2D9B41CB589ED66F340D15 /* CatholicFastingMacWidget.appex */,
 				D167FE87A601C695C753FB1C /* CatholicFastingMacAppUITests.xctest */,
 				903C9E4D0CF158E49C149A51 /* CatholicFastingMacAppTests.xctest */,
+				F60000000000000000000004 /* CatholicFastingAppStoreKitTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -827,6 +853,7 @@
 				A000000000000000000000D5 /* CatholicFastingAppUITests+OnboardingSetup.swift */,
 				A000000000000000000000D6 /* CatholicFastingAppUITests+TodayCalendar.swift */,
 				A000000000000000000000D7 /* CatholicFastingAppUITests+Premium.swift */,
+				F60000000000000000000010 /* CatholicFastingAppUITests+CompanionPremium.swift */,
 				A000000000000000000000D8 /* CatholicFastingAppUITests+TrackFast.swift */,
 				A000000000000000000000D9 /* CatholicFastingAppUITests+IPadNavigation.swift */,
 				A00000000000000000000151 /* CatholicFastingAppUITests+AppStoreScreenshots.swift */,
@@ -835,11 +862,21 @@
 			path = CatholicFastingAppUITests;
 			sourceTree = "<group>";
 		};
+		F60000000000000000000007 /* CatholicFastingAppStoreKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				F60000000000000000000003 /* MonetizationStoreStoreKitTests.swift */,
+			);
+			name = CatholicFastingAppStoreKitTests;
+			path = CatholicFastingAppStoreKitTests;
+			sourceTree = SOURCE_ROOT;
+		};
 		A00000000000000000000084 /* CatholicFastingWidget */ = {
 			isa = PBXGroup;
 			children = (
 				A00000000000000000000071 /* CatholicFastingWidgetBundle.swift */,
 				A00000000000000000000072 /* CatholicFastingWidget.swift */,
+				A000000000000000000001B1 /* IntermittentFastActivityWidget.swift */,
 				B60000000000000000000005 /* Localizable.strings */,
 				A00000000000000000000073 /* Info.plist */,
 				A00000000000000000000074 /* CatholicFastingWidget.entitlements */,
@@ -1027,6 +1064,24 @@
 			productReference = A00000000000000000000022 /* CatholicFastingAppUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		F6000000000000000000000B /* CatholicFastingAppStoreKitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F6000000000000000000000C /* Build configuration list for PBXNativeTarget "CatholicFastingAppStoreKitTests" */;
+			buildPhases = (
+				F60000000000000000000008 /* Sources */,
+				F60000000000000000000009 /* Frameworks */,
+				F6000000000000000000000A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F60000000000000000000006 /* PBXTargetDependency */,
+			);
+			name = CatholicFastingAppStoreKitTests;
+			productName = CatholicFastingAppStoreKitTests;
+			productReference = F60000000000000000000004 /* CatholicFastingAppStoreKitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		A0000000000000000000007E /* CatholicFastingWidget */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A0000000000000000000007F /* Build configuration list for PBXNativeTarget "CatholicFastingWidget" */;
@@ -1108,6 +1163,10 @@
 						CreatedOnToolsVersion = 26.2;
 						TestTargetID = A00000000000000000000006;
 					};
+					F6000000000000000000000B = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = A00000000000000000000006;
+					};
 					A0000000000000000000007E = {
 						CreatedOnToolsVersion = 26.2;
 						SystemCapabilities = {
@@ -1144,6 +1203,7 @@
 				599AB41AB63606815F5F527D /* CatholicFastingMacWidget */,
 				AFC5134474C00A50CD94DBEC /* CatholicFastingMacAppUITests */,
 				4FB525DD1FBF7F76BC70D647 /* CatholicFastingMacAppTests */,
+				F6000000000000000000000B /* CatholicFastingAppStoreKitTests */,
 			);
 		};
 /* End PBXProject section */
@@ -1182,6 +1242,14 @@
 			files = (
 				B60000000000000000000004 /* Localizable.strings in Resources */,
 				C4F200000000000000000003 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F6000000000000000000000A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F60000000000000000000002 /* Premium.storekit in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1423,9 +1491,18 @@
 				A000000000000000000000C5 /* CatholicFastingAppUITests+OnboardingSetup.swift in Sources */,
 				A000000000000000000000C6 /* CatholicFastingAppUITests+TodayCalendar.swift in Sources */,
 				A000000000000000000000C7 /* CatholicFastingAppUITests+Premium.swift in Sources */,
+				F6000000000000000000000F /* CatholicFastingAppUITests+CompanionPremium.swift in Sources */,
 				A000000000000000000000C8 /* CatholicFastingAppUITests+TrackFast.swift in Sources */,
 				A000000000000000000000C9 /* CatholicFastingAppUITests+IPadNavigation.swift in Sources */,
 				A00000000000000000000150 /* CatholicFastingAppUITests+AppStoreScreenshots.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F60000000000000000000008 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F60000000000000000000001 /* MonetizationStoreStoreKitTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1435,6 +1512,7 @@
 			files = (
 				A00000000000000000000076 /* CatholicFastingWidgetBundle.swift in Sources */,
 				A00000000000000000000077 /* CatholicFastingWidget.swift in Sources */,
+				A000000000000000000001B0 /* IntermittentFastActivityWidget.swift in Sources */,
 				B60000000000000000000002 /* WidgetSnapshotContract.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1467,6 +1545,11 @@
 			isa = PBXTargetDependency;
 			target = A00000000000000000000006 /* CatholicFastingApp */;
 			targetProxy = A0000000000000000000002B /* PBXContainerItemProxy */;
+		};
+		F60000000000000000000006 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A00000000000000000000006 /* CatholicFastingApp */;
+			targetProxy = F60000000000000000000005 /* PBXContainerItemProxy */;
 		};
 		A00000000000000000000083 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1573,6 +1656,7 @@
 		};
 		A00000000000000000000016 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A00000000000000000000190 /* Version.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1634,6 +1718,7 @@
 		};
 		A00000000000000000000017 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A00000000000000000000190 /* Version.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1688,6 +1773,7 @@
 		};
 		A00000000000000000000018 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A00000000000000000000190 /* Version.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1695,7 +1781,6 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = CatholicFastingApp/CatholicFastingApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1713,7 +1798,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
@@ -1725,6 +1809,7 @@
 		};
 		A00000000000000000000019 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A00000000000000000000190 /* Version.xcconfig */;
 			buildSettings = {
 				APP_SHORTCUTS_ENABLE_FLEXIBLE_MATCHING = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1733,7 +1818,6 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = CatholicFastingApp/CatholicFastingApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_PREVIEWS = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1751,7 +1835,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
@@ -1763,9 +1846,9 @@
 		};
 		A00000000000000000000029 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A00000000000000000000190 /* Version.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -1776,7 +1859,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 6.0;
+				OTHER_SWIFT_FLAGS = "$(inherited) -Xcc -Wno-error=deprecated-declarations";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingAppUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
@@ -1788,9 +1871,9 @@
 		};
 		A0000000000000000000002A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A00000000000000000000190 /* Version.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -1801,7 +1884,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 6.0;
+				OTHER_SWIFT_FLAGS = "$(inherited) -Xcc -Wno-error=deprecated-declarations";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingAppUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
@@ -1811,13 +1894,63 @@
 			};
 			name = Release;
 		};
+		F6000000000000000000000D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A00000000000000000000190 /* Version.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 22L6MB4Z6V;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -Xcc -Wno-error=deprecated-declarations";
+				PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingAppStoreKitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CatholicFastingApp.app/CatholicFastingApp";
+			};
+			name = Debug;
+		};
+		F6000000000000000000000E /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A00000000000000000000190 /* Version.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 22L6MB4Z6V;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -Xcc -Wno-error=deprecated-declarations";
+				PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingAppStoreKitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CatholicFastingApp.app/CatholicFastingApp";
+			};
+			name = Release;
+		};
 		A00000000000000000000080 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A00000000000000000000190 /* Version.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = CatholicFastingWidget/CatholicFastingWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -1828,7 +1961,6 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingApp.CatholicFastingWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1840,11 +1972,11 @@
 		};
 		A00000000000000000000081 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A00000000000000000000190 /* Version.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = CatholicFastingWidget/CatholicFastingWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 22L6MB4Z6V;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -1855,7 +1987,6 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kevpierce.CatholicFastingApp.CatholicFastingWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2032,6 +2163,15 @@
 			buildConfigurations = (
 				A00000000000000000000029 /* Debug */,
 				A0000000000000000000002A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F6000000000000000000000C /* Build configuration list for PBXNativeTarget "CatholicFastingAppStoreKitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F6000000000000000000000D /* Debug */,
+				F6000000000000000000000E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

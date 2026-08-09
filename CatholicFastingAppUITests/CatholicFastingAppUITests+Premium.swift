@@ -1,7 +1,28 @@
 import Foundation
 import XCTest
 
+private let premiumMonthlyProductID = "com.kevpierce.catholicfasting.premium.monthly.v3"
+private let premiumYearlyProductID = "com.kevpierce.catholicfasting.premium.yearly.v3"
+
+private struct PremiumToolRouteExpectation {
+    let rawValue: String
+    let contentID: String
+    let title: String
+}
+
 extension CatholicFastingAppUITests {
+    func testStoreKitCatalogLoadsMonthlyAndYearlyPrices() {
+        let app = launchStoreKitPremiumScreen()
+        assertStoreKitOffer(
+            productID: premiumMonthlyProductID,
+            expectedPrice: "$3.99",
+            in: app)
+        assertStoreKitOffer(
+            productID: premiumYearlyProductID,
+            expectedPrice: "$19.99",
+            in: app)
+    }
+
     func testIPhonePremiumLockedToolsAndAccountActionsRemainAvailable() {
         let app = makeApp()
         app.launch()
@@ -68,6 +89,47 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(scrollToElement(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Next step:")).firstMatch, in: app))
         XCTAssertTrue(scrollToElement(app.buttons["premium.restore"].firstMatch, in: app))
         XCTAssertTrue(scrollToElement(app.buttons["premium.manage"].firstMatch, in: app))
+    }
+
+    func testIPhonePremiumToolsOpenAllDestinations() {
+        let app = makeApp(premiumUnlocked: true)
+        app.launch()
+        ensureOnHomeScreen(app)
+        openMoreDestination("Support & Premium", in: app)
+
+        let toolsSegment = app.buttons["Premium Tools"].firstMatch
+        XCTAssertTrue(toolsSegment.waitForExistence(timeout: 4))
+        toolsSegment.tap()
+
+        let routes = [
+            PremiumToolRouteExpectation(rawValue: "planner", contentID: "premium.planner", title: "Planner"),
+            PremiumToolRouteExpectation(rawValue: "reminders", contentID: "premium.reminders", title: "Reminders"),
+            PremiumToolRouteExpectation(rawValue: "analytics", contentID: "premium.analytics", title: "Analytics"),
+            PremiumToolRouteExpectation(rawValue: "journal", contentID: "premium.reflection", title: "Journal"),
+            PremiumToolRouteExpectation(rawValue: "export", contentID: "premium.export_summary", title: "Export"),
+        ]
+
+        for route in routes {
+            let row = elementByIdentifier("premium.tool.\(route.rawValue)", in: app)
+            XCTAssertTrue(scrollToElement(row, in: app), "Unable to find Premium tool \(route.title)")
+            row.tap()
+
+            XCTAssertTrue(
+                elementByIdentifier(route.contentID, in: app).waitForExistence(timeout: 4),
+                "Premium tool \(route.title) did not show its content")
+            XCTAssertTrue(
+                app.navigationBars[route.title].waitForExistence(timeout: 4),
+                "Premium tool \(route.title) did not open its destination")
+
+            let backButton = app.navigationBars.buttons.firstMatch
+            XCTAssertTrue(backButton.waitForExistence(timeout: 3))
+            backButton.tap()
+            XCTAssertTrue(
+                elementByIdentifier("premium.surface_picker", in: app).waitForExistence(timeout: 4),
+                "Back did not return to Premium Tools after \(route.title)")
+        }
+
+        returnToMoreHome(in: app)
     }
 
     func testIPhonePremiumSpanishShowsLocalizedJourneyAndSupportCopy() {
@@ -158,6 +220,29 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(recovery.label.localizedCaseInsensitiveContains("current access"))
     }
 
+    func testIPhonePremiumOfflineStatePreservesAnExistingEntitlement() {
+        let app = makeApp(premiumUnlocked: true, premiumCatalogState: "offline")
+        app.launch()
+        ensureOnHomeScreen(app)
+        openMoreDestination("Support & Premium", in: app)
+
+        XCTAssertTrue(
+            app.buttons["premium.open_tools"].firstMatch.waitForExistence(timeout: 4),
+            "An offline catalog refresh hid an existing Premium entitlement")
+        let status = elementByIdentifier("premium.status", in: app)
+        let premiumList = app.collectionViews.firstMatch
+        XCTAssertTrue(premiumList.waitForExistence(timeout: 4))
+        for _ in 0 ..< 4 where !status.exists {
+            premiumList.swipeUp()
+        }
+        XCTAssertTrue(status.waitForExistence(timeout: 4))
+        XCTAssertTrue(
+            waitUntil(timeout: 4) {
+                status.exists && status.label.localizedCaseInsensitiveContains("current access")
+            },
+            "The offline state did not confirm that the existing Premium access remains available")
+    }
+
     func testIPadPremiumUnavailableStateOffersCatalogRetry() {
         let app = makeApp()
         app.launch()
@@ -167,5 +252,29 @@ extension CatholicFastingAppUITests {
         let retry = app.buttons["premium.catalog.retry"].firstMatch
         XCTAssertTrue(scrollToElement(retry, in: app))
         XCTAssertTrue(retry.isHittable)
+    }
+}
+
+private extension CatholicFastingAppUITests {
+    func launchStoreKitPremiumScreen() -> XCUIApplication {
+        let app = makeApp(includeUITestEnvironment: false)
+        app.launch()
+        ensureOnHomeScreen(app)
+        openMoreDestination("Support & Premium", in: app)
+        return app
+    }
+
+    func assertStoreKitOffer(
+        productID: String,
+        expectedPrice: String,
+        in app: XCUIApplication)
+    {
+        let offer = elementByIdentifier("premium.offer.\(productID)", in: app)
+        XCTAssertTrue(scrollToElement(offer, in: app), "StoreKit did not load \(productID)")
+        let button = app.buttons["premium.offer.unlock.\(productID)"].firstMatch
+        XCTAssertTrue(scrollToElement(button, in: app), "StoreKit did not expose \(productID)")
+        XCTAssertTrue(
+            button.label.contains(expectedPrice),
+            "Expected \(productID) to display \(expectedPrice), got: \(button.label)")
     }
 }

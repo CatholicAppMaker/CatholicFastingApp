@@ -9,3 +9,12 @@
 "widget.fast.active" = "Jeûne actif";
 "widget.fast.active_target" = "Jeûne actif. Objectif à %@";
 "widget.fast.target_reached" = "Objectif de jeûne atteint";
+"fast.live_activity.title" = "Jeûne personnel";
+"fast.live_activity.fasting" = "Jeûne en cours";
+"fast.live_activity.target_reached" = "Objectif atteint";
+"fast.live_activity.keep_going" = "Continuez pour terminer ce plan.";
+"fast.live_activity.end_anytime" = "Vous pouvez terminer le jeûne quand vous le souhaitez.";
+"fast.live_activity.elapsed" = "Temps écoulé";
+"fast.live_activity.remaining" = "Restant";
+"fast.live_activity.started" = "Commencé";
+"fast.live_activity.target" = "Objectif";
