@@ -25,19 +25,31 @@ struct CompanionDashboardCard: View {
 
             SacredEditorialRule()
 
-            HStack(alignment: .top, spacing: 14) {
-                CompanionMetricPill(
-                    title: localized("companion.metric.today", default: "Today"),
-                    value: todayLabel)
+            if dynamicTypeSize.isAccessibilitySize {
+                VStack(alignment: .leading, spacing: 0) {
+                    CompanionMetricPill(
+                        title: localized("companion.metric.today", default: "Today"),
+                        value: todayLabel)
+                    SacredEditorialRule()
+                    CompanionMetricPill(
+                        title: localized("companion.metric.next", default: "Next"),
+                        value: nextRequiredLabel)
+                }
+            } else {
+                HStack(alignment: .top, spacing: 14) {
+                    CompanionMetricPill(
+                        title: localized("companion.metric.today", default: "Today"),
+                        value: todayLabel)
 
-                Rectangle()
-                    .fill(CatholicTheme.primary.opacity(0.14))
-                    .frame(width: 1, height: 46)
-                    .accessibilityHidden(true)
+                    Rectangle()
+                        .fill(CatholicTheme.primary.opacity(0.14))
+                        .frame(width: 1, height: 46)
+                        .accessibilityHidden(true)
 
-                CompanionMetricPill(
-                    title: localized("companion.metric.next", default: "Next"),
-                    value: nextRequiredLabel)
+                    CompanionMetricPill(
+                        title: localized("companion.metric.next", default: "Next"),
+                        value: nextRequiredLabel)
+                }
             }
 
             SacredEditorialRule()

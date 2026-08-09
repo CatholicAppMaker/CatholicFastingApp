@@ -226,11 +226,8 @@ struct IPadWorkspaceHeroBand: View {
                         Label(seasonContextLabel, systemImage: "sparkles")
                             .font(.footnote.weight(.semibold))
                             .foregroundStyle(CatholicTheme.primary)
-                        CatholicFastingQuoteCard(quote: quote, compact: true)
-                        HStack(spacing: 8) {
-                            IPadContextBadge(text: regionContext.classificationLabel, supportLevel: regionContext.supportLevel)
-                            IPadContextBadge(text: regionContext.supportLevel.label, supportLevel: regionContext.supportLevel)
-                        }
+                        CatholicFastingQuoteCard(quote: quote, compact: true, presentation: .inline)
+                        contextBadges
                         Text(regionContext.disclosureText)
                             .appSupportingTextStyle()
                             .fixedSize(horizontal: false, vertical: true)
@@ -252,11 +249,8 @@ struct IPadWorkspaceHeroBand: View {
                         Label(seasonContextLabel, systemImage: "sparkles")
                             .font(.footnote.weight(.semibold))
                             .foregroundStyle(CatholicTheme.primary)
-                        CatholicFastingQuoteCard(quote: quote, compact: false)
-                        HStack(spacing: 8) {
-                            IPadContextBadge(text: regionContext.classificationLabel, supportLevel: regionContext.supportLevel)
-                            IPadContextBadge(text: regionContext.supportLevel.label, supportLevel: regionContext.supportLevel)
-                        }
+                        CatholicFastingQuoteCard(quote: quote, compact: false, presentation: .inline)
+                        contextBadges
                         Text(regionContext.disclosureText)
                             .appSupportingTextStyle()
                     }
@@ -267,6 +261,19 @@ struct IPadWorkspaceHeroBand: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(18)
         .iPadPaneCard()
+    }
+
+    private var contextBadges: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 8) {
+                IPadContextBadge(text: regionContext.classificationLabel, supportLevel: regionContext.supportLevel)
+                IPadContextBadge(text: regionContext.supportLevel.label, supportLevel: regionContext.supportLevel)
+            }
+            VStack(alignment: .leading, spacing: 8) {
+                IPadContextBadge(text: regionContext.classificationLabel, supportLevel: regionContext.supportLevel)
+                IPadContextBadge(text: regionContext.supportLevel.label, supportLevel: regionContext.supportLevel)
+            }
+        }
     }
 }
 
@@ -319,7 +326,7 @@ struct IPadObservanceSelectionRow: View {
                         color: context.observance.kind.color)
                     StatusTag(
                         text: ObservancePresentationLocalizer.currentDispositionLabel(context.observance),
-                        color: context.observance.obligation == .mandatory ? .red : .blue)
+                        color: (context.observance.obligation == .mandatory ? AppSemanticTone.danger : .information).foreground)
                     IPadContextBadge(text: context.regionalContext.classificationLabel, supportLevel: context.regionalContext.supportLevel)
                 }
             }

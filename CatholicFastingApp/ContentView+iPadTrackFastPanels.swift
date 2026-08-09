@@ -334,6 +334,9 @@ extension ContentView {
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             .buttonStyle(.bordered)
+            .controlSize(.large)
+            .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+            .contentShape(Rectangle())
             .accessibilityValue(
                 intermittentShowAdvanced
                     ? localized("common.expanded", default: "Expanded")
@@ -361,8 +364,7 @@ extension ContentView {
         VStack(alignment: .leading, spacing: 12) {
             intermittentScheduleEditor(presentation: .pad)
         }
-        .padding(12)
-        .appSurfaceCard(.utility, cornerRadius: 14)
+        .padding(.vertical, 4)
     }
 
     var ipadIntermittentHistoryCard: some View {

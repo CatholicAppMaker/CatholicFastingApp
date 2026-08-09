@@ -38,7 +38,7 @@ extension CatholicFastingAppUITests {
             app.launch()
             ensureOnHomeScreen(app)
             openMoreDestination("Support & Premium", in: app)
-            XCTAssertTrue(scrollToElement(elementByIdentifier("premium.sample_preview", in: app), in: app))
+            XCTAssertTrue(scrollToElement(elementByIdentifier("premium.journey.preview", in: app), in: app))
         }
     }
 
@@ -242,7 +242,7 @@ extension CatholicFastingAppUITests {
             app.launch()
             ensureOnHomeScreen(app)
             openMoreDestination("Support & Premium", in: app)
-            XCTAssertTrue(elementByIdentifier("premium.sample_preview", in: app).waitForExistence(timeout: 4))
+            XCTAssertTrue(elementByIdentifier("premium.journey.preview", in: app).waitForExistence(timeout: 4))
         }
 
         try captureAppStoreScreen("05-more-hub") { app in

@@ -301,9 +301,14 @@ struct TodayDecisionCardSection: View {
                 Button(action: openGuidance) {
                     Label(guidanceTitle, systemImage: "book.closed")
                 }
+                .controlSize(.large)
+                .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                .contentShape(Rectangle())
                 .accessibilityIdentifier("today.decision.open_full_food_guidance")
 
+                SacredEditorialRule()
                 commonQuestions
+                SacredEditorialRule()
                 sourceCard
             }
             .padding(14)
@@ -341,8 +346,7 @@ struct TodayDecisionCardSection: View {
             Text(nextAction)
                 .appLeadTextStyle()
         }
-        .padding(12)
-        .appSurfaceCard(.utility, cornerRadius: 16)
+        .padding(.vertical, 4)
         .accessibilityIdentifier("today.decision.next_action")
     }
 
@@ -372,8 +376,7 @@ struct TodayDecisionCardSection: View {
             Label(brothAnswer, systemImage: "questionmark.circle")
                 .foregroundStyle(.secondary)
         }
-        .padding(12)
-        .appSurfaceCard(.utility, cornerRadius: 16)
+        .padding(.vertical, 4)
         .accessibilityIdentifier("today.decision.common_food_questions")
     }
 
@@ -383,9 +386,10 @@ struct TodayDecisionCardSection: View {
                 .appSupportingTextStyle()
             Link(sourceLinkTitle, destination: sourceURL)
                 .font(.footnote.weight(.semibold))
+                .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                .contentShape(Rectangle())
         }
-        .padding(12)
-        .appSurfaceCard(.utility, cornerRadius: 16)
+        .padding(.vertical, 4)
     }
 }
 

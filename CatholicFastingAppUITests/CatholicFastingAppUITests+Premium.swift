@@ -40,7 +40,7 @@ extension CatholicFastingAppUITests {
         XCTAssertTrue(upgradeSegment.waitForExistence(timeout: 4))
         upgradeSegment.tap()
 
-        let preview = elementByIdentifier("premium.sample_preview", in: app)
+        let preview = elementByIdentifier("premium.journey.preview", in: app)
         XCTAssertTrue(scrollToElement(preview, in: app))
 
         let restoreButton = app.buttons["premium.restore"].firstMatch
@@ -82,7 +82,7 @@ extension CatholicFastingAppUITests {
         ensureOnHomeScreen(app)
         openMoreDestination("Support & Premium", in: app)
 
-        let journeyCard = elementByIdentifier("premium.sample_preview", in: app)
+        let journeyCard = elementByIdentifier("premium.journey.current", in: app)
         XCTAssertTrue(scrollToElement(journeyCard, in: app))
         XCTAssertTrue(scrollToElement(app.staticTexts["Your Guided Seasonal Journey"].firstMatch, in: app))
         XCTAssertTrue(scrollToElement(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Current journey week:")).firstMatch, in: app))
@@ -147,7 +147,7 @@ extension CatholicFastingAppUITests {
             scrollToElement(
                 app.staticTexts["Vista previa de Formación estacional guiada"].firstMatch,
                 in: app))
-        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.sample_preview", in: app), in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.journey.preview", in: app), in: app))
         XCTAssertTrue(scrollToElement(app.buttons["premium.restore"].firstMatch, in: app))
     }
 
@@ -160,7 +160,7 @@ extension CatholicFastingAppUITests {
 
         XCTAssertTrue(scrollToElement(app.staticTexts["Apoyo y Premium"].firstMatch, in: app))
         XCTAssertTrue(scrollToElement(app.staticTexts["Vista previa de Formación estacional guiada"].firstMatch, in: app))
-        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.sample_preview", in: app), in: app))
+        XCTAssertTrue(scrollToElement(elementByIdentifier("premium.journey.preview", in: app), in: app))
     }
 
     func testIPadMorePremiumShowsPlansAndLegal() {
@@ -188,7 +188,7 @@ extension CatholicFastingAppUITests {
         let planChoice = elementByIdentifier("premium.plan_choice", in: app)
         let planState = elementByIdentifier("premium.plan_choice_state", in: app)
         let legal = elementByIdentifier("premium.legal_actions", in: app)
-        let journey = elementByIdentifier("premium.sample_preview", in: app)
+        let journey = elementByIdentifier("premium.journey.preview", in: app)
         XCTAssertTrue(planChoice.waitForExistence(timeout: 4))
         XCTAssertTrue(planState.waitForExistence(timeout: 4), "The plan-choice heading must never be followed by a blank state")
         XCTAssertTrue(legal.waitForExistence(timeout: 4))
@@ -227,8 +227,9 @@ extension CatholicFastingAppUITests {
         openMoreDestination("Support & Premium", in: app)
 
         XCTAssertTrue(
-            app.buttons["premium.open_tools"].firstMatch.waitForExistence(timeout: 4),
+            app.buttons["premium.status.open_tools"].firstMatch.waitForExistence(timeout: 4),
             "An offline catalog refresh hid an existing Premium entitlement")
+        XCTAssertTrue(app.buttons["premium.active.open_tools"].firstMatch.waitForExistence(timeout: 4))
         let status = elementByIdentifier("premium.status", in: app)
         let premiumList = app.collectionViews.firstMatch
         XCTAssertTrue(premiumList.waitForExistence(timeout: 4))

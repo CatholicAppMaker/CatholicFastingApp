@@ -21,23 +21,14 @@ extension ContentView {
                 focusFastingDaysOnUpcomingRequired()
             }
 
-            HStack(spacing: 10) {
-                IPadWorkspaceActionButton(
-                    title: localized("ipad.today.actions.open_planning", default: "Open Planning"),
-                    systemImage: "slider.horizontal.3",
-                    primary: false,
-                    accessibilityIdentifier: "ipad.today.action.open_planning")
-                {
-                    navigateToMoreDestination(.profileAndNorms)
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 10) {
+                    ipadTodayPlanningAction
+                    ipadTodayPremiumAction
                 }
-
-                IPadWorkspaceActionButton(
-                    title: localized("ipad.today.actions.support_premium", default: "Support & Premium"),
-                    systemImage: "heart.circle",
-                    primary: false,
-                    accessibilityIdentifier: "ipad.today.action.open_premium")
-                {
-                    navigateToMoreDestination(.supportAndPremium)
+                VStack(alignment: .leading, spacing: 10) {
+                    ipadTodayPlanningAction
+                    ipadTodayPremiumAction
                 }
             }
 
@@ -173,9 +164,12 @@ extension ContentView {
             Text(todayFoodDecision.sourceLine)
                 .appSupportingTextStyle()
 
-            HStack(spacing: 8) {
-                ForEach(regionContext.citations, id: \.self) { citation in
-                    StatusTag(text: citation.authority.rawValue, color: CatholicTheme.primary)
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 8) {
+                    citationTags(for: regionContext)
+                }
+                VStack(alignment: .leading, spacing: 8) {
+                    citationTags(for: regionContext)
                 }
             }
 
@@ -191,5 +185,33 @@ extension ContentView {
         .accessibilityElement(children: .contain)
         .accessibilityValue(Text(regionContext.classificationLabel))
         .accessibilityIdentifier("ipad.today.transparency")
+    }
+
+    private var ipadTodayPlanningAction: some View {
+        IPadWorkspaceActionButton(
+            title: localized("ipad.today.actions.open_planning", default: "Open Planning"),
+            systemImage: "slider.horizontal.3",
+            primary: false,
+            accessibilityIdentifier: "ipad.today.action.open_planning")
+        {
+            navigateToMoreDestination(.profileAndNorms)
+        }
+    }
+
+    private var ipadTodayPremiumAction: some View {
+        IPadWorkspaceActionButton(
+            title: localized("ipad.today.actions.support_premium", default: "Support & Premium"),
+            systemImage: "heart.circle",
+            primary: false,
+            accessibilityIdentifier: "ipad.today.action.open_premium")
+        {
+            navigateToMoreDestination(.supportAndPremium)
+        }
+    }
+
+    private func citationTags(for regionContext: RegionalRuleContext) -> some View {
+        ForEach(regionContext.citations, id: \.self) { citation in
+            StatusTag(text: citation.authority.rawValue, color: CatholicTheme.primary)
+        }
     }
 }

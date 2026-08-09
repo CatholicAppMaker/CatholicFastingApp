@@ -429,8 +429,14 @@ struct SacredImageryCard: View {
 }
 
 struct CatholicFastingQuoteCard: View {
+    enum Presentation {
+        case card
+        case inline
+    }
+
     let quote: CatholicFastingQuote
     var compact: Bool = false
+    var presentation: Presentation = .card
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -447,8 +453,21 @@ struct CatholicFastingQuoteCard: View {
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .appSurfaceCard(.utility, cornerRadius: 12)
+        .modifier(CatholicFastingQuotePresentationModifier(presentation: presentation))
         .accessibilityElement(children: .combine)
         .accessibilityLabel([quote.text, quote.author, quote.source].joined(separator: " "))
+    }
+}
+
+private struct CatholicFastingQuotePresentationModifier: ViewModifier {
+    let presentation: CatholicFastingQuoteCard.Presentation
+
+    func body(content: Content) -> some View {
+        switch presentation {
+        case .card:
+            content.appSurfaceCard(.utility, cornerRadius: 12)
+        case .inline:
+            content
+        }
     }
 }

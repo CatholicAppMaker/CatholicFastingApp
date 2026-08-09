@@ -34,7 +34,7 @@ struct PremiumActiveStateCard: View {
 
             Button(buttonTitle, action: onOpenTools)
                 .appPrimaryButtonStyle()
-                .accessibilityIdentifier("premium.open_tools")
+                .accessibilityIdentifier("premium.active.open_tools")
         }
         .padding(14)
         .appSurfaceCard(.primary, cornerRadius: 18)
@@ -199,7 +199,7 @@ struct PremiumStatusSummaryCard: View {
             if isUnlocked {
                 Button(openToolsTitle, action: onOpenTools)
                     .appPrimaryButtonStyle()
-                    .accessibilityIdentifier("premium.open_tools")
+                    .accessibilityIdentifier("premium.status.open_tools")
             } else {
                 VStack(alignment: .leading, spacing: 8) {
                     Text(lockedAddsTitle)
@@ -287,7 +287,7 @@ struct PremiumJourneyCard: View {
         }
         .padding(14)
         .appSurfaceCard(isSample ? .standard : .primary, cornerRadius: 16)
-        .accessibilityIdentifier("premium.sample_preview")
+        .accessibilityIdentifier(isSample ? "premium.journey.preview" : "premium.journey.current")
         .onAppear(perform: onAppear)
     }
 

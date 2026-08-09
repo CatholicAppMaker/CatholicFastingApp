@@ -55,11 +55,7 @@ struct IntermittentFastOverviewSection: View {
                     metricTiles
                 }
                 VStack(spacing: 8) {
-                    HStack {
-                        metricTile(metrics[0])
-                        metricTile(metrics[1])
-                    }
-                    metricTile(metrics[2])
+                    metricTiles
                 }
             }
 

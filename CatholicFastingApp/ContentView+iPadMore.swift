@@ -179,7 +179,7 @@ extension ContentView {
         }
         .padding(14)
         .appSurfaceCard(monetizationStore.premiumUnlocked ? .primary : .standard, cornerRadius: 16)
-        .accessibilityIdentifier("premium.sample_preview")
+        .accessibilityIdentifier(monetizationStore.premiumUnlocked ? "premium.journey.current" : "premium.journey.preview")
     }
 
     #if canImport(StoreKit)
